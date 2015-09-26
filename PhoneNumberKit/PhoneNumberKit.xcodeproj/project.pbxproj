@@ -11,6 +11,7 @@
 		3424186F1BB6E5A000EE70E7 /* PhoneNumberKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 342418641BB6E5A000EE70E7 /* PhoneNumberKit.framework */; settings = {ASSET_TAGS = (); }; };
 		342418741BB6E5A000EE70E7 /* PhoneNumberKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342418731BB6E5A000EE70E7 /* PhoneNumberKitTests.swift */; };
 		342418801BB705B500EE70E7 /* PhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3424187F1BB705B500EE70E7 /* PhoneNumber.swift */; settings = {ASSET_TAGS = (); }; };
+		342418821BB70F5200EE70E7 /* PhoneNumberParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342418811BB70F5200EE70E7 /* PhoneNumberParser.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,6 +32,7 @@
 		342418731BB6E5A000EE70E7 /* PhoneNumberKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberKitTests.swift; sourceTree = "<group>"; };
 		342418751BB6E5A000EE70E7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3424187F1BB705B500EE70E7 /* PhoneNumber.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumber.swift; sourceTree = "<group>"; };
+		342418811BB70F5200EE70E7 /* PhoneNumberParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumberParser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +78,7 @@
 				342418671BB6E5A000EE70E7 /* PhoneNumberKit.h */,
 				342418691BB6E5A000EE70E7 /* Info.plist */,
 				3424187F1BB705B500EE70E7 /* PhoneNumber.swift */,
+				342418811BB70F5200EE70E7 /* PhoneNumberParser.swift */,
 			);
 			path = PhoneNumberKit;
 			sourceTree = "<group>";
@@ -197,6 +200,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				342418821BB70F5200EE70E7 /* PhoneNumberParser.swift in Sources */,
 				342418801BB705B500EE70E7 /* PhoneNumber.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -8,13 +8,26 @@
 
 import Foundation
 
-struct PhoneNumber {
+public enum PNCountryCodeSource {
+    case NumberWithPlusSign
+    case NumberWithIDD
+    case NumberWithoutPlusSign
+    case DefaultCountry
+}
+
+public struct PhoneNumber {
     var countryCode: UInt
     var nationalNumber: UInt
     var numberExtension: String
     var italianLeadingZero: Bool
     var leadingZerosNumber: Int
     var rawNumber: String
-    var countryCodeSource: Int
+    var countryCodeSource: PNCountryCodeSource
     var preferredDomesticCarrierCode: String
 }
+
+//extension PhoneNumber {
+//    init(rawNumber: String, defaultRegion: String) {
+//        self.rawNumber = rawNumber
+//    }
+//}
