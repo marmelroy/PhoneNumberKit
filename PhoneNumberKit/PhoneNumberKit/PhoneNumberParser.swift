@@ -13,12 +13,6 @@ let PNPlusChars : String = "+＋"
 let PNValidDigitsString : String = "0-9０-９٠-٩۰-۹"
 let PNRegionCodeForNonGeoEntity : String = "001"
 
-let RFC3966_EXTN_PREFIX = ";ext="
-let RFC3966_PREFIX = "tel:"
-let RFC3966_PHONE_CONTEXT = ";phone-context="
-let RFC3966_ISDN_SUBADDRESS = ";isub="
-
-
 public class PhoneNumberParser: NSObject {
 
     // MARK: PARSER
@@ -29,9 +23,10 @@ public class PhoneNumberParser: NSObject {
     }
     
     func buildNationalNumber(numberToParse: String) -> String {
-        
-        let indexOfPhoneContent = self.inde
-        return string.stringByReplacingOccurrencesOfString(PNNonBreakingSpace, withString: " ")
+        var nationalNumber : String = ""
+        nationalNumber =  nationalNumber.stringByAppendingString("") [(*nationalNumber) stringByAppendingString:[self extractPossibleNumber:numberToParse]];
+
+        return nationalNumber
     }
 
     
@@ -41,15 +36,15 @@ public class PhoneNumberParser: NSObject {
         return string.stringByReplacingOccurrencesOfString(PNNonBreakingSpace, withString: " ")
     }
     
-    func indexOfStringInString(source: String, target: String) -> Int {
-        let stringRange = source.rangeOfString(target)
-        if (stringRange!.isEmpty) {
-            return -1
-        }
-        else {
-            return stringRange!.startIndex as Int
-        }
+    func extractPossibleNumber(string: String) -> String {
+        let start
+        return string.stringByReplacingOccurrencesOfString(PNNonBreakingSpace, withString: " ")
     }
+
+    func stringPositionByRegex(source: String, pattern: String) -> Int {
+
+    }
+
     
 }
 
