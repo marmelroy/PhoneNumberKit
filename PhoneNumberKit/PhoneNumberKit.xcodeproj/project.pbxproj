@@ -10,6 +10,7 @@
 		342418681BB6E5A000EE70E7 /* PhoneNumberKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 342418671BB6E5A000EE70E7 /* PhoneNumberKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3424186F1BB6E5A000EE70E7 /* PhoneNumberKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 342418641BB6E5A000EE70E7 /* PhoneNumberKit.framework */; settings = {ASSET_TAGS = (); }; };
 		342418741BB6E5A000EE70E7 /* PhoneNumberKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342418731BB6E5A000EE70E7 /* PhoneNumberKitTests.swift */; };
+		342418801BB705B500EE70E7 /* PhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3424187F1BB705B500EE70E7 /* PhoneNumber.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +30,7 @@
 		3424186E1BB6E5A000EE70E7 /* PhoneNumberKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PhoneNumberKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		342418731BB6E5A000EE70E7 /* PhoneNumberKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberKitTests.swift; sourceTree = "<group>"; };
 		342418751BB6E5A000EE70E7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3424187F1BB705B500EE70E7 /* PhoneNumber.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumber.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +75,7 @@
 			children = (
 				342418671BB6E5A000EE70E7 /* PhoneNumberKit.h */,
 				342418691BB6E5A000EE70E7 /* Info.plist */,
+				3424187F1BB705B500EE70E7 /* PhoneNumber.swift */,
 			);
 			path = PhoneNumberKit;
 			sourceTree = "<group>";
@@ -142,6 +145,7 @@
 		3424185B1BB6E5A000EE70E7 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Roy Marmelstein";
 				TargetAttributes = {
@@ -193,6 +197,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				342418801BB705B500EE70E7 /* PhoneNumber.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -307,6 +312,7 @@
 		342418791BB6E5A000EE70E7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -317,12 +323,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.roymarmelstein.PhoneNumberKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		3424187A1BB6E5A000EE70E7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
