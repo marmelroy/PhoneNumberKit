@@ -14,7 +14,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        PhoneNumberKit.printMetaDataJSON()
+        let phoneNumberKit = PhoneNumberKit()
 //        let testNumberString : NSString = "0689017383\n\nsdsdsds"
 //        let numberParser = PhoneNumberParser()
 //        let normailzedNumber : NSString = numberParser.normalizeNonBreakingSpace(testNumberString as String)
