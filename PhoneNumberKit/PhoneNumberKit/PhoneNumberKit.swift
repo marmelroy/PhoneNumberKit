@@ -18,16 +18,21 @@ public class PhoneNumberKit : NSObject {
         metadata = populateMetadata()
     }
     
-    public func countriesForCode(code: UInt) -> [String] {
-        let countryArray = metadata.filter { $0.countryCode == code}
-            .map{$0.codeID}
-        return countryArray;
+    public func allCountries() -> [String] {
+        let results = metadata.map{$0.codeID}
+        return results
     }
     
-    public func codesForCountry(country: NSString) -> [UInt] {
-        let countryArray = metadata.filter { $0.codeID == country}
+    public func countriesForCode(code: UInt) -> [String] {
+        let results = metadata.filter { $0.countryCode == code}
+            .map{$0.codeID}
+        return results
+    }
+    
+    public func codeForCountry(country: NSString) -> UInt {
+        let results = metadata.filter { $0.codeID == country}
             .map{$0.countryCode}
-        return countryArray;
+        return results.first!
     }
 
     
