@@ -19,7 +19,7 @@ public class PhoneNumberKit : NSObject {
     }
     
     public func getCountries(code: UInt) -> [String] {
-        let countryArray = metadata.filter { (territory) in territory.countryCode == code}
+        let countryArray = metadata.filter { $0.countryCode == code}
             .map{$0.codeID}
         return countryArray;
     }
