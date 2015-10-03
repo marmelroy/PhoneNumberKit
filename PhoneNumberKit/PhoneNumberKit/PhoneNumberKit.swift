@@ -18,7 +18,10 @@ public class PhoneNumberKit : NSObject {
         metadata = populateMetadata()
     }
     
-    public class func printMetaDataJSON () {
+    public func getCountries(code: UInt) -> [String] {
+        let countryArray = metadata.filter { (territory) in territory.countryCode == code}
+            .map{$0.codeID}
+        return countryArray;
     }
     
     func populateMetadata() -> [MetadataTerritory] {
@@ -32,8 +35,7 @@ public class PhoneNumberKit : NSObject {
             let metaDataTerritories : NSDictionary = metaDataDict["territories"] as! NSDictionary
             let metaDataTerritoryArray : NSArray = metaDataTerritories["territory"] as! NSArray
             for territory in metaDataTerritoryArray {
-                let parsedTerritory = MetadataTerritory(dictionary: territory as! NSDictionary)
-                print(parsedTerritory)
+                let parsedTerritory = MetadataTerritory(jsondDict: territory as! NSDictionary)
                 territoryArray.append(parsedTerritory)
             }
         }
