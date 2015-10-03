@@ -13,6 +13,7 @@ let PNPlusChars : String = "+＋"
 let PNValidDigitsString : String = "0-9０-９٠-٩۰-۹"
 let PNRegionCodeForNonGeoEntity : String = "001"
 
+
 public class PhoneNumberParser: NSObject {
 
     // MARK: PARSER

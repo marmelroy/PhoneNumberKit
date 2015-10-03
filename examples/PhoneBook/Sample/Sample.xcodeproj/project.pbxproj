@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		346922611BC003590023482F /* PhoneNumberKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3435CCAD1BC00337003F953B /* PhoneNumberKit.framework */; };
+		346922621BC003590023482F /* PhoneNumberKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3435CCAD1BC00337003F953B /* PhoneNumberKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3472096B1BB808D1004DE6DA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3472096A1BB808D1004DE6DA /* AppDelegate.swift */; };
 		3472096D1BB808D1004DE6DA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3472096C1BB808D1004DE6DA /* ViewController.swift */; };
 		347209701BB808D1004DE6DA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3472096E1BB808D1004DE6DA /* Main.storyboard */; };
@@ -14,12 +16,30 @@
 		347209751BB808D1004DE6DA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 347209731BB808D1004DE6DA /* LaunchScreen.storyboard */; };
 		347209801BB808D1004DE6DA /* SampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3472097F1BB808D1004DE6DA /* SampleTests.swift */; };
 		3472098E1BB80A4F004DE6DA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3472098D1BB80A4F004DE6DA /* Foundation.framework */; };
-		347209961BB80BFA004DE6DA /* PhoneNumberKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 347209951BB80BFA004DE6DA /* PhoneNumberKit.framework */; settings = {ASSET_TAGS = (); }; };
-		347209971BB80BFA004DE6DA /* PhoneNumberKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 347209951BB80BFA004DE6DA /* PhoneNumberKit.framework */; settings = {ASSET_TAGS = (); }; };
-		347209991BB80D3F004DE6DA /* PhoneNumberKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 347209951BB80BFA004DE6DA /* PhoneNumberKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		3435CCAC1BC00337003F953B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3435CCA71BC00337003F953B /* PhoneNumberKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 342418641BB6E5A000EE70E7;
+			remoteInfo = PhoneNumberKit;
+		};
+		3435CCAE1BC00337003F953B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3435CCA71BC00337003F953B /* PhoneNumberKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3424186E1BB6E5A000EE70E7;
+			remoteInfo = PhoneNumberKitTests;
+		};
+		346922631BC003590023482F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3435CCA71BC00337003F953B /* PhoneNumberKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 342418631BB6E5A000EE70E7;
+			remoteInfo = PhoneNumberKit;
+		};
 		3472097C1BB808D1004DE6DA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3472095F1BB808D1004DE6DA /* Project object */;
@@ -30,19 +50,21 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		347209981BB80D34004DE6DA /* CopyFiles */ = {
+		3435CCA51BC00184003F953B /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				347209991BB80D3F004DE6DA /* PhoneNumberKit.framework in CopyFiles */,
+				346922621BC003590023482F /* PhoneNumberKit.framework in Embed Frameworks */,
 			);
+			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3435CCA71BC00337003F953B /* PhoneNumberKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PhoneNumberKit.xcodeproj; path = ../../../PhoneNumberKit/PhoneNumberKit.xcodeproj; sourceTree = "<group>"; };
 		347209671BB808D1004DE6DA /* Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3472096A1BB808D1004DE6DA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3472096C1BB808D1004DE6DA /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -54,7 +76,6 @@
 		3472097F1BB808D1004DE6DA /* SampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleTests.swift; sourceTree = "<group>"; };
 		347209811BB808D1004DE6DA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3472098D1BB80A4F004DE6DA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		347209951BB80BFA004DE6DA /* PhoneNumberKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = PhoneNumberKit.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,8 +83,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				347209961BB80BFA004DE6DA /* PhoneNumberKit.framework in Frameworks */,
 				3472098E1BB80A4F004DE6DA /* Foundation.framework in Frameworks */,
+				346922611BC003590023482F /* PhoneNumberKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,16 +92,25 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				347209971BB80BFA004DE6DA /* PhoneNumberKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3435CCA81BC00337003F953B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3435CCAD1BC00337003F953B /* PhoneNumberKit.framework */,
+				3435CCAF1BC00337003F953B /* PhoneNumberKitTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		3472095E1BB808D1004DE6DA = {
 			isa = PBXGroup;
 			children = (
+				3435CCA71BC00337003F953B /* PhoneNumberKit.xcodeproj */,
 				347209691BB808D1004DE6DA /* Sample */,
 				3472097E1BB808D1004DE6DA /* SampleTests */,
 				347209681BB808D1004DE6DA /* Products */,
@@ -104,7 +134,6 @@
 				3472096E1BB808D1004DE6DA /* Main.storyboard */,
 				347209711BB808D1004DE6DA /* Assets.xcassets */,
 				347209731BB808D1004DE6DA /* LaunchScreen.storyboard */,
-				347209951BB80BFA004DE6DA /* PhoneNumberKit.framework */,
 				347209761BB808D1004DE6DA /* Info.plist */,
 				3472098D1BB80A4F004DE6DA /* Foundation.framework */,
 			);
@@ -130,11 +159,12 @@
 				347209631BB808D1004DE6DA /* Sources */,
 				347209641BB808D1004DE6DA /* Frameworks */,
 				347209651BB808D1004DE6DA /* Resources */,
-				347209981BB80D34004DE6DA /* CopyFiles */,
+				3435CCA51BC00184003F953B /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				346922641BC003590023482F /* PBXTargetDependency */,
 			);
 			name = Sample;
 			productName = Sample;
@@ -188,6 +218,12 @@
 			mainGroup = 3472095E1BB808D1004DE6DA;
 			productRefGroup = 347209681BB808D1004DE6DA /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 3435CCA81BC00337003F953B /* Products */;
+					ProjectRef = 3435CCA71BC00337003F953B /* PhoneNumberKit.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				347209661BB808D1004DE6DA /* Sample */,
@@ -195,6 +231,23 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		3435CCAD1BC00337003F953B /* PhoneNumberKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = PhoneNumberKit.framework;
+			remoteRef = 3435CCAC1BC00337003F953B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3435CCAF1BC00337003F953B /* PhoneNumberKitTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = PhoneNumberKitTests.xctest;
+			remoteRef = 3435CCAE1BC00337003F953B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		347209651BB808D1004DE6DA /* Resources */ = {
@@ -237,6 +290,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		346922641BC003590023482F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = PhoneNumberKit;
+			targetProxy = 346922631BC003590023482F /* PBXContainerItemProxy */;
+		};
 		3472097D1BB808D1004DE6DA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 347209661BB808D1004DE6DA /* Sample */;
@@ -349,6 +407,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Sample",
@@ -364,6 +423,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Sample",
@@ -426,6 +486,7 @@
 				347209861BB808D1004DE6DA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		347209871BB808D1004DE6DA /* Build configuration list for PBXNativeTarget "SampleTests" */ = {
 			isa = XCConfigurationList;
@@ -434,6 +495,7 @@
 				347209891BB808D1004DE6DA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

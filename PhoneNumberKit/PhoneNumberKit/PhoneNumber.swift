@@ -26,6 +26,21 @@ public struct PhoneNumber {
     var preferredDomesticCarrierCode: String
 }
 
+public class PhoneNumberKit : NSObject {
+    public class func printMetaDataJSON () {
+        let frameworkBundle = NSBundle(forClass: PhoneNumberKit.self)
+        let jsonPath = frameworkBundle.pathForResource("PhoneNumberMetadata", ofType: "json")
+        let jsonData = NSData(contentsOfFile: jsonPath!)
+        do {
+            let object = try NSJSONSerialization.JSONObjectWithData(jsonData!, options: NSJSONReadingOptions.AllowFragments)
+            print(object)
+        }
+        catch {
+            
+        }
+    }
+}
+
 //extension PhoneNumber {
 //    init(rawNumber: String, defaultRegion: String) {
 //        self.rawNumber = rawNumber
