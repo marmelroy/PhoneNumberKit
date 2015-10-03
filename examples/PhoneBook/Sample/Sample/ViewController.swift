@@ -15,7 +15,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let phoneNumberKit = PhoneNumberKit()
-        print(phoneNumberKit.getCountries(01))
+        print(phoneNumberKit.countriesForCode(01))
+        print(phoneNumberKit.codesForCountry("FR"))
     }
 
     override func didReceiveMemoryWarning() {

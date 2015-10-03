@@ -18,11 +18,18 @@ public class PhoneNumberKit : NSObject {
         metadata = populateMetadata()
     }
     
-    public func getCountries(code: UInt) -> [String] {
+    public func countriesForCode(code: UInt) -> [String] {
         let countryArray = metadata.filter { $0.countryCode == code}
             .map{$0.codeID}
         return countryArray;
     }
+    
+    public func codesForCountry(country: NSString) -> [UInt] {
+        let countryArray = metadata.filter { $0.codeID == country}
+            .map{$0.countryCode}
+        return countryArray;
+    }
+
     
     func populateMetadata() -> [MetadataTerritory] {
         var territoryArray : [MetadataTerritory] = [MetadataTerritory]()
