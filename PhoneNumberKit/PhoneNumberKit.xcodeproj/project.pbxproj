@@ -18,6 +18,7 @@
 		3435CCA01BBFF66F003F953B /* PhoneNumberMetadata.json in Resources */ = {isa = PBXBuildFile; fileRef = 3435CC951BBFF66F003F953B /* PhoneNumberMetadata.json */; settings = {ASSET_TAGS = (); }; };
 		3435CCA11BBFF66F003F953B /* ShortNumberMetadata.json in Resources */ = {isa = PBXBuildFile; fileRef = 3435CC961BBFF66F003F953B /* ShortNumberMetadata.json */; settings = {ASSET_TAGS = (); }; };
 		3435CCA21BBFF66F003F953B /* ShortNumberMetadata.json in Resources */ = {isa = PBXBuildFile; fileRef = 3435CC961BBFF66F003F953B /* ShortNumberMetadata.json */; settings = {ASSET_TAGS = (); }; };
+		34566C9A1BC112C500715E6B /* RegularExpressions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34566C991BC112C500715E6B /* RegularExpressions.swift */; settings = {ASSET_TAGS = (); }; };
 		346922671BC01DCC0023482F /* Metadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346922661BC01DCC0023482F /* Metadata.swift */; settings = {ASSET_TAGS = (); }; };
 		346922691BC023A60023482F /* PhoneNumberKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346922681BC023A60023482F /* PhoneNumberKit.swift */; settings = {ASSET_TAGS = (); }; };
 		347209901BB80A69004DE6DA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3472098F1BB80A69004DE6DA /* Foundation.framework */; };
@@ -45,6 +46,7 @@
 		3435CC941BBFF66F003F953B /* PhoneNumberAlternateFormats.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PhoneNumberAlternateFormats.json; sourceTree = "<group>"; };
 		3435CC951BBFF66F003F953B /* PhoneNumberMetadata.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PhoneNumberMetadata.json; sourceTree = "<group>"; };
 		3435CC961BBFF66F003F953B /* ShortNumberMetadata.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ShortNumberMetadata.json; sourceTree = "<group>"; };
+		34566C991BC112C500715E6B /* RegularExpressions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegularExpressions.swift; sourceTree = "<group>"; };
 		346922661BC01DCC0023482F /* Metadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Metadata.swift; sourceTree = "<group>"; };
 		346922681BC023A60023482F /* PhoneNumberKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumberKit.swift; sourceTree = "<group>"; };
 		3472098F1BB80A69004DE6DA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -97,6 +99,7 @@
 				3424187F1BB705B500EE70E7 /* PhoneNumber.swift */,
 				346922661BC01DCC0023482F /* Metadata.swift */,
 				342418811BB70F5200EE70E7 /* PhoneNumberParser.swift */,
+				34566C991BC112C500715E6B /* RegularExpressions.swift */,
 				3435CC8F1BBFF66F003F953B /* Resources */,
 				3472098F1BB80A69004DE6DA /* Foundation.framework */,
 			);
@@ -239,6 +242,7 @@
 				342418821BB70F5200EE70E7 /* PhoneNumberParser.swift in Sources */,
 				346922671BC01DCC0023482F /* Metadata.swift in Sources */,
 				346922691BC023A60023482F /* PhoneNumberKit.swift in Sources */,
+				34566C9A1BC112C500715E6B /* RegularExpressions.swift in Sources */,
 				342418801BB705B500EE70E7 /* PhoneNumber.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

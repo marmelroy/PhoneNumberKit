@@ -13,6 +13,19 @@ let PNPlusChars : String = "+＋"
 let PNValidDigitsString : String = "0-9０-９٠-٩۰-۹"
 let PNRegionCodeForNonGeoEntity : String = "001"
 
+let PNNANPACountryCode : Int = 1
+let PNMinLengthForNSN : Int = 2
+let PNMaxLengthForNSN : Int = 16
+let PNMaxLengthCountryCode : Int = 3
+let PNMaxInputStringLength : Int = 250
+
+
+public enum PNParsingError :  ErrorType {
+    case NotANumber
+    case TooLong
+    case InvalidCountryCode
+}
+
 
 public class PhoneNumberParser: NSObject {
 
@@ -24,20 +37,15 @@ public class PhoneNumberParser: NSObject {
 //        
 //    }
     
-//    func buildNationalNumber(numberToParse: String) -> String {
-//        var nationalNumber : String = ""
-//        nationalNumber =  nationalNumber.stringByAppendingString("") [(*nationalNumber) stringByAppendingString:[self extractPossibleNumber:numberToParse]];
-//
-//        return nationalNumber
-//    }
 
     
     // MARK: PHONE NUMBER HELPERS
 
+
     
     public func extractPossibleNumber(number: NSString) -> String {
         var possibleNumber : NSString
-        let validStartPattern = "["+PNPlusChars+PNValidDigitsString+"]"
+        let validStartPattern = "[" + PNPlusChars + PNValidDigitsString + "]"
         let secondNumberStartPattern = "[\\\\\\/] *x";
         let unwantedEndPattern = "[^" + PNValidDigitsString + "A-Za-z#]+$";
 
@@ -100,8 +108,53 @@ public class PhoneNumberParser: NSObject {
         } catch {
             return replacementResult
         }
-
     }
+    
+    func isViablePhoneNumber(number: String) -> Bool {
+        let numberToParse = normalizeNonBreakingSpace(number)
+        if (numberToParse.characters.count < PNMinLengthForNSN) {
+            return false;
+        }
+        
+        
+        return matchesEntirely(PNMValidPhoneNumberPattern, string: number)
+    }
+    
+
+    
+    func checkRegionForParsing(rawNumber: String, defaultRegion: String) -> Bool {
+        return (isValidRegionCode(defaultRegion) || (rawNumber.characters.count > 0 && matchesAtStart(PNPlusChars, string: rawNumber)))
+    }
+    
+    func isValidRegionCode(regionCode: String) -> Bool {
+        if (PhoneNumberKit().codeForCountry(regionCode) != nil) {
+            return true
+        }
+        else {
+            return false
+        }
+    }
+    
+    
+    func maybeStripExtension(number: String) -> (modifiedNumber: String, extn: String?) {
+        let copiedNumber : NSString = number
+        let mStart = stringPositionByRegex(copiedNumber, pattern: PNExtnPattern)
+        if (mStart >= 0 && (isViablePhoneNumber(copiedNumber.substringWithRange(NSMakeRange(0, mStart))))) {
+            let firstMatch = matchFirst(number, pattern: PNExtnPattern)
+            let matchedGroupsLength = firstMatch?.numberOfRanges
+            for var i = 1; i < matchedGroupsLength; i++ {
+                let curRange = firstMatch?.rangeAtIndex(i)
+                if (curRange?.location != NSNotFound && curRange?.location < number.characters.count) {
+                    let matchString = copiedNumber.substringWithRange(curRange!)
+                    let stringRange = NSMakeRange(0, mStart)
+                    let tokenedString = copiedNumber.substringWithRange(stringRange)
+                    return (tokenedString as String, matchString)
+                }
+            }
+        }
+        return (number, nil)
+    }
+    
     
 }
 
