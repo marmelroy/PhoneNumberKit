@@ -226,18 +226,44 @@ public class PhoneNumberParser: NSObject {
         let result = maybeStripInternationalPrefixAndNormalize(number, possibleIddPrefix: possibleCountryIddPrefix!)
         copiedNumber = result.modifiedNumber as NSString
         let countryCodeSource = result.countryCodeSource
-        if (countryCodeSource != .DefaultCountry) {
+        if (countryCodeSource == .DefaultCountry) {
             if (copiedNumber.length <= PNMinLengthForNSN) {
                 return (copiedNumber as String, 0)
             }
-            
-//            let potentialCoutryCode =
+            let extractedCountryCode = extractCountryCode(copiedNumber, nationalNumber: number)
+            print(extractedCountryCode.countryCode)
         }
         return (number, nil)
     }
 
-    
-    
+    func extractCountryCode(var fullNumber: NSString, nationalNumber: String) -> (modifiedNationalNumber: String, countryCode: UInt?) {
+        var modifiedNationalNumber : String?
+        fullNumber = normalizeNonBreakingSpace(fullNumber as String) as NSString
+        if ((fullNumber.length == 0) || (fullNumber.substringToIndex(1) == "0")) {
+            return (nationalNumber, 0)
+        }
+        let numberLength = fullNumber.length
+        var maxCountryCode = PNMaxLengthCountryCode
+        if (fullNumber.hasPrefix("+")) {
+            maxCountryCode = PNMaxLengthCountryCode + 1
+        }
+        for var i = 1; i <= maxCountryCode && i <= numberLength; i++ {
+            let stringRange = NSMakeRange(0, i)
+            let subNumber = fullNumber.substringWithRange(stringRange)
+            let potentialCountryCode = UInt(subNumber)
+            let regionCodes = PhoneNumberKit().countriesForCode(potentialCountryCode!)
+            if (regionCodes.count > 0) {
+                if (modifiedNationalNumber == nil){
+                    modifiedNationalNumber = fullNumber.substringFromIndex(i)
+                }
+                else {
+                    modifiedNationalNumber = modifiedNationalNumber! + fullNumber.substringFromIndex(i)
+                }
+                return (modifiedNationalNumber!, potentialCountryCode)
+            }
+        }
+        return (nationalNumber, 0)
+    }
 //
 //        if (countryCodeSource != NBECountryCodeSourceFROM_DEFAULT_COUNTRY) {
 //

@@ -17,7 +17,7 @@ class ViewController: UIViewController {
         let phoneNumberKit: PhoneNumberKit = PhoneNumberKit()
         print(phoneNumberKit.countriesForCode(01))
         print(phoneNumberKit.codeForCountry("FR"))
-        let phoneNumber = phoneNumberKit.parsePhoneNumber("0033689017383 ext. 80", defaultRegion: "FR");
+        let phoneNumber = phoneNumberKit.parsePhoneNumber("+44689017383 ext. 80", defaultRegion: "FR");
         print(phoneNumber)
     }
 
