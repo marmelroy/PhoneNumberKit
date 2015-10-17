@@ -56,14 +56,11 @@ extension PhoneNumber {
             nationalNumber = parser.maybeStripExtension(nationalNumber).modifiedNumber
         }
         
-//        // Attempt to parse extension first, since it doesn't require region-specific
-//        // data and we want to have the non-normalised number here.
-//        /** @type {string} */
-//        var extension = this.maybeStripExtension(nationalNumber);
-//        if (extension.length > 0) {
-//            phoneNumber.setExtension(extension);
-//        }
-//        
+        let regionMetaData =  PhoneNumberKit().metadata.filter { $0.codeID == defaultRegion}.first
+
+        let countryCode = parser.maybeExtractCountryCode(nationalNumber, metadata: regionMetaData!)
+        
+        
 //        /** @type {i18n.phonenumbers.PhoneMetadata} */
 //        var regionMetadata = this.getMetadataForRegion(defaultRegion);
 //        // Check to see if the number is given in international format so we know
