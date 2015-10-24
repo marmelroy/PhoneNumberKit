@@ -41,7 +41,7 @@ extension PhoneNumber {
         
         let parser = PhoneNumberParser()
         
-        var nationalNumber = parser.extractPossibleNumber(rawNumber)
+        let nationalNumber = parser.extractPossibleNumber(rawNumber)
         if (!parser.isViablePhoneNumber(nationalNumber)) {
             throw PNParsingError.NotANumber
         }
@@ -50,15 +50,19 @@ extension PhoneNumber {
             throw PNParsingError.InvalidCountryCode
         }
         
-        let extn = parser.maybeStripExtension(nationalNumber).extn
-        if (extn != nil && extn?.characters.count > 0) {
-            self.numberExtension = extn
-            nationalNumber = parser.maybeStripExtension(nationalNumber).modifiedNumber
+        var regexNumber : NSString = nationalNumber as NSString
+        
+        let extn = parser.maybeStripExtension(&regexNumber)
+        if (extn != nil && extn?.length > 0) {
+            self.numberExtension = extn as? String
         }
         
         let regionMetaData =  PhoneNumberKit().metadata.filter { $0.codeID == defaultRegion}.first
-
-        let countryCode = parser.maybeExtractCountryCode(nationalNumber, metadata: regionMetaData!)
+        do {
+            let countryCode = try parser.maybeExtractCountryCode(&regexNumber, metadata: regionMetaData!)
+        } catch {
+        }
+        print(countryCode)
         
         
 //        /** @type {i18n.phonenumbers.PhoneMetadata} */
