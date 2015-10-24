@@ -31,7 +31,7 @@ public func matchesEntirely(pattern: String, string: String) -> Bool {
     }
     do {
         var currentPattern : NSRegularExpression
-        currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpressionOptions.CaseInsensitive)
+        currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpressionOptions(rawValue: 0))
         let stringRange = NSMakeRange(0, string.characters.count)
         let matchResult = currentPattern.firstMatchInString(string, options: NSMatchingOptions.Anchored, range: stringRange)
         if (matchResult != nil) {
@@ -47,7 +47,7 @@ public func matchesEntirely(pattern: String, string: String) -> Bool {
 public func matchesAtStart(pattern: String, string: String) -> Bool {
     do {
         var currentPattern : NSRegularExpression
-        currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpressionOptions.CaseInsensitive)
+        currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpressionOptions(rawValue: 0))
         let stringRange = NSMakeRange(0, string.characters.count)
         let matches = currentPattern.matchesInString(string, options: NSMatchingOptions.Anchored, range: stringRange)
         for match in matches {
@@ -64,7 +64,7 @@ public func matchesAtStart(pattern: String, string: String) -> Bool {
 public func matchFirst(pattern: String, string: String) -> NSTextCheckingResult? {
     do {
         var currentPattern : NSRegularExpression
-        currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpressionOptions.CaseInsensitive)
+        currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpressionOptions(rawValue: 0))
         let stringRange = NSMakeRange(0, string.characters.count)
         let matches = currentPattern.matchesInString(string, options: [], range: stringRange)
         if (matches.count > 0) {
@@ -82,7 +82,7 @@ public func matchFirst(pattern: String, string: String) -> NSTextCheckingResult?
 public func matchesByRegex(pattern: String, string: String) -> [AnyObject]? {
     do {
         var currentPattern : NSRegularExpression
-        currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpressionOptions.CaseInsensitive)
+        currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpressionOptions(rawValue: 0))
         let stringRange = NSMakeRange(0, string.characters.count)
         let matches = currentPattern.matchesInString(string, options: [], range: stringRange)
         return matches
@@ -91,3 +91,66 @@ public func matchesByRegex(pattern: String, string: String) -> [AnyObject]? {
         return nil
     }
 }
+
+public func regularExpressionWithPattern(pattern: String) -> NSRegularExpression? {
+    do {
+        var currentPattern : NSRegularExpression
+        currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpressionOptions(rawValue: 0))
+        return currentPattern
+    }
+    catch {
+        return nil
+    }
+}
+
+
+func replaceStringByRegex(source: NSString, pattern: String) -> NSString {
+    var replacementResult : NSString = source
+    do {
+        let regex = try NSRegularExpression(pattern: pattern, options: [])
+        let results = regex.matchesInString(source as String,
+            options: [], range: NSMakeRange(0, source.length))
+        if (results.count == 1) {
+            let range = regex.rangeOfFirstMatchInString(source as String, options: [], range: NSMakeRange(0, source.length))
+            if (range.location != NSNotFound) {
+                replacementResult = regex.stringByReplacingMatchesInString(source.mutableCopy() as! String, options: [], range: range, withTemplate: "")
+            }
+            return replacementResult
+        }
+        else if (results.count > 1) {
+            replacementResult = regex.stringByReplacingMatchesInString(source.mutableCopy() as! String, options: [], range: NSMakeRange(0, source.length), withTemplate: "")
+        }
+        return replacementResult
+    } catch {
+        return replacementResult
+    }
+}
+
+func replaceFirstStringByRegex(source: NSString, pattern: String, templateString: NSString) -> NSString? {
+    var replacementResult : NSString = source
+    do {
+        let regex = try NSRegularExpression(pattern: pattern, options: [])
+        let range = regex.rangeOfFirstMatchInString(source as String, options: [], range: NSMakeRange(0, source.length))
+        if (range.location != NSNotFound) {
+            replacementResult = regex.stringByReplacingMatchesInString(source.mutableCopy() as! String, options: [], range: range, withTemplate: templateString as String)
+        }
+
+        return replacementResult
+    } catch {
+        return nil
+    }
+}
+
+func hasValue(value: NSString) -> Bool {
+    let spaceCharSet = NSMutableCharacterSet(charactersInString: PNNonBreakingSpace)
+    spaceCharSet.formUnionWithCharacterSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+    if (value.stringByTrimmingCharactersInSet(spaceCharSet).characters.count == 0) {
+        return false
+    }
+    return true
+}
+
+
+
+
+

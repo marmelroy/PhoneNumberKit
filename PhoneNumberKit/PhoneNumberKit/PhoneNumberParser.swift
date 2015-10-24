@@ -79,27 +79,6 @@ public class PhoneNumberParser: NSObject {
         }
     }
     
-    func replaceStringByRegex(source: NSString, pattern: String) -> NSString {
-        var replacementResult : NSString = source
-        do {
-            let regex = try NSRegularExpression(pattern: pattern, options: [])
-            let results = regex.matchesInString(source as String,
-                options: [], range: NSMakeRange(0, source.length))
-            if (results.count == 1) {
-                let range = regex.rangeOfFirstMatchInString(source as String, options: [], range: NSMakeRange(0, source.length))
-                if (range.location != NSNotFound) {
-                    replacementResult = regex.stringByReplacingMatchesInString(source.mutableCopy() as! String, options: [], range: range, withTemplate: "")
-                }
-                return replacementResult
-            }
-            else if (results.count > 1) {
-                replacementResult = regex.stringByReplacingMatchesInString(source.mutableCopy() as! String, options: [], range: NSMakeRange(0, source.length), withTemplate: "")
-            }
-            return replacementResult
-        } catch {
-            return replacementResult
-        }
-    }
     
     func isViablePhoneNumber(number: String) -> Bool {
         let numberToParse = normalizeNonBreakingSpace(number)
@@ -235,69 +214,60 @@ public class PhoneNumberParser: NSObject {
         else {
             let defaultCountryCode = String(metadata.countryCode)
             if (number.hasPrefix(defaultCountryCode)) {
-//                let potentialNationalNumber = number.substringFromIndex(defaultCountryCode.characters.count)
-//                let validNumberPattern = metadata.generalDesc?.nationalNumberPattern
+                var potentialNationalNumber : NSString = number.substringFromIndex(defaultCountryCode.characters.count) as NSString
+                let validNumberPattern = metadata.generalDesc?.nationalNumberPattern
+                var carrierCode : NSString = NSString()
+                maybeStripNationalPrefixAndCarrierCode(&potentialNationalNumber, metadata: metadata, carrierCode: &carrierCode)
+                print(carrierCode)
             }
         }
         return nil
     }
     
-    func maybeStripNationalPrefixAndCarrierCode(inout number: NSString, metadata: MetadataTerritory, carrierCode: String?) {
-//        var copiedNumber : NSString = number
-//        let possibleNationalPrefix = metadata.nationalPrefixForParsing
-//        let prefixPattern = String(format: "^(?:%@", arguments: possibleNationalPrefix)
+    func maybeStripNationalPrefixAndCarrierCode(inout number: NSString, metadata: MetadataTerritory, inout carrierCode: NSString) -> Bool {
+        if (metadata.nationalPrefixForParsing != nil) {
+            let possibleNationalPrefix = metadata.nationalPrefixForParsing!
+            let prefixPattern = String(format: "^(?:%@)", possibleNationalPrefix)
+            let currentPattern = regularExpressionWithPattern(prefixPattern)
+            if (currentPattern != nil) {
+                let prefixMatcher = currentPattern!.matchesInString(number as String, options: NSMatchingOptions(rawValue: 0), range: NSMakeRange(0, number.length))
+                if (!prefixMatcher.isEmpty) {
+                    let nationalNumberRule = metadata.generalDesc?.nationalNumberPattern
+                    let firstMatch = prefixMatcher.first
+                    let firstMatchString = number.substringWithRange(firstMatch!.range)
+                    let numOfGroups = firstMatch!.numberOfRanges - 1
+                    let transformRule = metadata.nationalPrefixTransformRule
+                    var transformedNumber : NSString = NSString()
+                    let firstRange = firstMatch?.rangeAtIndex(numOfGroups)
+                    let firstMatchStringWithGroup = (firstRange!.location != NSNotFound && firstRange!.location < number.length) ? number.substringWithRange(firstRange!) :  ""
+                    let noTransform = (transformRule == nil || transformRule?.characters.count == 0 || hasValue(firstMatchStringWithGroup))
+                    if (noTransform ==  true) {
+                        transformedNumber = number.substringFromIndex(firstMatchString.characters.count)
+                    }
+                    else {
+                        transformedNumber = replaceFirstStringByRegex(number, pattern: prefixPattern, templateString: transformRule!)!
+                        
+                    }
+                    if (hasValue(nationalNumberRule!) && matchesEntirely(nationalNumberRule!, string: number as String)){
+                        return false
+                    }
+                    if ((noTransform && numOfGroups > 0 && hasValue(firstMatchStringWithGroup)) || (!noTransform && numOfGroups > 1)) {
+                        if (carrierCode.length > 0) {
+                            carrierCode = carrierCode.stringByAppendingString(firstMatchStringWithGroup)
+                        }
+                        else if ((noTransform && numOfGroups > 0 && hasValue(firstMatchString)) || (!noTransform && numOfGroups > 1)) {
+                            if (carrierCode.length > 0) {
+                                carrierCode = carrierCode.stringByAppendingString(firstMatchString)
+                            }
+                        }
+                        number = transformedNumber
+                        return true
+                    }
+                }
+            }
+        }
+        return false
     }
-
-    
-    
-//    // Attempt to parse the first digits as a national prefix.
-//    NSString *prefixPattern = [NSString stringWithFormat:@"^(?:%@)", possibleNationalPrefix];
-//    NSError *error = nil;
-//    NSRegularExpression *currentPattern = [self regularExpressionWithPattern:prefixPattern options:0 error:&error];
-//    
-//    NSArray *prefixMatcher = [currentPattern matchesInString:numberStr options:0 range:NSMakeRange(0, numberLength)];
-//    if (prefixMatcher && [prefixMatcher count] > 0) {
-//    NSString *nationalNumberRule = metadata.generalDesc.nationalNumberPattern;
-//    NSTextCheckingResult *firstMatch = [prefixMatcher objectAtIndex:0];
-//    NSString *firstMatchString = [numberStr substringWithRange:firstMatch.range];
-//    
-//    // prefixMatcher[numOfGroups] == null implies nothing was captured by the
-//    // capturing groups in possibleNationalPrefix; therefore, no transformation
-//    // is necessary, and we just remove the national prefix.
-//    unsigned int numOfGroups = (unsigned int)firstMatch.numberOfRanges - 1;
-//    NSString *transformRule = metadata.nationalPrefixTransformRule;
-//    NSString *transformedNumber = @"";
-//    NSRange firstRange = [firstMatch rangeAtIndex:numOfGroups];
-//    NSString *firstMatchStringWithGroup = (firstRange.location != NSNotFound && firstRange.location < numberStr.length) ? [numberStr substringWithRange:firstRange] : nil;
-//    BOOL noTransform = (transformRule == nil || transformRule.length == 0 || [NBMetadataHelper hasValue:firstMatchStringWithGroup] == NO);
-//    
-//    if (noTransform) {
-//    transformedNumber = [numberStr substringFromIndex:firstMatchString.length];
-//    } else {
-//    transformedNumber = [self replaceFirstStringByRegex:numberStr regex:prefixPattern withTemplate:transformRule];
-//    }
-//    // If the original number was viable, and the resultant number is not,
-//    // we return.
-//    if ([NBMetadataHelper hasValue:nationalNumberRule ] && [self matchesEntirely:nationalNumberRule string:numberStr] &&
-//    [self matchesEntirely:nationalNumberRule string:transformedNumber] == NO) {
-//    return NO;
-//    }
-//    
-//    if ((noTransform && numOfGroups > 0 && [NBMetadataHelper hasValue:firstMatchStringWithGroup]) || (!noTransform && numOfGroups > 1)) {
-//    if (carrierCode != NULL && (*carrierCode) != nil) {
-//    (*carrierCode) = [(*carrierCode) stringByAppendingString:firstMatchStringWithGroup];
-//    }
-//    } else if ((noTransform && numOfGroups > 0 && [NBMetadataHelper hasValue:firstMatchString]) || (!noTransform && numOfGroups > 1)) {
-//    if (carrierCode != NULL && (*carrierCode) != nil) {
-//    (*carrierCode) = [(*carrierCode) stringByAppendingString:firstMatchString];
-//    }
-//    }
-//    
-//    (*number) = transformedNumber;
-//    return YES;
-//    }
-//    return NO;
-//    }
 
     func extractCountryCode(var fullNumber: NSString, inout nationalNumber: NSString) -> UInt? {
         fullNumber = normalizeNonBreakingSpace(fullNumber as String) as NSString
