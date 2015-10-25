@@ -14,7 +14,7 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let phoneNumberKit: PhoneNumberKit = PhoneNumberKit()
+        let phoneNumberKit = PhoneNumberKit.sharedInstance
         print(phoneNumberKit.countriesForCode(33))
         print(phoneNumberKit.codeForCountry("FR"))
         do {

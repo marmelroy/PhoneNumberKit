@@ -33,7 +33,7 @@ catch {
 
 You can also query countries for a dialing code or the dailing code for a given country
 ```
-let phoneNumberKit: PhoneNumberKit = PhoneNumberKit()
+let phoneNumberKit = PhoneNumberKit.sharedInstance
 phoneNumberKit.countriesForCode(33)
 phoneNumberKit.codeForCountry("FR")
 ```

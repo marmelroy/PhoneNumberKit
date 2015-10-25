@@ -21,7 +21,8 @@ public extension PhoneNumber {
     // Parse on init
     public init(rawNumber: String) throws {
         let parser = PhoneNumberParser()
-        let defaultRegion = PhoneNumberKit().defaultRegionCode()
+        let phoneNumberKit = PhoneNumberKit.sharedInstance
+        let defaultRegion = phoneNumberKit.defaultRegionCode()
         self.rawNumber = rawNumber
         
         // Validations
@@ -46,7 +47,7 @@ public extension PhoneNumber {
         }
         
         // Country code parsing
-        var regionMetaData =  PhoneNumberKit().metadata.filter { $0.codeID == defaultRegion}.first
+        var regionMetaData =  phoneNumberKit.metadata.filter { $0.codeID == defaultRegion}.first
         var countryCode : UInt = 0
         do {
             countryCode = try parser.extractCountryCode(nationalNumber, nationalNumber: &nationalNumber, metadata: regionMetaData!)
@@ -76,11 +77,11 @@ public extension PhoneNumber {
         
         // Regex validations
         if (self.countryCode != regionMetaData!.countryCode) {
-            let country = PhoneNumberKit().countriesForCode(countryCode).first
+            let country = phoneNumberKit.countriesForCode(countryCode).first
             if  (country == nil) {
                 throw PNParsingError.NotANumber
             }
-            regionMetaData =  PhoneNumberKit().metadata.filter { $0.codeID == country}.first
+            regionMetaData =  phoneNumberKit.metadata.filter { $0.codeID == country}.first
         }
         self.type = parser.extractNumberType(normalizedNationalNumber, metadata: regionMetaData!)
         if (self.type == PNPhoneNumberType.Unknown) {

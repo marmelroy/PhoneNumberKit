@@ -12,12 +12,17 @@ import CoreTelephony
 public class PhoneNumberKit : NSObject {
     
     // MARK: Lifecycle
+    public static let sharedInstance = PhoneNumberKit()
     
     var metadata: [MetadataTerritory] = []
 
-    public override init() {
+    override init() {
         super.init()
         metadata = populateMetadata()
+    }
+    
+    deinit {
+        metadata = []
     }
     
     // MARK: Data population
