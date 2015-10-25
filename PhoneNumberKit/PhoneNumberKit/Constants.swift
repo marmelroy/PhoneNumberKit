@@ -8,28 +8,34 @@
 
 import Foundation
 
-// MARK: Enums
+// MARK: Private Enums
 
-public enum PNCountryCodeSource {
+enum PNCountryCodeSource {
     case NumberWithPlusSign
     case NumberWithIDD
     case NumberWithoutPlusSign
     case DefaultCountry
 }
 
-public enum PNParsingError :  ErrorType {
-    case NotANumber
-    case TooLong
-    case TooShort
-    case InvalidCountryCode
+enum PNRegexError :  ErrorType {
+    case General
 }
 
-public enum PNValidationResult :  ErrorType {
+enum PNValidationResult :  ErrorType {
     case Unknown
     case IsPossible
     case InvalidCountryCode
     case TooShort
     case TooLong
+}
+
+// MARK: Public Enums
+
+public enum PNParsingError :  ErrorType {
+    case NotANumber
+    case TooLong
+    case TooShort
+    case InvalidCountryCode
 }
 
 public enum PNPhoneNumberType {
@@ -47,9 +53,6 @@ public enum PNPhoneNumberType {
 
 }
 
-public enum PNRegexError :  ErrorType {
-    case General
-}
 
 // MARK: Constants
 
