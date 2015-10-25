@@ -23,6 +23,7 @@ let PNMaxInputStringLength : Int = 250
 public enum PNParsingError :  ErrorType {
     case NotANumber
     case TooLong
+    case TooShort
     case InvalidCountryCode
 }
 
@@ -31,8 +32,6 @@ public class PhoneNumberParser: NSObject {
 
     
     // MARK: PHONE NUMBER HELPERS
-
-
     
     public func extractPossibleNumber(number: NSString) -> String {
         var possibleNumber : NSString
@@ -154,7 +153,7 @@ public class PhoneNumberParser: NSObject {
         return false
     }
 
-    func normalizePhoneNumber(number: String) -> String {
+    public func normalizePhoneNumber(number: String) -> String {
         let normalizedNumber = normalizeNonBreakingSpace(number)
         if (matchesEntirely(PNValidAlphaPhonePatternString, string: normalizedNumber)) {
             return stringByReplacingOccurrences(number, map: PNAllNormalizationMappings, removeNonMatches: true)!

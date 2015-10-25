@@ -21,10 +21,10 @@ public struct PhoneNumber {
     var countryCode: UInt?
     var nationalNumber: UInt?
     var numberExtension: String?
-//    var italianLeadingZero: Bool?
-//    var leadingZerosNumber: Int?
+    var italianLeadingZero: Bool?
+    var leadingZerosNumber: Int?
     var countryCodeSource: PNCountryCodeSource?
-//    var preferredDomesticCarrierCode: String?
+    var preferredDomesticCarrierCode: String?
 }
 
 
@@ -79,7 +79,20 @@ extension PhoneNumber {
         else {
             self.countryCode = regionMetaData?.countryCode
         }
-        print(regexNationalNumber)
+        
+        if (regexNationalNumber.length <
+            PNMinLengthForNSN) {
+            throw PNParsingError.TooShort
+        }
+        if (regexNationalNumber.length > PNMaxLengthForNSN) {
+            throw PNParsingError.TooLong
+        }
+        if (regexNationalNumber.hasPrefix("0")) {
+            self.italianLeadingZero = true
+        }
+        let normalizedNumber = parser.normalizePhoneNumber(regexNationalNumber as String)
+        self.nationalNumber = UInt(normalizedNumber)
+        
     }
 }
 
