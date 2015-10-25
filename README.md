@@ -8,6 +8,7 @@ Inspired by Google's libphonenumber.
 ## Features
 
 - Quickly validate, normalize and extract the elements of any phone number string.    
+- Automatically grab the default region code from the phone's SIM (or if unavailable, the device's region).
 - Convert country codes to country names and vice versa.
 - All whilst using simple Swift 2.0 syntax
 - PhoneNumberKit uses the best-in-class metadata and general approach from Google's libphonenumber project. By not being a direct port, PhoneNumberKit can focus on a smaller feature-set that's cleaner and more readable.
