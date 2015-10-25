@@ -8,30 +8,17 @@
 
 import Foundation
 
-public enum PNCountryCodeSource {
-    case NumberWithPlusSign
-    case NumberWithIDD
-    case NumberWithoutPlusSign
-    case DefaultCountry
-}
 
 public struct PhoneNumber {
     var rawNumber: String
-    var defaultRegion: String
     var countryCode: UInt?
     var nationalNumber: UInt?
     var numberExtension: String?
-    var italianLeadingZero: Bool?
-    var leadingZerosNumber: Int?
-    var countryCodeSource: PNCountryCodeSource?
-    var preferredDomesticCarrierCode: String?
 }
-
 
 extension PhoneNumber {
     init(let rawNumber: String, defaultRegion: String) throws {
         self.rawNumber = rawNumber
-        self.defaultRegion = defaultRegion
         
         if (rawNumber.isEmpty) {
             throw PNParsingError.NotANumber
@@ -41,18 +28,16 @@ extension PhoneNumber {
         
         let parser = PhoneNumberParser()
         
-        let nationalNumber = parser.extractPossibleNumber(rawNumber)
-        if (!parser.isViablePhoneNumber(nationalNumber)) {
+        var nationalNumber = parser.extractPossibleNumber(rawNumber)
+        if (!parser.isViablePhoneNumber(nationalNumber as String)) {
             throw PNParsingError.NotANumber
         }
         
-        if (!parser.checkRegionForParsing(nationalNumber, defaultRegion: defaultRegion)) {
+        if (!parser.checkRegionForParsing(nationalNumber as String, defaultRegion: defaultRegion)) {
             throw PNParsingError.InvalidCountryCode
         }
         
-        var regexNationalNumber : NSString = nationalNumber as NSString
-        
-        let extn = parser.maybeStripExtension(&regexNationalNumber)
+        let extn = parser.maybeStripExtension(&nationalNumber)
         if (extn != nil && extn?.length > 0) {
             self.numberExtension = extn as? String
         }
@@ -60,12 +45,12 @@ extension PhoneNumber {
         var regionMetaData =  PhoneNumberKit().metadata.filter { $0.codeID == defaultRegion}.first
         var countryCode : UInt = 0
         do {
-            countryCode = try parser.maybeExtractCountryCode(regexNationalNumber, nationalNumber: &regexNationalNumber, metadata: regionMetaData!)
+            countryCode = try parser.maybeExtractCountryCode(nationalNumber, nationalNumber: &nationalNumber, metadata: regionMetaData!)
             self.countryCode = countryCode
         } catch {
             do {
-                let plusRemovedNumebrString = replaceStringByRegex(regexNationalNumber, pattern: PNLeadingPlusCharsPattern)
-                countryCode = try parser.maybeExtractCountryCode(plusRemovedNumebrString, nationalNumber: &regexNationalNumber, metadata: regionMetaData!)
+                let plusRemovedNumebrString = replaceStringByRegex(nationalNumber, pattern: PNLeadingPlusCharsPattern)
+                countryCode = try parser.maybeExtractCountryCode(plusRemovedNumebrString, nationalNumber: &nationalNumber, metadata: regionMetaData!)
                 self.countryCode = countryCode
             } catch {
             }
@@ -80,18 +65,15 @@ extension PhoneNumber {
             self.countryCode = regionMetaData?.countryCode
         }
         
-        if (regexNationalNumber.length <
+        if (nationalNumber.length <
             PNMinLengthForNSN) {
             throw PNParsingError.TooShort
         }
-        if (regexNationalNumber.length > PNMaxLengthForNSN) {
+        if (nationalNumber.length > PNMaxLengthForNSN) {
             throw PNParsingError.TooLong
         }
-        if (regexNationalNumber.hasPrefix("0")) {
-            self.italianLeadingZero = true
-        }
-        let normalizedNumber = parser.normalizePhoneNumber(regexNationalNumber as String)
-        self.nationalNumber = UInt(normalizedNumber)
+        let normalizedNationalNumber = parser.normalizePhoneNumber(nationalNumber as String)
+        self.nationalNumber = UInt(normalizedNationalNumber)
         
     }
 }

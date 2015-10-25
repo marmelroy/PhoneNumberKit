@@ -20,6 +20,13 @@ let PNMaxLengthCountryCode : Int = 3
 let PNMaxInputStringLength : Int = 250
 
 
+public enum PNCountryCodeSource {
+    case NumberWithPlusSign
+    case NumberWithIDD
+    case NumberWithoutPlusSign
+    case DefaultCountry
+}
+
 public enum PNParsingError :  ErrorType {
     case NotANumber
     case TooLong
@@ -33,7 +40,7 @@ public class PhoneNumberParser: NSObject {
     
     // MARK: PHONE NUMBER HELPERS
     
-    public func extractPossibleNumber(number: NSString) -> String {
+    public func extractPossibleNumber(number: NSString) -> NSString {
         var possibleNumber : NSString
         let validStartPattern = "[" + PNPlusChars + PNValidDigitsString + "]"
         let secondNumberStartPattern = "[\\\\\\/] *x";
@@ -51,10 +58,10 @@ public class PhoneNumberParser: NSObject {
         }
         else
         {
-            possibleNumber = "";
+            possibleNumber = ""
         }
 
-        return possibleNumber as String
+        return possibleNumber
     }
     
     // MARK: STRING HELPERS
