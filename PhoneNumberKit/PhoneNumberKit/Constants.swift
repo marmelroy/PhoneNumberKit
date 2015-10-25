@@ -32,6 +32,10 @@ public enum PNValidationResult :  ErrorType {
     case TooLong
 }
 
+public enum PNRegexError :  ErrorType {
+    case General
+}
+
 // MARK: Constants
 
 let PNMinLengthForNSN : Int = 2

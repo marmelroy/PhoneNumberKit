@@ -8,31 +8,36 @@
 
 import Foundation
 
-// MARK: Match helpers
+// MARK: Regular expression
 
-public func matchesEntirely(pattern: String, string: String) -> Bool {
-    var matches : Bool = false
+func regularExpressionWithPattern(pattern: String) throws -> NSRegularExpression {
     do {
         var currentPattern : NSRegularExpression
         currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpressionOptions(rawValue: 0))
-        let stringRange = NSMakeRange(0, string.characters.count)
-        let matchResult = currentPattern.firstMatchInString(string, options: NSMatchingOptions.Anchored, range: stringRange)
-        if (matchResult != nil) {
-            matches = NSEqualRanges(matchResult!.range, stringRange)
-        }
+        return currentPattern
     }
     catch {
-        matches = false
+        throw PNRegexError.General
     }
-    return matches
 }
+
+func regexMatches(pattern: String, string: String) throws -> [NSTextCheckingResult] {
+    do {
+        let currentPattern =  try regularExpressionWithPattern(pattern)
+        let stringRange = NSMakeRange(0, string.characters.count)
+        let matches = currentPattern.matchesInString(string, options: [], range: stringRange)
+        return matches
+    }
+    catch {
+        throw PNRegexError.General
+    }
+}
+
+// MARK: Match helpers
 
 public func matchesAtStart(pattern: String, string: String) -> Bool {
     do {
-        var currentPattern : NSRegularExpression
-        currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpressionOptions(rawValue: 0))
-        let stringRange = NSMakeRange(0, string.characters.count)
-        let matches = currentPattern.matchesInString(string, options: NSMatchingOptions.Anchored, range: stringRange)
+        let matches = try regexMatches(pattern, string: string)
         for match in matches {
             if (match.range.location == 0) {
                 return true
@@ -44,44 +49,11 @@ public func matchesAtStart(pattern: String, string: String) -> Bool {
     return false
 }
 
-public func matchFirst(pattern: String, string: String) -> NSTextCheckingResult? {
-    do {
-        var currentPattern : NSRegularExpression
-        currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpressionOptions(rawValue: 0))
-        let stringRange = NSMakeRange(0, string.characters.count)
-        let matches = currentPattern.matchesInString(string, options: [], range: stringRange)
-        if (matches.count > 0) {
-            return matches.first
-        }
-        else {
-            return nil
-        }
-    }
-    catch {
-        return nil
-    }
-}
-
-public func matchesByRegex(pattern: String, string: String) -> [AnyObject]? {
-    do {
-        var currentPattern : NSRegularExpression
-        currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpressionOptions(rawValue: 0))
-        let stringRange = NSMakeRange(0, string.characters.count)
-        let matches = currentPattern.matchesInString(string, options: [], range: stringRange)
-        return matches
-    }
-    catch {
-        return nil
-    }
-}
-
 func stringPositionByRegex(pattern: String, string: String) -> Int {
     do {
-        let regex = try NSRegularExpression(pattern: pattern, options: [])
-        let results = regex.matchesInString(string,
-            options: [], range: NSMakeRange(0, string.characters.count))
-        if (results.count > 0) {
-            let match = results.first
+        let matches = try regexMatches(pattern, string: string)
+        if (matches.count > 0) {
+            let match = matches.first
             return (match!.range.location)
         }
         return -1
@@ -90,18 +62,24 @@ func stringPositionByRegex(pattern: String, string: String) -> Int {
     }
 }
 
-// MARK: Regular expression
 
-public func regularExpressionWithPattern(pattern: String) -> NSRegularExpression? {
+public func matchesEntirely(pattern: String, string: String) -> Bool {
+    var matchesEntirely : Bool = false
     do {
-        var currentPattern : NSRegularExpression
-        currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpressionOptions(rawValue: 0))
-        return currentPattern
+        let matches = try regexMatches(pattern, string: string)
+        let matchResult = matches.first
+        let stringRange = NSMakeRange(0, string.characters.count)
+        if (matchResult != nil) {
+            matchesEntirely = NSEqualRanges(matchResult!.range, stringRange)
+        }
     }
     catch {
-        return nil
+        matchesEntirely = false
     }
+    return matchesEntirely
 }
+
+
 
 // MARK: String and replace
 

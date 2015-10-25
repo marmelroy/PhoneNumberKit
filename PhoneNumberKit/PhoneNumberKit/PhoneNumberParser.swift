@@ -124,11 +124,11 @@ public class PhoneNumberParser: NSObject {
     // Try and parse prefix as IDD
     func parsePrefixAsIdd(inout number: NSString, iddPattern: NSString) -> Bool {
         if (stringPositionByRegex(iddPattern as String, string: number as String) == 0) {
-            let matched = matchesByRegex(iddPattern as String, string: number as String)?.first
-            let matchedString = number.substringWithRange(matched!.range)
-            let matchEnd = matchedString.characters.count
-            let remainString : NSString = number.substringFromIndex(matchEnd)
             do {
+                let matched = try regexMatches(iddPattern as String, string: number as String).first
+                let matchedString = number.substringWithRange(matched!.range)
+                let matchEnd = matchedString.characters.count
+                let remainString : NSString = number.substringFromIndex(matchEnd)
                 let capturingDigitPatterns = try NSRegularExpression(pattern: PNCapturingDigitPattern, options:NSRegularExpressionOptions.CaseInsensitive)
                 let matchedGroups = capturingDigitPatterns.matchesInString(remainString as String, options: [], range: NSMakeRange(0, remainString.length))
                 if (matchedGroups.count > 0 && matchedGroups.first != nil) {
@@ -157,16 +157,20 @@ public class PhoneNumberParser: NSObject {
     func stripExtension(inout number: NSString) -> String? {
         let mStart = stringPositionByRegex(PNExtnPattern, string: number as String)
         if (mStart >= 0 && (isViablePhoneNumber(number.substringWithRange(NSMakeRange(0, mStart))))) {
-            let firstMatch = matchFirst(PNExtnPattern, string: number as String)
-            let matchedGroupsLength = firstMatch?.numberOfRanges
-            for var i = 1; i < matchedGroupsLength; i++ {
-                let curRange = firstMatch?.rangeAtIndex(i)
-                if (curRange?.location != NSNotFound && curRange?.location < number.length) {
-                    let matchString = number.substringWithRange(curRange!)
-                    let stringRange = NSMakeRange(0, mStart)
-                    number = number.substringWithRange(stringRange)
-                    return matchString
+            do {
+                let firstMatch = try regexMatches(PNExtnPattern, string: number as String).first
+                let matchedGroupsLength = firstMatch!.numberOfRanges
+                for var i = 1; i < matchedGroupsLength; i++ {
+                    let curRange = firstMatch?.rangeAtIndex(i)
+                    if (curRange?.location != NSNotFound && curRange?.location < number.length) {
+                        let matchString = number.substringWithRange(curRange!)
+                        let stringRange = NSMakeRange(0, mStart)
+                        number = number.substringWithRange(stringRange)
+                        return matchString
+                    }
                 }
+            }
+            catch {
             }
         }
         return nil
@@ -193,9 +197,9 @@ public class PhoneNumberParser: NSObject {
         if (metadata.nationalPrefixForParsing != nil) {
             let possibleNationalPrefix = metadata.nationalPrefixForParsing!
             let prefixPattern = String(format: "^(?:%@)", possibleNationalPrefix)
-            let currentPattern = regularExpressionWithPattern(prefixPattern)
-            if (currentPattern != nil) {
-                let prefixMatcher = currentPattern!.matchesInString(number as String, options: NSMatchingOptions(rawValue: 0), range: NSMakeRange(0, number.length))
+            do {
+                let currentPattern =  try regularExpressionWithPattern(prefixPattern)
+                let prefixMatcher = currentPattern.matchesInString(number as String, options: NSMatchingOptions(rawValue: 0), range: NSMakeRange(0, number.length))
                 if (!prefixMatcher.isEmpty) {
                     let nationalNumberRule = metadata.generalDesc?.nationalNumberPattern
                     let firstMatch = prefixMatcher.first
@@ -229,7 +233,11 @@ public class PhoneNumberParser: NSObject {
                         return true
                     }
                 }
+
             }
+            catch {
+            }
+
         }
         return false
     }
