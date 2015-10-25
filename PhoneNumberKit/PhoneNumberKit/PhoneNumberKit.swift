@@ -13,10 +13,9 @@ public class PhoneNumberKit : NSObject {
     
     // MARK: Lifecycle
     
-    var metadata: [MetadataTerritory]
+    var metadata: [MetadataTerritory] = []
 
     public override init() {
-        metadata = []
         super.init()
         metadata = populateMetadata()
     }
