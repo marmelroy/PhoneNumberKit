@@ -29,7 +29,7 @@ public struct PhoneNumber {
 
 
 extension PhoneNumber {
-    init(rawNumber: String, defaultRegion: String) throws {
+    init(var rawNumber: String, defaultRegion: String) throws {
         self.rawNumber = rawNumber
         self.defaultRegion = defaultRegion
         
@@ -50,17 +50,24 @@ extension PhoneNumber {
             throw PNParsingError.InvalidCountryCode
         }
         
-        var regexNumber : NSString = nationalNumber as NSString
+        var regexNationalNumber : NSString = nationalNumber as NSString
         
-        let extn = parser.maybeStripExtension(&regexNumber)
+        let extn = parser.maybeStripExtension(&regexNationalNumber)
         if (extn != nil && extn?.length > 0) {
             self.numberExtension = extn as? String
         }
         
         let regionMetaData =  PhoneNumberKit().metadata.filter { $0.codeID == defaultRegion}.first
         do {
-            let countryCode = try parser.maybeExtractCountryCode(&regexNumber, metadata: regionMetaData!)
+            let countryCode = try parser.maybeExtractCountryCode(regexNationalNumber, nationalNumber: &regexNationalNumber, metadata: regionMetaData!)
+            self.countryCode = countryCode
         } catch {
+            do {
+                let plusRemovedNumebrString = replaceStringByRegex(regexNationalNumber, pattern: PNLeadingPlusCharsPattern)
+                let countryCode = try parser.maybeExtractCountryCode(plusRemovedNumebrString, nationalNumber: &regexNationalNumber, metadata: regionMetaData!)
+                self.countryCode = countryCode
+            } catch {
+            }
         }
         print(countryCode)
         

@@ -40,12 +40,12 @@ public class PhoneNumberParser: NSObject {
         let secondNumberStartPattern = "[\\\\\\/] *x";
         let unwantedEndPattern = "[^" + PNValidDigitsString + "A-Za-z#]+$";
 
-        let start = self.stringPositionByRegex(number as String, pattern: validStartPattern)
+        let start = stringPositionByRegex(number as String, pattern: validStartPattern)
         if (start >= 0)
         {
             possibleNumber = number.substringFromIndex(start)
             possibleNumber = replaceStringByRegex(possibleNumber, pattern: unwantedEndPattern)
-            let secondNumberStart = self.stringPositionByRegex(number as String, pattern: secondNumberStartPattern)
+            let secondNumberStart = stringPositionByRegex(number as String, pattern: secondNumberStartPattern)
             if (secondNumberStart > 0) {
                 possibleNumber = possibleNumber.substringWithRange(NSMakeRange(0, secondNumberStart - 1))
             }
@@ -64,20 +64,6 @@ public class PhoneNumberParser: NSObject {
         return string.stringByReplacingOccurrencesOfString(PNNonBreakingSpace, withString: " ")
     }
 
-    func stringPositionByRegex(source: String, pattern: String) -> Int {
-        do {
-            let regex = try NSRegularExpression(pattern: pattern, options: [])
-            let results = regex.matchesInString(source as String,
-                options: [], range: NSMakeRange(0, source.characters.count))
-            if (results.count > 0) {
-                let match = results.first
-                return (match!.range.location)
-            }
-            return -1
-        } catch {
-            return -1
-        }
-    }
     
     
     func isViablePhoneNumber(number: String) -> Bool {
@@ -125,7 +111,7 @@ public class PhoneNumberParser: NSObject {
     }
     
     func maybeStripInternationalPrefixAndNormalize(inout number: NSString, possibleIddPrefix: NSString) -> PNCountryCodeSource {
-        if (matchesAtStart(number as String, string: PNLeadingPlusCharsPattern)) {
+        if (matchesAtStart(PNLeadingPlusCharsPattern, string: number as String)) {
             number = replaceStringByRegex(number, pattern: PNLeadingPlusCharsPattern)
             return .NumberWithPlusSign
         }
@@ -140,7 +126,7 @@ public class PhoneNumberParser: NSObject {
     }
     
     func parsePrefixAsIdd(inout number: NSString, iddPattern: NSString) -> Bool {
-        if (self.stringPositionByRegex(number as String, pattern: iddPattern as String) == 0) {
+        if (stringPositionByRegex(number as String, pattern: iddPattern as String) == 0) {
             let matched = matchesByRegex(iddPattern as String, string: number as String)?.first
             let matchedString = number.substringWithRange(matched!.range)
             let matchEnd = matchedString.characters.count
@@ -181,7 +167,7 @@ public class PhoneNumberParser: NSObject {
     func stringByReplacingOccurrences(source: String, map : [String:String], removeNonMatches : Bool) -> String? {
         let targetString = NSMutableString ()
         let copiedString : NSString = source
-        for var i = 1; i < source.characters.count; i++ {
+        for var i = 0; i < source.characters.count; i++ {
             var oneChar = copiedString.characterAtIndex(i)
             let keyString = NSString(characters: &oneChar, length: 1) as String
             let mappedValue = map[keyString.uppercaseString]
@@ -195,17 +181,17 @@ public class PhoneNumberParser: NSObject {
         return targetString as String
     }
     
-    func maybeExtractCountryCode(inout number: NSString, metadata: MetadataTerritory) throws -> UInt? {
-        let fullNumber = number
+    func maybeExtractCountryCode(number: NSString, inout nationalNumber: NSString, metadata: MetadataTerritory) throws -> UInt {
+        var fullNumber = number
         let possibleCountryIddPrefix = metadata.internationalPrefix
-        let countryCodeSource = maybeStripInternationalPrefixAndNormalize(&number, possibleIddPrefix: possibleCountryIddPrefix!)
+        let countryCodeSource = maybeStripInternationalPrefixAndNormalize(&fullNumber, possibleIddPrefix: possibleCountryIddPrefix!)
         if (countryCodeSource != .DefaultCountry) {
-            if (number.length <= PNMinLengthForNSN) {
+            if (fullNumber.length <= PNMinLengthForNSN) {
                 return 0
             }
-            let potentialCountryCode = extractCountryCode(fullNumber, nationalNumber: &number)
+            let potentialCountryCode = extractCountryCode(fullNumber, nationalNumber: &nationalNumber)
             if (potentialCountryCode != 0) {
-                return potentialCountryCode
+                return potentialCountryCode!
             }
             else {
                 throw PNParsingError.InvalidCountryCode
@@ -213,16 +199,22 @@ public class PhoneNumberParser: NSObject {
         }
         else {
             let defaultCountryCode = String(metadata.countryCode)
-            if (number.hasPrefix(defaultCountryCode)) {
-                var potentialNationalNumber : NSString = number.substringFromIndex(defaultCountryCode.characters.count) as NSString
+            if (fullNumber.hasPrefix(defaultCountryCode)) {
+                var potentialNationalNumber : NSString = fullNumber.substringFromIndex(defaultCountryCode.characters.count) as NSString
                 let validNumberPattern = metadata.generalDesc?.nationalNumberPattern
                 var carrierCode : NSString = NSString()
                 maybeStripNationalPrefixAndCarrierCode(&potentialNationalNumber, metadata: metadata, carrierCode: &carrierCode)
-                print(carrierCode)
+                let potentialNationalNumberStr = potentialNationalNumber.copy()
+                let possibleNumberPattern = metadata.generalDesc?.possibleNumberPattern
+                if ((!matchesEntirely(validNumberPattern!, string: fullNumber as String) && matchesEntirely(validNumberPattern!, string: potentialNationalNumberStr as! String)) || testStringLengthAgainstPattern(fullNumber as String, pattern: possibleNumberPattern!) == PNValidationResult.TooLong) {
+                        nationalNumber = nationalNumber.stringByAppendingString(potentialNationalNumberStr as! String)
+                    return UInt(defaultCountryCode)!
+                }
             }
         }
-        return nil
+        return 0
     }
+
     
     func maybeStripNationalPrefixAndCarrierCode(inout number: NSString, metadata: MetadataTerritory, inout carrierCode: NSString) -> Bool {
         if (metadata.nationalPrefixForParsing != nil) {
@@ -296,29 +288,6 @@ public class PhoneNumberParser: NSObject {
         }
         return 0
     }
-//                // Passing null since we don't need the carrier code.
-//                [self maybeStripNationalPrefixAndCarrierCode:&potentialNationalNumber metadata:defaultRegionMetadata carrierCode:nil];
-//                
-//                NSString *potentialNationalNumberStr = [potentialNationalNumber copy];
-//                NSString *possibleNumberPattern = generalDesc.possibleNumberPattern;
-//                // If the number was not valid before but is valid now, or if it was too
-//                // long before, we consider the number with the country calling code
-//                // stripped to be a better result and keep that instead.
-//                if ((![self matchesEntirely:validNumberPattern string:fullNumber] &&
-//                    [self matchesEntirely:validNumberPattern string:potentialNationalNumberStr]) ||
-//                    [self testNumberLengthAgainstPattern:possibleNumberPattern number:fullNumber] == NBEValidationResultTOO_LONG) {
-//                        (*nationalNumber) = [(*nationalNumber) stringByAppendingString:potentialNationalNumberStr];
-//                        if (keepRawInput) {
-//                            (*phoneNumber).countryCodeSource = [NSNumber numberWithInt:NBECountryCodeSourceFROM_NUMBER_WITHOUT_PLUS_SIGN];
-//                        }
-//                        (*phoneNumber).countryCode = defaultCountryCode;
-//                        return defaultCountryCode;
-//                }
-//            }
-//        }
-//        // No country calling code present.
-//        (*phoneNumber).countryCode = @0;
-//        return @0;
     
 }
 
