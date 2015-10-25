@@ -8,15 +8,16 @@
 
 import Foundation
 
-
 public struct PhoneNumber {
     public let rawNumber: String
-    public var countryCode: UInt?
-    public var nationalNumber: UInt?
+    public var countryCode: UInt
+    public var nationalNumber: UInt
     public var numberExtension: String?
 }
 
 extension PhoneNumber {
+    
+    // Parse on init
     init(let rawNumber: String, defaultRegion: String) throws {
         let parser = PhoneNumberParser()
         self.rawNumber = rawNumber
@@ -58,7 +59,7 @@ extension PhoneNumber {
             }
         }
         if (countryCode == 0) {
-            self.countryCode = regionMetaData?.countryCode
+            self.countryCode = regionMetaData!.countryCode
         }
         
         // Final Validations
@@ -71,26 +72,30 @@ extension PhoneNumber {
             throw PNParsingError.TooLong
         }
         
-        self.nationalNumber = UInt(normalizedNationalNumber)
+        self.nationalNumber = UInt(normalizedNationalNumber)!
     }
     
+    // Format to E164 format (e.g. +33689123456)
     public func toE164() -> String {
-        let formattedNumber : String = "+" + String(countryCode!) + String(nationalNumber!)
+        let formattedNumber : String = "+" + String(countryCode) + String(nationalNumber)
         return formattedNumber
     }
     
+    // Format to International format (e.g. +33 689123456)
     public func toInternational() -> String {
-        let formattedNumber : String = "+" + String(countryCode!) + " " + String(nationalNumber!)
+        let formattedNumber : String = "+" + String(countryCode) + " " + String(nationalNumber)
         return formattedNumber
     }
     
+    // Format to actionable RFC format (e.g. tel:+33-689123456)
     public func toRFC3966() -> String {
-        let formattedNumber : String = "tel:+" + String(countryCode!) + "-" + String(nationalNumber!)
+        let formattedNumber : String = "tel:+" + String(countryCode) + "-" + String(nationalNumber)
         return formattedNumber
     }
 
+    // Format to local national format (e.g. 0689123456)
     public func toNational() -> String {
-        let formattedNumber : String = "0" + String(nationalNumber!)
+        let formattedNumber : String = "0" + String(nationalNumber)
         return formattedNumber
     }
 

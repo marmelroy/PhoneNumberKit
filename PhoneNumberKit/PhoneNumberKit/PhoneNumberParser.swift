@@ -8,36 +8,20 @@
 
 import Foundation
 
-let PNNonBreakingSpace : String = "\u{00a0}"
-let PNPlusChars : String = "+＋"
-let PNValidDigitsString : String = "0-9０-９٠-٩۰-۹"
-let PNRegionCodeForNonGeoEntity : String = "001"
-
-let PNNANPACountryCode : Int = 1
-let PNMinLengthForNSN : Int = 2
-let PNMaxLengthForNSN : Int = 16
-let PNMaxLengthCountryCode : Int = 3
-let PNMaxInputStringLength : Int = 250
-
-
-public enum PNCountryCodeSource {
-    case NumberWithPlusSign
-    case NumberWithIDD
-    case NumberWithoutPlusSign
-    case DefaultCountry
-}
-
-public enum PNParsingError :  ErrorType {
-    case NotANumber
-    case TooLong
-    case TooShort
-    case InvalidCountryCode
-}
-
-
 public class PhoneNumberParser: NSObject {
-
     
+    // MARK: Normalizations
+
+    // Normalize phone number
+    public func normalizePhoneNumber(number: String) -> String {
+        return stringByReplacingOccurrences(number, map: PNAllNormalizationMappings, removeNonMatches: true)!
+    }
+
+    // Normalize non breaking space
+    public func normalizeNonBreakingSpace(string: String) -> String {
+        return string.stringByReplacingOccurrencesOfString(PNNonBreakingSpace, withString: " ")
+    }
+
     // MARK: PHONE NUMBER HELPERS
     
     public func extractPossibleNumber(number: NSString) -> NSString {
@@ -66,12 +50,6 @@ public class PhoneNumberParser: NSObject {
     
     // MARK: STRING HELPERS
 
-    public func normalizeNonBreakingSpace(string: String) -> String {
-        return string.stringByReplacingOccurrencesOfString(PNNonBreakingSpace, withString: " ")
-    }
-
-    
-    
     func isViablePhoneNumber(number: NSString) -> Bool {
         let numberToParse = normalizeNonBreakingSpace(number as String)
         if (numberToParse.characters.count < PNMinLengthForNSN) {
@@ -94,7 +72,6 @@ public class PhoneNumberParser: NSObject {
             return false
         }
     }
-    
     
     func maybeStripExtension(inout number: NSString) -> String? {
         let mStart = stringPositionByRegex(number as String, pattern: PNExtnPattern)
@@ -158,32 +135,7 @@ public class PhoneNumberParser: NSObject {
         return false
     }
 
-    public func normalizePhoneNumber(number: String) -> String {
-        let normalizedNumber = normalizeNonBreakingSpace(number)
-        if (matchesEntirely(PNValidAlphaPhonePatternString, string: normalizedNumber)) {
-            return stringByReplacingOccurrences(number, map: PNAllNormalizationMappings, removeNonMatches: true)!
-        }
-        else {
-            return stringByReplacingOccurrences(number, map: PNDigitMappings, removeNonMatches: true)!
-        }
-    }
     
-    func stringByReplacingOccurrences(source: String, map : [String:String], removeNonMatches : Bool) -> String? {
-        let targetString = NSMutableString ()
-        let copiedString : NSString = source
-        for var i = 0; i < source.characters.count; i++ {
-            var oneChar = copiedString.characterAtIndex(i)
-            let keyString = NSString(characters: &oneChar, length: 1) as String
-            let mappedValue = map[keyString.uppercaseString]
-            if (mappedValue != nil) {
-                targetString.appendString(mappedValue!)
-            }
-            else if (removeNonMatches == false) {
-                targetString.appendString(keyString as String)
-            }
-        }
-        return targetString as String
-    }
     
     func maybeExtractCountryCode(number: NSString, inout nationalNumber: NSString, metadata: MetadataTerritory) throws -> UInt {
         var fullNumber = number
