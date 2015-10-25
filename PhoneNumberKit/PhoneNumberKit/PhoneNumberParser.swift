@@ -207,7 +207,7 @@ public class PhoneNumberParser: NSObject {
                 let potentialNationalNumberStr = potentialNationalNumber.copy()
                 let possibleNumberPattern = metadata.generalDesc?.possibleNumberPattern
                 if ((!matchesEntirely(validNumberPattern!, string: fullNumber as String) && matchesEntirely(validNumberPattern!, string: potentialNationalNumberStr as! String)) || testStringLengthAgainstPattern(fullNumber as String, pattern: possibleNumberPattern!) == PNValidationResult.TooLong) {
-                        nationalNumber = nationalNumber.stringByAppendingString(potentialNationalNumberStr as! String)
+                        nationalNumber = potentialNationalNumberStr as! NSString
                     return UInt(defaultCountryCode)!
                 }
             }
@@ -277,12 +277,7 @@ public class PhoneNumberParser: NSObject {
             let potentialCountryCode = UInt(subNumber)
             let regionCodes = PhoneNumberKit().countriesForCode(potentialCountryCode!)
             if (regionCodes.count > 0) {
-                if (nationalNumber.length == 0){
-                    nationalNumber = fullNumber.substringFromIndex(i)
-                }
-                else {
-                    nationalNumber = nationalNumber.stringByAppendingString(fullNumber.substringFromIndex(i))
-                }
+                nationalNumber = fullNumber.substringFromIndex(i)
                 return potentialCountryCode
             }
         }
