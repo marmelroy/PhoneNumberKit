@@ -77,8 +77,6 @@ public class PhoneNumberParser: NSObject {
         if (numberToParse.characters.count < PNMinLengthForNSN) {
             return false;
         }
-        
-        
         return matchesEntirely(PNMValidPhoneNumberPattern, string: number as String)
     }
     

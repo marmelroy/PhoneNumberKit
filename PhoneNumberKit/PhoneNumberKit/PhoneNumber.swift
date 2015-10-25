@@ -10,10 +10,10 @@ import Foundation
 
 
 public struct PhoneNumber {
-    var rawNumber: String
-    var countryCode: UInt?
-    var nationalNumber: UInt?
-    var numberExtension: String?
+    public let rawNumber: String
+    public var countryCode: UInt?
+    public var nationalNumber: UInt?
+    public var numberExtension: String?
 }
 
 extension PhoneNumber {
@@ -72,8 +72,28 @@ extension PhoneNumber {
         }
         
         self.nationalNumber = UInt(normalizedNationalNumber)
-        
     }
+    
+    public func toE164() -> String {
+        let formattedNumber : String = "+" + String(countryCode!) + String(nationalNumber!)
+        return formattedNumber
+    }
+    
+    public func toInternational() -> String {
+        let formattedNumber : String = "+" + String(countryCode!) + " " + String(nationalNumber!)
+        return formattedNumber
+    }
+    
+    public func toRFC3966() -> String {
+        let formattedNumber : String = "tel:+" + String(countryCode!) + "-" + String(nationalNumber!)
+        return formattedNumber
+    }
+
+    public func toNational() -> String {
+        let formattedNumber : String = "0" + String(nationalNumber!)
+        return formattedNumber
+    }
+
 }
 
 

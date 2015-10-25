@@ -15,10 +15,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let phoneNumberKit: PhoneNumberKit = PhoneNumberKit()
-        print(phoneNumberKit.countriesForCode(01))
+        print(phoneNumberKit.countriesForCode(33))
         print(phoneNumberKit.codeForCountry("FR"))
-        let phoneNumber = phoneNumberKit.parsePhoneNumber("06 89 017383 ext.83", defaultRegion: "GB");
-        print(phoneNumber)
+        let phoneNumber = phoneNumberKit.parsePhoneNumber("06 89 017383", defaultRegion: "GB")
+        print(phoneNumber!.toNational())
     }
 
     override func didReceiveMemoryWarning() {
