@@ -9,12 +9,11 @@
 import Foundation
 
 public struct PhoneNumber {
-    public var countryCode: UInt
-    public var nationalNumber: UInt
-    public var numberExtension: String?
-    public var rawNumber: String
-    public var type: PNPhoneNumberType
-
+    private(set) public var countryCode: UInt
+    private(set) public var nationalNumber: UInt
+    private(set) public var numberExtension: String?
+    private(set) public var rawNumber: String
+    private(set) public var type: PNPhoneNumberType
 }
 
 public extension PhoneNumber {

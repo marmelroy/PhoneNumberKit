@@ -8,12 +8,12 @@
 
 import Foundation
 
-public struct MetadataPhoneNumberDesc {
+struct MetadataPhoneNumberDesc {
     var nationalNumberPattern: String?
     var possibleNumberPattern: String?
 }
 
-public struct MetadataPhoneNumberFormat {
+struct MetadataPhoneNumberFormat {
     var pattern: String
     var format: String
     var leadingDigitsPatterns: [String]
@@ -22,7 +22,7 @@ public struct MetadataPhoneNumberFormat {
     var domesticCarrierCodeFormattingRule: String
 }
 
-public struct MetadataTerritory {
+struct MetadataTerritory {
     var generalDesc: MetadataPhoneNumberDesc?
     var fixedLine: MetadataPhoneNumberDesc?
     var mobile: MetadataPhoneNumberDesc?
@@ -35,21 +35,11 @@ public struct MetadataTerritory {
     var uan: MetadataPhoneNumberDesc?
     var emergency: MetadataPhoneNumberDesc?
     var voicemail: MetadataPhoneNumberDesc?
-//    var noInternationalDialling: MetadataPhoneNumberDesc?
     var codeID: String
     var countryCode: UInt
     var internationalPrefix: String?
-//    var preferredInternationalPrefix: String?
-//    var nationalPrefix: String?
-//    var preferredExtnPrefix: String?
     var nationalPrefixForParsing: String?
     var nationalPrefixTransformRule: String?
-//    var sameMobileAndFixedLinePattern: Bool?
-//    var numberFormats: [MetadataPhoneNumberFormat]?
-//    var intlNumberFormats: [MetadataPhoneNumberFormat]?
-//    var mainCountryForCode: Bool?
-//    var leadingDigits: String?
-//    var leadingZeroPossible: Bool?
 }
 
 extension MetadataTerritory {
@@ -66,18 +56,11 @@ extension MetadataTerritory {
         self.uan = MetadataPhoneNumberDesc(jsondDict: (jsondDict.valueForKey("uan") as? NSDictionary))
         self.emergency = MetadataPhoneNumberDesc(jsondDict: (jsondDict.valueForKey("emergency") as? NSDictionary))
         self.voicemail = MetadataPhoneNumberDesc(jsondDict: (jsondDict.valueForKey("voicemail") as? NSDictionary))
-//        self.noInternationalDialling = MetadataPhoneNumberDesc(jsondDict: (jsondDict.valueForKey("noInternationalDialling") as? NSDictionary))
         self.codeID = jsondDict.valueForKey("_id") as! String
         self.countryCode = UInt(jsondDict.valueForKey("_countryCode") as! String)!
         self.internationalPrefix = jsondDict.valueForKey("_internationalPrefix") as? String
-//        self.preferredInternationalPrefix = jsondDict.valueForKey("_preferredInternationalPrefix") as? String
-//        self.nationalPrefix = jsondDict.valueForKey("_nationalPrefix") as? String
-//        self.preferredExtnPrefix = jsondDict.valueForKey("_preferredExtnPrefix") as? String
         self.nationalPrefixForParsing = jsondDict.valueForKey("_nationalPrefixForParsing") as? String
         self.nationalPrefixTransformRule = jsondDict.valueForKey("_nationalPrefixTransformRule") as? String
-//        self.mainCountryForCode = jsondDict.valueForKey("_mainCountryForCode") as? Bool
-//        self.mainCountryForCode = jsondDict.valueForKey("_mainCountryForCode") as? Bool
-//        self.leadingZeroPossible = jsondDict.valueForKey("_leadingZeroPossible") as? Bool
     }
 }
 

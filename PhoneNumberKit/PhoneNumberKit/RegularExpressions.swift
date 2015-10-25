@@ -35,7 +35,7 @@ func regexMatches(pattern: String, string: String) throws -> [NSTextCheckingResu
 
 // MARK: Match helpers
 
-public func matchesAtStart(pattern: String, string: String) -> Bool {
+func matchesAtStart(pattern: String, string: String) -> Bool {
     do {
         let matches = try regexMatches(pattern, string: string)
         for match in matches {
