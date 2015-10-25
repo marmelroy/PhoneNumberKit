@@ -38,7 +38,7 @@ extension PhoneNumber {
         }
         
         // Extension parsing
-        let extn = parser.maybeStripExtension(&nationalNumber)
+        let extn = parser.stripExtension(&nationalNumber)
         if (extn != nil && extn?.characters.count > 0) {
             self.numberExtension = extn
         }
@@ -47,12 +47,12 @@ extension PhoneNumber {
         let regionMetaData =  PhoneNumberKit().metadata.filter { $0.codeID == defaultRegion}.first
         var countryCode : UInt = 0
         do {
-            countryCode = try parser.maybeExtractCountryCode(nationalNumber, nationalNumber: &nationalNumber, metadata: regionMetaData!)
+            countryCode = try parser.extractCountryCode(nationalNumber, nationalNumber: &nationalNumber, metadata: regionMetaData!)
             self.countryCode = countryCode
         } catch {
             do {
-                let plusRemovedNumebrString = replaceStringByRegex(nationalNumber, pattern: PNLeadingPlusCharsPattern)
-                countryCode = try parser.maybeExtractCountryCode(plusRemovedNumebrString, nationalNumber: &nationalNumber, metadata: regionMetaData!)
+                let plusRemovedNumebrString = replaceStringByRegex(PNLeadingPlusCharsPattern, string: nationalNumber as String)
+                countryCode = try parser.extractCountryCode(plusRemovedNumebrString, nationalNumber: &nationalNumber, metadata: regionMetaData!)
                 self.countryCode = countryCode
             } catch {
                 throw PNParsingError.InvalidCountryCode

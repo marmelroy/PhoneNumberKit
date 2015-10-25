@@ -8,11 +8,10 @@
 
 import Foundation
 
+// MARK: Match helpers
+
 public func matchesEntirely(pattern: String, string: String) -> Bool {
     var matches : Bool = false
-    if (pattern == "NA") {
-        return matches
-    }
     do {
         var currentPattern : NSRegularExpression
         currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpressionOptions(rawValue: 0))
@@ -76,6 +75,23 @@ public func matchesByRegex(pattern: String, string: String) -> [AnyObject]? {
     }
 }
 
+func stringPositionByRegex(pattern: String, string: String) -> Int {
+    do {
+        let regex = try NSRegularExpression(pattern: pattern, options: [])
+        let results = regex.matchesInString(string,
+            options: [], range: NSMakeRange(0, string.characters.count))
+        if (results.count > 0) {
+            let match = results.first
+            return (match!.range.location)
+        }
+        return -1
+    } catch {
+        return -1
+    }
+}
+
+// MARK: Regular expression
+
 public func regularExpressionWithPattern(pattern: String) -> NSRegularExpression? {
     do {
         var currentPattern : NSRegularExpression
@@ -87,22 +103,23 @@ public func regularExpressionWithPattern(pattern: String) -> NSRegularExpression
     }
 }
 
+// MARK: String and replace
 
-func replaceStringByRegex(source: NSString, pattern: String) -> NSString {
-    var replacementResult : NSString = source
+func replaceStringByRegex(pattern: String, string: String) -> NSString {
+    var replacementResult : NSString = string
     do {
         let regex = try NSRegularExpression(pattern: pattern, options: [])
-        let results = regex.matchesInString(source as String,
-            options: [], range: NSMakeRange(0, source.length))
+        let results = regex.matchesInString(string as String,
+            options: [], range: NSMakeRange(0, string.characters.count))
         if (results.count == 1) {
-            let range = regex.rangeOfFirstMatchInString(source as String, options: [], range: NSMakeRange(0, source.length))
+            let range = regex.rangeOfFirstMatchInString(string, options: [], range: NSMakeRange(0, string.characters.count))
             if (range.location != NSNotFound) {
-                replacementResult = regex.stringByReplacingMatchesInString(source.mutableCopy() as! String, options: [], range: range, withTemplate: "")
+                replacementResult = regex.stringByReplacingMatchesInString(string.mutableCopy() as! String, options: [], range: range, withTemplate: "")
             }
             return replacementResult
         }
         else if (results.count > 1) {
-            replacementResult = regex.stringByReplacingMatchesInString(source.mutableCopy() as! String, options: [], range: NSMakeRange(0, source.length), withTemplate: "")
+            replacementResult = regex.stringByReplacingMatchesInString(string.mutableCopy() as! String, options: [], range: NSMakeRange(0, string.characters.count), withTemplate: "")
         }
         return replacementResult
     } catch {
@@ -110,13 +127,13 @@ func replaceStringByRegex(source: NSString, pattern: String) -> NSString {
     }
 }
 
-func replaceFirstStringByRegex(source: NSString, pattern: String, templateString: NSString) -> NSString? {
-    var replacementResult : NSString = source
+func replaceFirstStringByRegex(pattern: String, string: String, templateString: NSString) -> NSString? {
+    var replacementResult : NSString = string
     do {
         let regex = try NSRegularExpression(pattern: pattern, options: [])
-        let range = regex.rangeOfFirstMatchInString(source as String, options: [], range: NSMakeRange(0, source.length))
+        let range = regex.rangeOfFirstMatchInString(string, options: [], range: NSMakeRange(0, string.characters.count))
         if (range.location != NSNotFound) {
-            replacementResult = regex.stringByReplacingMatchesInString(source.mutableCopy() as! String, options: [], range: range, withTemplate: templateString as String)
+            replacementResult = regex.stringByReplacingMatchesInString(string.mutableCopy() as! String, options: [], range: range, withTemplate: templateString as String)
         }
 
         return replacementResult
@@ -125,50 +142,10 @@ func replaceFirstStringByRegex(source: NSString, pattern: String, templateString
     }
 }
 
-func hasValue(value: NSString) -> Bool {
-    let spaceCharSet = NSMutableCharacterSet(charactersInString: PNNonBreakingSpace)
-    spaceCharSet.formUnionWithCharacterSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-    if (value.stringByTrimmingCharactersInSet(spaceCharSet).characters.count == 0) {
-        return false
-    }
-    return true
-}
-
-
-func stringPositionByRegex(source: String, pattern: String) -> Int {
-    do {
-        let regex = try NSRegularExpression(pattern: pattern, options: [])
-        let results = regex.matchesInString(source as String,
-            options: [], range: NSMakeRange(0, source.characters.count))
-        if (results.count > 0) {
-            let match = results.first
-            return (match!.range.location)
-        }
-        return -1
-    } catch {
-        return -1
-    }
-}
-
-
-
-func testStringLengthAgainstPattern(source: String, pattern: String) -> PNValidationResult {
-    if (matchesEntirely(pattern, string: source)) {
-        return PNValidationResult.IsPossible
-    }
-    if (stringPositionByRegex(source, pattern: pattern) == 0) {
-        return PNValidationResult.TooLong
-    }
-    else {
-        return PNValidationResult.TooShort
-    }
-}
-
-
-func stringByReplacingOccurrences(source: String, map : [String:String], removeNonMatches : Bool) -> String? {
+func stringByReplacingOccurrences(string: String, map : [String:String], removeNonMatches : Bool) -> String? {
     let targetString = NSMutableString ()
-    let copiedString : NSString = source
-    for var i = 0; i < source.characters.count; i++ {
+    let copiedString : NSString = string
+    for var i = 0; i < string.characters.count; i++ {
         var oneChar = copiedString.characterAtIndex(i)
         let keyString = NSString(characters: &oneChar, length: 1) as String
         let mappedValue = map[keyString.uppercaseString]
@@ -181,6 +158,32 @@ func stringByReplacingOccurrences(source: String, map : [String:String], removeN
     }
     return targetString as String
 }
+
+// MARK: Validations
+
+func hasValue(value: NSString) -> Bool {
+    let spaceCharSet = NSMutableCharacterSet(charactersInString: PNNonBreakingSpace)
+    spaceCharSet.formUnionWithCharacterSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+    if (value.stringByTrimmingCharactersInSet(spaceCharSet).characters.count == 0) {
+        return false
+    }
+    return true
+}
+
+func testStringLengthAgainstPattern(pattern: String, string: String) -> PNValidationResult {
+    if (matchesEntirely(pattern, string: string)) {
+        return PNValidationResult.IsPossible
+    }
+    if (stringPositionByRegex(pattern, string: string) == 0) {
+        return PNValidationResult.TooLong
+    }
+    else {
+        return PNValidationResult.TooShort
+    }
+}
+
+
+
 
 
 
