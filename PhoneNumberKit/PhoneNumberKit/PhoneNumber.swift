@@ -9,10 +9,10 @@
 import Foundation
 
 public struct PhoneNumber {
-    public var rawNumber: String
     public var countryCode: UInt
     public var nationalNumber: UInt
     public var numberExtension: String?
+    public var rawNumber: String
     public var type: PNPhoneNumberType
 
 }
@@ -65,7 +65,7 @@ public extension PhoneNumber {
             self.countryCode = regionMetaData!.countryCode
         }
         
-        // Final Validations
+        // Length Validations
         let normalizedNationalNumber = parser.normalizePhoneNumber(nationalNumber as String)
         if (normalizedNationalNumber.characters.count <
             PNMinLengthForNSN) {
@@ -83,19 +83,10 @@ public extension PhoneNumber {
             }
             regionMetaData =  PhoneNumberKit().metadata.filter { $0.codeID == country}.first
         }
-        
-        let generalDesc = regionMetaData?.generalDesc
-        if (hasValue((generalDesc?.nationalNumberPattern)!) == false) {
-            let numberLength = normalizedNationalNumber.characters.count
-            if (!(numberLength > PNMinLengthForNSN && numberLength <= PNMaxLengthForNSN)) {
-                throw PNParsingError.NotANumber
-            }
-        }
         self.type = parser.extractNumberType(normalizedNationalNumber, metadata: regionMetaData!)
         if (self.type == PNPhoneNumberType.Unknown) {
             throw PNParsingError.NotANumber
         }
-
 
         self.nationalNumber = UInt(normalizedNationalNumber)!
     }

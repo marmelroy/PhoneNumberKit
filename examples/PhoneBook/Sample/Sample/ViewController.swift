@@ -21,8 +21,11 @@ class ViewController: UIViewController {
             let phoneNumber = try PhoneNumber(rawNumber:"+33 6 89 017383")
             print(phoneNumber.toE164())
         }
+        catch PNParsingError.NotANumber {
+            print("The number is invalid")
+        }
         catch {
-        
+            print("Generic error")
         }
     }
 
