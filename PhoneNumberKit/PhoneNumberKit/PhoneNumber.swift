@@ -13,6 +13,8 @@ public struct PhoneNumber {
     public var countryCode: UInt
     public var nationalNumber: UInt
     public var numberExtension: String?
+    public var type: PNPhoneNumberType
+
 }
 
 public extension PhoneNumber {
@@ -45,7 +47,7 @@ public extension PhoneNumber {
         }
         
         // Country code parsing
-        let regionMetaData =  PhoneNumberKit().metadata.filter { $0.codeID == defaultRegion}.first
+        var regionMetaData =  PhoneNumberKit().metadata.filter { $0.codeID == defaultRegion}.first
         var countryCode : UInt = 0
         do {
             countryCode = try parser.extractCountryCode(nationalNumber, nationalNumber: &nationalNumber, metadata: regionMetaData!)
@@ -73,6 +75,28 @@ public extension PhoneNumber {
             throw PNParsingError.TooLong
         }
         
+        // Regex validations
+        if (self.countryCode != regionMetaData!.countryCode) {
+            let country = PhoneNumberKit().countriesForCode(countryCode).first
+            if  (country == nil) {
+                throw PNParsingError.NotANumber
+            }
+            regionMetaData =  PhoneNumberKit().metadata.filter { $0.codeID == country}.first
+        }
+        
+        let generalDesc = regionMetaData?.generalDesc
+        if (hasValue((generalDesc?.nationalNumberPattern)!) == false) {
+            let numberLength = normalizedNationalNumber.characters.count
+            if (!(numberLength > PNMinLengthForNSN && numberLength <= PNMaxLengthForNSN)) {
+                throw PNParsingError.NotANumber
+            }
+        }
+        self.type = parser.extractNumberType(normalizedNationalNumber, metadata: regionMetaData!)
+        if (self.type == PNPhoneNumberType.Unknown) {
+            throw PNParsingError.NotANumber
+        }
+
+
         self.nationalNumber = UInt(normalizedNationalNumber)!
     }
     
@@ -99,6 +123,8 @@ public extension PhoneNumber {
         let formattedNumber : String = "0" + String(nationalNumber)
         return formattedNumber
     }
+    
+
 
 }
 

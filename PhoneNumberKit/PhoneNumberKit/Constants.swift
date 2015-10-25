@@ -32,6 +32,21 @@ public enum PNValidationResult :  ErrorType {
     case TooLong
 }
 
+public enum PNPhoneNumberType {
+    case FixedLine
+    case Mobile
+    case TollFree
+    case PremiumRate
+    case SharedCost
+    case VOIP
+    case PersonalNumber
+    case Pager
+    case UAN
+    case Voicemail
+    case Unknown
+
+}
+
 public enum PNRegexError :  ErrorType {
     case General
 }

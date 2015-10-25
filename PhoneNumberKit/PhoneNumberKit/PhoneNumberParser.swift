@@ -98,6 +98,59 @@ public class PhoneNumberParser: NSObject {
         }
         return 0
     }
+    
+    func extractNumberType(nationalNumber: NSString, metadata: MetadataTerritory) -> PNPhoneNumberType {
+        let generalNumberDesc = metadata.generalDesc!
+        if (hasValue(generalNumberDesc.nationalNumberPattern) == false || !isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc)) {
+            return PNPhoneNumberType.Unknown
+        }
+        if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.premiumRate)) {
+            return PNPhoneNumberType.PremiumRate
+        }
+        if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.tollFree)) {
+            return PNPhoneNumberType.TollFree
+        }
+        if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.sharedCost)) {
+            return PNPhoneNumberType.SharedCost
+        }
+        if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.voip)) {
+            return PNPhoneNumberType.VOIP
+        }
+        if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.personalNumber)) {
+            return PNPhoneNumberType.PersonalNumber
+        }
+        if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.pager)) {
+            return PNPhoneNumberType.Pager
+        }
+        if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.uan)) {
+            return PNPhoneNumberType.UAN
+        }
+        if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.voicemail)) {
+            return PNPhoneNumberType.Voicemail
+        }
+        if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.fixedLine)) {
+            return PNPhoneNumberType.FixedLine
+        }
+        if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.mobile)) {
+            return PNPhoneNumberType.Mobile
+        }
+
+        return PNPhoneNumberType.Unknown
+    }
+    
+    func isNumberMatchingDesc(nationalNumber: NSString, numberDesc: MetadataPhoneNumberDesc?) -> Bool {
+        if (numberDesc == nil) {
+            return false
+        }
+        let metadataDesc = numberDesc!
+        if (hasValue(metadataDesc.possibleNumberPattern) == false || metadataDesc.possibleNumberPattern == "NA") {
+            return matchesEntirely(metadataDesc.nationalNumberPattern, string: nationalNumber as String)
+        }
+        if (hasValue(metadataDesc.nationalNumberPattern) == false || metadataDesc.nationalNumberPattern == "NA") {
+            return matchesEntirely(metadataDesc.possibleNumberPattern, string: nationalNumber as String)
+        }
+        return matchesEntirely(metadataDesc.possibleNumberPattern, string: nationalNumber as String) && matchesEntirely(metadataDesc.possibleNumberPattern, string: nationalNumber as String)
+    }
 
     
     // MARK: Validations

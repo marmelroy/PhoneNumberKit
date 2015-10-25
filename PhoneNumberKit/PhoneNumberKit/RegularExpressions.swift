@@ -63,10 +63,13 @@ func stringPositionByRegex(pattern: String, string: String) -> Int {
 }
 
 
-public func matchesEntirely(pattern: String, string: String) -> Bool {
+public func matchesEntirely(pattern: String?, string: String) -> Bool {
+    if (pattern == nil) {
+        return false
+    }
     var matchesEntirely : Bool = false
     do {
-        let matches = try regexMatches(pattern, string: string)
+        let matches = try regexMatches(pattern!, string: string)
         let matchResult = matches.first
         let stringRange = NSMakeRange(0, string.characters.count)
         if (matchResult != nil) {
@@ -81,11 +84,11 @@ public func matchesEntirely(pattern: String, string: String) -> Bool {
 
 // MARK: String and replace
 
-func replaceStringByRegex(pattern: String, string: String) -> NSString {
-    var replacementResult : NSString = string
+func replaceStringByRegex(pattern: String, string: String) -> String {
+    var replacementResult = string
     do {
         let regex =  try regexWithPattern(pattern)
-        let matches = regex.matchesInString(string as String,
+        let matches = regex.matchesInString(string,
             options: [], range: NSMakeRange(0, string.characters.count))
         if (matches.count == 1) {
             let range = regex.rangeOfFirstMatchInString(string, options: [], range: NSMakeRange(0, string.characters.count))
@@ -136,10 +139,13 @@ func stringByReplacingOccurrences(string: String, map : [String:String], removeN
 
 // MARK: Validations
 
-func hasValue(value: NSString) -> Bool {
+func hasValue(value: NSString?) -> Bool {
+    if (value == nil) {
+        return false
+    }
     let spaceCharSet = NSMutableCharacterSet(charactersInString: PNNonBreakingSpace)
     spaceCharSet.formUnionWithCharacterSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-    if (value.stringByTrimmingCharactersInSet(spaceCharSet).characters.count == 0) {
+    if (value!.stringByTrimmingCharactersInSet(spaceCharSet).characters.count == 0) {
         return false
     }
     return true
