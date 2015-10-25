@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		346922611BC003590023482F /* PhoneNumberKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3435CCAD1BC00337003F953B /* PhoneNumberKit.framework */; };
-		346922621BC003590023482F /* PhoneNumberKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3435CCAD1BC00337003F953B /* PhoneNumberKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3472096B1BB808D1004DE6DA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3472096A1BB808D1004DE6DA /* AppDelegate.swift */; };
 		3472096D1BB808D1004DE6DA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3472096C1BB808D1004DE6DA /* ViewController.swift */; };
 		347209701BB808D1004DE6DA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3472096E1BB808D1004DE6DA /* Main.storyboard */; };
@@ -19,33 +17,26 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		3435CCAC1BC00337003F953B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3435CCA71BC00337003F953B /* PhoneNumberKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 342418641BB6E5A000EE70E7;
-			remoteInfo = PhoneNumberKit;
-		};
-		3435CCAE1BC00337003F953B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3435CCA71BC00337003F953B /* PhoneNumberKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 3424186E1BB6E5A000EE70E7;
-			remoteInfo = PhoneNumberKitTests;
-		};
-		346922631BC003590023482F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3435CCA71BC00337003F953B /* PhoneNumberKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 342418631BB6E5A000EE70E7;
-			remoteInfo = PhoneNumberKit;
-		};
 		3472097C1BB808D1004DE6DA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3472095F1BB808D1004DE6DA /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 347209661BB808D1004DE6DA;
 			remoteInfo = Sample;
+		};
+		34DA665C1BDD74E200FEE29F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3435CCA71BC00337003F953B /* PhoneNumberKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 342418641BB6E5A000EE70E7;
+			remoteInfo = PhoneNumberKit;
+		};
+		34DA665E1BDD74E200FEE29F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3435CCA71BC00337003F953B /* PhoneNumberKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3424186E1BB6E5A000EE70E7;
+			remoteInfo = PhoneNumberKitTests;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -56,7 +47,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				346922621BC003590023482F /* PhoneNumberKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -64,7 +54,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		3435CCA71BC00337003F953B /* PhoneNumberKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PhoneNumberKit.xcodeproj; path = ../../../PhoneNumberKit/PhoneNumberKit.xcodeproj; sourceTree = "<group>"; };
+		3435CCA71BC00337003F953B /* PhoneNumberKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PhoneNumberKit.xcodeproj; path = ../../../PhoneNumberKit.xcodeproj; sourceTree = "<group>"; };
 		347209671BB808D1004DE6DA /* Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3472096A1BB808D1004DE6DA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3472096C1BB808D1004DE6DA /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -84,7 +74,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3472098E1BB80A4F004DE6DA /* Foundation.framework in Frameworks */,
-				346922611BC003590023482F /* PhoneNumberKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,15 +87,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3435CCA81BC00337003F953B /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				3435CCAD1BC00337003F953B /* PhoneNumberKit.framework */,
-				3435CCAF1BC00337003F953B /* PhoneNumberKitTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		3472095E1BB808D1004DE6DA = {
 			isa = PBXGroup;
 			children = (
@@ -149,6 +129,15 @@
 			path = SampleTests;
 			sourceTree = "<group>";
 		};
+		34DA66581BDD74E200FEE29F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				34DA665D1BDD74E200FEE29F /* PhoneNumberKit.framework */,
+				34DA665F1BDD74E200FEE29F /* PhoneNumberKitTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -164,7 +153,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				346922641BC003590023482F /* PBXTargetDependency */,
 			);
 			name = Sample;
 			productName = Sample;
@@ -220,7 +208,7 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 3435CCA81BC00337003F953B /* Products */;
+					ProductGroup = 34DA66581BDD74E200FEE29F /* Products */;
 					ProjectRef = 3435CCA71BC00337003F953B /* PhoneNumberKit.xcodeproj */;
 				},
 			);
@@ -233,18 +221,18 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		3435CCAD1BC00337003F953B /* PhoneNumberKit.framework */ = {
+		34DA665D1BDD74E200FEE29F /* PhoneNumberKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
 			path = PhoneNumberKit.framework;
-			remoteRef = 3435CCAC1BC00337003F953B /* PBXContainerItemProxy */;
+			remoteRef = 34DA665C1BDD74E200FEE29F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		3435CCAF1BC00337003F953B /* PhoneNumberKitTests.xctest */ = {
+		34DA665F1BDD74E200FEE29F /* PhoneNumberKitTests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
 			path = PhoneNumberKitTests.xctest;
-			remoteRef = 3435CCAE1BC00337003F953B /* PBXContainerItemProxy */;
+			remoteRef = 34DA665E1BDD74E200FEE29F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -290,11 +278,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		346922641BC003590023482F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = PhoneNumberKit;
-			targetProxy = 346922631BC003590023482F /* PBXContainerItemProxy */;
-		};
 		3472097D1BB808D1004DE6DA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 347209661BB808D1004DE6DA /* Sample */;
