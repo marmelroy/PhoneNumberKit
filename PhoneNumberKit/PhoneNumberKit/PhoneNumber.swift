@@ -9,17 +9,18 @@
 import Foundation
 
 public struct PhoneNumber {
-    public let rawNumber: String
+    public var rawNumber: String
     public var countryCode: UInt
     public var nationalNumber: UInt
     public var numberExtension: String?
 }
 
-extension PhoneNumber {
+public extension PhoneNumber {
     
     // Parse on init
-    init(let rawNumber: String, defaultRegion: String) throws {
+    public init(rawNumber: String) throws {
         let parser = PhoneNumberParser()
+        let defaultRegion = PhoneNumberKit().defaultRegionCode()
         self.rawNumber = rawNumber
         
         // Validations

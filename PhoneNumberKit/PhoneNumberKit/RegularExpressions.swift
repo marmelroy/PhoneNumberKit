@@ -10,7 +10,7 @@ import Foundation
 
 // MARK: Regular expression
 
-func regularExpressionWithPattern(pattern: String) throws -> NSRegularExpression {
+func regexWithPattern(pattern: String) throws -> NSRegularExpression {
     do {
         var currentPattern : NSRegularExpression
         currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpressionOptions(rawValue: 0))
@@ -23,7 +23,7 @@ func regularExpressionWithPattern(pattern: String) throws -> NSRegularExpression
 
 func regexMatches(pattern: String, string: String) throws -> [NSTextCheckingResult] {
     do {
-        let currentPattern =  try regularExpressionWithPattern(pattern)
+        let currentPattern =  try regexWithPattern(pattern)
         let stringRange = NSMakeRange(0, string.characters.count)
         let matches = currentPattern.matchesInString(string, options: [], range: stringRange)
         return matches
@@ -79,24 +79,22 @@ public func matchesEntirely(pattern: String, string: String) -> Bool {
     return matchesEntirely
 }
 
-
-
 // MARK: String and replace
 
 func replaceStringByRegex(pattern: String, string: String) -> NSString {
     var replacementResult : NSString = string
     do {
-        let regex = try NSRegularExpression(pattern: pattern, options: [])
-        let results = regex.matchesInString(string as String,
+        let regex =  try regexWithPattern(pattern)
+        let matches = regex.matchesInString(string as String,
             options: [], range: NSMakeRange(0, string.characters.count))
-        if (results.count == 1) {
+        if (matches.count == 1) {
             let range = regex.rangeOfFirstMatchInString(string, options: [], range: NSMakeRange(0, string.characters.count))
             if (range.location != NSNotFound) {
                 replacementResult = regex.stringByReplacingMatchesInString(string.mutableCopy() as! String, options: [], range: range, withTemplate: "")
             }
             return replacementResult
         }
-        else if (results.count > 1) {
+        else if (matches.count > 1) {
             replacementResult = regex.stringByReplacingMatchesInString(string.mutableCopy() as! String, options: [], range: NSMakeRange(0, string.characters.count), withTemplate: "")
         }
         return replacementResult
@@ -108,12 +106,11 @@ func replaceStringByRegex(pattern: String, string: String) -> NSString {
 func replaceFirstStringByRegex(pattern: String, string: String, templateString: NSString) -> NSString? {
     var replacementResult : NSString = string
     do {
-        let regex = try NSRegularExpression(pattern: pattern, options: [])
+        let regex = try regexWithPattern(pattern)
         let range = regex.rangeOfFirstMatchInString(string, options: [], range: NSMakeRange(0, string.characters.count))
         if (range.location != NSNotFound) {
             replacementResult = regex.stringByReplacingMatchesInString(string.mutableCopy() as! String, options: [], range: range, withTemplate: templateString as String)
         }
-
         return replacementResult
     } catch {
         return nil

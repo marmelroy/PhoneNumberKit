@@ -13,29 +13,26 @@ public class PhoneNumberParser: NSObject {
     // MARK: Normalizations
 
     // Normalize phone number
-    public func normalizePhoneNumber(number: String) -> String {
+    func normalizePhoneNumber(number: String) -> String {
         return stringByReplacingOccurrences(number, map: PNAllNormalizationMappings, removeNonMatches: true)!
     }
 
     // Normalize non breaking space
-    public func normalizeNonBreakingSpace(string: String) -> String {
+    func normalizeNonBreakingSpace(string: String) -> String {
         return string.stringByReplacingOccurrencesOfString(PNNonBreakingSpace, withString: " ")
     }
 
     // MARK: Extractions
     
     // Extract possible number from string
-    public func extractPossibleNumber(number: NSString) -> NSString {
+    func extractPossibleNumber(number: NSString) -> NSString {
         var possibleNumber : NSString = ""
-        let validStartPattern = "[" + PNPlusChars + PNValidDigitsString + "]"
-        let secondNumberStartPattern = "[\\\\\\/] *x";
-        let unwantedEndPattern = "[^" + PNValidDigitsString + "A-Za-z#]+$";
-        let start = stringPositionByRegex(validStartPattern, string: number as String)
+        let start = stringPositionByRegex(PNValidStartPattern, string: number as String)
         if (start >= 0)
         {
             possibleNumber = number.substringFromIndex(start)
-            possibleNumber = replaceStringByRegex(unwantedEndPattern, string: possibleNumber as String)
-            let secondNumberStart = stringPositionByRegex(secondNumberStartPattern, string: number as String)
+            possibleNumber = replaceStringByRegex(PNUnwantedEndPattern, string: possibleNumber as String)
+            let secondNumberStart = stringPositionByRegex(PNSecondNumberStartPattern, string: number as String)
             if (secondNumberStart > 0) {
                 possibleNumber = possibleNumber.substringWithRange(NSMakeRange(0, secondNumberStart - 1))
             }
@@ -111,7 +108,7 @@ public class PhoneNumberParser: NSObject {
         if (numberToParse.characters.count < PNMinLengthForNSN) {
             return false;
         }
-        return matchesEntirely(PNMValidPhoneNumberPattern, string: number as String)
+        return matchesEntirely(PNValidPhoneNumberPattern, string: number as String)
     }
     
     // Check region is valid for parsing
@@ -198,7 +195,7 @@ public class PhoneNumberParser: NSObject {
             let possibleNationalPrefix = metadata.nationalPrefixForParsing!
             let prefixPattern = String(format: "^(?:%@)", possibleNationalPrefix)
             do {
-                let currentPattern =  try regularExpressionWithPattern(prefixPattern)
+                let currentPattern =  try regexWithPattern(prefixPattern)
                 let prefixMatcher = currentPattern.matchesInString(number as String, options: NSMatchingOptions(rawValue: 0), range: NSMakeRange(0, number.length))
                 if (!prefixMatcher.isEmpty) {
                     let nationalNumberRule = metadata.generalDesc?.nationalNumberPattern
@@ -233,7 +230,6 @@ public class PhoneNumberParser: NSObject {
                         return true
                     }
                 }
-
             }
             catch {
             }

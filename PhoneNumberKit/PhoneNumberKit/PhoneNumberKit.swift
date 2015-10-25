@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CoreTelephony
 
 public class PhoneNumberKit : NSObject {
     
@@ -43,19 +44,7 @@ public class PhoneNumberKit : NSObject {
         return territoryArray
     }
     
-    // MARK: Core functionality
-
-    public func parsePhoneNumber(rawNumber: String, defaultRegion: String) -> PhoneNumber? {
-        let number: PhoneNumber?
-        do {
-            number = try PhoneNumber(rawNumber: rawNumber, defaultRegion: defaultRegion)
-        } catch _ {
-            number = nil
-        }
-        return number
-    }
-
-    // MARK: Country code helpers
+    // MARK: Country and region code
     
     public func allCountries() -> [String] {
         let results = metadata.map{$0.codeID}
@@ -73,6 +62,19 @@ public class PhoneNumberKit : NSObject {
             .map{$0.countryCode}
         return results.first
     }
+    
+    public func defaultRegionCode() -> String {
+        let networkInfo = CTTelephonyNetworkInfo()
+        let carrier = networkInfo.subscriberCellularProvider
+        if (carrier != nil && (carrier!.isoCountryCode != nil)) {
+            return carrier!.isoCountryCode!;
+        } else {
+            let currentLocale = NSLocale.currentLocale()
+            let countryCode : String = currentLocale.objectForKey(NSLocaleCountryCode) as! String
+            return countryCode;
+        }
+    }
+
     
 }
 

@@ -17,8 +17,13 @@ class ViewController: UIViewController {
         let phoneNumberKit: PhoneNumberKit = PhoneNumberKit()
         print(phoneNumberKit.countriesForCode(33))
         print(phoneNumberKit.codeForCountry("FR"))
-        let phoneNumber = phoneNumberKit.parsePhoneNumber("06 89 017383 ext.83", defaultRegion: "GB")
-        print(phoneNumber!.toE164())
+        do {
+            let phoneNumber = try PhoneNumber(rawNumber:"+33 06 89 017383 ext.83")
+            print(phoneNumber.toE164())
+        }
+        catch {
+        
+        }
     }
 
     override func didReceiveMemoryWarning() {
