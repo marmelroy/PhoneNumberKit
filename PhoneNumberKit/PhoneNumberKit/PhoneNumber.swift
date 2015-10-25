@@ -18,31 +18,32 @@ public struct PhoneNumber {
 
 extension PhoneNumber {
     init(let rawNumber: String, defaultRegion: String) throws {
+        let parser = PhoneNumberParser()
         self.rawNumber = rawNumber
         
+        // Validations
         if (rawNumber.isEmpty) {
             throw PNParsingError.NotANumber
         } else if (rawNumber.characters.count > PNMaxInputStringLength) {
             throw PNParsingError.TooLong
         }
-        
-        let parser = PhoneNumberParser()
-        
         var nationalNumber = parser.extractPossibleNumber(rawNumber)
-        if (!parser.isViablePhoneNumber(nationalNumber as String)) {
+        
+        if (!parser.isViablePhoneNumber(nationalNumber)) {
             throw PNParsingError.NotANumber
         }
-        
-        if (!parser.checkRegionForParsing(nationalNumber as String, defaultRegion: defaultRegion)) {
+        if (!parser.checkRegionForParsing(nationalNumber, defaultRegion: defaultRegion)) {
             throw PNParsingError.InvalidCountryCode
         }
         
+        // Extension parsing
         let extn = parser.maybeStripExtension(&nationalNumber)
-        if (extn != nil && extn?.length > 0) {
-            self.numberExtension = extn as? String
+        if (extn != nil && extn?.characters.count > 0) {
+            self.numberExtension = extn
         }
         
-        var regionMetaData =  PhoneNumberKit().metadata.filter { $0.codeID == defaultRegion}.first
+        // Country code parsing
+        let regionMetaData =  PhoneNumberKit().metadata.filter { $0.codeID == defaultRegion}.first
         var countryCode : UInt = 0
         do {
             countryCode = try parser.maybeExtractCountryCode(nationalNumber, nationalNumber: &nationalNumber, metadata: regionMetaData!)
@@ -53,26 +54,23 @@ extension PhoneNumber {
                 countryCode = try parser.maybeExtractCountryCode(plusRemovedNumebrString, nationalNumber: &nationalNumber, metadata: regionMetaData!)
                 self.countryCode = countryCode
             } catch {
+                throw PNParsingError.InvalidCountryCode
             }
         }
-        if (countryCode != 0) {
-            let region = PhoneNumberKit().countriesForCode(countryCode).first
-            if (region != defaultRegion) {
-                regionMetaData = PhoneNumberKit().metadata.filter { $0.codeID == region}.first
-            }
-        }
-        else {
+        if (countryCode == 0) {
             self.countryCode = regionMetaData?.countryCode
         }
         
-        if (nationalNumber.length <
+        // Final Validations
+        let normalizedNationalNumber = parser.normalizePhoneNumber(nationalNumber as String)
+        if (normalizedNationalNumber.characters.count <
             PNMinLengthForNSN) {
             throw PNParsingError.TooShort
         }
-        if (nationalNumber.length > PNMaxLengthForNSN) {
+        if (normalizedNationalNumber.characters.count > PNMaxLengthForNSN) {
             throw PNParsingError.TooLong
         }
-        let normalizedNationalNumber = parser.normalizePhoneNumber(nationalNumber as String)
+        
         self.nationalNumber = UInt(normalizedNationalNumber)
         
     }

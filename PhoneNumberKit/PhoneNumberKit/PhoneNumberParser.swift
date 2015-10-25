@@ -72,20 +72,20 @@ public class PhoneNumberParser: NSObject {
 
     
     
-    func isViablePhoneNumber(number: String) -> Bool {
-        let numberToParse = normalizeNonBreakingSpace(number)
+    func isViablePhoneNumber(number: NSString) -> Bool {
+        let numberToParse = normalizeNonBreakingSpace(number as String)
         if (numberToParse.characters.count < PNMinLengthForNSN) {
             return false;
         }
         
         
-        return matchesEntirely(PNMValidPhoneNumberPattern, string: number)
+        return matchesEntirely(PNMValidPhoneNumberPattern, string: number as String)
     }
     
 
     
-    func checkRegionForParsing(rawNumber: String, defaultRegion: String) -> Bool {
-        return (isValidRegionCode(defaultRegion) || (rawNumber.characters.count > 0 && matchesAtStart(PNPlusChars, string: rawNumber)))
+    func checkRegionForParsing(rawNumber: NSString, defaultRegion: String) -> Bool {
+        return (isValidRegionCode(defaultRegion) || (rawNumber.length > 0 && matchesAtStart(PNPlusChars, string: rawNumber as String)))
     }
     
     func isValidRegionCode(regionCode: String) -> Bool {
@@ -98,7 +98,7 @@ public class PhoneNumberParser: NSObject {
     }
     
     
-    func maybeStripExtension(inout number: NSString) -> NSString? {
+    func maybeStripExtension(inout number: NSString) -> String? {
         let mStart = stringPositionByRegex(number as String, pattern: PNExtnPattern)
         if (mStart >= 0 && (isViablePhoneNumber(number.substringWithRange(NSMakeRange(0, mStart))))) {
             let firstMatch = matchFirst(PNExtnPattern, string: number as String)
