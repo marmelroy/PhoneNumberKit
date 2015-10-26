@@ -36,7 +36,7 @@ struct MetadataTerritory {
     var emergency: MetadataPhoneNumberDesc?
     var voicemail: MetadataPhoneNumberDesc?
     var codeID: String
-    var countryCode: UInt
+    var countryCode: UInt64
     var internationalPrefix: String?
     var nationalPrefixForParsing: String?
     var nationalPrefixTransformRule: String?
@@ -58,7 +58,7 @@ extension MetadataTerritory {
         self.emergency = MetadataPhoneNumberDesc(jsondDict: (jsondDict.valueForKey("emergency") as? NSDictionary))
         self.voicemail = MetadataPhoneNumberDesc(jsondDict: (jsondDict.valueForKey("voicemail") as? NSDictionary))
         self.codeID = jsondDict.valueForKey("_id") as! String
-        self.countryCode = UInt(jsondDict.valueForKey("_countryCode") as! String)!
+        self.countryCode = UInt64(jsondDict.valueForKey("_countryCode") as! String)!
         self.internationalPrefix = jsondDict.valueForKey("_internationalPrefix") as? String
         self.nationalPrefixForParsing = jsondDict.valueForKey("_nationalPrefixForParsing") as? String
         self.nationalPrefixTransformRule = jsondDict.valueForKey("_nationalPrefixTransformRule") as? String

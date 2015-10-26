@@ -58,14 +58,14 @@ public class PhoneNumberKit : NSObject {
     }
     
     // Get a the countries corresponding to a given country code
-    public func countriesForCode(code: UInt) -> [String] {
+    public func countriesForCode(code: UInt64) -> [String] {
         let results = metadata.filter { $0.countryCode == code}
             .map{$0.codeID}
         return results
     }
     
     // Get a the country code for a specific country
-    public func codeForCountry(country: NSString) -> UInt? {
+    public func codeForCountry(country: NSString) -> UInt64? {
         let results = metadata.filter { $0.codeID == country}
             .map{$0.countryCode}
         return results.first

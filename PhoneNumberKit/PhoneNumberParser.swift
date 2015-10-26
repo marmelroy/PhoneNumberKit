@@ -41,7 +41,7 @@ public class PhoneNumberParser: NSObject {
     }
 
     // Extract potential country code
-    func extractPotentialCountryCode(var fullNumber: NSString, inout nationalNumber: NSString) -> UInt? {
+    func extractPotentialCountryCode(var fullNumber: NSString, inout nationalNumber: NSString) -> UInt64? {
         fullNumber = normalizeNonBreakingSpace(fullNumber as String) as NSString
         if ((fullNumber.length == 0) || (fullNumber.substringToIndex(1) == "0")) {
             return 0
@@ -55,7 +55,7 @@ public class PhoneNumberParser: NSObject {
         for var i = 1; i <= maxCountryCode && i <= numberLength; i++ {
             let stringRange = NSMakeRange(0, i)
             let subNumber = fullNumber.substringWithRange(stringRange)
-            let potentialCountryCode = UInt(subNumber)
+            let potentialCountryCode = UInt64(subNumber)
             let regionCodes = phoneNumberKit.countriesForCode(potentialCountryCode!)
             if (regionCodes.count > 0) {
                 nationalNumber = fullNumber.substringFromIndex(i)
@@ -66,7 +66,7 @@ public class PhoneNumberParser: NSObject {
     }
     
     // Extract country code
-    func extractCountryCode(number: NSString, inout nationalNumber: NSString, metadata: MetadataTerritory) throws -> UInt {
+    func extractCountryCode(number: NSString, inout nationalNumber: NSString, metadata: MetadataTerritory) throws -> UInt64 {
         var fullNumber = number
         let possibleCountryIddPrefix = metadata.internationalPrefix
         let countryCodeSource = stripInternationalPrefixAndNormalize(&fullNumber, possibleIddPrefix: possibleCountryIddPrefix!)
@@ -93,7 +93,7 @@ public class PhoneNumberParser: NSObject {
                 let possibleNumberPattern = metadata.generalDesc?.possibleNumberPattern
                 if ((!matchesEntirely(validNumberPattern!, string: fullNumber as String) && matchesEntirely(validNumberPattern!, string: potentialNationalNumberStr as! String)) || testStringLengthAgainstPattern(possibleNumberPattern!, string: fullNumber as String) == PNValidationResult.TooLong) {
                     nationalNumber = potentialNationalNumberStr as! NSString
-                    return UInt(defaultCountryCode)!
+                    return UInt64(defaultCountryCode)!
                 }
             }
         }

@@ -9,8 +9,8 @@
 import Foundation
 
 public struct PhoneNumber {
-    private(set) public var countryCode: UInt
-    private(set) public var nationalNumber: UInt
+    private(set) public var countryCode: UInt64
+    private(set) public var nationalNumber: UInt64
     private(set) public var numberExtension: String?
     private(set) public var rawNumber: String
     private(set) public var leadingZero: Bool
@@ -49,7 +49,7 @@ public extension PhoneNumber {
         
         // Country code parsing
         var regionMetaData =  phoneNumberKit.metadata.filter { $0.codeID == defaultRegion}.first
-        var countryCode : UInt = 0
+        var countryCode : UInt64 = 0
         do {
             countryCode = try parser.extractCountryCode(nationalNumber, nationalNumber: &nationalNumber, metadata: regionMetaData!)
             self.countryCode = countryCode
@@ -89,7 +89,7 @@ public extension PhoneNumber {
             throw PNParsingError.NotANumber
         }
         self.leadingZero = normalizedNationalNumber.hasPrefix("0")
-        self.nationalNumber = UInt(normalizedNationalNumber)!
+        self.nationalNumber = UInt64(normalizedNationalNumber)!
     }
     
     private func adjustedNationalNumber() -> String {
