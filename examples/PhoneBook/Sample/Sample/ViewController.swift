@@ -8,31 +8,65 @@
 
 import UIKit
 import Foundation
+import ContactsUI
 import PhoneNumberKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, CNContactPickerDelegate {
 
+    @IBOutlet weak var parsedNumberLabel: UILabel!
+    @IBOutlet weak var parsedCountryCodeLabel: UILabel!
+    @IBOutlet weak var parsedCountryLabel: UILabel!
+    
+    let notAvailable = "NA"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        let phoneNumberKit = PhoneNumberKit.sharedInstance
-        print(phoneNumberKit.countriesForCode(33))
-        print(phoneNumberKit.codeForCountry("FR"))
-        do {
-            let phoneNumber = try PhoneNumber(rawNumber:"+39 0 549555555")
-            print(phoneNumber.toE164())
-        }
-        catch PNParsingError.NotANumber {
-            print("The number is invalid")
-        }
-        catch {
-            print("Generic error")
-        }
+        clearResults()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+
+    @IBAction func selectFromContacts(sender: AnyObject) {
+        let controller = CNContactPickerViewController()
+        controller.delegate = self
+        self.presentViewController(controller,
+            animated: true, completion: nil)
+    }
+    
+    
+    func contactPicker(picker: CNContactPickerViewController, didSelectContact contact: CNContact) {
+        if (contact.phoneNumbers.count > 0) {
+            let phoneNumber : CNPhoneNumber = contact.phoneNumbers.first!.value as! CNPhoneNumber
+            parseNumber(phoneNumber.stringValue)
+        }
+        else {
+            clearResults()
+            print("Something went wrong")
+        }
+    }
+
+    func parseNumber(number: String) {
+        do {
+            let phoneNumber = try PhoneNumber(rawNumber: number)
+            parsedNumberLabel.text = phoneNumber.toInternational()
+            parsedCountryCodeLabel.text = String(phoneNumber.countryCode)
+            parsedCountryLabel.text = PhoneNumberKit.sharedInstance.countriesForCode(phoneNumber.countryCode).first
+        }
+        catch {
+            clearResults()
+            print("Something went wrong")
+        }
+    }
+    
+    func clearResults() {
+        parsedNumberLabel.text = notAvailable
+        parsedCountryCodeLabel.text = notAvailable
+        parsedCountryLabel.text = notAvailable
+    }
+    
 
 
 }

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		344D87571BDED6A200487684 /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 344D87561BDED6A200487684 /* Contacts.framework */; };
+		344D875A1BDED6A600487684 /* ContactsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 344D87591BDED6A600487684 /* ContactsUI.framework */; };
 		3472096B1BB808D1004DE6DA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3472096A1BB808D1004DE6DA /* AppDelegate.swift */; };
 		3472096D1BB808D1004DE6DA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3472096C1BB808D1004DE6DA /* ViewController.swift */; };
 		347209701BB808D1004DE6DA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3472096E1BB808D1004DE6DA /* Main.storyboard */; };
@@ -65,6 +67,8 @@
 
 /* Begin PBXFileReference section */
 		3435CCA71BC00337003F953B /* PhoneNumberKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PhoneNumberKit.xcodeproj; path = ../../../PhoneNumberKit.xcodeproj; sourceTree = "<group>"; };
+		344D87561BDED6A200487684 /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
+		344D87591BDED6A600487684 /* ContactsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ContactsUI.framework; path = System/Library/Frameworks/ContactsUI.framework; sourceTree = SDKROOT; };
 		347209671BB808D1004DE6DA /* Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3472096A1BB808D1004DE6DA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3472096C1BB808D1004DE6DA /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -83,6 +87,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				344D875A1BDED6A600487684 /* ContactsUI.framework in Frameworks */,
+				344D87571BDED6A200487684 /* Contacts.framework in Frameworks */,
 				3472098E1BB80A4F004DE6DA /* Foundation.framework in Frameworks */,
 				34EB91CA1BDD76F100D201A8 /* PhoneNumberKit.framework in Frameworks */,
 			);
@@ -126,6 +132,8 @@
 				347209711BB808D1004DE6DA /* Assets.xcassets */,
 				347209731BB808D1004DE6DA /* LaunchScreen.storyboard */,
 				347209761BB808D1004DE6DA /* Info.plist */,
+				344D87591BDED6A600487684 /* ContactsUI.framework */,
+				344D87561BDED6A200487684 /* Contacts.framework */,
 				3472098D1BB80A4F004DE6DA /* Foundation.framework */,
 			);
 			path = Sample;
