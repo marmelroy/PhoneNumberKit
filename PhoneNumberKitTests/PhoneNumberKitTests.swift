@@ -28,10 +28,24 @@ class PhoneNumberKitTests: XCTestCase {
             XCTAssertEqual(phoneNumber.countryCode, 39)
             XCTAssertEqual(phoneNumber.nationalNumber, 549555555)
             XCTAssertEqual(phoneNumber.leadingZero, true)
-
         }
         catch {
         
+        }
+    }
+    
+    // French number with extension
+    func testNumberWithExtension() {
+        let testNumber = "+33689555555 ext. 84"
+        do {
+            let phoneNumber = try PhoneNumber(rawNumber: testNumber)
+            XCTAssertEqual(phoneNumber.countryCode, 33)
+            XCTAssertEqual(phoneNumber.nationalNumber, 689555555)
+            XCTAssertEqual(phoneNumber.leadingZero, false)
+            XCTAssertEqual(phoneNumber.numberExtension, "84")
+        }
+        catch {
+            
         }
     }
     
