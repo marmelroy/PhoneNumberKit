@@ -13,7 +13,7 @@ public struct PhoneNumber {
     private(set) public var nationalNumber: UInt
     private(set) public var numberExtension: String?
     private(set) public var rawNumber: String
-    private(set) public var italianLeadingZero: Bool
+    private(set) public var leadingZero: Bool
     private(set) public var type: PNPhoneNumberType
 }
 
@@ -68,11 +68,11 @@ public extension PhoneNumber {
         
         // Length Validations
         let normalizedNationalNumber = parser.normalizePhoneNumber(nationalNumber as String)
-        if (normalizedNationalNumber.characters.count <
+        if (normalizedNationalNumber.characters.count <=
             PNMinLengthForNSN) {
             throw PNParsingError.TooShort
         }
-        if (normalizedNationalNumber.characters.count > PNMaxLengthForNSN) {
+        if (normalizedNationalNumber.characters.count >= PNMaxLengthForNSN) {
             throw PNParsingError.TooLong
         }
         
@@ -88,12 +88,12 @@ public extension PhoneNumber {
         if (self.type == PNPhoneNumberType.Unknown) {
             throw PNParsingError.NotANumber
         }
-        self.italianLeadingZero = normalizedNationalNumber.hasPrefix("0")
+        self.leadingZero = normalizedNationalNumber.hasPrefix("0")
         self.nationalNumber = UInt(normalizedNationalNumber)!
     }
     
     private func adjustedNationalNumber() -> String {
-        if (self.italianLeadingZero) {
+        if (self.leadingZero) {
             return "0" + String(nationalNumber)
         }
         else {
