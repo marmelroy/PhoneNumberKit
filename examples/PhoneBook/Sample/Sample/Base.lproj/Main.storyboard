@@ -17,7 +17,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="center" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="VRI-8G-Lta">
-                                <rect key="frame" x="175" y="182" width="250" height="235.5"/>
+                                <rect key="frame" x="175" y="132" width="250" height="235.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Parsed Number" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="173" translatesAutoresizingMaskIntoConstraints="NO" id="fdW-Hc-Fag" userLabel="NumberTitle">
                                         <rect key="frame" x="39" y="0.0" width="172.5" height="30"/>
@@ -47,8 +47,8 @@
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Country" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BTd-7t-ET4" userLabel="CountryTitle">
-                                        <rect key="frame" x="80" y="161" width="89" height="30"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Main Country" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BTd-7t-ET4" userLabel="CountryTitle">
+                                        <rect key="frame" x="50.5" y="161" width="149.5" height="30"/>
                                         <animations/>
                                         <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -65,10 +65,10 @@
                                 <animations/>
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QhY-GJ-YJf" userLabel="SelectButton">
-                                <rect key="frame" x="208" y="448" width="185" height="35"/>
+                                <rect key="frame" x="210" y="397" width="180" height="35"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="19"/>
-                                <state key="normal" title="Select from Contacts "/>
+                                <state key="normal" title="Select from Contacts"/>
                                 <connections>
                                     <action selector="selectFromContacts:" destination="BYZ-38-t0r" eventType="touchUpInside" id="YTb-HU-S61"/>
                                 </connections>
@@ -78,7 +78,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="QhY-GJ-YJf" firstAttribute="top" secondItem="VRI-8G-Lta" secondAttribute="bottom" constant="30" id="9Rx-lA-7HY"/>
-                            <constraint firstItem="VRI-8G-Lta" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="EPM-kG-0xb"/>
+                            <constraint firstItem="VRI-8G-Lta" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-50" id="EPM-kG-0xb"/>
                             <constraint firstItem="QhY-GJ-YJf" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="asA-Nq-9a9"/>
                             <constraint firstItem="VRI-8G-Lta" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="y4p-i6-Msx"/>
                         </constraints>

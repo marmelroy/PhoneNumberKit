@@ -53,7 +53,9 @@ class ViewController: UIViewController, CNContactPickerDelegate {
             let phoneNumber = try PhoneNumber(rawNumber: number)
             parsedNumberLabel.text = phoneNumber.toInternational()
             parsedCountryCodeLabel.text = String(phoneNumber.countryCode)
-            parsedCountryLabel.text = PhoneNumberKit.sharedInstance.countriesForCode(phoneNumber.countryCode).first
+            let regionCode = PhoneNumberKit.sharedInstance.countriesForCode(phoneNumber.countryCode).first
+            let country = NSLocale.currentLocale().displayNameForKey(NSLocaleCountryCode, value: regionCode!)
+            parsedCountryLabel.text = country
         }
         catch {
             clearResults()
