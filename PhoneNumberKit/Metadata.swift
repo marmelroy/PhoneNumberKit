@@ -40,6 +40,7 @@ struct MetadataTerritory {
     var internationalPrefix: String?
     var nationalPrefixForParsing: String?
     var nationalPrefixTransformRule: String?
+    
 }
 
 extension MetadataTerritory {

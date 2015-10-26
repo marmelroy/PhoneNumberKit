@@ -18,7 +18,7 @@ class ViewController: UIViewController {
         print(phoneNumberKit.countriesForCode(33))
         print(phoneNumberKit.codeForCountry("FR"))
         do {
-            let phoneNumber = try PhoneNumber(rawNumber:"+33 6 89 017383")
+            let phoneNumber = try PhoneNumber(rawNumber:"+39 0 549555555")
             print(phoneNumber.toE164())
         }
         catch PNParsingError.NotANumber {

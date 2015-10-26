@@ -13,6 +13,7 @@ public struct PhoneNumber {
     private(set) public var nationalNumber: UInt
     private(set) public var numberExtension: String?
     private(set) public var rawNumber: String
+    private(set) public var italianLeadingZero: Bool
     private(set) public var type: PNPhoneNumberType
 }
 
@@ -87,25 +88,34 @@ public extension PhoneNumber {
         if (self.type == PNPhoneNumberType.Unknown) {
             throw PNParsingError.NotANumber
         }
-
+        self.italianLeadingZero = normalizedNationalNumber.hasPrefix("0")
         self.nationalNumber = UInt(normalizedNationalNumber)!
+    }
+    
+    private func adjustedNationalNumber() -> String {
+        if (self.italianLeadingZero) {
+            return "0" + String(nationalNumber)
+        }
+        else {
+            return String(nationalNumber)
+        }
     }
     
     // Format to E164 format (e.g. +33689123456)
     public func toE164() -> String {
-        let formattedNumber : String = "+" + String(countryCode) + String(nationalNumber)
+        let formattedNumber : String = "+" + String(countryCode) + adjustedNationalNumber()
         return formattedNumber
     }
     
     // Format to International format (e.g. +33 689123456)
     public func toInternational() -> String {
-        let formattedNumber : String = "+" + String(countryCode) + " " + String(nationalNumber)
+        let formattedNumber : String = "+" + String(countryCode) + " " + adjustedNationalNumber()
         return formattedNumber
     }
     
     // Format to actionable RFC format (e.g. tel:+33-689123456)
     public func toRFC3966() -> String {
-        let formattedNumber : String = "tel:+" + String(countryCode) + "-" + String(nationalNumber)
+        let formattedNumber : String = "tel:+" + String(countryCode) + "-" + adjustedNationalNumber()
         return formattedNumber
     }
 
