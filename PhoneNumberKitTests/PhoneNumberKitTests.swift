@@ -79,37 +79,7 @@ class PhoneNumberKitTests: XCTestCase {
             XCTFail()
         }
     }
-    
-    // French number with a plus
-    func testValidNumberWithoutPlusNoWhiteSpace() {
-        let testNumber = "33689555555"
-        do {
-            let phoneNumber = try PhoneNumber(rawNumber: testNumber)
-            XCTAssertEqual(phoneNumber.toE164(), "+33689555555")
-            XCTAssertEqual(phoneNumber.countryCode, 33)
-            XCTAssertEqual(phoneNumber.nationalNumber, 689555555)
-            XCTAssertEqual(phoneNumber.leadingZero, false)
-            XCTAssertEqual(phoneNumber.type, PNPhoneNumberType.Mobile)
-        }
-        catch {
-            XCTFail()
-        }
-    }
-    
-    // 'Noisy' Japanese number with a plus
-    func testValidNumberWithoutPlusWhiteSpace() {
-        let testNumber = "81 601 55-5-5 5 5"
-        do {
-            let phoneNumber = try PhoneNumber(rawNumber: testNumber)
-            XCTAssertEqual(phoneNumber.toE164(), "+81601555555")
-            XCTAssertEqual(phoneNumber.countryCode, 81)
-            XCTAssertEqual(phoneNumber.nationalNumber, 601555555)
-            XCTAssertEqual(phoneNumber.leadingZero, false)
-        }
-        catch {
-            XCTFail()
-        }
-    }
+
     
     // French number with brackets
     func testValidNumberWithBrackets() {
@@ -234,7 +204,7 @@ class PhoneNumberKitTests: XCTestCase {
 
     //  Invalid number invalid format
     func testInvalidNumberNotANumberInvalidFormat() {
-        let testNumber = "+33(0)689555555"
+        let testNumber = "+33(02)689555555"
         do {
             let phoneNumber = try PhoneNumber(rawNumber: testNumber)
             phoneNumber.toE164()
