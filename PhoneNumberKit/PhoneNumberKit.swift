@@ -83,7 +83,7 @@ public class PhoneNumberKit : NSObject {
     
     // Get a the country code for a specific country
     public func codeForCountry(country: NSString) -> UInt64? {
-        let results = metadata.filter { $0.codeID == country}
+        let results = metadata.filter { $0.codeID == country.uppercaseString}
             .map{$0.countryCode}
         return results.first
     }
@@ -93,11 +93,11 @@ public class PhoneNumberKit : NSObject {
         let networkInfo = CTTelephonyNetworkInfo()
         let carrier = networkInfo.subscriberCellularProvider
         if (carrier != nil && (carrier!.isoCountryCode != nil)) {
-            return carrier!.isoCountryCode!;
+            return carrier!.isoCountryCode!.uppercaseString;
         } else {
             let currentLocale = NSLocale.currentLocale()
             let countryCode : String = currentLocale.objectForKey(NSLocaleCountryCode) as! String
-            return countryCode;
+            return countryCode.uppercaseString;
         }
     }
 
