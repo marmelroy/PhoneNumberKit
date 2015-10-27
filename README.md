@@ -4,7 +4,7 @@
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 # PhoneNumberKit
-A Swift framework for parsing, formatting and validating international phone numbers.
+Swift framework for parsing, formatting and validating international phone numbers.
 Inspired by Google's libphonenumber.
 
 ## Features
