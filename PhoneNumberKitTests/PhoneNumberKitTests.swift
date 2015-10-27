@@ -30,7 +30,7 @@ class PhoneNumberKitTests: XCTestCase {
             XCTAssertEqual(phoneNumber.leadingZero, true)
         }
         catch {
-        
+            XCTFail()
         }
     }
     
@@ -45,7 +45,7 @@ class PhoneNumberKitTests: XCTestCase {
             XCTAssertEqual(phoneNumber.numberExtension, "84")
         }
         catch {
-            
+            XCTFail()
         }
     }
     
@@ -61,7 +61,7 @@ class PhoneNumberKitTests: XCTestCase {
             XCTAssertEqual(phoneNumber.type, PNPhoneNumberType.Mobile)
         }
         catch {
-            
+            XCTFail()
         }
     }
     
@@ -76,7 +76,7 @@ class PhoneNumberKitTests: XCTestCase {
             XCTAssertEqual(phoneNumber.leadingZero, false)
         }
         catch {
-            
+            XCTFail()
         }
     }
     
@@ -92,7 +92,7 @@ class PhoneNumberKitTests: XCTestCase {
             XCTAssertEqual(phoneNumber.type, PNPhoneNumberType.Mobile)
         }
         catch {
-            
+            XCTFail()
         }
     }
     
@@ -107,9 +107,27 @@ class PhoneNumberKitTests: XCTestCase {
             XCTAssertEqual(phoneNumber.leadingZero, false)
         }
         catch {
-            
+            XCTFail()
         }
     }
+    
+    // French number with brackets
+    func testValidNumberWithBrackets() {
+        let testNumber = "+33 (0) 6 89 01 73 83"
+        do {
+            let phoneNumber = try PhoneNumber(rawNumber: testNumber)
+            XCTAssertEqual(phoneNumber.toE164(), "+33689017383")
+            XCTAssertEqual(phoneNumber.countryCode, 33)
+            XCTAssertEqual(phoneNumber.nationalNumber, 689017383)
+            XCTAssertEqual(phoneNumber.leadingZero, false)
+        }
+        catch {
+            XCTFail()
+        }
+    }
+
+    
+    
 
 
     // English number with an American IDD (default region for testing enivronment)
@@ -123,7 +141,7 @@ class PhoneNumberKitTests: XCTestCase {
             XCTAssertEqual(phoneNumber.leadingZero, false)
         }
         catch {
-            
+            XCTFail()
         }
     }
 
@@ -138,7 +156,7 @@ class PhoneNumberKitTests: XCTestCase {
             XCTAssertEqual(phoneNumber.leadingZero, false)
         }
         catch {
-            
+            XCTFail()
         }
     }
 
@@ -153,7 +171,7 @@ class PhoneNumberKitTests: XCTestCase {
             XCTAssertEqual(phoneNumber.leadingZero, false)
         }
         catch {
-            
+            XCTFail()
         }
     }
     
@@ -168,7 +186,7 @@ class PhoneNumberKitTests: XCTestCase {
             XCTAssertEqual(phoneNumber.leadingZero, false)
         }
         catch {
-            
+            XCTFail()
         }
     }
     
@@ -178,12 +196,10 @@ class PhoneNumberKitTests: XCTestCase {
         do {
             let phoneNumber = try PhoneNumber(rawNumber: testNumber)
             phoneNumber.toE164()
-        }
-        catch PNParsingError.TooShort {
-            XCTAssert(true)
+            XCTFail()
         }
         catch {
-            XCTAssert(false)
+            XCTAssert(true)
         }
     }
 
@@ -193,6 +209,7 @@ class PhoneNumberKitTests: XCTestCase {
         do {
             let phoneNumber = try PhoneNumber(rawNumber: testNumber)
             phoneNumber.toE164()
+            XCTFail()
         }
         catch PNParsingError.TooLong {
             XCTAssert(true)
@@ -208,12 +225,10 @@ class PhoneNumberKitTests: XCTestCase {
         do {
             let phoneNumber = try PhoneNumber(rawNumber: testNumber)
             phoneNumber.toE164()
-        }
-        catch PNParsingError.NotANumber {
-            XCTAssert(true)
+            XCTFail()
         }
         catch {
-            XCTAssert(false)
+            XCTAssert(true)
         }
     }
 
@@ -223,6 +238,7 @@ class PhoneNumberKitTests: XCTestCase {
         do {
             let phoneNumber = try PhoneNumber(rawNumber: testNumber)
             phoneNumber.toE164()
+            XCTFail()
         }
         catch PNParsingError.NotANumber {
             XCTAssert(true)
