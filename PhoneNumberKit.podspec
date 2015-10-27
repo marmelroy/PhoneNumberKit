@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = "PhoneNumberKit"
   s.version          = "0.1"
-  s.summary          = "A Swift framework for parsing, formatting and validating international phone numbers. Inspired by Google's libphonenumber."
+  s.summary          = "Swift framework for working with phone numbers"
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -25,15 +25,12 @@ Pod::Spec.new do |s|
   s.license          = 'MIT'
   s.author           = { "Roy Marmelstein" => "marmelroy@gmail.com" }
   s.source           = { :git => "https://github.com/marmelroy/PhoneNumberKit.git", :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  s.social_media_url   = "http://twitter.com/marmelroy"
 
   s.platform     = :ios, '8.0'
   s.requires_arc = true
 
-  s.source_files = 'Pod/Classes/**/*'
-  s.resource_bundles = {
-    'PhoneNumberKit' => ['Pod/Assets/*.png']
-  }
+  s.source_files = "PhoneNumberKit"
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'CoreTelephony'
