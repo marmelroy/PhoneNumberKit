@@ -157,12 +157,12 @@ public class PhoneNumberParser: NSObject {
     // MARK: Validations
 
     // Check if number is viable
-    func isViablePhoneNumber(number: NSString) -> Bool {
-        let numberToParse = normalizeNonBreakingSpace(number as String)
+    func isViablePhoneNumber(number: String) -> Bool {
+        let numberToParse = normalizeNonBreakingSpace(number)
         if (numberToParse.characters.count < PNMinLengthForNSN) {
             return false;
         }
-        return true
+        return matchesEntirely(PNValidPhoneNumberPattern, string: number)
     }
     
     // Check region is valid for parsing

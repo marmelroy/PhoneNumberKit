@@ -13,7 +13,7 @@ import Foundation
 func regexWithPattern(pattern: String) throws -> NSRegularExpression {
     do {
         var currentPattern : NSRegularExpression
-        currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpressionOptions(rawValue: 0))
+        currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpressionOptions.CaseInsensitive)
         return currentPattern
     }
     catch {
@@ -67,19 +67,19 @@ public func matchesEntirely(pattern: String?, string: String) -> Bool {
     if (pattern == nil) {
         return false
     }
-    var matchesEntirely : Bool = false
+    var isMatchingEntirely : Bool = false
     do {
-        let matches = try regexMatches(pattern!, string: string)
-        let matchResult = matches.first
+        let currentPattern = try regexWithPattern(pattern!)
         let stringRange = NSMakeRange(0, string.characters.count)
+        let matchResult = currentPattern.firstMatchInString(string, options: NSMatchingOptions.Anchored, range: stringRange)
         if (matchResult != nil) {
-            matchesEntirely = NSEqualRanges(matchResult!.range, stringRange)
+            isMatchingEntirely = NSEqualRanges(matchResult!.range, stringRange)
         }
+        return isMatchingEntirely
     }
     catch {
-        matchesEntirely = false
+        return false
     }
-    return matchesEntirely
 }
 
 // MARK: String and replace

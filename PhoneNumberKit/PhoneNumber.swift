@@ -34,7 +34,7 @@ public extension PhoneNumber {
         }
         var nationalNumber = parser.extractPossibleNumber(rawNumber)
         
-        if (!parser.isViablePhoneNumber(nationalNumber)) {
+        if (!parser.isViablePhoneNumber(nationalNumber as String)) {
             throw PNParsingError.NotANumber
         }
         if (!parser.checkRegionForParsing(nationalNumber, defaultRegion: defaultRegion)) {
