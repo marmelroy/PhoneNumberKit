@@ -78,7 +78,7 @@ public extension PhoneNumber {
         
         // Regex validations
         if (self.countryCode != regionMetaData!.countryCode) {
-            let country = phoneNumberKit.countriesForCode(countryCode).first
+            let country = phoneNumberKit.mainCountryForCode(countryCode)
             if  (country == nil) {
                 throw PNParsingError.NotANumber
             }
