@@ -162,7 +162,7 @@ public class PhoneNumberParser: NSObject {
         if (numberToParse.characters.count < PNMinLengthForNSN) {
             return false;
         }
-        return matchesEntirely(PNValidPhoneNumberPattern, string: number)
+        return matchesEntirely(PNValidPhoneNumberPatternA, string: number)
     }
     
     // Check region is valid for parsing
