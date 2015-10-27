@@ -67,7 +67,7 @@ public extension PhoneNumber {
         }
         
         // Length Validations
-        let normalizedNationalNumber = parser.normalizePhoneNumber(nationalNumber as String)
+        var normalizedNationalNumber = parser.normalizePhoneNumber(nationalNumber as String)
         if (normalizedNationalNumber.characters.count <=
             PNMinLengthForNSN) {
             throw PNParsingError.TooShort
@@ -84,6 +84,11 @@ public extension PhoneNumber {
             }
             regionMetaData =  phoneNumberKit.metadata.filter { $0.codeID == country}.first
         }
+        
+        // Carrier Code
+        var carrierCode : NSString = NSString()
+        parser.stripNationalPrefixAndCarrierCode(&normalizedNationalNumber, metadata: regionMetaData!, carrierCode: &carrierCode)
+        
         self.type = parser.extractNumberType(normalizedNationalNumber, metadata: regionMetaData!)
         if (self.type == PNPhoneNumberType.Unknown) {
             throw PNParsingError.NotANumber
