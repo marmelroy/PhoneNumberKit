@@ -24,7 +24,7 @@ if [ "$MODE" = "build" ]; then
         -scheme PhoneNumberKit \
         -sdk "$SDK" \
         -destination "$PLATFORM" \
-        build
+        build test
     trap - EXIT
     exit 0
 fi
