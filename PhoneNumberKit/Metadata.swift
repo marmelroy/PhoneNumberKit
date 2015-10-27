@@ -40,7 +40,7 @@ struct MetadataTerritory {
     var internationalPrefix: String?
     var nationalPrefixForParsing: String?
     var nationalPrefixTransformRule: String?
-    
+    var mainCountryForCode: Bool = false
 }
 
 extension MetadataTerritory {
@@ -62,6 +62,10 @@ extension MetadataTerritory {
         self.internationalPrefix = jsondDict.valueForKey("_internationalPrefix") as? String
         self.nationalPrefixForParsing = jsondDict.valueForKey("_nationalPrefixForParsing") as? String
         self.nationalPrefixTransformRule = jsondDict.valueForKey("_nationalPrefixTransformRule") as? String
+        let _mainCountryForCode = jsondDict.valueForKey("_mainCountryForCode") as? NSString
+        if (_mainCountryForCode != nil) {
+            self.mainCountryForCode = _mainCountryForCode!.boolValue
+        }
     }
 }
 
