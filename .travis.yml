@@ -8,12 +8,14 @@ before_install:
   - brew update;
   - brew reinstall xctool
   - gem install cocoapods
+  - gem install slather -N
   - xcrun simctl list
 install: echo "<3"
 env:
   - MODE=build
   - MODE=examples
 script: ./build.sh $MODE
+after_success: slather
 
 # whitelist
 branches:
