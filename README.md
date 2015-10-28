@@ -7,6 +7,8 @@
 Swift framework for parsing, formatting and validating international phone numbers.
 Inspired by Google's libphonenumber.
 
+:construction: PhoneNumberKit is currently alpha software :construction:
+
 ## Features
 
 - Quickly validate, normalize and extract the elements of any phone number string.    
