@@ -50,9 +50,7 @@ public enum PNPhoneNumberType {
     case UAN
     case Voicemail
     case Unknown
-
 }
-
 
 // MARK: Constants
 

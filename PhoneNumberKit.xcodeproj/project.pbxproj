@@ -71,6 +71,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3420981B1BE1F1250036BBB1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				34AA66031BDD448B00467912 /* CoreTelephony.framework */,
+				3472098F1BB80A69004DE6DA /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		3424185A1BB6E5A000EE70E7 = {
 			isa = PBXGroup;
 			children = (
@@ -101,8 +110,7 @@
 				34566C991BC112C500715E6B /* RegularExpressions.swift */,
 				34AA66011BDD160B00467912 /* Constants.swift */,
 				3435CC8F1BBFF66F003F953B /* Resources */,
-				34AA66031BDD448B00467912 /* CoreTelephony.framework */,
-				3472098F1BB80A69004DE6DA /* Foundation.framework */,
+				3420981B1BE1F1250036BBB1 /* Frameworks */,
 			);
 			path = PhoneNumberKit;
 			sourceTree = "<group>";
