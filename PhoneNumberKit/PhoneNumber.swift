@@ -28,6 +28,7 @@ public extension PhoneNumber {
     
     // Parse raw number with custom region
     public init(rawNumber: String, region: String) throws {
+        let region = region.uppercaseString
         let parser = PhoneNumberParser()
         self.rawNumber = rawNumber
         
