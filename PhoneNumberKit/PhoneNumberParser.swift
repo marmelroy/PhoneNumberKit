@@ -99,7 +99,8 @@ public class PhoneNumberParser: NSObject {
         return 0
     }
     
-    func extractNumberType(nationalNumber: NSString, metadata: MetadataTerritory) -> PNPhoneNumberType {
+    // Extract number type
+    func extractNumberType(nationalNumber: String, metadata: MetadataTerritory) -> PNPhoneNumberType {
         let generalNumberDesc = metadata.generalDesc!
         if (hasValue(generalNumberDesc.nationalNumberPattern) == false || !isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc)) {
             return PNPhoneNumberType.Unknown
@@ -137,18 +138,18 @@ public class PhoneNumberParser: NSObject {
         return PNPhoneNumberType.Unknown
     }
     
-    func isNumberMatchingDesc(nationalNumber: NSString, numberDesc: MetadataPhoneNumberDesc?) -> Bool {
+    func isNumberMatchingDesc(nationalNumber: String, numberDesc: MetadataPhoneNumberDesc?) -> Bool {
         if (numberDesc == nil) {
             return false
         }
         let metadataDesc = numberDesc!
         if (hasValue(metadataDesc.possibleNumberPattern) == false || metadataDesc.possibleNumberPattern == "NA") {
-            return matchesEntirely(metadataDesc.nationalNumberPattern, string: nationalNumber as String)
+            return matchesEntirely(metadataDesc.nationalNumberPattern, string: nationalNumber)
         }
         if (hasValue(metadataDesc.nationalNumberPattern) == false || metadataDesc.nationalNumberPattern == "NA") {
-            return matchesEntirely(metadataDesc.possibleNumberPattern, string: nationalNumber as String)
+            return matchesEntirely(metadataDesc.possibleNumberPattern, string: nationalNumber)
         }
-        return matchesEntirely(metadataDesc.possibleNumberPattern, string: nationalNumber as String) && matchesEntirely(metadataDesc.possibleNumberPattern, string: nationalNumber as String)
+        return matchesEntirely(metadataDesc.possibleNumberPattern, string: nationalNumber) && matchesEntirely(metadataDesc.possibleNumberPattern, string: nationalNumber)
     }
 
     
@@ -276,7 +277,6 @@ public class PhoneNumberParser: NSObject {
             catch {
                 return
             }
-
         }
     }
 

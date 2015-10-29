@@ -32,12 +32,14 @@ public extension PhoneNumber {
         } else if (rawNumber.characters.count > PNMaxInputStringLength) {
             throw PNParsingError.TooLong
         }
+        
+        // Possible number extraction
         var nationalNumber = parser.extractPossibleNumber(rawNumber)
         
         if (parser.isViablePhoneNumber(nationalNumber as String) == false) {
             throw PNParsingError.NotANumber
         }
-        if (!parser.checkRegionForParsing(nationalNumber, defaultRegion: defaultRegion)) {
+        if (parser.checkRegionForParsing(nationalNumber, defaultRegion: defaultRegion) == false) {
             throw PNParsingError.InvalidCountryCode
         }
         
@@ -76,13 +78,13 @@ public extension PhoneNumber {
             throw PNParsingError.TooLong
         }
         
-        // Regex validations
+        // If country code is not default, grab countrycode metadata 
         if (self.countryCode != regionMetaData!.countryCode) {
-            let country = phoneNumberKit.mainCountryForCode(countryCode)
-            if  (country == nil) {
-                throw PNParsingError.NotANumber
+            let countryMetadata = phoneNumberKit.mainCountryMetadataForCode(countryCode)
+            if  (countryMetadata == nil) {
+                throw PNParsingError.InvalidCountryCode
             }
-            regionMetaData =  phoneNumberKit.metadata.filter { $0.codeID == country}.first
+            regionMetaData = countryMetadata
         }
         
         // National Prefix Strip
@@ -97,6 +99,7 @@ public extension PhoneNumber {
     }
     
     private func adjustedNationalNumber() -> String {
+        // Adding leading zero if needed
         if (self.leadingZero) {
             return "0" + String(nationalNumber)
         }

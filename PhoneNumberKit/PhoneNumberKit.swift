@@ -66,6 +66,12 @@ public class PhoneNumberKit : NSObject {
     
     // Get the main country corresponding to a given country code
     public func mainCountryForCode(code: UInt64) -> String? {
+        let country = self.mainCountryMetadataForCode(code)
+        return country?.codeID
+    }
+    
+    // Get the main country corresponding to a given country code
+    func mainCountryMetadataForCode(code: UInt64) -> MetadataTerritory? {
         let results = metadata.filter { $0.countryCode == code}
         if (results.count > 0) {
             var mainResult : MetadataTerritory
@@ -75,7 +81,7 @@ public class PhoneNumberKit : NSObject {
             else {
                 mainResult = results.first!
             }
-            return mainResult.codeID
+            return mainResult
         }
         return nil
     }
