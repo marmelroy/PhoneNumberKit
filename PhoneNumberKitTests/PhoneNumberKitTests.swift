@@ -274,107 +274,131 @@ class PhoneNumberKitTests: XCTestCase {
     
     func testBSNumber() {
         do {
-            let phoneNumber1 = try PhoneNumber(rawNumber: "+1 242 365 1234")
+            let phoneNumber1 = try PhoneNumber(rawNumber: "242 365 1234", region: "BS")
             XCTAssertNotNil(phoneNumber1)
-            let phoneNumber2 = try PhoneNumber(rawNumber: "+1 242 365 1234")
+            let phoneNumber2 = try PhoneNumber(rawNumber: "+1 242 365 1234", region: "BS")
             XCTAssertNotNil(phoneNumber2)
         }
         catch {
             XCTFail()
         }
     }
-
     
+    func testGBNumber() {
+        do {
+            let phoneNumber1 = try PhoneNumber(rawNumber: "(020) 7031 3000", region: "GB")
+            XCTAssertNotNil(phoneNumber1)
+            let phoneNumber2 = try PhoneNumber(rawNumber: "+44 20 7031 3000", region: "GB")
+            XCTAssertNotNil(phoneNumber2)
+            let phoneNumber3 = try PhoneNumber(rawNumber: "(07912) 345 678", region: "GB")
+            XCTAssertNotNil(phoneNumber3)
+            let phoneNumber4 = try PhoneNumber(rawNumber: "+44 7912 345 678", region: "GB")
+            XCTAssertNotNil(phoneNumber4)
+        }
+        catch {
+            XCTFail()
+        }
+    }
+
+    func testDENumber() {
+        do {
+            let phoneNumber1 = try PhoneNumber(rawNumber: "0291 12345678", region: "DE")
+            XCTAssertNotNil(phoneNumber1)
+            let phoneNumber2 = try PhoneNumber(rawNumber: "+49 291 12345678", region: "DE")
+            XCTAssertNotNil(phoneNumber2)
+            let phoneNumber3 = try PhoneNumber(rawNumber: "04134 1234", region: "DE")
+            XCTAssertNotNil(phoneNumber3)
+            let phoneNumber4 = try PhoneNumber(rawNumber: "09123 12345", region: "DE")
+            XCTAssertNotNil(phoneNumber4)
+            let phoneNumber5 = try PhoneNumber(rawNumber: "+49 8021 2345", region: "DE")
+            XCTAssertNotNil(phoneNumber5)
+        }
+        catch {
+            XCTFail()
+        }
+    }
+    
+    func testITNumber() {
+        do {
+            let phoneNumber1 = try PhoneNumber(rawNumber: "02 3661 8300", region: "IT")
+            XCTAssertNotNil(phoneNumber1)
+            let phoneNumber2 = try PhoneNumber(rawNumber: "+39 02 3661 8300", region: "IT")
+            XCTAssertNotNil(phoneNumber2)
+            let phoneNumber3 = try PhoneNumber(rawNumber: "+390236618300", region: "IT")
+            XCTAssertNotNil(phoneNumber3)
+            let phoneNumber4 = try PhoneNumber(rawNumber: "345 678 901", region: "IT")
+            XCTAssertNotNil(phoneNumber4)
+            let phoneNumber5 = try PhoneNumber(rawNumber: "+39 345 678 901", region: "IT")
+            XCTAssertNotNil(phoneNumber5)
+            let phoneNumber6 = try PhoneNumber(rawNumber: "+39345678901", region: "IT")
+            XCTAssertNotNil(phoneNumber6)
+        }
+        catch {
+            XCTFail()
+        }
+    }
+    
+    func testAUNumber() {
+        do {
+            let phoneNumber1 = try PhoneNumber(rawNumber: "02 3661 8300", region: "AU")
+            XCTAssertNotNil(phoneNumber1)
+            let phoneNumber2 = try PhoneNumber(rawNumber: "+61 2 3661 8300", region: "AU")
+            XCTAssertNotNil(phoneNumber2)
+            let phoneNumber3 = try PhoneNumber(rawNumber: "+61236618300", region: "AU")
+            XCTAssertNotNil(phoneNumber3)
+            let phoneNumber4 = try PhoneNumber(rawNumber: "1800 123 456", region: "AU")
+            XCTAssertNotNil(phoneNumber4)
+            let phoneNumber5 = try PhoneNumber(rawNumber: "+61 1800 123 456", region: "AU")
+            XCTAssertNotNil(phoneNumber5)
+            let phoneNumber6 = try PhoneNumber(rawNumber: "+611800123456", region: "AU")
+            XCTAssertNotNil(phoneNumber6)
+        }
+        catch {
+            XCTFail()
+        }
+    }
 //
-//    
-//    #pragma mark - testFormatGBNumber
-//    {
-//    XCTAssertEqualObjects(@"(020) 7031 3000", [_aUtil format:GB_NUMBER numberFormat:NBEPhoneNumberFormatNATIONAL]);
-//    XCTAssertEqualObjects(@"+44 20 7031 3000", [_aUtil format:GB_NUMBER numberFormat:NBEPhoneNumberFormatINTERNATIONAL]);
-//    XCTAssertEqualObjects(@"(07912) 345 678", [_aUtil format:GB_MOBILE numberFormat:NBEPhoneNumberFormatNATIONAL]);
-//    XCTAssertEqualObjects(@"+44 7912 345 678", [_aUtil format:GB_MOBILE numberFormat:NBEPhoneNumberFormatINTERNATIONAL]);
-//    }
-//    
-//    
-//    #pragma mark - testFormatDENumber
-//    {
-//    id deNumber = [[NBPhoneNumber alloc] init];
-//    [deNumber setCountryCode:@49];
-//    [deNumber setNationalNumber:@301234];
-//    XCTAssertEqualObjects(@"030/1234", [_aUtil format:deNumber numberFormat:NBEPhoneNumberFormatNATIONAL]);
-//    XCTAssertEqualObjects(@"+49 30/1234", [_aUtil format:deNumber numberFormat:NBEPhoneNumberFormatINTERNATIONAL]);
-//    XCTAssertEqualObjects(@"tel:+49-30-1234", [_aUtil format:deNumber numberFormat:NBEPhoneNumberFormatRFC3966]);
-//    
-//    deNumber = [[NBPhoneNumber alloc] init];
-//    [deNumber setCountryCode:@49];
-//    [deNumber setNationalNumber:@291123];
-//    XCTAssertEqualObjects(@"0291 123", [_aUtil format:deNumber numberFormat:NBEPhoneNumberFormatNATIONAL]);
-//    XCTAssertEqualObjects(@"+49 291 123", [_aUtil format:deNumber numberFormat:NBEPhoneNumberFormatINTERNATIONAL]);
-//    
-//    deNumber = [[NBPhoneNumber alloc] init];
-//    [deNumber setCountryCode:@49];
-//    [deNumber setNationalNumber:@29112345678];
-//    XCTAssertEqualObjects(@"0291 12345678", [_aUtil format:deNumber numberFormat:NBEPhoneNumberFormatNATIONAL]);
-//    XCTAssertEqualObjects(@"+49 291 12345678", [_aUtil format:deNumber numberFormat:NBEPhoneNumberFormatINTERNATIONAL]);
-//    
-//    deNumber = [[NBPhoneNumber alloc] init];
-//    [deNumber setCountryCode:@49];
-//    [deNumber setNationalNumber:@912312345];
-//    XCTAssertEqualObjects(@"09123 12345", [_aUtil format:deNumber numberFormat:NBEPhoneNumberFormatNATIONAL]);
-//    XCTAssertEqualObjects(@"+49 9123 12345", [_aUtil format:deNumber numberFormat:NBEPhoneNumberFormatINTERNATIONAL]);
-//    
-//    deNumber = [[NBPhoneNumber alloc] init];
-//    [deNumber setCountryCode:@49];
-//    [deNumber setNationalNumber:@80212345];
-//    XCTAssertEqualObjects(@"08021 2345", [_aUtil format:deNumber numberFormat:NBEPhoneNumberFormatNATIONAL]);
-//    XCTAssertEqualObjects(@"+49 8021 2345", [_aUtil format:deNumber numberFormat:NBEPhoneNumberFormatINTERNATIONAL]);
-//    
-//    // Note this number is correctly formatted without national prefix. Most of
-//    // the numbers that are treated as invalid numbers by the library are short
-//    // numbers, and they are usually not dialed with national prefix.
-//    XCTAssertEqualObjects(@"1234", [_aUtil format:DE_SHORT_NUMBER numberFormat:NBEPhoneNumberFormatNATIONAL]);
-//    XCTAssertEqualObjects(@"+49 1234", [_aUtil format:DE_SHORT_NUMBER numberFormat:NBEPhoneNumberFormatINTERNATIONAL]);
-//    
-//    deNumber = [[NBPhoneNumber alloc] init];
-//    [deNumber setCountryCode:@49];
-//    [deNumber setNationalNumber:@41341234];
-//    XCTAssertEqualObjects(@"04134 1234", [_aUtil format:deNumber numberFormat:NBEPhoneNumberFormatNATIONAL]);
-//    }
-//    
-//    #pragma mark - testFormatITNumber
-//    {
-//    XCTAssertEqualObjects(@"02 3661 8300", [_aUtil format:IT_NUMBER numberFormat:NBEPhoneNumberFormatNATIONAL]);
-//    XCTAssertEqualObjects(@"+39 02 3661 8300", [_aUtil format:IT_NUMBER numberFormat:NBEPhoneNumberFormatINTERNATIONAL]);
-//    XCTAssertEqualObjects(@"+390236618300", [_aUtil format:IT_NUMBER numberFormat:NBEPhoneNumberFormatE164]);
-//    XCTAssertEqualObjects(@"345 678 901", [_aUtil format:IT_MOBILE numberFormat:NBEPhoneNumberFormatNATIONAL]);
-//    XCTAssertEqualObjects(@"+39 345 678 901", [_aUtil format:IT_MOBILE numberFormat:NBEPhoneNumberFormatINTERNATIONAL]);
-//    XCTAssertEqualObjects(@"+39345678901", [_aUtil format:IT_MOBILE numberFormat:NBEPhoneNumberFormatE164]);
-//    }
-//    
-//    #pragma mark - testFormatAUNumber
-//    {
-//    XCTAssertEqualObjects(@"02 3661 8300", [_aUtil format:AU_NUMBER numberFormat:NBEPhoneNumberFormatNATIONAL]);
-//    XCTAssertEqualObjects(@"+61 2 3661 8300", [_aUtil format:AU_NUMBER numberFormat:NBEPhoneNumberFormatINTERNATIONAL]);
-//    XCTAssertEqualObjects(@"+61236618300", [_aUtil format:AU_NUMBER numberFormat:NBEPhoneNumberFormatE164]);
-//    
-//    id auNumber = [[NBPhoneNumber alloc] init];
-//    [auNumber setCountryCode:@61];
-//    [auNumber setNationalNumber:@1800123456];
-//    XCTAssertEqualObjects(@"1800 123 456", [_aUtil format:auNumber numberFormat:NBEPhoneNumberFormatNATIONAL]);
-//    XCTAssertEqualObjects(@"+61 1800 123 456", [_aUtil format:auNumber numberFormat:NBEPhoneNumberFormatINTERNATIONAL]);
-//    XCTAssertEqualObjects(@"+611800123456", [_aUtil format:auNumber numberFormat:NBEPhoneNumberFormatE164]);
-//    }
-//    
-//    #pragma mark - testFormatARNumber
-//    {
-//    XCTAssertEqualObjects(@"011 8765-4321", [_aUtil format:AR_NUMBER numberFormat:NBEPhoneNumberFormatNATIONAL]);
-//    XCTAssertEqualObjects(@"+54 11 8765-4321", [_aUtil format:AR_NUMBER numberFormat:NBEPhoneNumberFormatINTERNATIONAL]);
-//    XCTAssertEqualObjects(@"+541187654321", [_aUtil format:AR_NUMBER numberFormat:NBEPhoneNumberFormatE164]);
-//    XCTAssertEqualObjects(@"011 15 8765-4321", [_aUtil format:AR_MOBILE numberFormat:NBEPhoneNumberFormatNATIONAL]);
-//    XCTAssertEqualObjects(@"+54 9 11 8765 4321", [_aUtil format:AR_MOBILE numberFormat:NBEPhoneNumberFormatINTERNATIONAL]);
-//    XCTAssertEqualObjects(@"+5491187654321", [_aUtil format:AR_MOBILE numberFormat:NBEPhoneNumberFormatE164]);
-//    }
-//    
+    func testARNumber() {
+        do {
+            let phoneNumber1 = try PhoneNumber(rawNumber: "011 8765-4321", region: "AR")
+            XCTAssertNotNil(phoneNumber1)
+            let phoneNumber2 = try PhoneNumber(rawNumber: "+54 11 8765-4321", region: "AR")
+            XCTAssertNotNil(phoneNumber2)
+            let phoneNumber3 = try PhoneNumber(rawNumber: "+541187654321", region: "AR")
+            XCTAssertNotNil(phoneNumber3)
+            let phoneNumber4 = try PhoneNumber(rawNumber: "011 15 8765-4321", region: "AR")
+            XCTAssertNotNil(phoneNumber4)
+            let phoneNumber5 = try PhoneNumber(rawNumber: "+54 9 11 8765 4321", region: "AR")
+            XCTAssertNotNil(phoneNumber5)
+            let phoneNumber6 = try PhoneNumber(rawNumber: "+5491187654321", region: "AR")
+            XCTAssertNotNil(phoneNumber6)
+        }
+        catch {
+            XCTFail()
+        }
+    }
+
+    func testMXNumber() {
+        do {
+            let phoneNumber1 = try PhoneNumber(rawNumber: "045 234 567 8900", region: "MX")
+            XCTAssertNotNil(phoneNumber1)
+            let phoneNumber2 = try PhoneNumber(rawNumber: "+52 1 234 567 8900", region: "MX")
+            XCTAssertNotNil(phoneNumber2)
+            let phoneNumber3 = try PhoneNumber(rawNumber: "+5212345678900", region: "MX")
+            XCTAssertNotNil(phoneNumber3)
+            let phoneNumber5 = try PhoneNumber(rawNumber: "045 55 1234 5678", region: "MX")
+            XCTAssertNotNil(phoneNumber5)
+            let phoneNumber6 = try PhoneNumber(rawNumber: "+52 1 55 1234 5678", region: "MX")
+            XCTAssertNotNil(phoneNumber6)
+        }
+        catch {
+            XCTFail()
+        }
+    }
+//
+//
+
+//
 //    #pragma mark - testFormatMXNumber
 //    {
 //    XCTAssertEqualObjects(@"045 234 567 8900", [_aUtil format:MX_MOBILE1 numberFormat:NBEPhoneNumberFormatNATIONAL]);
