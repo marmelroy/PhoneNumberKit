@@ -128,16 +128,8 @@ extension MetadataTerritory {
 
 extension MetadataPhoneNumberDesc {
     init(jsondDict: NSDictionary?) {
-        let nationalNumberPattern = jsondDict?.valueForKey("nationalNumberPattern") as? String
-        let possibleNumberPattern = jsondDict?.valueForKey("possibleNumberPattern") as? String
-        if (nationalNumberPattern != nil) {
-            let trimmedNationalNumberPattern = nationalNumberPattern!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-            self.nationalNumberPattern = trimmedNationalNumberPattern
-        }
-        if (possibleNumberPattern != nil) {
-            let trimmedpossibleNumberPattern = possibleNumberPattern!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-            self.possibleNumberPattern = trimmedpossibleNumberPattern
-        }
+        self.nationalNumberPattern = jsondDict?.valueForKey("nationalNumberPattern") as? String
+        self.possibleNumberPattern = jsondDict?.valueForKey("possibleNumberPattern") as? String
     }
 }
 
