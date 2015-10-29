@@ -85,9 +85,8 @@ public extension PhoneNumber {
             regionMetaData =  phoneNumberKit.metadata.filter { $0.codeID == country}.first
         }
         
-        // Carrier Code
-        var carrierCode : NSString = NSString()
-        parser.stripNationalPrefixAndCarrierCode(&normalizedNationalNumber, metadata: regionMetaData!, carrierCode: &carrierCode)
+        // National Prefix Strip
+        parser.stripNationalPrefix(&normalizedNationalNumber, metadata: regionMetaData!)
         
         self.type = parser.extractNumberType(normalizedNationalNumber, metadata: regionMetaData!)
         if (self.type == PNPhoneNumberType.Unknown) {

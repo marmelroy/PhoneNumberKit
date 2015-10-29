@@ -87,8 +87,7 @@ public class PhoneNumberParser: NSObject {
             if (fullNumber.hasPrefix(defaultCountryCode)) {
                 var potentialNationalNumber = fullNumber.substringFromIndex(defaultCountryCode.characters.count)
                 let validNumberPattern = metadata.generalDesc?.nationalNumberPattern
-                var carrierCode : NSString = NSString()
-                stripNationalPrefixAndCarrierCode(&potentialNationalNumber, metadata: metadata, carrierCode: &carrierCode)
+                stripNationalPrefix(&potentialNationalNumber, metadata: metadata)
                 let potentialNationalNumberStr = potentialNationalNumber.copy()
                 let possibleNumberPattern = metadata.generalDesc?.possibleNumberPattern
                 if ((!matchesEntirely(validNumberPattern!, string: fullNumber as String) && matchesEntirely(validNumberPattern!, string: potentialNationalNumberStr as! String)) || testStringLengthAgainstPattern(possibleNumberPattern!, string: fullNumber as String) == PNValidationResult.TooLong) {
@@ -245,7 +244,7 @@ public class PhoneNumberParser: NSObject {
     }
     
     // Strip national prefix and carrier code
-    func stripNationalPrefixAndCarrierCode(inout number: String, metadata: MetadataTerritory, inout carrierCode: NSString) -> Bool {
+    func stripNationalPrefix(inout number: String, metadata: MetadataTerritory) -> Bool {
         if (metadata.nationalPrefixForParsing != nil) {
             let adjustedNumber : NSString = number as NSString
             let possibleNationalPrefix = metadata.nationalPrefixForParsing!
@@ -272,16 +271,6 @@ public class PhoneNumberParser: NSObject {
                     }
                     if (hasValue(nationalNumberRule!) && matchesEntirely(nationalNumberRule!, string: number)){
                         return false
-                    }
-                    if ((noTransform && numOfGroups > 0 && hasValue(firstMatchStringWithGroup)) || (!noTransform && numOfGroups > 1)) {
-                        if (carrierCode.length > 0) {
-                            carrierCode = carrierCode.stringByAppendingString(firstMatchStringWithGroup)
-                        }
-                        else if ((noTransform && numOfGroups > 0 && hasValue(firstMatchString)) || (!noTransform && numOfGroups > 1)) {
-                            if (carrierCode.length > 0) {
-                                carrierCode = carrierCode.stringByAppendingString(firstMatchString)
-                            }
-                        }
                     }
                     number = transformedNumber as String
                     return true
