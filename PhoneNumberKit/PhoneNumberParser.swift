@@ -102,7 +102,7 @@ class PhoneNumberParser {
     // Extract number type
     func extractNumberType(nationalNumber: String, metadata: MetadataTerritory) -> PNPhoneNumberType {
         let generalNumberDesc = metadata.generalDesc!
-        if (hasValue(generalNumberDesc.nationalNumberPattern) == false || !isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc)) {
+        if (hasValue(generalNumberDesc.nationalNumberPattern) == false || isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc) == false) {
             return PNPhoneNumberType.Unknown
         }
         if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.fixedLine)) {
@@ -149,7 +149,7 @@ class PhoneNumberParser {
         if (hasValue(metadataDesc.nationalNumberPattern) == false || metadataDesc.nationalNumberPattern == "NA") {
             return matchesEntirely(metadataDesc.possibleNumberPattern, string: nationalNumber)
         }
-        return matchesEntirely(metadataDesc.possibleNumberPattern, string: nationalNumber) && matchesEntirely(metadataDesc.possibleNumberPattern, string: nationalNumber)
+        return matchesEntirely(metadataDesc.possibleNumberPattern, string: nationalNumber) && matchesEntirely(metadataDesc.nationalNumberPattern, string: nationalNumber)
     }
 
     
@@ -259,7 +259,7 @@ class PhoneNumberParser {
                     var transformedNumber : String = String()
                     let firstRange = firstMatch?.rangeAtIndex(numOfGroups)
                     let firstMatchStringWithGroup = (firstRange!.location != NSNotFound && firstRange!.location < number.characters.count) ? number.substringWithNSRange(firstRange!) :  String()
-                    let noTransform = (transformRule == nil || transformRule?.characters.count == 0 || hasValue(firstMatchStringWithGroup))
+                    let noTransform = (transformRule == nil || transformRule?.characters.count == 0 || hasValue(firstMatchStringWithGroup) == false)
                     if (noTransform ==  true) {
                         let index = number.startIndex.advancedBy(firstMatchString.characters.count)
                         transformedNumber = number.substringFromIndex(index)
