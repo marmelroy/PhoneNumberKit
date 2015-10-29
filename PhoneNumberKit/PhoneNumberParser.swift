@@ -243,44 +243,42 @@ public class PhoneNumberParser: NSObject {
         }
     }
     
-    // Strip national prefix and carrier code
-    func stripNationalPrefix(inout number: String, metadata: MetadataTerritory) -> Bool {
+    // Strip national prefix
+    func stripNationalPrefix(inout number: String, metadata: MetadataTerritory) {
         if (metadata.nationalPrefixForParsing != nil) {
-            let adjustedNumber : NSString = number as NSString
             let possibleNationalPrefix = metadata.nationalPrefixForParsing!
             let prefixPattern = String(format: "^(?:%@)", possibleNationalPrefix)
             do {
-                let currentPattern =  try regexWithPattern(prefixPattern)
-                let prefixMatcher = currentPattern.matchesInString(number as String, options: NSMatchingOptions(rawValue: 0), range: NSMakeRange(0, number.characters.count))
-                if (!prefixMatcher.isEmpty) {
+                let matches = try regexMatches(prefixPattern, string: number)
+                if (matches.isEmpty == false) {
                     let nationalNumberRule = metadata.generalDesc?.nationalNumberPattern
-                    let firstMatch = prefixMatcher.first
-                    let firstMatchString = adjustedNumber.substringWithRange(firstMatch!.range)
+                    let firstMatch = matches.first
+                    let firstMatchString = number.substringWithNSRange(firstMatch!.range)
                     let numOfGroups = firstMatch!.numberOfRanges - 1
                     let transformRule = metadata.nationalPrefixTransformRule
-                    var transformedNumber : NSString = NSString()
+                    var transformedNumber : String = String()
                     let firstRange = firstMatch?.rangeAtIndex(numOfGroups)
-                    let firstMatchStringWithGroup = (firstRange!.location != NSNotFound && firstRange!.location < adjustedNumber.length) ? adjustedNumber.substringWithRange(firstRange!) :  ""
+                    let firstMatchStringWithGroup = (firstRange!.location != NSNotFound && firstRange!.location < number.characters.count) ? number.substringWithNSRange(firstRange!) :  String()
                     let noTransform = (transformRule == nil || transformRule?.characters.count == 0 || hasValue(firstMatchStringWithGroup))
                     if (noTransform ==  true) {
-                        transformedNumber = adjustedNumber.substringFromIndex(firstMatchString.characters.count)
+                        let index = number.startIndex.advancedBy(firstMatchString.characters.count)
+                        transformedNumber = number.substringFromIndex(index)
                     }
                     else {
                         transformedNumber = replaceFirstStringByRegex(prefixPattern, string: number, templateString: transformRule!)!
-                        
                     }
-                    if (hasValue(nationalNumberRule!) && matchesEntirely(nationalNumberRule!, string: number)){
-                        return false
+                    if (hasValue(nationalNumberRule!) && matchesEntirely(nationalNumberRule!, string: number) && matchesEntirely(nationalNumberRule!, string: transformedNumber) == false){
+                        return
                     }
-                    number = transformedNumber as String
-                    return true
+                    number = transformedNumber
+                    return
                 }
             }
             catch {
+                return
             }
 
         }
-        return false
     }
 
     

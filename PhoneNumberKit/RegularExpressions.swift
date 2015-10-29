@@ -24,7 +24,9 @@ func regexWithPattern(pattern: String) throws -> NSRegularExpression {
 func regexMatches(pattern: String, string: String) throws -> [NSTextCheckingResult] {
     do {
         let currentPattern =  try regexWithPattern(pattern)
-        let stringRange = NSMakeRange(0, string.characters.count)
+        // NSRegularExpression accepts Swift strings but still works with NSString under the hood. Safer to bridge to NSString for taking range.
+        let nsString = string as NSString
+        let stringRange = NSMakeRange(0, nsString.length)
         let matches = currentPattern.matchesInString(string, options: [], range: stringRange)
         return matches
     }
@@ -106,15 +108,16 @@ func replaceStringByRegex(pattern: String, string: String) -> String {
     }
 }
 
-func replaceFirstStringByRegex(pattern: String, string: String, templateString: NSString) -> NSString? {
-    var replacementResult : NSString = string
+func replaceFirstStringByRegex(pattern: String, string: String, templateString: String) -> String? {
     do {
+        var nsString = string as NSString
+        let stringRange = NSMakeRange(0, nsString.length)
         let regex = try regexWithPattern(pattern)
-        let range = regex.rangeOfFirstMatchInString(string, options: [], range: NSMakeRange(0, string.characters.count))
+        let range = regex.rangeOfFirstMatchInString(string, options: [], range: stringRange)
         if (range.location != NSNotFound) {
-            replacementResult = regex.stringByReplacingMatchesInString(string.mutableCopy() as! String, options: [], range: range, withTemplate: templateString as String)
+            nsString = regex.stringByReplacingMatchesInString(string, options: [], range: range, withTemplate: templateString)
         }
-        return replacementResult
+        return nsString as String
     } catch {
         return nil
     }
@@ -163,10 +166,14 @@ func testStringLengthAgainstPattern(pattern: String, string: String) -> PNValida
     }
 }
 
+// MARK: Extensions
 
-
-
-
+extension String {
+    func substringWithNSRange(range : NSRange) -> String {
+        let nsString = self as NSString
+        return nsString.substringWithRange(range)
+    }
+}
 
 
 
