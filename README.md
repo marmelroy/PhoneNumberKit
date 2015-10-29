@@ -67,7 +67,7 @@ $ brew update
 $ brew install carthage
 ```
 
-To integrate Localize-Swift into your Xcode project using Carthage, specify it in your `Cartfile`:
+To integrate PhoneNumberKit into your Xcode project using Carthage, specify it in your `Cartfile`:
 
 ```ogdl
 github "marmelroy/PhoneNumberKit"
