@@ -24,7 +24,7 @@ func regexWithPattern(pattern: String) throws -> NSRegularExpression {
 func regexMatches(pattern: String, string: String) throws -> [NSTextCheckingResult] {
     do {
         let currentPattern =  try regexWithPattern(pattern)
-        // NSRegularExpression accepts Swift strings but still works with NSString under the hood. Safer to bridge to NSString for taking range.
+        // NSRegularExpression accepts Swift strings but works with NSString under the hood. Safer to bridge to NSString for taking range.
         let nsString = string as NSString
         let stringRange = NSMakeRange(0, nsString.length)
         let matches = currentPattern.matchesInString(string, options: [], range: stringRange)
@@ -72,7 +72,9 @@ public func matchesEntirely(pattern: String?, string: String) -> Bool {
     var isMatchingEntirely : Bool = false
     do {
         let currentPattern = try regexWithPattern(pattern!)
-        let stringRange = NSMakeRange(0, string.characters.count)
+        // NSRegularExpression accepts Swift strings but works with NSString under the hood. Safer to bridge to NSString for taking range.
+        let nsString = string as NSString
+        let stringRange = NSMakeRange(0, nsString.length)
         let matchResult = currentPattern.firstMatchInString(string, options: NSMatchingOptions.Anchored, range: stringRange)
         if (matchResult != nil) {
             isMatchingEntirely = NSEqualRanges(matchResult!.range, stringRange)
@@ -87,29 +89,33 @@ public func matchesEntirely(pattern: String?, string: String) -> Bool {
 // MARK: String and replace
 
 func replaceStringByRegex(pattern: String, string: String) -> String {
-    var replacementResult = string
     do {
+        var replacementResult = string
         let regex =  try regexWithPattern(pattern)
+        // NSRegularExpression accepts Swift strings but works with NSString under the hood. Safer to bridge to NSString for taking range.
+        let nsString = string as NSString
+        let stringRange = NSMakeRange(0, nsString.length)
         let matches = regex.matchesInString(string,
-            options: [], range: NSMakeRange(0, string.characters.count))
+            options: [], range: stringRange)
         if (matches.count == 1) {
-            let range = regex.rangeOfFirstMatchInString(string, options: [], range: NSMakeRange(0, string.characters.count))
+            let range = regex.rangeOfFirstMatchInString(string, options: [], range: stringRange)
             if (range.location != NSNotFound) {
                 replacementResult = regex.stringByReplacingMatchesInString(string.mutableCopy() as! String, options: [], range: range, withTemplate: "")
             }
             return replacementResult
         }
         else if (matches.count > 1) {
-            replacementResult = regex.stringByReplacingMatchesInString(string.mutableCopy() as! String, options: [], range: NSMakeRange(0, string.characters.count), withTemplate: "")
+            replacementResult = regex.stringByReplacingMatchesInString(string.mutableCopy() as! String, options: [], range: stringRange, withTemplate: "")
         }
         return replacementResult
     } catch {
-        return replacementResult
+        return string
     }
 }
 
-func replaceFirstStringByRegex(pattern: String, string: String, templateString: String) -> String? {
+func replaceFirstStringByRegex(pattern: String, string: String, templateString: String) -> String {
     do {
+        // NSRegularExpression accepts Swift strings but works with NSString under the hood. Safer to bridge to NSString for taking range.
         var nsString = string as NSString
         let stringRange = NSMakeRange(0, nsString.length)
         let regex = try regexWithPattern(pattern)
@@ -119,7 +125,7 @@ func replaceFirstStringByRegex(pattern: String, string: String, templateString: 
         }
         return nsString as String
     } catch {
-        return nil
+        return String()
     }
 }
 

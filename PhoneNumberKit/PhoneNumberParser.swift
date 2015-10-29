@@ -264,7 +264,7 @@ public class PhoneNumberParser: NSObject {
                         transformedNumber = number.substringFromIndex(index)
                     }
                     else {
-                        transformedNumber = replaceFirstStringByRegex(prefixPattern, string: number, templateString: transformRule!)!
+                        transformedNumber = replaceFirstStringByRegex(prefixPattern, string: number, templateString: transformRule!)
                     }
                     if (hasValue(nationalNumberRule!) && matchesEntirely(nationalNumberRule!, string: number) && matchesEntirely(nationalNumberRule!, string: transformedNumber) == false){
                         return
