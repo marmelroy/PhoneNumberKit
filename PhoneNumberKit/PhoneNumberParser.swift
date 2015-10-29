@@ -104,6 +104,12 @@ public class PhoneNumberParser: NSObject {
         if (hasValue(generalNumberDesc.nationalNumberPattern) == false || !isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc)) {
             return PNPhoneNumberType.Unknown
         }
+        if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.fixedLine)) {
+            return PNPhoneNumberType.FixedLine
+        }
+        if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.mobile)) {
+            return PNPhoneNumberType.Mobile
+        }
         if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.premiumRate)) {
             return PNPhoneNumberType.PremiumRate
         }
@@ -128,13 +134,6 @@ public class PhoneNumberParser: NSObject {
         if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.voicemail)) {
             return PNPhoneNumberType.Voicemail
         }
-        if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.fixedLine)) {
-            return PNPhoneNumberType.FixedLine
-        }
-        if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.mobile)) {
-            return PNPhoneNumberType.Mobile
-        }
-
         return PNPhoneNumberType.Unknown
     }
     
