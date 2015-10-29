@@ -19,11 +19,16 @@ public struct PhoneNumber {
 
 public extension PhoneNumber {
     
-    // Parse on init
+    // Parse raw number (with default SIM region)
     public init(rawNumber: String) throws {
-        let parser = PhoneNumberParser()
-        let phoneNumberKit = PhoneNumberKit.sharedInstance
+        let phoneNumberKit = PhoneNumberKit()
         let defaultRegion = phoneNumberKit.defaultRegionCode()
+        try self.init(rawNumber: rawNumber, region : defaultRegion)
+    }
+    
+    // Parse raw number with custom region
+    public init(rawNumber: String, region: String) throws {
+        let parser = PhoneNumberParser()
         self.rawNumber = rawNumber
         
         // Validations
@@ -39,7 +44,7 @@ public extension PhoneNumber {
         if (parser.isViablePhoneNumber(nationalNumber as String) == false) {
             throw PNParsingError.NotANumber
         }
-        if (parser.checkRegionForParsing(nationalNumber, defaultRegion: defaultRegion) == false) {
+        if (parser.checkRegionForParsing(nationalNumber, defaultRegion: region) == false) {
             throw PNParsingError.InvalidCountryCode
         }
         
@@ -50,7 +55,7 @@ public extension PhoneNumber {
         }
         
         // Country code parsing
-        var regionMetaData =  phoneNumberKit.metadata.filter { $0.codeID == defaultRegion}.first
+        var regionMetaData =  Metadata.sharedInstance.items.filter { $0.codeID == region}.first
         var countryCode : UInt64 = 0
         do {
             countryCode = try parser.extractCountryCode(nationalNumber, nationalNumber: &nationalNumber, metadata: regionMetaData!)
@@ -72,15 +77,15 @@ public extension PhoneNumber {
         var normalizedNationalNumber = parser.normalizePhoneNumber(nationalNumber as String)
         if (normalizedNationalNumber.characters.count <=
             PNMinLengthForNSN) {
-            throw PNParsingError.TooShort
+                throw PNParsingError.TooShort
         }
         if (normalizedNationalNumber.characters.count >= PNMaxLengthForNSN) {
             throw PNParsingError.TooLong
         }
         
-        // If country code is not default, grab countrycode metadata 
+        // If country code is not default, grab countrycode metadata
         if (self.countryCode != regionMetaData!.countryCode) {
-            let countryMetadata = phoneNumberKit.mainCountryMetadataForCode(countryCode)
+            let countryMetadata = Metadata.sharedInstance.mainCountryMetadataForCode(countryCode)
             if  (countryMetadata == nil) {
                 throw PNParsingError.InvalidCountryCode
             }
@@ -132,8 +137,8 @@ public extension PhoneNumber {
         return formattedNumber
     }
     
-
-
+    
+    
 }
 
 

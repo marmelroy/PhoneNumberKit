@@ -220,34 +220,34 @@ class PhoneNumberKitTests: XCTestCase {
     
     //  Test that metadata initiates correctly by checking all countries
     func testAllCountries() {
-        let phoneNumberKit = PhoneNumberKit.sharedInstance
+        let phoneNumberKit = PhoneNumberKit()
         let allCountries = phoneNumberKit.allCountries()
         XCTAssert(allCountries.count > 0)
     }
 
     //  Test code for country function -  valid country
     func testCodeForCountryValid() {
-        let phoneNumberKit = PhoneNumberKit.sharedInstance
+        let phoneNumberKit = PhoneNumberKit()
         XCTAssertEqual(phoneNumberKit.codeForCountry("FR"), 33)
     }
     
     //  Test code for country function - invalid country
     func testCodeForCountryInvalid() {
-        let phoneNumberKit = PhoneNumberKit.sharedInstance
+        let phoneNumberKit = PhoneNumberKit()
         XCTAssertEqual(phoneNumberKit.codeForCountry("FOOBAR"), nil)
     }
 
     
     //  Test countries for code function
     func testCountriesForCodeValid() {
-        let phoneNumberKit = PhoneNumberKit.sharedInstance
-        XCTAssertEqual(phoneNumberKit.countriesForCode(1).count, 25)
+        let phoneNumberKit = PhoneNumberKit()
+        XCTAssertEqual(phoneNumberKit.countriesForCode(1)?.count, 25)
     }
 
     //  Test countries for code function
     func testCountriesForCodeInvalid() {
-        let phoneNumberKit = PhoneNumberKit.sharedInstance
-        XCTAssertEqual(phoneNumberKit.countriesForCode(424242).count, 0)
+        let phoneNumberKit = PhoneNumberKit()
+        XCTAssertEqual(phoneNumberKit.countriesForCode(424242)?.count, 0)
     }
 
 }

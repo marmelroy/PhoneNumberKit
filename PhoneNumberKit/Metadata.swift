@@ -8,18 +8,70 @@
 
 import Foundation
 
-struct MetadataPhoneNumberDesc {
-    var nationalNumberPattern: String?
-    var possibleNumberPattern: String?
-}
-
-struct MetadataPhoneNumberFormat {
-    var pattern: String
-    var format: String
-    var leadingDigitsPatterns: [String]
-    var nationalPrefixFormattingRule: String
-    var nationalPrefixOptionalWhenFormatting: Bool
-    var domesticCarrierCodeFormattingRule: String
+class Metadata {
+    
+    // MARK: Lifecycle
+    
+    static let sharedInstance = Metadata()
+    
+    private init () {
+        items = populateItems()
+    }
+    
+    var items: [MetadataTerritory] = []
+    
+    // Populate items
+    func populateItems() -> [MetadataTerritory] {
+        var territoryArray : [MetadataTerritory] = [MetadataTerritory]()
+        let frameworkBundle = NSBundle(forClass: PhoneNumberKit.self)
+        let jsonPath = frameworkBundle.pathForResource("PhoneNumberMetadata", ofType: "json")
+        let jsonData = NSData(contentsOfFile: jsonPath!)
+        do {
+            let jsonObjects : NSDictionary = try NSJSONSerialization.JSONObjectWithData(jsonData!, options: NSJSONReadingOptions.AllowFragments) as! NSDictionary
+            let metaDataDict : NSDictionary = jsonObjects["phoneNumberMetadata"] as! NSDictionary
+            let metaDataTerritories : NSDictionary = metaDataDict["territories"] as! NSDictionary
+            let metaDataTerritoryArray : NSArray = metaDataTerritories["territory"] as! NSArray
+            for territory in metaDataTerritoryArray {
+                let parsedTerritory = MetadataTerritory(jsondDict: territory as! NSDictionary)
+                territoryArray.append(parsedTerritory)
+            }
+        }
+        catch {
+            
+        }
+        return territoryArray
+    }
+    
+    // MARK: Helpers
+    
+    // Get the main country corresponding to a given country code
+    func mainCountryMetadataForCode(code: UInt64) -> MetadataTerritory? {
+        let results = items.filter { $0.countryCode == code}
+        if (results.count > 0) {
+            var mainResult : MetadataTerritory
+            if (results.count > 1) {
+                mainResult = results.filter { $0.mainCountryForCode == true}.first!
+            }
+            else {
+                mainResult = results.first!
+            }
+            return mainResult
+        }
+        return nil
+    }
+    
+    // Get the countries corresponding to a given country code
+    func countriesForCode(code: UInt64) -> [MetadataTerritory]? {
+        let results = items.filter { $0.countryCode == code}
+        return results
+    }
+    
+    // Get a the country code for a specific country
+    func metadataForCountry(country: NSString) -> MetadataTerritory? {
+        let results = items.filter { $0.codeID == country.uppercaseString}
+        return results.first
+    }
+    
 }
 
 struct MetadataTerritory {
@@ -88,3 +140,18 @@ extension MetadataPhoneNumberDesc {
         }
     }
 }
+
+struct MetadataPhoneNumberDesc {
+    var nationalNumberPattern: String?
+    var possibleNumberPattern: String?
+}
+
+struct MetadataPhoneNumberFormat {
+    var pattern: String
+    var format: String
+    var leadingDigitsPatterns: [String]
+    var nationalPrefixFormattingRule: String
+    var nationalPrefixOptionalWhenFormatting: Bool
+    var domesticCarrierCodeFormattingRule: String
+}
+

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class PhoneNumberParser: NSObject {
+class PhoneNumberParser {
     
     // MARK: Normalizations
 
@@ -51,13 +51,13 @@ public class PhoneNumberParser: NSObject {
         if (fullNumber.hasPrefix("+")) {
             maxCountryCode = PNMaxLengthCountryCode + 1
         }
-        let phoneNumberKit = PhoneNumberKit.sharedInstance
+        let metadata = Metadata.sharedInstance
         for var i = 1; i <= maxCountryCode && i <= numberLength; i++ {
             let stringRange = NSMakeRange(0, i)
             let subNumber = fullNumber.substringWithRange(stringRange)
             let potentialCountryCode = UInt64(subNumber)
-            let regionCodes = phoneNumberKit.countriesForCode(potentialCountryCode!)
-            if (regionCodes.count > 0) {
+            let regionCodes = metadata.countriesForCode(potentialCountryCode!)
+            if (regionCodes?.count > 0) {
                 nationalNumber = fullNumber.substringFromIndex(i)
                 return potentialCountryCode
             }
@@ -166,8 +166,8 @@ public class PhoneNumberParser: NSObject {
     
     // Check region is valid for parsing
     func checkRegionForParsing(rawNumber: NSString, defaultRegion: String) -> Bool {
-        let phoneNumberKit = PhoneNumberKit.sharedInstance
-        return (phoneNumberKit.codeForCountry(defaultRegion) != nil || (rawNumber.length > 0 && matchesAtStart(PNPlusChars, string: rawNumber as String)))
+        let metadata = Metadata.sharedInstance
+        return (metadata.metadataForCountry(defaultRegion) != nil || (rawNumber.length > 0 && matchesAtStart(PNPlusChars, string: rawNumber as String)))
     }
     
     // MARK: Parse
