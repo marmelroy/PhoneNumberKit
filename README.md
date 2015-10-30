@@ -9,7 +9,7 @@ Inspired by Google's libphonenumber.
 
 ### :construction: PhoneNumberKit is currently alpha software :construction:
 
-Status | Objective
+ | Objective
 --- | --- 
 :white_check_mark: | Match Google's libphonenumber accuracy by passing tests against all example numbers
 :x: | Faster performance. Target is at least 1000 parses < 1 seconds. 
