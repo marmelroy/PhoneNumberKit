@@ -7,7 +7,13 @@
 Swift framework for parsing, formatting and validating international phone numbers.
 Inspired by Google's libphonenumber.
 
-:construction: PhoneNumberKit is currently alpha software :construction:
+### :construction: PhoneNumberKit is currently alpha software :construction:
+
+Status | Objective
+--- | --- 
+:white_check_mark: | Match Google's libphonenumber accuracy by passing tests against all example numbers
+:x: | Faster performance. Target is at least 1000 parses < 1 seconds. 
+:x: | Better formatter and an AsYouType formatter for UITextField
 
 ## Features
 
