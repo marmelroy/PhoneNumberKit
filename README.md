@@ -21,12 +21,12 @@ Inspired by Google's libphonenumber.
 
 Import PhoneNumberKit at the top of the Swift file that will interact with a phone number.
 
-```
+```swift
 import PhoneNumberKit
 ```
 
 To parse and validate a string, initialize a PhoneNumber object and supply the string as the rawNumber. In case of an error, it will throw and you can catch and respond to in your app's UI
-```
+```swift
 do {
     let phoneNumber = try PhoneNumber(rawNumber:"+33 6 89 017383")
 }
@@ -36,19 +36,19 @@ catch {
 ```
 
 You can also query countries for a dialing code or the dailing code for a given country
-```
+```swift
 let phoneNumberKit = PhoneNumberKit()
 phoneNumberKit.countriesForCode(33)
 phoneNumberKit.codeForCountry("FR")
 ```
 
 Formatting a parsed phone number to a string is also very easy
-```
+```swift
 phoneNumber.toE164()
 ```
 
 You can access the following properties of a PhoneNumber object
-```
+```swift
 phoneNumber.countryCode
 phoneNumber.nationalNumber
 phoneNumber.numberExtension
@@ -74,7 +74,7 @@ github "marmelroy/PhoneNumberKit"
 ```
 
 ### Setting up with [CocoaPods](http://cocoapods.org/?q=PhoneNumberKit)
-```
+```ruby
 source 'https://github.com/CocoaPods/Specs.git'
 pod 'PhoneNumberKit', '~> 0.1'
 ```
