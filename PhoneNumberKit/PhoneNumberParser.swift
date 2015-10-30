@@ -58,8 +58,8 @@ class PhoneNumberParser {
             let stringRange = NSMakeRange(0, i)
             let subNumber = fullNumber.substringWithRange(stringRange)
             let potentialCountryCode = UInt64(subNumber)
-            let regionCodes = metadata.countriesForCode(potentialCountryCode!)
-            if (regionCodes?.count > 0) {
+            let regionCodes = metadata.countryPerCode[potentialCountryCode!]
+            if (regionCodes != nil) {
                 nationalNumber = fullNumber.substringFromIndex(i)
                 return potentialCountryCode
             }
@@ -169,7 +169,7 @@ class PhoneNumberParser {
     // Check region is valid for parsing
     func checkRegionForParsing(rawNumber: NSString, defaultRegion: String) -> Bool {
         let metadata = Metadata.sharedInstance
-        return (metadata.metadataForCountry(defaultRegion) != nil || (rawNumber.length > 0 && regex.matchesAtStart(PNPlusChars, string: rawNumber as String)))
+        return (metadata.codePerCountry[defaultRegion] != nil || (rawNumber.length > 0 && regex.matchesAtStart(PNPlusChars, string: rawNumber as String)))
     }
     
     // MARK: Parse
