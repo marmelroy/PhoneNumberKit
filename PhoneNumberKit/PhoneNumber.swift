@@ -28,6 +28,7 @@ public extension PhoneNumber {
     
     // Parse raw number with custom region
     public init(rawNumber: String, region: String) throws {
+        let region = region.uppercaseString
         let parser = PhoneNumberParser()
         self.rawNumber = rawNumber
         
@@ -62,7 +63,7 @@ public extension PhoneNumber {
             self.countryCode = countryCode
         } catch {
             do {
-                let plusRemovedNumebrString = replaceStringByRegex(PNLeadingPlusCharsPattern, string: nationalNumber as String)
+                let plusRemovedNumebrString = RegularExpressions.sharedInstance.replaceStringByRegex(PNLeadingPlusCharsPattern, string: nationalNumber as String)
                 countryCode = try parser.extractCountryCode(plusRemovedNumebrString, nationalNumber: &nationalNumber, metadata: regionMetaData!)
                 self.countryCode = countryCode
             } catch {
