@@ -16,9 +16,17 @@ class Metadata {
     
     private init () {
         items = populateItems()
+        for item in items {
+            codePerCountry[item.codeID] = item.countryCode
+            countryPerCode[item.countryCode] = item.codeID
+        }
     }
     
     var items: [MetadataTerritory] = []
+    
+    var codePerCountry: [String : UInt64] = [:]
+    var countryPerCode: [UInt64 : String] = [:]
+
     
     // Populate items
     func populateItems() -> [MetadataTerritory] {
