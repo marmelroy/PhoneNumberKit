@@ -76,6 +76,19 @@ class RegularExpressions {
         }
     }
     
+    func matchesExist(pattern: String?, string: String) -> Bool {
+        if (pattern == nil) {
+            return false
+        }
+        do {
+            let matches = try regexMatches(pattern!, string: string)
+            return matches.count > 0
+        }
+        catch {
+            return false
+        }
+    }
+
     
     func matchesEntirely(pattern: String?, string: String) -> Bool {
         if (pattern == nil) {
@@ -83,13 +96,13 @@ class RegularExpressions {
         }
         var isMatchingEntirely : Bool = false
         do {
-            let currentPattern = try regexWithPattern(pattern!)
-            // NSRegularExpression accepts Swift strings but works with NSString under the hood. Safer to bridge to NSString for taking range.
+            let matches = try regexMatches(pattern!, string: string)
             let nsString = string as NSString
             let stringRange = NSMakeRange(0, nsString.length)
-            let matchResult = currentPattern.firstMatchInString(string, options: NSMatchingOptions.Anchored, range: stringRange)
-            if (matchResult != nil) {
-                isMatchingEntirely = NSEqualRanges(matchResult!.range, stringRange)
+            for match in matches {
+                if (NSEqualRanges(match.range, stringRange)) {
+                    isMatchingEntirely = true
+                }
             }
             return isMatchingEntirely
         }

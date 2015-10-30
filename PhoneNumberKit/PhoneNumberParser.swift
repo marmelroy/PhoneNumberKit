@@ -71,7 +71,7 @@ class PhoneNumberParser {
     func extractCountryCode(number: NSString, inout nationalNumber: NSString, metadata: MetadataTerritory) throws -> UInt64 {
         var fullNumber = number
         let possibleCountryIddPrefix = metadata.internationalPrefix
-        let countryCodeSource = stripInternationalPrefixAndNormalize(&fullNumber, possibleIddPrefix: possibleCountryIddPrefix!)
+        let countryCodeSource = stripInternationalPrefixAndNormalize(&fullNumber, possibleIddPrefix: possibleCountryIddPrefix)
         if (countryCodeSource != .DefaultCountry) {
             if (fullNumber.length <= PNMinLengthForNSN) {
                 return 0
@@ -151,7 +151,7 @@ class PhoneNumberParser {
         if (regex.hasValue(metadataDesc.nationalNumberPattern) == false || metadataDesc.nationalNumberPattern == "NA") {
             return regex.matchesEntirely(metadataDesc.possibleNumberPattern, string: nationalNumber)
         }
-        return regex.matchesEntirely(metadataDesc.possibleNumberPattern, string: nationalNumber) && regex.matchesEntirely(metadataDesc.nationalNumberPattern, string: nationalNumber)
+        return regex.matchesEntirely(metadataDesc.possibleNumberPattern, string: nationalNumber) || regex.matchesEntirely(metadataDesc.nationalNumberPattern, string: nationalNumber)
     }
 
     
@@ -230,19 +230,22 @@ class PhoneNumberParser {
     }
     
     // Strip international prefix
-    func stripInternationalPrefixAndNormalize(inout number: NSString, possibleIddPrefix: NSString) -> PNCountryCodeSource {
+    func stripInternationalPrefixAndNormalize(inout number: NSString, possibleIddPrefix: NSString?) -> PNCountryCodeSource {
         if (regex.matchesAtStart(PNLeadingPlusCharsPattern, string: number as String)) {
             number = regex.replaceStringByRegex(PNLeadingPlusCharsPattern, string: number as String)
             return .NumberWithPlusSign
         }
         number = normalizePhoneNumber(number as String)
-        let prefixResult = parsePrefixAsIdd(&number, iddPattern: possibleIddPrefix)
-        if (prefixResult == true) {
-            return .NumberWithIDD
+        if (possibleIddPrefix != nil) {
+            let prefixResult = parsePrefixAsIdd(&number, iddPattern: possibleIddPrefix!)
+            if (prefixResult == true) {
+                return .NumberWithIDD
+            }
+            else {
+                return .DefaultCountry
+            }
         }
-        else {
-            return .DefaultCountry
-        }
+        return .NumberWithoutPlusSign
     }
     
     // Strip national prefix

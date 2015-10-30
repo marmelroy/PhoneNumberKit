@@ -130,12 +130,16 @@ extension MetadataPhoneNumberDesc {
     init(jsondDict: NSDictionary?) {
         self.nationalNumberPattern = jsondDict?.valueForKey("nationalNumberPattern") as? String
         self.possibleNumberPattern = jsondDict?.valueForKey("possibleNumberPattern") as? String
+        self.exampleNumber = jsondDict?.valueForKey("exampleNumber") as? String
+
     }
 }
 
 struct MetadataPhoneNumberDesc {
     var nationalNumberPattern: String?
     var possibleNumberPattern: String?
+    var exampleNumber: String?
+
 }
 
 struct MetadataPhoneNumberFormat {
