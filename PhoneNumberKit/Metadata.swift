@@ -17,8 +17,10 @@ class Metadata {
     private init () {
         items = populateItems()
         for item in items {
+            if (countryPerCode[item.countryCode] == nil || item.mainCountryForCode == true) {
+                countryPerCode[item.countryCode] = item.codeID
+            }
             codePerCountry[item.codeID] = item.countryCode
-            countryPerCode[item.countryCode] = item.codeID
         }
     }
     

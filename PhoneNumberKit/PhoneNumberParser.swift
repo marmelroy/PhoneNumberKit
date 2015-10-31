@@ -81,7 +81,7 @@ class PhoneNumberParser {
         
         // If country code is not default, grab countrycode metadata
         if (phoneNumber.countryCode != regionMetaData!.countryCode) {
-            let countryMetadata = metadata.mainCountryMetadataForCode(countryCode)
+            let countryMetadata = metadata.mainCountryMetadataForCode(phoneNumber.countryCode)
             if  (countryMetadata == nil) {
                 throw PNParsingError.InvalidCountryCode
             }
