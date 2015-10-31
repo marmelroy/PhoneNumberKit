@@ -12,6 +12,95 @@ class PhoneNumberParser {
     
     let regex = RegularExpressions.sharedInstance
     
+    let metadata = Metadata.sharedInstance
+    
+    class InternalPhoneNumber {
+        var countryCode: UInt64 = 0
+        var nationalNumber: UInt64 = 0
+        var numberExtension: String?
+        var rawNumber: String = ""
+        var leadingZero: Bool = false
+        var type: PNPhoneNumberType = PNPhoneNumberType.Unknown
+    }
+    
+    func parsePhoneNumber(rawNumber: String, region: String) throws -> InternalPhoneNumber {
+        let phoneNumber = InternalPhoneNumber()
+        phoneNumber.rawNumber = rawNumber
+        
+        // Validations
+        if (rawNumber.isEmpty) {
+            throw PNParsingError.NotANumber
+        } else if (rawNumber.characters.count > PNMaxInputStringLength) {
+            throw PNParsingError.TooLong
+        }
+        
+        // Possible number extraction
+        var nationalNumber = extractPossibleNumber(rawNumber)
+        
+        if (isViablePhoneNumber(nationalNumber as String) == false) {
+            throw PNParsingError.NotANumber
+        }
+        if (checkRegionForParsing(nationalNumber, defaultRegion: region) == false) {
+            throw PNParsingError.InvalidCountryCode
+        }
+        
+        // Extension parsing
+        let extn = stripExtension(&nationalNumber)
+        if (extn != nil && extn?.characters.count > 0) {
+            phoneNumber.numberExtension = extn
+        }
+        
+        // Country code parsing
+        var regionMetaData =  metadata.items.filter { $0.codeID == region}.first
+        var countryCode : UInt64 = 0
+        do {
+            countryCode = try extractCountryCode(nationalNumber, nationalNumber: &nationalNumber, metadata: regionMetaData!)
+            phoneNumber.countryCode = countryCode
+        } catch {
+            do {
+                let plusRemovedNumebrString = RegularExpressions.sharedInstance.replaceStringByRegex(PNLeadingPlusCharsPattern, string: nationalNumber as String)
+                countryCode = try extractCountryCode(plusRemovedNumebrString, nationalNumber: &nationalNumber, metadata: regionMetaData!)
+                phoneNumber.countryCode = countryCode
+            } catch {
+                throw PNParsingError.InvalidCountryCode
+            }
+        }
+        if (countryCode == 0) {
+            phoneNumber.countryCode = regionMetaData!.countryCode
+        }
+        
+        // Length Validations
+        var normalizedNationalNumber = normalizePhoneNumber(nationalNumber as String)
+        if (normalizedNationalNumber.characters.count <=
+            PNMinLengthForNSN) {
+                throw PNParsingError.TooShort
+        }
+        if (normalizedNationalNumber.characters.count >= PNMaxLengthForNSN) {
+            throw PNParsingError.TooLong
+        }
+        
+        // If country code is not default, grab countrycode metadata
+        if (phoneNumber.countryCode != regionMetaData!.countryCode) {
+            let countryMetadata = metadata.mainCountryMetadataForCode(countryCode)
+            if  (countryMetadata == nil) {
+                throw PNParsingError.InvalidCountryCode
+            }
+            regionMetaData = countryMetadata
+        }
+        
+        // National Prefix Strip
+        stripNationalPrefix(&normalizedNationalNumber, metadata: regionMetaData!)
+        
+        phoneNumber.type = extractNumberType(normalizedNationalNumber, metadata: regionMetaData!)
+        if (phoneNumber.type == PNPhoneNumberType.Unknown) {
+            throw PNParsingError.NotANumber
+        }
+        phoneNumber.leadingZero = normalizedNationalNumber.hasPrefix("0")
+        phoneNumber.nationalNumber = UInt64(normalizedNationalNumber)!
+        return phoneNumber
+    }
+
+    
     // MARK: Normalizations
 
     // Normalize phone number
@@ -53,7 +142,6 @@ class PhoneNumberParser {
         if (fullNumber.hasPrefix("+")) {
             maxCountryCode = PNMaxLengthCountryCode + 1
         }
-        let metadata = Metadata.sharedInstance
         for var i = 1; i <= maxCountryCode && i <= numberLength; i++ {
             let stringRange = NSMakeRange(0, i)
             let subNumber = fullNumber.substringWithRange(stringRange)
@@ -168,7 +256,6 @@ class PhoneNumberParser {
     
     // Check region is valid for parsing
     func checkRegionForParsing(rawNumber: NSString, defaultRegion: String) -> Bool {
-        let metadata = Metadata.sharedInstance
         return (metadata.codePerCountry[defaultRegion] != nil || (rawNumber.length > 0 && regex.matchesAtStart(PNPlusChars, string: rawNumber as String)))
     }
     

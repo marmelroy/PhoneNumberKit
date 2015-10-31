@@ -30,78 +30,15 @@ public extension PhoneNumber {
     public init(rawNumber: String, region: String) throws {
         let region = region.uppercaseString
         let parser = PhoneNumberParser()
-        self.rawNumber = rawNumber
-        
-        // Validations
-        if (rawNumber.isEmpty) {
-            throw PNParsingError.NotANumber
-        } else if (rawNumber.characters.count > PNMaxInputStringLength) {
-            throw PNParsingError.TooLong
-        }
-        
-        // Possible number extraction
-        var nationalNumber = parser.extractPossibleNumber(rawNumber)
-        
-        if (parser.isViablePhoneNumber(nationalNumber as String) == false) {
-            throw PNParsingError.NotANumber
-        }
-        if (parser.checkRegionForParsing(nationalNumber, defaultRegion: region) == false) {
-            throw PNParsingError.InvalidCountryCode
-        }
-        
-        // Extension parsing
-        let extn = parser.stripExtension(&nationalNumber)
-        if (extn != nil && extn?.characters.count > 0) {
+        let phoneNumber = try parser.parsePhoneNumber(rawNumber, region: region)
+        self.countryCode = phoneNumber.countryCode
+        self.nationalNumber = phoneNumber.nationalNumber
+        if let extn = phoneNumber.numberExtension {
             self.numberExtension = extn
         }
-        
-        // Country code parsing
-        var regionMetaData =  Metadata.sharedInstance.items.filter { $0.codeID == region}.first
-        var countryCode : UInt64 = 0
-        do {
-            countryCode = try parser.extractCountryCode(nationalNumber, nationalNumber: &nationalNumber, metadata: regionMetaData!)
-            self.countryCode = countryCode
-        } catch {
-            do {
-                let plusRemovedNumebrString = RegularExpressions.sharedInstance.replaceStringByRegex(PNLeadingPlusCharsPattern, string: nationalNumber as String)
-                countryCode = try parser.extractCountryCode(plusRemovedNumebrString, nationalNumber: &nationalNumber, metadata: regionMetaData!)
-                self.countryCode = countryCode
-            } catch {
-                throw PNParsingError.InvalidCountryCode
-            }
-        }
-        if (countryCode == 0) {
-            self.countryCode = regionMetaData!.countryCode
-        }
-        
-        // Length Validations
-        var normalizedNationalNumber = parser.normalizePhoneNumber(nationalNumber as String)
-        if (normalizedNationalNumber.characters.count <=
-            PNMinLengthForNSN) {
-                throw PNParsingError.TooShort
-        }
-        if (normalizedNationalNumber.characters.count >= PNMaxLengthForNSN) {
-            throw PNParsingError.TooLong
-        }
-        
-        // If country code is not default, grab countrycode metadata
-        if (self.countryCode != regionMetaData!.countryCode) {
-            let countryMetadata = Metadata.sharedInstance.mainCountryMetadataForCode(countryCode)
-            if  (countryMetadata == nil) {
-                throw PNParsingError.InvalidCountryCode
-            }
-            regionMetaData = countryMetadata
-        }
-        
-        // National Prefix Strip
-        parser.stripNationalPrefix(&normalizedNationalNumber, metadata: regionMetaData!)
-        
-        self.type = parser.extractNumberType(normalizedNationalNumber, metadata: regionMetaData!)
-        if (self.type == PNPhoneNumberType.Unknown) {
-            throw PNParsingError.NotANumber
-        }
-        self.leadingZero = normalizedNationalNumber.hasPrefix("0")
-        self.nationalNumber = UInt64(normalizedNationalNumber)!
+        self.rawNumber = phoneNumber.rawNumber
+        self.leadingZero = phoneNumber.leadingZero
+        self.type = phoneNumber.type
     }
     
     private func adjustedNationalNumber() -> String {
