@@ -14,7 +14,15 @@ public struct PhoneNumber {
     private(set) public var numberExtension: String?
     private(set) public var rawNumber: String
     private(set) public var leadingZero: Bool
-    private(set) public var type: PNPhoneNumberType
+    public var type: PNPhoneNumberType {
+        if (nationalNumber != 0 && countryCode != 0) {
+            let parser = PhoneNumberParser()
+            let regionMetaData : MetadataTerritory =  Metadata.sharedInstance.metadataPerCode[countryCode]!
+            let type : PNPhoneNumberType = parser.extractNumberType(String(nationalNumber),metadata: regionMetaData)
+            return type
+        }
+        return PNPhoneNumberType.Unknown
+    }
 }
 
 public extension PhoneNumber {
@@ -38,7 +46,6 @@ public extension PhoneNumber {
         }
         self.rawNumber = phoneNumber.rawNumber
         self.leadingZero = phoneNumber.leadingZero
-        self.type = phoneNumber.type
     }
     
     private func adjustedNationalNumber() -> String {

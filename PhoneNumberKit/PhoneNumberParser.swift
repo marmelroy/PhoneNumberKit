@@ -22,57 +22,50 @@ class PhoneNumberParser {
         var numberExtension: String?
         var rawNumber: String = ""
         var leadingZero: Bool = false
-        var type: PNPhoneNumberType = PNPhoneNumberType.Unknown
     }
     
     func parsePhoneNumber(rawNumber: String, region: String) throws -> InternalPhoneNumber {
         let phoneNumber = InternalPhoneNumber()
         phoneNumber.rawNumber = rawNumber
         
-        let validateRawNumber = ParseOperation<String, Bool>()
-
-        validateRawNumber.setin = rawNumber
-
-        validateRawNumber.onStart { asyncOp in
-            let rawNumber = asyncOp.input.value!
-            if (rawNumber.isEmpty) {
-                throw PNParsingError.NotANumber
-            } else if (rawNumber.characters.count > PNMaxInputStringLength) {
-                throw PNParsingError.TooLong
-            }
-
-            let dataTask = NSURLSession.sharedSessi
-            on().dataTaskWithURL(imageURL) { data, _, error in
-                if let data = data, image = UIImage(data: data) {
-                    asyncOp.finish(with: image)
-                } else {
-                    asyncOp.finish(with: error ?? AsyncOpError.Unspecified)
-                }
-            }
-            dataTask.resume()
+        var nationalNumber : NSString = rawNumber as NSString
+        let matches = try regex.phoneDataDetectorMatches(rawNumber)
+        if (matches.count > 0) {
+            let firstMatch = matches.first
+            nationalNumber = rawNumber.substringWithNSRange(firstMatch!.range)
         }
         
-        validateRawNumber.whenFinished { operation in
-            print(operation.output)
-        }
+//        let validateRawNumber = ParseOperation<String, Bool>()
+        
+//        validateRawNumber.setin = rawNumber
+//
+//        validateRawNumber.onStart { asyncOp in
+//            let rawNumber = asyncOp.input.value!
+//            if (rawNumber.isEmpty) {
+//                throw PNParsingError.NotANumber
+//            } else if (rawNumber.characters.count > PNMaxInputStringLength) {
+//                throw PNParsingError.TooLong
+//            }
+//
+//            let dataTask = NSURLSession.sharedSessi
+//            on().dataTaskWithURL(imageURL) { data, _, error in
+//                if let data = data, image = UIImage(data: data) {
+//                    asyncOp.finish(with: image)
+//                } else {
+//                    asyncOp.finish(with: error ?? AsyncOpError.Unspecified)
+//                }
+//            }
+//            dataTask.resume()
+//        }
+//        
+//        validateRawNumber.whenFinished { operation in
+//            print(operation.output)
+//        }
 
-        
-        // Validations
-        if (rawNumber.isEmpty) {
-            throw PNParsingError.NotANumber
-        } else if (rawNumber.characters.count > PNMaxInputStringLength) {
-            throw PNParsingError.TooLong
-        }
-        
-        // Possible number extraction
-        var nationalNumber = extractPossibleNumber(rawNumber)
-        
-        if (isViablePhoneNumber(nationalNumber as String) == false) {
-            throw PNParsingError.NotANumber
-        }
-        if (checkRegionForParsing(nationalNumber, defaultRegion: region) == false) {
-            throw PNParsingError.InvalidCountryCode
-        }
+//        
+//        if (checkRegionForParsing(nationalNumber, defaultRegion: region) == false) {
+//            throw PNParsingError.InvalidCountryCode
+//        }
         
         // Extension parsing
         let extn = stripExtension(&nationalNumber)
@@ -81,7 +74,7 @@ class PhoneNumberParser {
         }
         
         // Country code parsing
-        var regionMetaData =  metadata.items.filter { $0.codeID == region}.first
+        var regionMetaData =  metadata.metadataPerCountry[region]
         var countryCode : UInt64 = 0
         do {
             countryCode = try extractCountryCode(nationalNumber, nationalNumber: &nationalNumber, metadata: regionMetaData!)
@@ -98,20 +91,14 @@ class PhoneNumberParser {
         if (countryCode == 0) {
             phoneNumber.countryCode = regionMetaData!.countryCode
         }
-        
+
         // Length Validations
         var normalizedNationalNumber = normalizePhoneNumber(nationalNumber as String)
-        if (normalizedNationalNumber.characters.count <=
-            PNMinLengthForNSN) {
-                throw PNParsingError.TooShort
-        }
-        if (normalizedNationalNumber.characters.count >= PNMaxLengthForNSN) {
-            throw PNParsingError.TooLong
-        }
         
         // If country code is not default, grab countrycode metadata
         if (phoneNumber.countryCode != regionMetaData!.countryCode) {
-            let countryMetadata = metadata.mainCountryMetadataForCode(phoneNumber.countryCode)
+        // Don't look up
+            let countryMetadata = metadata.metadataPerCode[phoneNumber.countryCode]
             if  (countryMetadata == nil) {
                 throw PNParsingError.InvalidCountryCode
             }
@@ -121,10 +108,15 @@ class PhoneNumberParser {
         // National Prefix Strip
         stripNationalPrefix(&normalizedNationalNumber, metadata: regionMetaData!)
         
-        phoneNumber.type = extractNumberType(normalizedNationalNumber, metadata: regionMetaData!)
-        if (phoneNumber.type == PNPhoneNumberType.Unknown) {
+        let generalNumberDesc = regionMetaData!.generalDesc
+        if (regex.hasValue(generalNumberDesc!.nationalNumberPattern) == false || isNumberMatchingDesc(normalizedNationalNumber, numberDesc: generalNumberDesc!) == false) {
             throw PNParsingError.NotANumber
         }
+
+//        phoneNumber.type = extractNumberType(normalizedNationalNumber, metadata: regionMetaData!)
+//        if (phoneNumber.type == PNPhoneNumberType.Unknown) {
+//            throw PNParsingError.NotANumber
+//        }
         phoneNumber.leadingZero = normalizedNationalNumber.hasPrefix("0")
         phoneNumber.nationalNumber = UInt64(normalizedNationalNumber)!
         return phoneNumber
@@ -176,7 +168,7 @@ class PhoneNumberParser {
             let stringRange = NSMakeRange(0, i)
             let subNumber = fullNumber.substringWithRange(stringRange)
             let potentialCountryCode = UInt64(subNumber)
-            let regionCodes = metadata.countryPerCode[potentialCountryCode!]
+            let regionCodes = metadata.metadataPerCode[potentialCountryCode!]
             if (regionCodes != nil) {
                 nationalNumber = fullNumber.substringFromIndex(i)
                 return potentialCountryCode
@@ -276,17 +268,17 @@ class PhoneNumberParser {
     // MARK: Validations
 
     // Check if number is viable
-    func isViablePhoneNumber(number: String) -> Bool {
-        let numberToParse = normalizeNonBreakingSpace(number)
-        if (numberToParse.characters.count < PNMinLengthForNSN) {
-            return false;
-        }
-        return regex.matchesEntirely(PNValidPhoneNumberPattern, string: number)
-    }
+//    func isViablePhoneNumber(number: String) -> Bool {
+//        let numberToParse = normalizeNonBreakingSpace(number)
+//        if (numberToParse.characters.count < PNMinLengthForNSN) {
+//            return false;
+//        }
+//        return regex.matchesEntirely(PNValidPhoneNumberPattern, string: number)
+//    }
     
     // Check region is valid for parsing
     func checkRegionForParsing(rawNumber: NSString, defaultRegion: String) -> Bool {
-        return (metadata.codePerCountry[defaultRegion] != nil || (rawNumber.length > 0 && regex.matchesAtStart(PNPlusChars, string: rawNumber as String)))
+        return (metadata.metadataPerCountry[defaultRegion] != nil)
     }
     
     // MARK: Parse
@@ -326,7 +318,7 @@ class PhoneNumberParser {
     // Strip extension
     func stripExtension(inout number: NSString) -> String? {
         let mStart = regex.stringPositionByRegex(PNExtnPattern, string: number as String)
-        if (mStart >= 0 && (isViablePhoneNumber(number.substringWithRange(NSMakeRange(0, mStart))))) {
+        if (mStart >= 0) {
             do {
                 let firstMatch = try regex.regexMatches(PNExtnPattern, string: number as String).first
                 let matchedGroupsLength = firstMatch!.numberOfRanges

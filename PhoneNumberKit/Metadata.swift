@@ -17,17 +17,17 @@ class Metadata {
     private init () {
         items = populateItems()
         for item in items {
-            if (countryPerCode[item.countryCode] == nil || item.mainCountryForCode == true) {
-                countryPerCode[item.countryCode] = item.codeID
+            if (metadataPerCode[item.countryCode] == nil || item.mainCountryForCode == true) {
+                metadataPerCode[item.countryCode] = item
             }
-            codePerCountry[item.codeID] = item.countryCode
+            metadataPerCountry[item.codeID] = item
         }
     }
     
     var items: [MetadataTerritory] = []
     
-    var codePerCountry: [String : UInt64] = [:]
-    var countryPerCode: [UInt64 : String] = [:]
+    var metadataPerCountry: [String : MetadataTerritory] = [:]
+    var metadataPerCode: [UInt64 : MetadataTerritory] = [:]
 
     
     // Populate items

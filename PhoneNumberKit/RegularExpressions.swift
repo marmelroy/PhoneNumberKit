@@ -14,6 +14,8 @@ class RegularExpressions {
     
     var regularExpresions: [String : NSRegularExpression] = [:]
 
+    var phoneDataDetector : NSDataDetector?
+
     // MARK: Regular expression
     
     func regexWithPattern(pattern: String) throws -> NSRegularExpression {
@@ -45,6 +47,21 @@ class RegularExpressions {
         catch {
             throw PNRegexError.General
         }
+    }
+    
+    func phoneDataDetectorMatches(string: String) throws -> [NSTextCheckingResult] {
+        if (phoneDataDetector == nil) {
+            do {
+                phoneDataDetector = try NSDataDetector(types: NSTextCheckingType.PhoneNumber.rawValue)
+            }
+            catch {
+                throw PNRegexError.General
+            }
+        }
+        let nsString = string as NSString
+        let stringRange = NSMakeRange(0, nsString.length)
+        let matches = phoneDataDetector!.matchesInString(string, options: [], range: stringRange)
+        return matches
     }
     
     // MARK: Match helpers
