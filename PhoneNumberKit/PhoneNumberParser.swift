@@ -34,8 +34,6 @@ class PhoneNumberParser {
             nationalNumber = phoneNumber
         }
         
-        nationalNumber = normalizePhoneNumber(nationalNumber)
-        
         let extn = stripExtension(&nationalNumber)
         if let numberExtension = extn {
             phoneNumber.numberExtension = numberExtension
@@ -95,6 +93,8 @@ class PhoneNumberParser {
         if (countryCode == 0) {
             phoneNumber.countryCode = regionMetaData!.countryCode
         }
+        
+        nationalNumber = normalizePhoneNumber(nationalNumber)
 
         // Length Validations
         
