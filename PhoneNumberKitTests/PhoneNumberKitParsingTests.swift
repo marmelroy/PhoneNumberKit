@@ -164,7 +164,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
                         let exampleNumber = desc?.exampleNumber
                         if (exampleNumber != nil) {
                             let phoneNumber = try PhoneNumber(rawNumber: exampleNumber!, region: codeID)
-                            XCTAssertNotNil(phoneNumber)
+                            print("raw number \(phoneNumber.rawNumber) - country code \(phoneNumber.countryCode) -  national number \(phoneNumber.nationalNumber)")
                         }
                     }
                 }
@@ -174,8 +174,30 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTFail()
         }
     }
+//
+    func testPerformanceSimple() {
+        let numberOfParses = 1000
+        do {
+            _ = PhoneNumberKit()
+            let startTime = NSDate()
+            var endTime = NSDate()
+            for var numberIdx = 0; numberIdx <= numberOfParses; numberIdx++ {
+                let phoneNumber6 = try PhoneNumber(rawNumber: "+5491187654321", region: "AR")
+                XCTAssertNotNil(phoneNumber6)
+                if (numberIdx == numberOfParses) {
+                    endTime = NSDate()
+                }
+            }
+            let timeInterval = endTime.timeIntervalSinceDate(startTime)
+            print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
+            XCTAssertTrue(timeInterval < 1)
+        }
+        catch {
+            XCTFail()
+        }
+    }
     
-    func testPerformance() {
+    func testPerformanceHard() {
         let numberOfParses = 1000
         do {
             let startTime = NSDate()
@@ -195,5 +217,6 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTFail()
         }
     }
+
 
 }

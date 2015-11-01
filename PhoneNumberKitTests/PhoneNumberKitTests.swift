@@ -34,21 +34,22 @@ class PhoneNumberKitTests: XCTestCase {
         }
     }
     
-    // French number with extension
+//    // French number with extension
     func testNumberWithExtension() {
-        let testNumber = "+33689555555 ext. 84"
+        let testNumber = "+33-689-5-5555-5 ext. 84"
         do {
             let phoneNumber = try PhoneNumber(rawNumber: testNumber)
+            print(phoneNumber.numberExtension)
             XCTAssertEqual(phoneNumber.countryCode, 33)
+            XCTAssertEqual(phoneNumber.numberExtension, "84")
             XCTAssertEqual(phoneNumber.nationalNumber, 689555555)
             XCTAssertEqual(phoneNumber.leadingZero, false)
-            XCTAssertEqual(phoneNumber.numberExtension, "84")
         }
         catch {
             XCTFail()
         }
     }
-    
+
     // French number with a plus
     func testValidNumberWithPlusNoWhiteSpace() {
         let testNumber = "+33689555555"

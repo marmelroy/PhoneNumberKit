@@ -11,17 +11,21 @@ import Foundation
 public struct PhoneNumber {
     private(set) public var countryCode: UInt64
     private(set) public var nationalNumber: UInt64
-    private(set) public var numberExtension: String?
     private(set) public var rawNumber: String
     private(set) public var leadingZero: Bool
+    
+    public var numberExtension: String?
+    
+    // Get type on request
     public var type: PNPhoneNumberType {
-        if (nationalNumber != 0 && countryCode != 0) {
-            let parser = PhoneNumberParser()
-            let regionMetaData : MetadataTerritory =  Metadata.sharedInstance.metadataPerCode[countryCode]!
-            let type : PNPhoneNumberType = parser.extractNumberType(String(nationalNumber),metadata: regionMetaData)
-            return type
+        get {
+            if (nationalNumber != 0 && countryCode != 0) {
+                let parser = PhoneNumberParser()
+                let type : PNPhoneNumberType = parser.extractNumberType(String(nationalNumber), countryCode: countryCode)
+                return type
+            }
+            return PNPhoneNumberType.Unknown
         }
-        return PNPhoneNumberType.Unknown
     }
 }
 
@@ -41,9 +45,6 @@ public extension PhoneNumber {
         let phoneNumber = try parser.parsePhoneNumber(rawNumber, region: region)
         self.countryCode = phoneNumber.countryCode
         self.nationalNumber = phoneNumber.nationalNumber
-        if let extn = phoneNumber.numberExtension {
-            self.numberExtension = extn
-        }
         self.rawNumber = phoneNumber.rawNumber
         self.leadingZero = phoneNumber.leadingZero
     }

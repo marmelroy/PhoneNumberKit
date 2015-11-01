@@ -317,26 +317,20 @@ class PhoneNumberParser {
     
     // Strip extension
     func stripExtension(inout number: NSString) -> String? {
-        let mStart = regex.stringPositionByRegex(PNExtnPattern, string: number as String)
-        if (mStart >= 0) {
-            do {
-                let firstMatch = try regex.regexMatches(PNExtnPattern, string: number as String).first
-                let matchedGroupsLength = firstMatch!.numberOfRanges
-                for var i = 1; i < matchedGroupsLength; i++ {
-                    let curRange = firstMatch?.rangeAtIndex(i)
-                    if (curRange?.location != NSNotFound && curRange?.location < number.length) {
-                        let matchString = number.substringWithRange(curRange!)
-                        let stringRange = NSMakeRange(0, mStart)
-                        number = number.substringWithRange(stringRange)
-                        return matchString
-                    }
-                }
+        do {
+            let matches = try regex.regexMatches("\\;(.*)", string: number as String)
+            if let match = matches.first {
+                let adjustedRange = NSMakeRange(match.range.location + 1, match.range.length - 1)
+                let matchString = number.substringWithRange(adjustedRange)
+                let stringRange = NSMakeRange(0, match.range.location)
+                number = number.substringWithRange(stringRange)
+                return matchString
             }
-            catch {
-            }
+            return nil
         }
-        return nil
-    }
+        catch {
+            return nil
+        }
     
     // Strip international prefix
     func stripInternationalPrefixAndNormalize(inout number: NSString, possibleIddPrefix: NSString?) -> PNCountryCodeSource {
