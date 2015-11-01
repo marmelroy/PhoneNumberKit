@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "PhoneNumberKit"
-  s.version          = "0.1.2"
+  s.version          = "0.1.3"
   s.summary          = "Swift framework for working with phone numbers"
 
 # This description is used to generate tags and improve search results.
@@ -31,6 +31,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.source_files = "PhoneNumberKit"
+  s.resources = "PhoneNumberKit/Resources/PhoneNumberMetadata.json"
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   s.frameworks = 'CoreTelephony'
