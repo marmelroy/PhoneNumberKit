@@ -19,21 +19,29 @@ class PhoneNumberParser {
     class InternalPhoneNumber {
         var countryCode: UInt64 = 0
         var nationalNumber: UInt64 = 0
-        var numberExtension: String?
         var rawNumber: String = ""
         var leadingZero: Bool = false
+        var numberExtension: String?
     }
     
     func parsePhoneNumber(rawNumber: String, region: String) throws -> InternalPhoneNumber {
         let phoneNumber = InternalPhoneNumber()
         phoneNumber.rawNumber = rawNumber
         
-        var nationalNumber : NSString = rawNumber as NSString
+        var nationalNumber = rawNumber
         let matches = try regex.phoneDataDetectorMatches(rawNumber)
-        if (matches.count > 0) {
-            let firstMatch = matches.first
-            nationalNumber = rawNumber.substringWithNSRange(firstMatch!.range)
+        if let phoneNumber = matches.first?.phoneNumber {
+            nationalNumber = phoneNumber
         }
+        
+        nationalNumber = normalizePhoneNumber(nationalNumber)
+        
+        let extn = stripExtension(&nationalNumber)
+        if let numberExtension = extn {
+            phoneNumber.numberExtension = numberExtension
+        }
+
+        
         
 //        let validateRawNumber = ParseOperation<String, Bool>()
         
@@ -68,10 +76,6 @@ class PhoneNumberParser {
 //        }
         
         // Extension parsing
-        let extn = stripExtension(&nationalNumber)
-        if (extn != nil && extn?.characters.count > 0) {
-            phoneNumber.numberExtension = extn
-        }
         
         // Country code parsing
         var regionMetaData =  metadata.metadataPerCountry[region]
@@ -93,7 +97,6 @@ class PhoneNumberParser {
         }
 
         // Length Validations
-        var normalizedNationalNumber = normalizePhoneNumber(nationalNumber as String)
         
         // If country code is not default, grab countrycode metadata
         if (phoneNumber.countryCode != regionMetaData!.countryCode) {
@@ -106,19 +109,15 @@ class PhoneNumberParser {
         }
         
         // National Prefix Strip
-        stripNationalPrefix(&normalizedNationalNumber, metadata: regionMetaData!)
+        stripNationalPrefix(&nationalNumber, metadata: regionMetaData!)
         
         let generalNumberDesc = regionMetaData!.generalDesc
-        if (regex.hasValue(generalNumberDesc!.nationalNumberPattern) == false || isNumberMatchingDesc(normalizedNationalNumber, numberDesc: generalNumberDesc!) == false) {
+        if (regex.hasValue(generalNumberDesc!.nationalNumberPattern) == false || isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc!) == false) {
             throw PNParsingError.NotANumber
         }
 
-//        phoneNumber.type = extractNumberType(normalizedNationalNumber, metadata: regionMetaData!)
-//        if (phoneNumber.type == PNPhoneNumberType.Unknown) {
-//            throw PNParsingError.NotANumber
-//        }
-        phoneNumber.leadingZero = normalizedNationalNumber.hasPrefix("0")
-        phoneNumber.nationalNumber = UInt64(normalizedNationalNumber)!
+        phoneNumber.leadingZero = nationalNumber.hasPrefix("0")
+        phoneNumber.nationalNumber = UInt64(nationalNumber)!
         return phoneNumber
     }
 
@@ -138,39 +137,40 @@ class PhoneNumberParser {
     // MARK: Extractions
     
     // Extract possible number from string
-    func extractPossibleNumber(number: NSString) -> NSString {
-        var possibleNumber : NSString = ""
+    func extractPossibleNumber(number: String) -> String {
+        let nsString = number as NSString
+        var possibleNumber : String = ""
         let start = regex.stringPositionByRegex(PNValidStartPattern, string: number as String)
         if (start >= 0)
         {
-            possibleNumber = number.substringFromIndex(start)
+            possibleNumber = nsString.substringFromIndex(start)
             possibleNumber = regex.replaceStringByRegex(PNUnwantedEndPattern, string: possibleNumber as String)
             let secondNumberStart = regex.stringPositionByRegex(PNSecondNumberStartPattern, string: number as String)
             if (secondNumberStart > 0) {
-                possibleNumber = possibleNumber.substringWithRange(NSMakeRange(0, secondNumberStart - 1))
+                possibleNumber = possibleNumber.substringWithNSRange(NSMakeRange(0, secondNumberStart - 1))
             }
         }
         return possibleNumber
     }
 
     // Extract potential country code
-    func extractPotentialCountryCode(var fullNumber: NSString, inout nationalNumber: NSString) -> UInt64? {
-        fullNumber = normalizeNonBreakingSpace(fullNumber as String) as NSString
-        if ((fullNumber.length == 0) || (fullNumber.substringToIndex(1) == "0")) {
+    func extractPotentialCountryCode(fullNumber: String, inout nationalNumber: String) -> UInt64? {
+        let nsFullNumber = fullNumber as NSString
+        if ((nsFullNumber.length == 0) || (nsFullNumber.substringToIndex(1) == "0")) {
             return 0
         }
-        let numberLength = fullNumber.length
+        let numberLength = nsFullNumber.length
         var maxCountryCode = PNMaxLengthCountryCode
         if (fullNumber.hasPrefix("+")) {
             maxCountryCode = PNMaxLengthCountryCode + 1
         }
         for var i = 1; i <= maxCountryCode && i <= numberLength; i++ {
             let stringRange = NSMakeRange(0, i)
-            let subNumber = fullNumber.substringWithRange(stringRange)
+            let subNumber = nsFullNumber.substringWithRange(stringRange)
             let potentialCountryCode = UInt64(subNumber)
             let regionCodes = metadata.metadataPerCode[potentialCountryCode!]
             if (regionCodes != nil) {
-                nationalNumber = fullNumber.substringFromIndex(i)
+                nationalNumber = nsFullNumber.substringFromIndex(i)
                 return potentialCountryCode
             }
         }
@@ -178,13 +178,13 @@ class PhoneNumberParser {
     }
     
     // Extract country code
-    func extractCountryCode(number: NSString, inout nationalNumber: NSString, metadata: MetadataTerritory) throws -> UInt64 {
+    func extractCountryCode(number: String, inout nationalNumber: String, metadata: MetadataTerritory) throws -> UInt64 {
         var fullNumber = number
         let possibleCountryIddPrefix = metadata.internationalPrefix
         let countryCodeSource = stripInternationalPrefixAndNormalize(&fullNumber, possibleIddPrefix: possibleCountryIddPrefix)
         if (countryCodeSource != .DefaultCountry) {
-            if (fullNumber.length <= PNMinLengthForNSN) {
-                return 0
+            if (fullNumber.characters.count <= PNMinLengthForNSN) {
+                throw PNParsingError.TooShort
             }
             let potentialCountryCode = extractPotentialCountryCode(fullNumber, nationalNumber: &nationalNumber)
             if (potentialCountryCode != 0) {
@@ -197,22 +197,24 @@ class PhoneNumberParser {
         else {
             let defaultCountryCode = String(metadata.countryCode)
             if (fullNumber.hasPrefix(defaultCountryCode)) {
-                var potentialNationalNumber = fullNumber.substringFromIndex(defaultCountryCode.characters.count)
+                let nsFullNumber = fullNumber as NSString
+                var potentialNationalNumber = nsFullNumber.substringFromIndex(defaultCountryCode.characters.count)
                 let validNumberPattern = metadata.generalDesc?.nationalNumberPattern
                 stripNationalPrefix(&potentialNationalNumber, metadata: metadata)
                 let potentialNationalNumberStr = potentialNationalNumber.copy()
                 let possibleNumberPattern = metadata.generalDesc?.possibleNumberPattern
                 if ((!regex.matchesEntirely(validNumberPattern!, string: fullNumber as String) && regex.matchesEntirely(validNumberPattern!, string: potentialNationalNumberStr as! String)) || regex.testStringLengthAgainstPattern(possibleNumberPattern!, string: fullNumber as String) == PNValidationResult.TooLong) {
-                    nationalNumber = potentialNationalNumberStr as! NSString
+                    nationalNumber = potentialNationalNumberStr as! String
                     return UInt64(defaultCountryCode)!
                 }
             }
         }
-        return 0
+        throw PNParsingError.NotANumber
     }
     
     // Extract number type
-    func extractNumberType(nationalNumber: String, metadata: MetadataTerritory) -> PNPhoneNumberType {
+    func extractNumberType(nationalNumber: String, countryCode: UInt64) -> PNPhoneNumberType {
+        let metadata : MetadataTerritory =  Metadata.sharedInstance.metadataPerCode[countryCode]!
         let generalNumberDesc = metadata.generalDesc!
         if (regex.hasValue(generalNumberDesc.nationalNumberPattern) == false || isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc) == false) {
             return PNPhoneNumberType.Unknown
@@ -277,20 +279,21 @@ class PhoneNumberParser {
 //    }
     
     // Check region is valid for parsing
-    func checkRegionForParsing(rawNumber: NSString, defaultRegion: String) -> Bool {
+    func checkRegionForParsing(rawNumber: String, defaultRegion: String) -> Bool {
         return (metadata.metadataPerCountry[defaultRegion] != nil)
     }
     
     // MARK: Parse
     
     // Try and parse prefix as IDD
-    func parsePrefixAsIdd(inout number: NSString, iddPattern: NSString) -> Bool {
-        if (regex.stringPositionByRegex(iddPattern as String, string: number as String) == 0) {
+    func parsePrefixAsIdd(inout number: String, iddPattern: String) -> Bool {
+        if (regex.stringPositionByRegex(iddPattern, string: number) == 0) {
             do {
+                let nsString = number as NSString
                 let matched = try regex.regexMatches(iddPattern as String, string: number as String).first
-                let matchedString = number.substringWithRange(matched!.range)
+                let matchedString = number.substringWithNSRange(matched!.range)
                 let matchEnd = matchedString.characters.count
-                let remainString : NSString = number.substringFromIndex(matchEnd)
+                let remainString : NSString = nsString.substringFromIndex(matchEnd)
                 let capturingDigitPatterns = try NSRegularExpression(pattern: PNCapturingDigitPattern, options:NSRegularExpressionOptions.CaseInsensitive)
                 let matchedGroups = capturingDigitPatterns.matchesInString(remainString as String, options: [], range: NSMakeRange(0, remainString.length))
                 if (matchedGroups.count > 0 && matchedGroups.first != nil) {
@@ -302,7 +305,7 @@ class PhoneNumberParser {
                         }
                     }
                 }
-                number = remainString
+                number = remainString as String
                 return true
                 
             }
@@ -316,14 +319,14 @@ class PhoneNumberParser {
     // MARK: Strip helpers
     
     // Strip extension
-    func stripExtension(inout number: NSString) -> String? {
+    func stripExtension(inout number: String) -> String? {
         do {
-            let matches = try regex.regexMatches("\\;(.*)", string: number as String)
+            let matches = try regex.regexMatches("\\;(.*)", string: number)
             if let match = matches.first {
                 let adjustedRange = NSMakeRange(match.range.location + 1, match.range.length - 1)
-                let matchString = number.substringWithRange(adjustedRange)
+                let matchString = number.substringWithNSRange(adjustedRange)
                 let stringRange = NSMakeRange(0, match.range.location)
-                number = number.substringWithRange(stringRange)
+                number = number.substringWithNSRange(stringRange)
                 return matchString
             }
             return nil
@@ -331,9 +334,10 @@ class PhoneNumberParser {
         catch {
             return nil
         }
+    }
     
     // Strip international prefix
-    func stripInternationalPrefixAndNormalize(inout number: NSString, possibleIddPrefix: NSString?) -> PNCountryCodeSource {
+    func stripInternationalPrefixAndNormalize(inout number: String, possibleIddPrefix: String?) -> PNCountryCodeSource {
         if (regex.matchesAtStart(PNLeadingPlusCharsPattern, string: number as String)) {
             number = regex.replaceStringByRegex(PNLeadingPlusCharsPattern, string: number as String)
             return .NumberWithPlusSign
