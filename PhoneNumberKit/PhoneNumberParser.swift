@@ -49,8 +49,8 @@ class PhoneNumberParser {
             phoneNumber.countryCode = countryCode
         } catch {
             do {
-                let plusRemovedNumebrString = RegularExpressions.sharedInstance.replaceStringByRegex(PNLeadingPlusCharsPattern, string: nationalNumber as String)
-                countryCode = try extractCountryCode(plusRemovedNumebrString, nationalNumber: &nationalNumber, metadata: regionMetaData!)
+                let plusRemovedNumberString = regex.replaceStringByRegex(PNLeadingPlusCharsPattern, string: nationalNumber as String)
+                countryCode = try extractCountryCode(plusRemovedNumberString, nationalNumber: &nationalNumber, metadata: regionMetaData!)
                 phoneNumber.countryCode = countryCode
             } catch {
                 throw PNParsingError.InvalidCountryCode
@@ -63,7 +63,6 @@ class PhoneNumberParser {
         // Nomralize
         nationalNumber = normalizePhoneNumber(nationalNumber)
 
-        // Length Validations
         
         // If country code is not default, grab countrycode metadata
         if let cCode = phoneNumber.countryCode {

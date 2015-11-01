@@ -13,13 +13,10 @@ public struct PhoneNumber {
     private(set) public var nationalNumber: UInt64?
     private(set) public var rawNumber: String?
     private(set) public var leadingZero: Bool = false
-    
-    public var numberExtension: String?
-    
-    // Get type on request
-    public var type: PNPhoneNumberType {
+    private(set) public var numberExtension: String?
+    public var type: PNPhoneNumberType { // Compute type on get
         get {
-            if let nNumber = nationalNumber,let cCode = countryCode {
+            if let nNumber = nationalNumber, let cCode = countryCode {
                 let parser = PhoneNumberParser()
                 let type : PNPhoneNumberType = parser.extractNumberType(String(nNumber), countryCode: cCode)
                 return type
