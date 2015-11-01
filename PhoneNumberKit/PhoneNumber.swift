@@ -9,19 +9,19 @@
 import Foundation
 
 public struct PhoneNumber {
-    private(set) public var countryCode: UInt64
-    private(set) public var nationalNumber: UInt64
-    private(set) public var rawNumber: String
-    private(set) public var leadingZero: Bool
+    private(set) public var countryCode: UInt64?
+    private(set) public var nationalNumber: UInt64?
+    private(set) public var rawNumber: String?
+    private(set) public var leadingZero: Bool = false
     
     public var numberExtension: String?
     
     // Get type on request
     public var type: PNPhoneNumberType {
         get {
-            if (nationalNumber != 0 && countryCode != 0) {
+            if let nNumber = nationalNumber,let cCode = countryCode {
                 let parser = PhoneNumberParser()
-                let type : PNPhoneNumberType = parser.extractNumberType(String(nationalNumber), countryCode: countryCode)
+                let type : PNPhoneNumberType = parser.extractNumberType(String(nNumber), countryCode: cCode)
                 return type
             }
             return PNPhoneNumberType.Unknown
@@ -49,38 +49,53 @@ public extension PhoneNumber {
         self.leadingZero = phoneNumber.leadingZero
     }
     
-    private func adjustedNationalNumber() -> String {
+    private func adjustedNationalNumber() -> String? {
         // Adding leading zero if needed
-        if (self.leadingZero) {
-            return "0" + String(nationalNumber)
+        if let nNumber = nationalNumber {
+            if (self.leadingZero == true) {
+                return "0" + String(nNumber)
+            }
+            else {
+                return String(nNumber)
+            }
         }
-        else {
-            return String(nationalNumber)
-        }
+        return nil
     }
     
     // Format to E164 format (e.g. +33689123456)
-    public func toE164() -> String {
-        let formattedNumber : String = "+" + String(countryCode) + adjustedNationalNumber()
-        return formattedNumber
+    public func toE164() -> String? {
+        if let cCode = countryCode, let aNumber = adjustedNationalNumber() {
+            let formattedNumber : String = "+" + String(cCode) + aNumber
+            return formattedNumber
+        }
+        return nil
     }
     
     // Format to International format (e.g. +33 689123456)
-    public func toInternational() -> String {
-        let formattedNumber : String = "+" + String(countryCode) + " " + adjustedNationalNumber()
-        return formattedNumber
+    public func toInternational() -> String? {
+        if let cCode = countryCode, let aNumber = adjustedNationalNumber() {
+            let formattedNumber : String = "+" + String(cCode) + " " + aNumber
+            return formattedNumber
+        }
+        return nil
     }
     
     // Format to actionable RFC format (e.g. tel:+33-689123456)
-    public func toRFC3966() -> String {
-        let formattedNumber : String = "tel:+" + String(countryCode) + "-" + adjustedNationalNumber()
-        return formattedNumber
+    public func toRFC3966() -> String? {
+        if let cCode = countryCode, let aNumber = adjustedNationalNumber() {
+            let formattedNumber : String = "tel:+" + String(cCode) + "-" + aNumber
+            return formattedNumber
+        }
+        return nil
     }
 
     // Format to local national format (e.g. 0689123456)
-    public func toNational() -> String {
-        let formattedNumber : String = "0" + String(nationalNumber)
-        return formattedNumber
+    public func toNational() -> String? {
+        if let aNumber = adjustedNationalNumber() {
+            let formattedNumber : String = "0" + aNumber
+            return formattedNumber
+        }
+        return nil
     }
     
     

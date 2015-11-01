@@ -17,9 +17,9 @@ class PhoneNumberParser {
     let queue = NSOperationQueue()
     
     class InternalPhoneNumber {
-        var countryCode: UInt64 = 0
-        var nationalNumber: UInt64 = 0
-        var rawNumber: String = ""
+        var countryCode: UInt64?
+        var nationalNumber: UInt64?
+        var rawNumber: String?
         var leadingZero: Bool = false
         var numberExtension: String?
     }
@@ -28,52 +28,18 @@ class PhoneNumberParser {
         let phoneNumber = InternalPhoneNumber()
         phoneNumber.rawNumber = rawNumber
         
+        // Extract number
         var nationalNumber = rawNumber
         let matches = try regex.phoneDataDetectorMatches(rawNumber)
         if let phoneNumber = matches.first?.phoneNumber {
             nationalNumber = phoneNumber
         }
         
+        // Extension parsing
         let extn = stripExtension(&nationalNumber)
         if let numberExtension = extn {
             phoneNumber.numberExtension = numberExtension
         }
-
-        
-        
-//        let validateRawNumber = ParseOperation<String, Bool>()
-        
-//        validateRawNumber.setin = rawNumber
-//
-//        validateRawNumber.onStart { asyncOp in
-//            let rawNumber = asyncOp.input.value!
-//            if (rawNumber.isEmpty) {
-//                throw PNParsingError.NotANumber
-//            } else if (rawNumber.characters.count > PNMaxInputStringLength) {
-//                throw PNParsingError.TooLong
-//            }
-//
-//            let dataTask = NSURLSession.sharedSessi
-//            on().dataTaskWithURL(imageURL) { data, _, error in
-//                if let data = data, image = UIImage(data: data) {
-//                    asyncOp.finish(with: image)
-//                } else {
-//                    asyncOp.finish(with: error ?? AsyncOpError.Unspecified)
-//                }
-//            }
-//            dataTask.resume()
-//        }
-//        
-//        validateRawNumber.whenFinished { operation in
-//            print(operation.output)
-//        }
-
-//        
-//        if (checkRegionForParsing(nationalNumber, defaultRegion: region) == false) {
-//            throw PNParsingError.InvalidCountryCode
-//        }
-        
-        // Extension parsing
         
         // Country code parsing
         var regionMetaData =  metadata.metadataPerCountry[region]
@@ -94,18 +60,20 @@ class PhoneNumberParser {
             phoneNumber.countryCode = regionMetaData!.countryCode
         }
         
+        // Nomralize
         nationalNumber = normalizePhoneNumber(nationalNumber)
 
         // Length Validations
         
         // If country code is not default, grab countrycode metadata
-        if (phoneNumber.countryCode != regionMetaData!.countryCode) {
-        // Don't look up
-            let countryMetadata = metadata.metadataPerCode[phoneNumber.countryCode]
-            if  (countryMetadata == nil) {
-                throw PNParsingError.InvalidCountryCode
+        if let cCode = phoneNumber.countryCode {
+            if cCode != regionMetaData!.countryCode {
+                let countryMetadata = metadata.metadataPerCode[cCode]
+                if  (countryMetadata == nil) {
+                    throw PNParsingError.InvalidCountryCode
+                }
+                regionMetaData = countryMetadata
             }
-            regionMetaData = countryMetadata
         }
         
         // National Prefix Strip
@@ -191,7 +159,7 @@ class PhoneNumberParser {
                 return potentialCountryCode!
             }
             else {
-                throw PNParsingError.InvalidCountryCode
+                return 0
             }
         }
         else {
@@ -209,7 +177,7 @@ class PhoneNumberParser {
                 }
             }
         }
-        throw PNParsingError.NotANumber
+        return 0
     }
     
     // Extract number type
@@ -268,15 +236,6 @@ class PhoneNumberParser {
 
     
     // MARK: Validations
-
-    // Check if number is viable
-//    func isViablePhoneNumber(number: String) -> Bool {
-//        let numberToParse = normalizeNonBreakingSpace(number)
-//        if (numberToParse.characters.count < PNMinLengthForNSN) {
-//            return false;
-//        }
-//        return regex.matchesEntirely(PNValidPhoneNumberPattern, string: number)
-//    }
     
     // Check region is valid for parsing
     func checkRegionForParsing(rawNumber: String, defaultRegion: String) -> Bool {
