@@ -178,7 +178,6 @@ class PhoneNumberKitParsingTests: XCTestCase {
     func testPerformance() {
         let numberOfParses = 1000
         do {
-            _ = PhoneNumberKit()
             let startTime = NSDate()
             var endTime = NSDate()
             for var numberIdx = 0; numberIdx <= numberOfParses; numberIdx++ {
