@@ -13,6 +13,10 @@ class ParseOperation<OutputType> : NSOperation {
     typealias OpClosure = (parseOp: ParseOperation<OutputType>) -> Void
     typealias OpThrowingClosure = (parseOp: ParseOperation<OutputType>) throws -> Void
     
+    override final var asynchronous: Bool { return true }
+    override final var executing: Bool { return state == .Executing }
+    override final var finished: Bool { return state == .Finished }
+    
     private var implementationHandler: OpThrowingClosure?
     private var completionHandler: OpClosure?
     private var cancellationHandler: OpClosure?
@@ -23,6 +27,21 @@ class ParseOperation<OutputType> : NSOperation {
     
     private(set) var output: AsyncOpValue<OutputType> = .None(PNParsingError.TechnicalError)
 
+    private var state = AsyncOpState.Initial {
+        willSet {
+            if newValue != state {
+                willChangeValueForState(newValue)
+                willChangeValueForState(state)
+            }
+        }
+        didSet {
+            if oldValue != state {
+                didChangeValueForState(oldValue)
+                didChangeValueForState(state)
+            }
+        }
+    }
+    
     required override init() {
         super.init()
     }
@@ -87,10 +106,8 @@ extension ParseOperation {
     }
     
     func whenFinished(whenFinishedQueue completionHandlerQueue: NSOperationQueue = NSOperationQueue.mainQueue(), completionHandler: OpClosure) {
-        dispatch_once(&whenFinishedOnceToken) {
-            guard self.completionHandler == nil else { return }
-            self.completionHandler = completionHandler
-        }
+        guard self.completionHandler == nil else { return }
+        self.completionHandler = completionHandler
     }
     
     func onCancel(cancellationHandler: OpClosure) {
@@ -112,11 +129,14 @@ extension ParseOperation {
     func finish(with asyncOpValue: AsyncOpValue<OutputType>) {
         dispatch_once(&finishOnceToken) {
             self.output = asyncOpValue
+            self.state = .Finished
             guard let completionHandler = self.completionHandler else { return }
             self.completionHandler = nil
             self.implementationHandler = nil
             self.cancellationHandler = nil
             completionHandler(parseOp: self)
+            self.didChangeValueForKey("isExecuting")
+            self.didChangeValueForKey("isFinished")
         }
     }
     
@@ -158,4 +178,35 @@ public enum ParseOperationResultStatus {
     case Succeeded
     case Cancelled
     case Failed
+}
+
+private enum AsyncOpState {
+    case Initial
+    case Executing
+    case Finished
+    
+    var key: String? {
+        switch self {
+        case .Executing:
+            return "isExecuting"
+        case .Finished:
+            return "isFinished"
+        case .Initial:
+            return nil
+        }
+    }
+}
+
+private extension ParseOperation {
+    
+    func willChangeValueForState(state: AsyncOpState) {
+        guard let key = state.key else { return }
+        willChangeValueForKey(key)
+    }
+    
+    func didChangeValueForState(state: AsyncOpState) {
+        guard let key = state.key else { return }
+        didChangeValueForKey(key)
+    }
+    
 }

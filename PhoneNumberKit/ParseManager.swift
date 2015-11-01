@@ -10,6 +10,8 @@ import Foundation
 
 class ParseManager {
     
+    static let sharedInstance = ParseManager()
+    
     let regex = RegularExpressions.sharedInstance
     
     let metadata = Metadata.sharedInstance
@@ -38,38 +40,14 @@ class ParseManager {
 
         let extractNumber = ParseExtractNumber(phoneNumber)
         
+        queue.addOperations([extractNumber], waitUntilFinished: false)
         
         //
-        //
-        //
-
-        queue.addOperations([extractNumber], waitUntilFinished: true)
-        
-        //
-        //        // Nomralize (4)
-        //        nationalNumber = normalizePhoneNumber(nationalNumber)
-        //
-        //        // If country code is not default, grab countrycode metadata (5)
-        //        if let cCode = phoneNumber.countryCode {
-        //            if cCode != regionMetaData!.countryCode {
-        //                let countryMetadata = metadata.metadataPerCode[cCode]
-        //                if  (countryMetadata == nil) {
-        //                    throw PNParsingError.InvalidCountryCode
-        //                }
-        //                regionMetaData = countryMetadata
-        //            }
-        //        }
-        //
-        //        // National Prefix Strip (6)
-        //        stripNationalPrefix(&nationalNumber, metadata: regionMetaData!)
-        //
-        //        // Validate format (7)
+        //        // Validate format (6)
         //        try checkValidPattern(nationalNumber, metadata: regionMetaData)
         //
-        //        // Leading Zero (8)
+        //        // Leading Zero (7)
         //        phoneNumber.leadingZero = nationalNumber.hasPrefix("0")
-        //        // UInt casting (8)
-        //        phoneNumber.nationalNumber = UInt64(nationalNumber)!
         return phoneNumber
     }
     
@@ -120,6 +98,11 @@ class ParseManager {
         operation.whenFinished { operation in
             print("OUTPOT EXTRACT EXTENSIONS")
             print(operation.output)
+            if let phoneNumber = operation.output.value {
+                let countryCodeParse = self.ParseCountryCode(phoneNumber)
+                self.queue.addOperation(countryCodeParse)
+            }
+
         }
         return operation
     }
@@ -129,15 +112,16 @@ class ParseManager {
         let operation = ParseOperation<InternalPhoneNumber>()
         
         operation.onStart { asyncOp in
-            var regionMetaData =  self.metadata.metadataPerCountry[phoneNumber.parsingRegion!]
+            let regionMetaData =  self.metadata.metadataPerCountry[phoneNumber.parsingRegion!]
+            var nationalNumber = phoneNumber.parsingNationalNumber!
             var countryCode : UInt64 = 0
             do {
                 countryCode = try self.parser.extractCountryCode(nationalNumber, nationalNumber: &nationalNumber, metadata: regionMetaData!)
                 phoneNumber.countryCode = countryCode
             } catch {
                 do {
-                    let plusRemovedNumberString = regex.replaceStringByRegex(PNLeadingPlusCharsPattern, string: nationalNumber as String)
-                    countryCode = try extractCountryCode(plusRemovedNumberString, nationalNumber: &nationalNumber, metadata: regionMetaData!)
+                    let plusRemovedNumberString = self.regex.replaceStringByRegex(PNLeadingPlusCharsPattern, string: nationalNumber as String)
+                    countryCode = try self.parser.extractCountryCode(plusRemovedNumberString, nationalNumber: &nationalNumber, metadata: regionMetaData!)
                     phoneNumber.countryCode = countryCode
                 } catch {
                     throw PNParsingError.InvalidCountryCode
@@ -146,22 +130,71 @@ class ParseManager {
             if (countryCode == 0) {
                 phoneNumber.countryCode = regionMetaData!.countryCode
             }
-
-            
-            
             var tempNumber = phoneNumber.parsingNationalNumber
             let extn = self.parser.stripExtension(&tempNumber!)
             if let numberExtension = extn {
                 phoneNumber.numberExtension = numberExtension
             }
+            phoneNumber.parsingNationalNumber = nationalNumber
             asyncOp.finish(with: phoneNumber)
         }
         
         operation.whenFinished { operation in
-            print(operation.output)
+            print("OUTPOT COUNTRY PARSE")
+            if let output = operation.output.value {
+                let normalize = self.ParseNormalize(phoneNumber)
+                self.queue.addOperation(normalize)
+                print("country code")
+                print(output.countryCode)
+                print("national number")
+                print(output.parsingNationalNumber)
+            }
         }
         return operation
     }
+    
+    // Normalize (4)
+    func ParseNormalize(phoneNumber : InternalPhoneNumber) -> ParseOperation<InternalPhoneNumber> {
+        let operation = ParseOperation<InternalPhoneNumber>()
+        
+        operation.onStart { asyncOp in
+            let tempNumber = phoneNumber.parsingNationalNumber
+            phoneNumber.parsingNationalNumber = self.parser.normalizePhoneNumber(tempNumber!)
+            asyncOp.finish(with: phoneNumber)
+        }
+        
+        operation.whenFinished { operation in
+            print("OUTPOT NORMALIZE")
+            let output = operation.output.value
+            print("national number")
+            print(output!.parsingNationalNumber)
+        }
+        return operation
+    }
+    
+    // National Prefix Strip (5)
+    func ParseNationalPrefixStrip(phoneNumber : InternalPhoneNumber) -> ParseOperation<InternalPhoneNumber> {
+        let operation = ParseOperation<InternalPhoneNumber>()
+        
+        operation.onStart { asyncOp in
+            let regionMetaData =  self.metadata.metadataPerCode[phoneNumber.countryCode!]!
+            var nationalNumber = phoneNumber.parsingNationalNumber!
+            self.parser.stripNationalPrefix(&nationalNumber, metadata: regionMetaData)
+            phoneNumber.parsingNationalNumber = nationalNumber
+            phoneNumber.nationalNumber = UInt64(nationalNumber)!
+            asyncOp.finish(with: phoneNumber)
+        }
+        
+        operation.whenFinished { operation in
+            print("OUTPOT STRIP NATIONAL PREFIX")
+            let output = operation.output.value
+            print("national number")
+            print(output!.parsingNationalNumber)
+        }
+        return operation
+    }
+
+
     
 }
 

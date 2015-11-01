@@ -83,16 +83,16 @@ class PhoneNumberKitTests: XCTestCase {
 //
 //    
     // French number with brackets
-    func testValidNumberWithBrackets() {
-        do {
-            let phoneNumber2 = try PhoneNumber(rawNumber: "+1 650 253 0000")
-            XCTAssertNotNil(phoneNumber2)
-        }
-        catch {
-            XCTFail()
-        }
-
-    }
+//    func testValidNumberWithBrackets() {
+//        do {
+//            let phoneNumber2 = try PhoneNumber(rawNumber: "+44 20 7031 3000", region: "GB")
+//            XCTAssertNotNil(phoneNumber2)
+//        }
+//        catch {
+//            XCTFail()
+//        }
+//
+//    }
 //
 //    
 //    
