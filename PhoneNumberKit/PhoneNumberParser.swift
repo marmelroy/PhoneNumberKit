@@ -14,6 +14,8 @@ class PhoneNumberParser {
     
     let metadata = Metadata.sharedInstance
     
+    let queue = NSOperationQueue()
+    
     class InternalPhoneNumber {
         var countryCode: UInt64 = 0
         var nationalNumber: UInt64 = 0
@@ -26,6 +28,34 @@ class PhoneNumberParser {
     func parsePhoneNumber(rawNumber: String, region: String) throws -> InternalPhoneNumber {
         let phoneNumber = InternalPhoneNumber()
         phoneNumber.rawNumber = rawNumber
+        
+        let validateRawNumber = ParseOperation<String, Bool>()
+
+        validateRawNumber.setin = rawNumber
+
+        validateRawNumber.onStart { asyncOp in
+            let rawNumber = asyncOp.input.value!
+            if (rawNumber.isEmpty) {
+                throw PNParsingError.NotANumber
+            } else if (rawNumber.characters.count > PNMaxInputStringLength) {
+                throw PNParsingError.TooLong
+            }
+
+            let dataTask = NSURLSession.sharedSessi
+            on().dataTaskWithURL(imageURL) { data, _, error in
+                if let data = data, image = UIImage(data: data) {
+                    asyncOp.finish(with: image)
+                } else {
+                    asyncOp.finish(with: error ?? AsyncOpError.Unspecified)
+                }
+            }
+            dataTask.resume()
+        }
+        
+        validateRawNumber.whenFinished { operation in
+            print(operation.output)
+        }
+
         
         // Validations
         if (rawNumber.isEmpty) {

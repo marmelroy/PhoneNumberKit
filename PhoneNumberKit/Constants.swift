@@ -32,6 +32,7 @@ enum PNValidationResult :  ErrorType {
 // MARK: Public Enums
 
 public enum PNParsingError :  ErrorType {
+    case TechnicalError
     case NotANumber
     case TooLong
     case TooShort
