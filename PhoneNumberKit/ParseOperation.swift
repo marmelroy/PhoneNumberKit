@@ -8,74 +8,18 @@
 
 import Foundation
 
-//enum PhoneNumberParseOperationType {
-//    case InitialValidate
-//    case PossibleExtract
-//    case Viable
-//    case CheckRegion
-//    case StripExtension
-//    case CountryCodeParse
-//    case LengthValidations
-//    case RefreshMetadata
-//    case StripPrefix
-//    case ExtractNumberType
-//    case LeadingZero
-//    case NationalNumber
-//}
-
-//class operationInitialValidate : ParseOperation {
-//    
-////    private var completion: ((valid : Bool, error: PNParsingError?) -> Void)?
-////    private var rawNumber : String
-////
-////    init(rawNumber: String, completion: ((valid : Bool, error: PNParsingError?) -> Void)?) {
-////        self.rawNumber = rawNumber
-////        self.completion = completion
-////        super.init()
-////    }
-////    
-////    override func start() {
-////
-////        if cancelled {
-////            finish(.Failure)
-////            return
-////        }
-////        
-////        var error : PNParsingError?
-////
-////        if (rawNumber.isEmpty) {
-////            error = PNParsingError.NotANumber
-////        } else if (rawNumber.characters.count > PNMaxInputStringLength) {
-////            error = PNParsingError.TooLong
-////        }
-////        
-////        if let errorExists = error {
-////            self.completion?(valid: false, error: errorExists)
-////            self.finish(.Failure)
-////        }
-////        else {
-////            self.completion?(valid: true, error: nil)
-////            self.finish(.Success)
-////        }
-////
-////    }
-//}
-
-class ParseOperation<InputType, OutputType> : NSOperation {
+class ParseOperation<OutputType> : NSOperation {
     
-    typealias OpClosure = (parseOp: ParseOperation<InputType, OutputType>) -> Void
-    typealias OpThrowingClosure = (parseOp: ParseOperation<InputType, OutputType>) throws -> Void
+    typealias OpClosure = (parseOp: ParseOperation<OutputType>) -> Void
+    typealias OpThrowingClosure = (parseOp: ParseOperation<OutputType>) throws -> Void
     
     private var implementationHandler: OpThrowingClosure?
     private var completionHandler: OpClosure?
     private var cancellationHandler: OpClosure?
 
     private var whenFinishedOnceToken: dispatch_once_t = 0
-    private var completionHandlerQueue: NSOperationQueue?
     private var finishOnceToken: dispatch_once_t = 0
     private var cancelOnceToken: dispatch_once_t = 0
-
-    var input: AsyncOpValue<InputType> = .None(PNParsingError.TechnicalError)
     
     private(set) var output: AsyncOpValue<OutputType> = .None(PNParsingError.TechnicalError)
 
@@ -145,14 +89,7 @@ extension ParseOperation {
     func whenFinished(whenFinishedQueue completionHandlerQueue: NSOperationQueue = NSOperationQueue.mainQueue(), completionHandler: OpClosure) {
         dispatch_once(&whenFinishedOnceToken) {
             guard self.completionHandler == nil else { return }
-            if self.finished {
-                completionHandlerQueue.addOperationWithBlock {
-                    completionHandler(parseOp: self)
-                }
-            } else {
-                self.completionHandlerQueue = completionHandlerQueue
-                self.completionHandler = completionHandler
-            }
+            self.completionHandler = completionHandler
         }
     }
     
@@ -173,18 +110,13 @@ extension ParseOperation {
     }
     
     func finish(with asyncOpValue: AsyncOpValue<OutputType>) {
-        guard executing else { return }
         dispatch_once(&finishOnceToken) {
             self.output = asyncOpValue
             guard let completionHandler = self.completionHandler else { return }
             self.completionHandler = nil
             self.implementationHandler = nil
             self.cancellationHandler = nil
-            guard let completionHandlerQueue = self.completionHandlerQueue else { return }
-            self.completionHandlerQueue = nil
-            completionHandlerQueue.addOperationWithBlock {
-                completionHandler(parseOp: self)
-            }
+            completionHandler(parseOp: self)
         }
     }
     

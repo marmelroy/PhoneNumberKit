@@ -61,6 +61,9 @@ class RegularExpressions {
         let nsString = string as NSString
         let stringRange = NSMakeRange(0, nsString.length)
         let matches = phoneDataDetector!.matchesInString(string, options: [], range: stringRange)
+        if matches.isEmpty {
+            throw PNParsingError.NotANumber
+        }
         return matches
     }
     

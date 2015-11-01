@@ -38,8 +38,8 @@ public extension PhoneNumber {
     // Parse raw number with custom region
     public init(rawNumber: String, region: String) throws {
         let region = region.uppercaseString
-        let parser = PhoneNumberParser()
-        let phoneNumber = try parser.parsePhoneNumber(rawNumber, region: region)
+        let parseManager = ParseManager()
+        let phoneNumber = try parseManager.parsePhoneNumber(rawNumber, region: region)
         self.countryCode = phoneNumber.countryCode
         self.nationalNumber = phoneNumber.nationalNumber
         self.rawNumber = phoneNumber.rawNumber

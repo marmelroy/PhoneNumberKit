@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3422D9BA1BE6A2D500867D02 /* ParseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3422D9B91BE6A2D500867D02 /* ParseManager.swift */; };
 		342418681BB6E5A000EE70E7 /* PhoneNumberKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 342418671BB6E5A000EE70E7 /* PhoneNumberKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3424186F1BB6E5A000EE70E7 /* PhoneNumberKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 342418641BB6E5A000EE70E7 /* PhoneNumberKit.framework */; };
 		342418741BB6E5A000EE70E7 /* PhoneNumberKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342418731BB6E5A000EE70E7 /* PhoneNumberKitTests.swift */; };
@@ -35,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3422D9B91BE6A2D500867D02 /* ParseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseManager.swift; sourceTree = "<group>"; };
 		342418641BB6E5A000EE70E7 /* PhoneNumberKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PhoneNumberKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		342418671BB6E5A000EE70E7 /* PhoneNumberKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PhoneNumberKit.h; sourceTree = "<group>"; };
 		342418691BB6E5A000EE70E7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 				346922681BC023A60023482F /* PhoneNumberKit.swift */,
 				3424187F1BB705B500EE70E7 /* PhoneNumber.swift */,
 				346922661BC01DCC0023482F /* Metadata.swift */,
+				3422D9B91BE6A2D500867D02 /* ParseManager.swift */,
 				342418811BB70F5200EE70E7 /* PhoneNumberParser.swift */,
 				346DEC0A1BE4B2F900A63274 /* ParseOperation.swift */,
 				34566C991BC112C500715E6B /* RegularExpressions.swift */,
@@ -251,6 +254,7 @@
 				342418821BB70F5200EE70E7 /* PhoneNumberParser.swift in Sources */,
 				346922671BC01DCC0023482F /* Metadata.swift in Sources */,
 				346922691BC023A60023482F /* PhoneNumberKit.swift in Sources */,
+				3422D9BA1BE6A2D500867D02 /* ParseManager.swift in Sources */,
 				34566C9A1BC112C500715E6B /* RegularExpressions.swift in Sources */,
 				346DEC0B1BE4B2F900A63274 /* ParseOperation.swift in Sources */,
 				342418801BB705B500EE70E7 /* PhoneNumber.swift in Sources */,

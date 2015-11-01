@@ -13,83 +13,7 @@ class PhoneNumberParser {
     let regex = RegularExpressions.sharedInstance
     
     let metadata = Metadata.sharedInstance
-    
-    let queue = NSOperationQueue()
-    
-    class InternalPhoneNumber {
-        var countryCode: UInt64?
-        var nationalNumber: UInt64?
-        var rawNumber: String?
-        var leadingZero: Bool = false
-        var numberExtension: String?
-    }
-    
-    func parsePhoneNumber(rawNumber: String, region: String) throws -> InternalPhoneNumber {
-        let phoneNumber = InternalPhoneNumber()
-        phoneNumber.rawNumber = rawNumber
         
-        // Extract number
-        var nationalNumber = rawNumber
-        let matches = try regex.phoneDataDetectorMatches(rawNumber)
-        if let phoneNumber = matches.first?.phoneNumber {
-            nationalNumber = phoneNumber
-        }
-        
-        // Extension parsing
-        let extn = stripExtension(&nationalNumber)
-        if let numberExtension = extn {
-            phoneNumber.numberExtension = numberExtension
-        }
-        
-        // Country code parsing
-        
-        var regionMetaData =  metadata.metadataPerCountry[region]
-        var countryCode : UInt64 = 0
-        do {
-            countryCode = try extractCountryCode(nationalNumber, nationalNumber: &nationalNumber, metadata: regionMetaData!)
-            phoneNumber.countryCode = countryCode
-        } catch {
-            do {
-                let plusRemovedNumberString = regex.replaceStringByRegex(PNLeadingPlusCharsPattern, string: nationalNumber as String)
-                countryCode = try extractCountryCode(plusRemovedNumberString, nationalNumber: &nationalNumber, metadata: regionMetaData!)
-                phoneNumber.countryCode = countryCode
-            } catch {
-                throw PNParsingError.InvalidCountryCode
-            }
-        }
-        if (countryCode == 0) {
-            phoneNumber.countryCode = regionMetaData!.countryCode
-        }
-        
-        // Nomralize
-        nationalNumber = normalizePhoneNumber(nationalNumber)
-
-        
-        // If country code is not default, grab countrycode metadata
-        if let cCode = phoneNumber.countryCode {
-            if cCode != regionMetaData!.countryCode {
-                let countryMetadata = metadata.metadataPerCode[cCode]
-                if  (countryMetadata == nil) {
-                    throw PNParsingError.InvalidCountryCode
-                }
-                regionMetaData = countryMetadata
-            }
-        }
-        
-        // National Prefix Strip
-        stripNationalPrefix(&nationalNumber, metadata: regionMetaData!)
-        
-        let generalNumberDesc = regionMetaData!.generalDesc
-        if (regex.hasValue(generalNumberDesc!.nationalNumberPattern) == false || isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc!) == false) {
-            throw PNParsingError.NotANumber
-        }
-
-        phoneNumber.leadingZero = nationalNumber.hasPrefix("0")
-        phoneNumber.nationalNumber = UInt64(nationalNumber)!
-        return phoneNumber
-    }
-
-    
     // MARK: Normalizations
 
     // Normalize phone number
@@ -240,6 +164,19 @@ class PhoneNumberParser {
     // Check region is valid for parsing
     func checkRegionForParsing(rawNumber: String, defaultRegion: String) -> Bool {
         return (metadata.metadataPerCountry[defaultRegion] != nil)
+    }
+    
+    // Check valid pattern
+    func checkValidPattern(nationalNumber: String, metadata: MetadataTerritory?) throws {
+        if let regionMetaData = metadata {
+            let generalNumberDesc = regionMetaData.generalDesc
+            if (regex.hasValue(generalNumberDesc!.nationalNumberPattern) == false || isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc!) == false) {
+                throw PNParsingError.NotANumber
+            }
+        }
+        else {
+            throw PNParsingError.NotANumber
+        }
     }
     
     // MARK: Parse
