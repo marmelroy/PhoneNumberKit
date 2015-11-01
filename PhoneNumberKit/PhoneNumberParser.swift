@@ -42,6 +42,7 @@ class PhoneNumberParser {
         }
         
         // Country code parsing
+        
         var regionMetaData =  metadata.metadataPerCountry[region]
         var countryCode : UInt64 = 0
         do {
@@ -279,7 +280,7 @@ class PhoneNumberParser {
     // Strip extension
     func stripExtension(inout number: String) -> String? {
         do {
-            let matches = try regex.regexMatches("\\;(.*)", string: number)
+            let matches = try regex.regexMatches(PNExtnPattern, string: number)
             if let match = matches.first {
                 let adjustedRange = NSMakeRange(match.range.location + 1, match.range.length - 1)
                 let matchString = number.substringWithNSRange(adjustedRange)
@@ -349,7 +350,6 @@ class PhoneNumberParser {
             }
         }
     }
-
     
 }
 
