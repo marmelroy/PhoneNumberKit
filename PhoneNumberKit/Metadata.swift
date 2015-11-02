@@ -8,12 +8,21 @@
 
 import Foundation
 
+// MARK: Metdata Class
+
 class Metadata {
     
     // MARK: Lifecycle
     
     static let sharedInstance = Metadata()
     
+    var items: [MetadataTerritory] = []
+    var metadataPerCode: [UInt64: MetadataTerritory] = [:]
+    var metadataPerCountry: [String: MetadataTerritory] = [:]
+    
+    /**
+     Private init populates metadata items and the two hashed dictionaries for faster lookup.
+     */
     private init () {
         items = populateItems()
         for item in items {
@@ -24,13 +33,12 @@ class Metadata {
         }
     }
     
-    var items: [MetadataTerritory] = []
+    // MARK: Metadata population
     
-    var metadataPerCountry: [String: MetadataTerritory] = [:]
-    var metadataPerCode: [UInt64: MetadataTerritory] = [:]
-
-    
-    // Populate items
+    /**
+    Populates the metadata from the included json file resource.
+    - Returns: An array of MetadataTerritory objects.
+    */
     func populateItems() -> [MetadataTerritory] {
         var territoryArray: [MetadataTerritory] = [MetadataTerritory]()
         let frameworkBundle = NSBundle(forClass: PhoneNumberKit.self)
@@ -45,17 +53,31 @@ class Metadata {
                 let parsedTerritory = MetadataTerritory(jsondDict: territory as! NSDictionary)
                 territoryArray.append(parsedTerritory)
             }
+            return territoryArray
         }
         catch {
-            
+            return territoryArray
         }
-        return territoryArray
     }
     
-    // MARK: Helpers
+    // MARK: Fetch helpers
     
-    // Get the main country corresponding to a given country code
-    func mainCountryMetadataForCode(code: UInt64) -> MetadataTerritory? {
+    /**
+    Get an array of MetadataTerritory objects corresponding to a given country code.
+    - Parameter code: An international country code (e.g 44 for the UK).
+    - Returns: An optional array of MetadataTerritory objects.
+    */
+    func fetchCountriesForCode(code: UInt64) -> [MetadataTerritory]? {
+        let results = items.filter { $0.countryCode == code}
+        return results
+    }
+    
+    /**
+    Get the main MetadataTerritory objects for a given country code.
+    - Parameter code: An international country code (e.g 1 for the US).
+    - Returns: A MetadataTerritory object.
+    */
+    func fetchMainCountryMetadataForCode(code: UInt64) -> MetadataTerritory? {
         let results = items.filter { $0.countryCode == code}
         if (results.count > 0) {
             var mainResult: MetadataTerritory
@@ -70,45 +92,70 @@ class Metadata {
         return nil
     }
     
-    // Get the countries corresponding to a given country code
-    func countriesForCode(code: UInt64) -> [MetadataTerritory]? {
-        let results = items.filter { $0.countryCode == code}
-        return results
-    }
-    
-    // Get a the country code for a specific country
-    func metadataForCountry(country: NSString) -> MetadataTerritory? {
+
+    /**
+     Get the MetadataTerritory objects for an ISO 639 compliant region code.
+     - Parameter country: ISO 639 compliant region code (e.g "GB" for the UK).
+     - Returns: A MetadataTerritory object.
+     */
+    func fetchMetadataForCountry(country: String) -> MetadataTerritory? {
         let results = items.filter { $0.codeID == country.uppercaseString}
         return results.first
     }
     
 }
 
-// MARK: Types
+// MARK: MetadataTerritory
 
+/**
+MetadataTerritory object
+- Parameter codeID: ISO 639 compliant region code
+- Parameter countryCode: International country code
+- Parameter internationalPrefix: International prefix. Optional.
+- Parameter mainCountryForCode: Whether the current metadata is the main country for its country code.
+- Parameter nationalPrefix: National prefix
+- Parameter nationalPrefixForParsing: National prefix for parsing
+- Parameter nationalPrefixTransformRule: National prefix transform rule
+- Parameter emergency: MetadataPhoneNumberDesc for emergency numbers
+- Parameter fixedLine: MetadataPhoneNumberDesc for fixed line numbers
+- Parameter generalDesc: MetadataPhoneNumberDesc for general numbers
+- Parameter mobile: MetadataPhoneNumberDesc for mobile numbers
+- Parameter pager: MetadataPhoneNumberDesc for pager numbers
+- Parameter personalNumber: MetadataPhoneNumberDesc for personal number numbers
+- Parameter premiumRate: MetadataPhoneNumberDesc for premium rate numbers
+- Parameter sharedCost: MetadataPhoneNumberDesc for shared cost numbers
+- Parameter tollFree: MetadataPhoneNumberDesc for toll free numbers
+- Parameter voicemail: MetadataPhoneNumberDesc for voice mail numbers
+- Parameter voip: MetadataPhoneNumberDesc for voip numbers
+- Parameter uan: MetadataPhoneNumberDesc for uan numbers
+*/
 struct MetadataTerritory {
-    var generalDesc: MetadataPhoneNumberDesc?
-    var fixedLine: MetadataPhoneNumberDesc?
-    var mobile: MetadataPhoneNumberDesc?
-    var tollFree: MetadataPhoneNumberDesc?
-    var premiumRate: MetadataPhoneNumberDesc?
-    var sharedCost: MetadataPhoneNumberDesc?
-    var personalNumber: MetadataPhoneNumberDesc?
-    var voip: MetadataPhoneNumberDesc?
-    var pager: MetadataPhoneNumberDesc?
-    var uan: MetadataPhoneNumberDesc?
-    var emergency: MetadataPhoneNumberDesc?
-    var voicemail: MetadataPhoneNumberDesc?
     var codeID: String
     var countryCode: UInt64
     var internationalPrefix: String?
+    var mainCountryForCode: Bool = false
     var nationalPrefix: String?
     var nationalPrefixForParsing: String?
     var nationalPrefixTransformRule: String?
-    var mainCountryForCode: Bool = false
+    var emergency: MetadataPhoneNumberDesc?
+    var fixedLine: MetadataPhoneNumberDesc?
+    var generalDesc: MetadataPhoneNumberDesc?
+    var mobile: MetadataPhoneNumberDesc?
+    var pager: MetadataPhoneNumberDesc?
+    var personalNumber: MetadataPhoneNumberDesc?
+    var premiumRate: MetadataPhoneNumberDesc?
+    var sharedCost: MetadataPhoneNumberDesc?
+    var tollFree: MetadataPhoneNumberDesc?
+    var voicemail: MetadataPhoneNumberDesc?
+    var voip: MetadataPhoneNumberDesc?
+    var uan: MetadataPhoneNumberDesc?
 }
 
 extension MetadataTerritory {
+    /**
+     Parse a json dictionary into a MetadataTerritory.
+     - Parameter jsondDict: json dictionary from attached json metadata file.
+     */
     init(jsondDict: NSDictionary) {
         self.generalDesc = MetadataPhoneNumberDesc(jsondDict: (jsondDict.valueForKey("generalDesc") as? NSDictionary)!)
         self.fixedLine = MetadataPhoneNumberDesc(jsondDict: (jsondDict.valueForKey("fixedLine") as? NSDictionary))
@@ -138,13 +185,25 @@ extension MetadataTerritory {
     }
 }
 
+// MARK: MetadataPhoneNumberDesc
+
+/**
+ MetadataPhoneNumberDesc object
+ - Parameter exampleNumber: An example phone number for the given type. Optional.
+ - Parameter nationalNumberPattern:  National number regex pattern. Optional.
+ - Parameter possibleNumberPattern:  Possible number regex pattern. Optional.
+ */
 struct MetadataPhoneNumberDesc {
+    var exampleNumber: String?
     var nationalNumberPattern: String?
     var possibleNumberPattern: String?
-    var exampleNumber: String?
 }
 
 extension MetadataPhoneNumberDesc {
+    /**
+     Parse a json dictionary into a MetadataTerritory.
+     - Parameter jsondDict: json dictionary from attached json metadata file.
+     */
     init(jsondDict: NSDictionary?) {
         self.nationalNumberPattern = jsondDict?.valueForKey("nationalNumberPattern") as? String
         self.possibleNumberPattern = jsondDict?.valueForKey("possibleNumberPattern") as? String

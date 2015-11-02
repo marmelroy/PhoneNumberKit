@@ -8,8 +8,16 @@
 
 import Foundation
 
+class InternalPhoneNumber {
+    var countryCode: UInt64?
+    var nationalNumber: UInt64?
+    var rawNumber: String = ""
+    var leadingZero: Bool = false
+    var numberExtension: String?
+}
+
 class ParseManager {
-        
+    
     let regex = RegularExpressions.sharedInstance
     
     let metadata = Metadata.sharedInstance
@@ -18,15 +26,7 @@ class ParseManager {
     
     private var multiParseArray = SynchronizedArray<PhoneNumber>()
     
-    class InternalPhoneNumber {
-        var countryCode: UInt64?
-        var nationalNumber: UInt64?
-        var rawNumber: String?
-        var leadingZero: Bool = false
-        var numberExtension: String?
-    }
-    
-    func parsePhoneNumber(rawNumber: String, region: String) throws -> InternalPhoneNumber {
+    func parsePhoneNumber(rawNumber: String, region: String) throws -> PhoneNumber {
         let region = region.uppercaseString
         let phoneNumber = InternalPhoneNumber()
         phoneNumber.rawNumber = rawNumber
@@ -85,27 +85,36 @@ class ParseManager {
         
         phoneNumber.leadingZero = nationalNumber.hasPrefix("0")
         phoneNumber.nationalNumber = UInt64(nationalNumber)!
+        let parsedPhoneNumber = try PhoneNumber(phoneNumber: phoneNumber)
 
-        return phoneNumber
+        return parsedPhoneNumber
+    }
+    
+    // Parse task
+    func SingleParseTask(rawNumber: String, region: String) -> ParseOperation<PhoneNumber> {
+        let operation = ParseOperation<PhoneNumber>()
+        operation.onStart { asyncOp in
+            let phoneNumber = try self.parsePhoneNumber(rawNumber, region: region)
+            asyncOp.finish(with: phoneNumber)
+        }
+        return operation
     }
     
     func multiParse(rawNumbers: [String], region: String) -> [PhoneNumber] {
         self.multiParseArray = SynchronizedArray<PhoneNumber>()
         let queue = NSOperationQueue()
-        var operationArray: [ParseOperation<InternalPhoneNumber>] = []
+        var operationArray: [ParseOperation<PhoneNumber>] = []
         let completionOperation = ParseOperation<Bool>()
         completionOperation.onStart { asyncOp in
             asyncOp.finish(with: true)
         }
-        
         completionOperation.whenFinished { asyncOp in
         }
         for rawNumber in rawNumbers {
-            let parseTask = SingleParseTask(rawNumber, region:region)
+            let parseTask = self.SingleParseTask(rawNumber, region:region)
             parseTask.whenFinished { operation in
-                if let internalPhoneNumber = operation.output.value {
-//                    let phoneNumber = PhoneNumber(rawNumber: rawNumber, countryCode: internalPhoneNumber.countryCode, nationalNumber: internalPhoneNumber.nationalNumber, leadingZero: internalPhoneNumber.leadingZero, numberExtension: internalPhoneNumber.numberExtension)
-//                    self.multiParseArray.append(phoneNumber)
+                if let phoneNumber = operation.output.value {
+                    self.multiParseArray.append(phoneNumber)
                 }
             }
             operationArray.append(parseTask)
@@ -117,15 +126,6 @@ class ParseManager {
         return localMultiParseArray.array
     }
     
-    // Parse task
-    func SingleParseTask(rawNumber: String, region: String) -> ParseOperation<InternalPhoneNumber> {
-        let operation = ParseOperation<InternalPhoneNumber>()
-        operation.onStart { asyncOp in
-            let phoneNumber = try self.parsePhoneNumber(rawNumber, region: region)
-            asyncOp.finish(with: phoneNumber)
-        }
-        return operation
-    }
 
 }
 

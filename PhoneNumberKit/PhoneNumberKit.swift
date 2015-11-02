@@ -51,7 +51,7 @@ public class PhoneNumberKit: NSObject {
      - Returns: An optional array of ISO 639 compliant region codes.
      */
     func countriesForCode(code: UInt64) -> [String]? {
-        let results = metadata.countriesForCode(code)?.map{$0.codeID}
+        let results = metadata.fetchCountriesForCode(code)?.map{$0.codeID}
         return results
     }
     
@@ -61,7 +61,7 @@ public class PhoneNumberKit: NSObject {
      - Returns: A ISO 639 compliant region code string.
      */
     func mainCountryForCode(code: UInt64) -> String? {
-        let country = metadata.mainCountryMetadataForCode(code)
+        let country = metadata.fetchMainCountryMetadataForCode(code)
         return country?.codeID
     }
     
@@ -71,7 +71,7 @@ public class PhoneNumberKit: NSObject {
      - Returns: An international country code (e.g. 33 for France).
      */
     func codeForCountry(country: String) -> UInt64? {
-        let results = metadata.metadataForCountry(country)?.countryCode
+        let results = metadata.fetchMetadataForCountry(country)?.countryCode
         return results
     }
     
