@@ -26,7 +26,7 @@ struct PhoneNumber {
     var type: PNPhoneNumberType {
         get {
             let parser = PhoneNumberParser()
-            let type: PNPhoneNumberType = parser.extractNumberType(String(nationalNumber), countryCode: countryCode)
+            let type: PNPhoneNumberType = parser.checkNumberType(String(nationalNumber), countryCode: countryCode)
             return type
         }
     }

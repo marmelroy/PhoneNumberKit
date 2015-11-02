@@ -12,7 +12,6 @@ import Foundation
 Custom NSOperation for phone number parsing that supports throwing closures.
 */
 class ParseOperation<OutputType>: NSOperation {
-    
     typealias OperationClosure = (parseOp: ParseOperation<OutputType>) -> Void
     typealias OperationThrowingClosure = (parseOp: ParseOperation<OutputType>) throws -> Void
     override final var executing: Bool { return state == .Executing }
@@ -72,7 +71,6 @@ class ParseOperation<OutputType>: NSOperation {
             main_performImplementation() // happy path
         }
     }
-
 }
 
 extension ParseOperation {
@@ -141,7 +139,6 @@ extension ParseOperation {
             self.state = .Finished
         }
     }
-    
 }
 
 

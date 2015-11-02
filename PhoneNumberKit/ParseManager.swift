@@ -12,7 +12,6 @@ import Foundation
 Manager for parsing flow.
 */
 class ParseManager {
-    
     let metadata = Metadata.sharedInstance
     let parser = PhoneNumberParser()
     let regex = RegularExpressions.sharedInstance
