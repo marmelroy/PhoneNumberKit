@@ -12,9 +12,9 @@ class RegularExpressions {
     
     static let sharedInstance = RegularExpressions()
     
-    var regularExpresions : [String:NSRegularExpression] = [:]
+    var regularExpresions: [String:NSRegularExpression] = [:]
 
-    var phoneDataDetector : NSDataDetector?
+    var phoneDataDetector: NSDataDetector?
 
     // MARK: Regular expression
     
@@ -25,7 +25,7 @@ class RegularExpressions {
         }
         else {
             do {
-                var currentPattern : NSRegularExpression
+                var currentPattern: NSRegularExpression
                 currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpressionOptions.CaseInsensitive)
                 safeRegex.updateValue(currentPattern, forKey: pattern)
                 self.regularExpresions = safeRegex
@@ -53,7 +53,7 @@ class RegularExpressions {
     }
     
     func phoneDataDetectorMatches(string: String) throws -> [NSTextCheckingResult] {
-        var dataDetector : NSDataDetector
+        var dataDetector: NSDataDetector
         if let pdDetector = phoneDataDetector {
             dataDetector = pdDetector.copy() as! NSDataDetector
         }
@@ -130,7 +130,7 @@ class RegularExpressions {
         if (pattern == nil) {
             return false
         }
-        var isMatchingEntirely : Bool = false
+        var isMatchingEntirely: Bool = false
         do {
             let matches = try regexMatches(pattern!, string: string)
             let nsString = string as NSString
@@ -190,9 +190,9 @@ class RegularExpressions {
         }
     }
     
-    func stringByReplacingOccurrences(string: String, map : [String:String], removeNonMatches : Bool) -> String? {
+    func stringByReplacingOccurrences(string: String, map: [String:String], removeNonMatches: Bool) -> String? {
         let targetString = NSMutableString ()
-        let copiedString : NSString = string
+        let copiedString: NSString = string
         for var i = 0; i < string.characters.count; i++ {
             var oneChar = copiedString.characterAtIndex(i)
             let keyString = NSString(characters: &oneChar, length: 1) as String
@@ -240,7 +240,7 @@ class RegularExpressions {
 // MARK: Extensions
 
 extension String {
-    func substringWithNSRange(range : NSRange) -> String {
+    func substringWithNSRange(range: NSRange) -> String {
         let nsString = self as NSString
         return nsString.substringWithRange(range)
     }

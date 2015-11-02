@@ -14,7 +14,7 @@ import Foundation
  - Parameter leadingZero: Some countries (e.g. Italy) require leading zeros. Bool.
  - Parameter nationalNumber: National number as an unsigned. Int.
  - Parameter numberExtension: Extension if available. String. Optional
- - Parameter rawNumber: String used to generate phone number strict
+ - Parameter rawNumber: String used to generate phone number struct
  - Parameter type: Computed phone number type on access. Returns from an enumeration - PNPhoneNumberType.
  */
 struct PhoneNumber {
@@ -23,10 +23,10 @@ struct PhoneNumber {
     let nationalNumber: UInt64
     let numberExtension: String?
     let rawNumber: String
-    var type: PNPhoneNumberType { // Compute type on get
+    var type: PNPhoneNumberType {
         get {
             let parser = PhoneNumberParser()
-            let type : PNPhoneNumberType = parser.extractNumberType(String(nationalNumber), countryCode: countryCode)
+            let type: PNPhoneNumberType = parser.extractNumberType(String(nationalNumber), countryCode: countryCode)
             return type
         }
     }
@@ -34,16 +34,21 @@ struct PhoneNumber {
 
 extension PhoneNumber {
     
-    // Parse raw number (with default SIM region)
+    /**
+     Parse a string into a phone number object using default region. Can throw.
+     - Parameter rawNumber: String to be parsed to phone number struct.
+     */
     init(rawNumber: String) throws {
-        let phoneNumberKit = PhoneNumberKit()
-        let defaultRegion = phoneNumberKit.defaultRegionCode()
-        try self.init(rawNumber: rawNumber, region : defaultRegion)
+        let defaultRegion = PhoneNumberKit().defaultRegionCode()
+        try self.init(rawNumber: rawNumber, region: defaultRegion)
     }
     
-    // Parse raw number with custom region
+    /**
+     Parse a string into a phone number object using custom region. Can throw.
+     - Parameter rawNumber: String to be parsed to phone number struct.
+     - Parameter region: ISO 639 compliant region code.
+     */
     init(rawNumber: String, region: String) throws {
-        let region = region.uppercaseString
         let phoneNumber = try ParseManager().parsePhoneNumber(rawNumber, region: region)
         self.countryCode = phoneNumber.countryCode!
         self.nationalNumber = phoneNumber.nationalNumber!
@@ -74,7 +79,7 @@ extension PhoneNumber {
     // Format to E164 format (e.g. +33689123456)
     func toE164() -> String? {
         if let aNumber = adjustedNationalNumber() {
-            let formattedNumber : String = "+" + String(countryCode) + aNumber
+            let formattedNumber: String = "+" + String(countryCode) + aNumber
             return formattedNumber
         }
         return nil
@@ -83,7 +88,7 @@ extension PhoneNumber {
     // Format to International format (e.g. +33 689123456)
     func toInternational() -> String? {
         if let aNumber = adjustedNationalNumber() {
-            let formattedNumber : String = "+" + String(countryCode) + " " + aNumber
+            let formattedNumber: String = "+" + String(countryCode) + " " + aNumber
             return formattedNumber
         }
         return nil
@@ -92,7 +97,7 @@ extension PhoneNumber {
     // Format to actionable RFC format (e.g. tel:+33-689123456)
     func toRFC3966() -> String? {
         if let aNumber = adjustedNationalNumber() {
-            let formattedNumber : String = "tel:+" + String(countryCode) + "-" + aNumber
+            let formattedNumber: String = "tel:+" + String(countryCode) + "-" + aNumber
             return formattedNumber
         }
         return nil
@@ -101,7 +106,7 @@ extension PhoneNumber {
     // Format to local national format (e.g. 0689123456)
     func toNational() -> String? {
         if let aNumber = adjustedNationalNumber() {
-            let formattedNumber : String = "0" + aNumber
+            let formattedNumber: String = "0" + aNumber
             return formattedNumber
         }
         return nil

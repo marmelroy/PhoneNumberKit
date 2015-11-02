@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ParseOperation<OutputType> : NSOperation {
+class ParseOperation<OutputType>: NSOperation {
     
     typealias OpClosure = (parseOp: ParseOperation<OutputType>) -> Void
     typealias OpThrowingClosure = (parseOp: ParseOperation<OutputType>) throws -> Void

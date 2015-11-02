@@ -26,21 +26,21 @@ class Metadata {
     
     var items: [MetadataTerritory] = []
     
-    var metadataPerCountry: [String : MetadataTerritory] = [:]
-    var metadataPerCode: [UInt64 : MetadataTerritory] = [:]
+    var metadataPerCountry: [String: MetadataTerritory] = [:]
+    var metadataPerCode: [UInt64: MetadataTerritory] = [:]
 
     
     // Populate items
     func populateItems() -> [MetadataTerritory] {
-        var territoryArray : [MetadataTerritory] = [MetadataTerritory]()
+        var territoryArray: [MetadataTerritory] = [MetadataTerritory]()
         let frameworkBundle = NSBundle(forClass: PhoneNumberKit.self)
         let jsonPath = frameworkBundle.pathForResource("PhoneNumberMetadata", ofType: "json")
         let jsonData = NSData(contentsOfFile: jsonPath!)
         do {
-            let jsonObjects : NSDictionary = try NSJSONSerialization.JSONObjectWithData(jsonData!, options: NSJSONReadingOptions.AllowFragments) as! NSDictionary
-            let metaDataDict : NSDictionary = jsonObjects["phoneNumberMetadata"] as! NSDictionary
-            let metaDataTerritories : NSDictionary = metaDataDict["territories"] as! NSDictionary
-            let metaDataTerritoryArray : NSArray = metaDataTerritories["territory"] as! NSArray
+            let jsonObjects: NSDictionary = try NSJSONSerialization.JSONObjectWithData(jsonData!, options: NSJSONReadingOptions.AllowFragments) as! NSDictionary
+            let metaDataDict: NSDictionary = jsonObjects["phoneNumberMetadata"] as! NSDictionary
+            let metaDataTerritories: NSDictionary = metaDataDict["territories"] as! NSDictionary
+            let metaDataTerritoryArray: NSArray = metaDataTerritories["territory"] as! NSArray
             for territory in metaDataTerritoryArray {
                 let parsedTerritory = MetadataTerritory(jsondDict: territory as! NSDictionary)
                 territoryArray.append(parsedTerritory)
@@ -58,7 +58,7 @@ class Metadata {
     func mainCountryMetadataForCode(code: UInt64) -> MetadataTerritory? {
         let results = items.filter { $0.countryCode == code}
         if (results.count > 0) {
-            var mainResult : MetadataTerritory
+            var mainResult: MetadataTerritory
             if (results.count > 1) {
                 mainResult = results.filter { $0.mainCountryForCode == true}.first!
             }

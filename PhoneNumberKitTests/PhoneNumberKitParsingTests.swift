@@ -179,7 +179,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
         let numberOfParses = 1000
         let startTime = NSDate()
         var endTime = NSDate()
-        var numberArray : [String] = []
+        var numberArray: [String] = []
         for var numberIdx = 0; numberIdx < numberOfParses; numberIdx++ {
             numberArray.append("+5491187654321")
         }

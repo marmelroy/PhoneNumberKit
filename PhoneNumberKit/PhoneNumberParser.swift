@@ -31,7 +31,7 @@ class PhoneNumberParser {
     // Extract possible number from string
     func extractPossibleNumber(number: String) -> String {
         let nsString = number as NSString
-        var possibleNumber : String = ""
+        var possibleNumber: String = ""
         let start = regex.stringPositionByRegex(PNValidStartPattern, string: number as String)
         if (start >= 0)
         {
@@ -106,7 +106,7 @@ class PhoneNumberParser {
     
     // Extract number type
     func extractNumberType(nationalNumber: String, countryCode: UInt64) -> PNPhoneNumberType {
-        let metadata : MetadataTerritory =  Metadata.sharedInstance.metadataPerCode[countryCode]!
+        let metadata: MetadataTerritory =  Metadata.sharedInstance.metadataPerCode[countryCode]!
         let generalNumberDesc = metadata.generalDesc!
         if (regex.hasValue(generalNumberDesc.nationalNumberPattern) == false || isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc) == false) {
             return PNPhoneNumberType.Unknown
@@ -189,7 +189,7 @@ class PhoneNumberParser {
                 let matched = try regex.regexMatches(iddPattern as String, string: number as String).first
                 let matchedString = number.substringWithNSRange(matched!.range)
                 let matchEnd = matchedString.characters.count
-                let remainString : NSString = nsString.substringFromIndex(matchEnd)
+                let remainString: NSString = nsString.substringFromIndex(matchEnd)
                 let capturingDigitPatterns = try NSRegularExpression(pattern: PNCapturingDigitPattern, options:NSRegularExpressionOptions.CaseInsensitive)
                 let matchedGroups = capturingDigitPatterns.matchesInString(remainString as String, options: [], range: NSMakeRange(0, remainString.length))
                 if (matchedGroups.count > 0 && matchedGroups.first != nil) {
@@ -264,9 +264,9 @@ class PhoneNumberParser {
                     let firstMatchString = number.substringWithNSRange(firstMatch!.range)
                     let numOfGroups = firstMatch!.numberOfRanges - 1
                     let transformRule = metadata.nationalPrefixTransformRule
-                    var transformedNumber : String = String()
+                    var transformedNumber: String = String()
                     let firstRange = firstMatch?.rangeAtIndex(numOfGroups)
-                    let firstMatchStringWithGroup = (firstRange!.location != NSNotFound && firstRange!.location < number.characters.count) ? number.substringWithNSRange(firstRange!) :  String()
+                    let firstMatchStringWithGroup = (firstRange!.location != NSNotFound && firstRange!.location < number.characters.count) ? number.substringWithNSRange(firstRange!):  String()
                     let noTransform = (transformRule == nil || transformRule?.characters.count == 0 || regex.hasValue(firstMatchStringWithGroup) == false)
                     if (noTransform ==  true) {
                         let index = number.startIndex.advancedBy(firstMatchString.characters.count)

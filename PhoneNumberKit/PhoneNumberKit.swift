@@ -9,18 +9,18 @@
 import Foundation
 import CoreTelephony
 
-public class PhoneNumberKit : NSObject {
+public class PhoneNumberKit: NSObject {
     
     let metadata = Metadata.sharedInstance
     
-    // MARK: Parsing
+    // MARK: Multiple Parsing
     
     /**
     Fastest way to parse an array of phone numbers. Uses default region code.
     - Parameter rawNumbers: An array of raw number strings.
     - Returns: An array of valid PhoneNumber objects.
     */
-    func parseMultiple(rawNumbers : [String]) -> [PhoneNumber] {
+    func parseMultiple(rawNumbers: [String]) -> [PhoneNumber] {
         return self.parseMultiple(rawNumbers, region: self.defaultRegionCode())
     }
     
@@ -30,7 +30,7 @@ public class PhoneNumberKit : NSObject {
      - Parameter region: ISO 639 compliant region code.
      - Returns: An array of valid PhoneNumber objects.
      */
-    func parseMultiple(rawNumbers : [String], region: String) -> [PhoneNumber] {
+    func parseMultiple(rawNumbers: [String], region: String) -> [PhoneNumber] {
         return ParseManager().multiParse(rawNumbers, region: region)
     }
 
@@ -86,7 +86,7 @@ public class PhoneNumberKit : NSObject {
             return carrier!.isoCountryCode!.uppercaseString;
         } else {
             let currentLocale = NSLocale.currentLocale()
-            let countryCode : String = currentLocale.objectForKey(NSLocaleCountryCode) as! String
+            let countryCode: String = currentLocale.objectForKey(NSLocaleCountryCode) as! String
             return countryCode.uppercaseString;
         }
     }

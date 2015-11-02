@@ -27,6 +27,7 @@ class ParseManager {
     }
     
     func parsePhoneNumber(rawNumber: String, region: String) throws -> InternalPhoneNumber {
+        let region = region.uppercaseString
         let phoneNumber = InternalPhoneNumber()
         phoneNumber.rawNumber = rawNumber
         
@@ -46,7 +47,7 @@ class ParseManager {
         // Country code parsing
         
         var regionMetaData =  self.metadata.metadataPerCountry[region]
-        var countryCode : UInt64 = 0
+        var countryCode: UInt64 = 0
         do {
             countryCode = try self.parser.extractCountryCode(nationalNumber, nationalNumber: &nationalNumber, metadata: regionMetaData!)
             phoneNumber.countryCode = countryCode
@@ -88,10 +89,10 @@ class ParseManager {
         return phoneNumber
     }
     
-    func multiParse(rawNumbers: [String], region : String) -> [PhoneNumber] {
+    func multiParse(rawNumbers: [String], region: String) -> [PhoneNumber] {
         self.multiParseArray = SynchronizedArray<PhoneNumber>()
         let queue = NSOperationQueue()
-        var operationArray : [ParseOperation<InternalPhoneNumber>] = []
+        var operationArray: [ParseOperation<InternalPhoneNumber>] = []
         let completionOperation = ParseOperation<Bool>()
         completionOperation.onStart { asyncOp in
             asyncOp.finish(with: true)
