@@ -60,10 +60,7 @@ class RegularExpressions {
         else {
             do {
                 dataDetector = try NSDataDetector(types: NSTextCheckingType.PhoneNumber.rawValue)
-                let lockQueue = dispatch_queue_create("com.test.LockQueue", nil)
-                dispatch_sync(lockQueue) {
-                    self.phoneDataDetector = dataDetector
-                }
+                self.phoneDataDetector = dataDetector
             }
             catch {
                 throw PNRegexError.General

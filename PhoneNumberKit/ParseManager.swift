@@ -89,7 +89,7 @@ class ParseManager {
     }
     
     func multiParse(rawNumbers: [String], region : String) -> [PhoneNumber] {
-        multiParseArray = SynchronizedArray<PhoneNumber>()
+        self.multiParseArray = SynchronizedArray<PhoneNumber>()
         let queue = NSOperationQueue()
         var operationArray : [ParseOperation<InternalPhoneNumber>] = []
         let completionOperation = ParseOperation<Bool>()
