@@ -31,7 +31,7 @@ public class PhoneNumberKit: NSObject {
     - Returns: An array of valid PhoneNumber objects.
     */
     func parseMultiple(rawNumbers: [String], region: String) -> [PhoneNumber] {
-        return ParseManager().multiParse(rawNumbers, region: region)
+        return ParseManager().parseMultiple(rawNumbers, region: region)
     }
 
     // MARK: Country and region code
