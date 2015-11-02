@@ -8,14 +8,6 @@
 
 import Foundation
 
-class InternalPhoneNumber {
-    var countryCode: UInt64?
-    var nationalNumber: UInt64?
-    var rawNumber: String = ""
-    var leadingZero: Bool = false
-    var numberExtension: String?
-}
-
 class ParseManager {
     
     let regex = RegularExpressions.sharedInstance
@@ -28,8 +20,6 @@ class ParseManager {
     
     func parsePhoneNumber(rawNumber: String, region: String) throws -> PhoneNumber {
         let region = region.uppercaseString
-        let phoneNumber = InternalPhoneNumber()
-        phoneNumber.rawNumber = rawNumber
         
         // Extract number
         var nationalNumber = rawNumber
@@ -40,9 +30,6 @@ class ParseManager {
         
         // Extension parsing
         let extn = self.parser.stripExtension(&nationalNumber)
-        if let numberExtension = extn {
-            phoneNumber.numberExtension = numberExtension
-        }
         
         // Country code parsing
         
@@ -50,18 +37,16 @@ class ParseManager {
         var countryCode: UInt64 = 0
         do {
             countryCode = try self.parser.extractCountryCode(nationalNumber, nationalNumber: &nationalNumber, metadata: regionMetaData!)
-            phoneNumber.countryCode = countryCode
         } catch {
             do {
                 let plusRemovedNumberString = self.regex.replaceStringByRegex(PNLeadingPlusCharsPattern, string: nationalNumber as String)
                 countryCode = try self.parser.extractCountryCode(plusRemovedNumberString, nationalNumber: &nationalNumber, metadata: regionMetaData!)
-                phoneNumber.countryCode = countryCode
             } catch {
                 throw PNParsingError.InvalidCountryCode
             }
         }
         if (countryCode == 0) {
-            phoneNumber.countryCode = regionMetaData!.countryCode
+            countryCode = regionMetaData!.countryCode
         }
         
         // Nomralize
@@ -69,10 +54,8 @@ class ParseManager {
         
         
         // If country code is not default, grab countrycode metadata
-        if let cCode = phoneNumber.countryCode {
-            if cCode != regionMetaData!.countryCode {
-                regionMetaData = self.metadata.metadataPerCode[cCode]
-            }
+        if countryCode != regionMetaData!.countryCode {
+            regionMetaData = self.metadata.metadataPerCode[countryCode]
         }
         
         // National Prefix Strip
@@ -82,12 +65,10 @@ class ParseManager {
         if (self.regex.hasValue(generalNumberDesc!.nationalNumberPattern) == false || self.parser.isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc!) == false) {
             throw PNParsingError.NotANumber
         }
-        
-        phoneNumber.leadingZero = nationalNumber.hasPrefix("0")
-        phoneNumber.nationalNumber = UInt64(nationalNumber)!
-        let parsedPhoneNumber = try PhoneNumber(phoneNumber: phoneNumber)
-
-        return parsedPhoneNumber
+        let leadingZero = nationalNumber.hasPrefix("0")
+        let finalNationalNumber = UInt64(nationalNumber)!
+        let phoneNumber = PhoneNumber(countryCode: countryCode, leadingZero: leadingZero, nationalNumber: finalNationalNumber, numberExtension: extn, rawNumber: rawNumber)
+        return phoneNumber
     }
     
     // Parse task

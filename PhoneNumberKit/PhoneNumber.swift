@@ -51,24 +51,7 @@ extension PhoneNumber {
         let phoneNumber = try ParseManager().parsePhoneNumber(rawNumber, region: region)
         self = phoneNumber
     }
-    
-    /**
-     Parse internal phone number object. Throw if incomplete.
-     - Parameter phoneNumber: An internal phone number object produced by the parser.
-     */
-    init(phoneNumber: InternalPhoneNumber) throws {
-        if let cCode = phoneNumber.countryCode, let nNumber = phoneNumber.nationalNumber {
-            self.countryCode = cCode
-            self.nationalNumber = nNumber
-            self.rawNumber = phoneNumber.rawNumber
-            self.leadingZero = phoneNumber.leadingZero
-            self.numberExtension = phoneNumber.numberExtension
-        }
-        else {
-            throw PNParsingError.TechnicalError
-        }
-    }
-    
+        
     /**
      Adjust national number for display by adding leading zero if needed. Used for basic formatting functions.
      - Returns: A string representing the adjusted national number.
