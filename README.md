@@ -12,16 +12,17 @@ Inspired by Google's libphonenumber.
  | Objective
 --- | --- 
 :white_check_mark: | Match Google's libphonenumber accuracy by passing tests against all example numbers
-:x: | Faster performance. Target is at least 1000 parses < 1 seconds. 
+:white_check_mark: | Faster performance. 1000 parses -> ~0.3 seconds.
 :x: | Better formatter and an AsYouType formatter for UITextField
 
 ## Features
 
 - Quickly validate, normalize and extract the elements of any phone number string.    
-- Automatically grab the default region code from the phone's SIM (or if unavailable, the device's region).
+- Special function to quickly parse a large array of raw phone numbers. 
+- Automatically grab the default region code from the phone's SIM (or if unavailable, the device's region). You can override this if you need to.
 - Convert country codes to country names and vice versa.
-- All whilst using simple Swift 2.0 syntax
-- PhoneNumberKit uses the best-in-class metadata and general approach from Google's libphonenumber project. By not being a direct port, PhoneNumberKit can focus on a smaller feature-set that's cleaner and more readable.
+- Simple Swift 2.0 syntax and readable codebase.
+- PhoneNumberKit uses the best-in-class metadata and basic approach from Google's libphonenumber project. By not being a direct port, PhoneNumberKit can focus on a smaller feature-set that's cleaner, faster and more readable.
 
 ## Usage
 
@@ -31,14 +32,22 @@ Import PhoneNumberKit at the top of the Swift file that will interact with a pho
 import PhoneNumberKit
 ```
 
-To parse and validate a string, initialize a PhoneNumber object and supply the string as the rawNumber. In case of an error, it will throw and you can catch and respond to in your app's UI
+To parse and validate a string, initialize a PhoneNumber object and supply the string as the rawNumber. The region code is automatically computed but can be overridden if needed. In case of an error, it will throw and you can catch and respond to in your app's UI
 ```swift
 do {
     let phoneNumber = try PhoneNumber(rawNumber:"+33 6 89 017383")
+    let phoneNumberForCustomRegion = try PhoneNumber(rawNumber: "+44 20 7031 3000", region: "GB")
 }
 catch {
     print("Generic parser error")
 }
+```
+
+If you need to parse and validate a large amount of numbers at once, there is a special function for that.
+```swift
+let rawNumberArray = ["0291 12345678", "+49 291 12345678", "04134 1234", "09123 12345"]
+let phoneNumbers = PhoneNumberKit().parseMultiple(rawNumberArray)
+let phoneNumbersForCustomRegion = PhoneNumberKit().parseMultiple(rawNumberArray, region: "DE")
 ```
 
 You can also query countries for a dialing code or the dailing code for a given country
@@ -59,7 +68,7 @@ phoneNumber.countryCode
 phoneNumber.nationalNumber
 phoneNumber.numberExtension
 phoneNumber.rawNumber
-phoneNumber.type // e.g Mobile or Fixed
+phoneNumber.type // e.g Mobile or Fixed, computed on request
 ```
 
 ### Setting up with Carthage
