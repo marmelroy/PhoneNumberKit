@@ -13,6 +13,7 @@
 		342418741BB6E5A000EE70E7 /* PhoneNumberKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342418731BB6E5A000EE70E7 /* PhoneNumberKitTests.swift */; };
 		342418801BB705B500EE70E7 /* PhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3424187F1BB705B500EE70E7 /* PhoneNumber.swift */; };
 		342418821BB70F5200EE70E7 /* PhoneNumberParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342418811BB70F5200EE70E7 /* PhoneNumberParser.swift */; };
+		342548EE1BE727CD00FBE524 /* MultiParse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342548ED1BE727CD00FBE524 /* MultiParse.swift */; };
 		3435CC9F1BBFF66F003F953B /* PhoneNumberMetadata.json in Resources */ = {isa = PBXBuildFile; fileRef = 3435CC951BBFF66F003F953B /* PhoneNumberMetadata.json */; };
 		3435CCA01BBFF66F003F953B /* PhoneNumberMetadata.json in Resources */ = {isa = PBXBuildFile; fileRef = 3435CC951BBFF66F003F953B /* PhoneNumberMetadata.json */; };
 		34566C9A1BC112C500715E6B /* RegularExpressions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34566C991BC112C500715E6B /* RegularExpressions.swift */; };
@@ -45,6 +46,7 @@
 		342418751BB6E5A000EE70E7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3424187F1BB705B500EE70E7 /* PhoneNumber.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumber.swift; sourceTree = "<group>"; };
 		342418811BB70F5200EE70E7 /* PhoneNumberParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneNumberParser.swift; sourceTree = "<group>"; };
+		342548ED1BE727CD00FBE524 /* MultiParse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiParse.swift; sourceTree = "<group>"; };
 		3435CC951BBFF66F003F953B /* PhoneNumberMetadata.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PhoneNumberMetadata.json; sourceTree = "<group>"; };
 		34566C991BC112C500715E6B /* RegularExpressions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegularExpressions.swift; sourceTree = "<group>"; };
 		346922661BC01DCC0023482F /* Metadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Metadata.swift; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 				342418691BB6E5A000EE70E7 /* Info.plist */,
 				346922681BC023A60023482F /* PhoneNumberKit.swift */,
 				3424187F1BB705B500EE70E7 /* PhoneNumber.swift */,
+				342548ED1BE727CD00FBE524 /* MultiParse.swift */,
 				346922661BC01DCC0023482F /* Metadata.swift */,
 				3422D9B91BE6A2D500867D02 /* ParseManager.swift */,
 				342418811BB70F5200EE70E7 /* PhoneNumberParser.swift */,
@@ -257,6 +260,7 @@
 				3422D9BA1BE6A2D500867D02 /* ParseManager.swift in Sources */,
 				34566C9A1BC112C500715E6B /* RegularExpressions.swift in Sources */,
 				346DEC0B1BE4B2F900A63274 /* ParseOperation.swift in Sources */,
+				342548EE1BE727CD00FBE524 /* MultiParse.swift in Sources */,
 				342418801BB705B500EE70E7 /* PhoneNumber.swift in Sources */,
 				34AA66021BDD160B00467912 /* Constants.swift in Sources */,
 			);

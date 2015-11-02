@@ -12,36 +12,39 @@ class RegularExpressions {
     
     static let sharedInstance = RegularExpressions()
     
-    var regularExpresions: [String : NSRegularExpression] = [:]
+    var regularExpresions : [String:NSRegularExpression] = [:]
 
     var phoneDataDetector : NSDataDetector?
 
     // MARK: Regular expression
     
     func regexWithPattern(pattern: String) throws -> NSRegularExpression {
-        if (regularExpresions[pattern] == nil) {
+        var safeRegex = regularExpresions
+        if let regex = safeRegex[pattern] {
+            return regex
+        }
+        else {
             do {
                 var currentPattern : NSRegularExpression
                 currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpressionOptions.CaseInsensitive)
-                regularExpresions[pattern] = currentPattern
+                safeRegex.updateValue(currentPattern, forKey: pattern)
+                self.regularExpresions = safeRegex
                 return currentPattern
             }
             catch {
                 throw PNRegexError.General
             }
         }
-        else {
-            return regularExpresions[pattern]!
-        }
     }
     
     func regexMatches(pattern: String, string: String) throws -> [NSTextCheckingResult] {
         do {
+            let internalString = string
             let currentPattern =  try regexWithPattern(pattern)
             // NSRegularExpression accepts Swift strings but works with NSString under the hood. Safer to bridge to NSString for taking range.
-            let nsString = string as NSString
+            let nsString = internalString as NSString
             let stringRange = NSMakeRange(0, nsString.length)
-            let matches = currentPattern.matchesInString(string, options: [], range: stringRange)
+            let matches = currentPattern.matchesInString(internalString, options: [], range: stringRange)
             return matches
         }
         catch {
@@ -50,9 +53,18 @@ class RegularExpressions {
     }
     
     func phoneDataDetectorMatches(string: String) throws -> [NSTextCheckingResult] {
-        if (phoneDataDetector == nil) {
+        var dDetector : NSDataDetector
+        if let dataDetector = phoneDataDetector {
+            dDetector = dataDetector.copy() as! NSDataDetector
+        }
+        else {
             do {
-                phoneDataDetector = try NSDataDetector(types: NSTextCheckingType.PhoneNumber.rawValue)
+                let dataDetector = try NSDataDetector(types: NSTextCheckingType.PhoneNumber.rawValue)
+                let lockQueue = dispatch_queue_create("com.test.LockQueue", nil)
+                dDetector = dataDetector.copy() as! NSDataDetector
+                dispatch_sync(lockQueue) {
+                    self.phoneDataDetector = dataDetector
+                }
             }
             catch {
                 throw PNRegexError.General
@@ -60,7 +72,7 @@ class RegularExpressions {
         }
         let nsString = string as NSString
         let stringRange = NSMakeRange(0, nsString.length)
-        let matches = phoneDataDetector!.matchesInString(string, options: [], range: stringRange)
+        let matches = dDetector.matchesInString(string, options: [], range: stringRange)
         if matches.isEmpty {
             throw PNParsingError.NotANumber
         }

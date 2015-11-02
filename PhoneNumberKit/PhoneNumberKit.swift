@@ -12,6 +12,15 @@ import CoreTelephony
 public class PhoneNumberKit : NSObject {
     
     let metadata = Metadata.sharedInstance
+    
+    // MARK: Parssing
+    
+    // Get a list of all the countries in the metadata database
+    public func parseMultiplePhoneNumbers(rawNumbers : [String], region: String) -> [PhoneNumber] {
+        let parseManager = ParseManager.sharedInstance
+        return parseManager.multiParse(rawNumbers, region: region)
+    }
+
 
     // MARK: Country and region code
     

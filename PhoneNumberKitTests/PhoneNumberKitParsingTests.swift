@@ -177,23 +177,37 @@ class PhoneNumberKitParsingTests: XCTestCase {
 ////
     func testPerformanceSimple() {
         let numberOfParses = 1000
-        do {
-            let startTime = NSDate()
-            var endTime = NSDate()
-            for var numberIdx = 0; numberIdx <= numberOfParses; numberIdx++ {
-                let phoneNumber6 = try PhoneNumber(rawNumber: "+5491187654321", region: "AR")
-                XCTAssertNotNil(phoneNumber6)
-                if (numberIdx == numberOfParses) {
-                    endTime = NSDate()
-                }
-            }
-            let timeInterval = endTime.timeIntervalSinceDate(startTime)
-            print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
-            XCTAssertTrue(timeInterval < 1)
+        let startTime = NSDate()
+        print("start time \(startTime)")
+        var endTime = NSDate()
+        var numberArray : [String] = []
+        for var numberIdx = 0; numberIdx <= numberOfParses; numberIdx++ {
+            numberArray.append("+5491187654321")
         }
-        catch {
-            XCTFail()
-        }
+        let phoneNumbers = PhoneNumberKit().parseMultiplePhoneNumbers(numberArray, region: "FR")
+        print(phoneNumbers)
+        endTime = NSDate()
+        let timeInterval = endTime.timeIntervalSinceDate(startTime)
+        print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds, numbers \(phoneNumbers)")
+        self.waitForExpectationsWithTimeout(100, handler: nil)
+
+//        do {
+//            let startTime = NSDate()
+//            var endTime = NSDate()
+//            for var numberIdx = 0; numberIdx <= numberOfParses; numberIdx++ {
+//                let phoneNumber6 = try PhoneNumber(rawNumber: "+5491187654321", region: "AR")
+//                XCTAssertNotNil(phoneNumber6)
+//                if (numberIdx == numberOfParses) {
+//                    endTime = NSDate()
+//                }
+//            }
+//            let timeInterval = endTime.timeIntervalSinceDate(startTime)
+//            print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
+//            XCTAssertTrue(timeInterval < 1)
+//        }
+//        catch {
+//            XCTFail()
+//        }
     }
 //
 //    func testPerformanceHard() {

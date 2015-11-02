@@ -44,6 +44,16 @@ public extension PhoneNumber {
         self.nationalNumber = phoneNumber.nationalNumber
         self.rawNumber = phoneNumber.rawNumber
         self.leadingZero = phoneNumber.leadingZero
+        self.numberExtension = phoneNumber.numberExtension
+    }
+    
+    // Parse raw number with custom region
+    public init(rawNumber: String, countryCode: UInt64?, nationalNumber: UInt64?, leadingZero: Bool, numberExtension: String?) {
+        self.countryCode = countryCode
+        self.nationalNumber = nationalNumber
+        self.rawNumber = rawNumber
+        self.leadingZero = leadingZero
+        self.numberExtension = numberExtension
     }
     
     private func adjustedNationalNumber() -> String? {

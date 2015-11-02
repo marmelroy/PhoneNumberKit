@@ -129,14 +129,12 @@ extension ParseOperation {
     func finish(with asyncOpValue: AsyncOpValue<OutputType>) {
         dispatch_once(&finishOnceToken) {
             self.output = asyncOpValue
-            self.state = .Finished
             guard let completionHandler = self.completionHandler else { return }
             self.completionHandler = nil
             self.implementationHandler = nil
             self.cancellationHandler = nil
             completionHandler(parseOp: self)
-            self.didChangeValueForKey("isExecuting")
-            self.didChangeValueForKey("isFinished")
+            self.state = .Finished
         }
     }
     

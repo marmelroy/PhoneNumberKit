@@ -78,3 +78,60 @@ let PNSecondNumberStartPattern = "[\\\\\\/] *x"
 let PNUnwantedEndPattern = "[^0-9０-９٠-٩۰-۹A-Za-z#]+$"
 
 let PNValidStartPattern = "[+＋0-9０-９٠-٩۰-۹]"
+
+public class SynchronizedArray<T> {
+    public var array: [T] = []
+    private let accessQueue = dispatch_queue_create("SynchronizedArrayAccess", DISPATCH_QUEUE_SERIAL)
+    
+    public func append(newElement: T) {
+        dispatch_async(self.accessQueue) {
+            self.array.append(newElement)
+        }
+    }
+    
+    public subscript(index: Int) -> T {
+        set {
+            dispatch_async(self.accessQueue) {
+                self.array[index] = newValue
+            }
+        }
+        get {
+            var element: T!
+            
+            dispatch_sync(self.accessQueue) {
+                element = self.array[index]
+            }
+            
+            return element
+        }
+    }
+}
+
+public class SynchronizedDictionary<KeyType : Hashable, ValueType : Hashable> {
+    public var dictionary: [KeyType:ValueType] = [:]
+    private let accessQueue = dispatch_queue_create("SynchronizedDictAccess", DISPATCH_QUEUE_SERIAL)
+    
+    public func setKeyObject(key: KeyType, value: ValueType) {
+        dispatch_async(self.accessQueue) {
+            self.dictionary[key] = value
+        }
+    }
+    
+    public subscript(key: KeyType) -> ValueType {
+        set {
+            dispatch_async(self.accessQueue) {
+                self.dictionary[key] = newValue
+            }
+        }
+        get {
+            var element: ValueType!
+            
+            dispatch_sync(self.accessQueue) {
+                if let elementExists = self.dictionary[key] {
+                    element = elementExists
+                }
+            }
+            return element
+        }
+    }
+}
