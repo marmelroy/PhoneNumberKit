@@ -103,23 +103,26 @@ class ParseManager {
     func multiParse(rawNumbers: [String], region : String) -> [PhoneNumber] {
         let queue = NSOperationQueue()
         var operationArray : [ParseOperation<InternalPhoneNumber>] = []
-        ParseManager.sharedInstance.startTime =  NSDate()
+        let completionOperation = ParseOperation<Bool>()
+        completionOperation.onStart { asyncOp in
+            asyncOp.finish(with: true)
+        }
+        
+        completionOperation.whenFinished { asyncOp in
+        }
         for rawNumber in rawNumbers {
             let parseTask = SingleParseTask(rawNumber, region:region)
             parseTask.whenFinished { operation in
-                print("output")
                 if let internalPhoneNumber = operation.output.value {
                     let phoneNumber = PhoneNumber(rawNumber: rawNumber, countryCode: internalPhoneNumber.countryCode, nationalNumber: internalPhoneNumber.nationalNumber, leadingZero: internalPhoneNumber.leadingZero, numberExtension: internalPhoneNumber.numberExtension)
                     self.multiParseArray.append(phoneNumber)
-                    let endTime = NSDate()
-                    let timeInterval = endTime.timeIntervalSinceDate(ParseManager.sharedInstance.startTime)
-                    print("count \(self.multiParseArray.array.count), date \(timeInterval)")
-
                 }
             }
             operationArray.append(parseTask)
+            completionOperation.addDependency(parseTask)
         }
         queue.addOperations(operationArray, waitUntilFinished: false)
+        queue.addOperations([completionOperation], waitUntilFinished: true)
         let localMultiParseArray = self.multiParseArray
         return localMultiParseArray.array
     }

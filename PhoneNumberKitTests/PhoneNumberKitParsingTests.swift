@@ -153,62 +153,44 @@ class PhoneNumberKitParsingTests: XCTestCase {
 //        }
 //    }
 //    
-//    func testAllExampleNumbers() {
-//        do {
-//            let metaDataArray = PhoneNumberKit().metadata.items.filter{$0.codeID.characters.count == 2}
-//            for metadata in  metaDataArray {
-//                let codeID = metadata.codeID
-//                let metaDataDescriptions = [metadata.generalDesc, metadata.fixedLine, metadata.mobile, metadata.tollFree, metadata.premiumRate, metadata.sharedCost, metadata.voip, metadata.voicemail, metadata.pager, metadata.uan, metadata.emergency]
-//                for desc in metaDataDescriptions {
-//                    if (desc != nil) {
-//                        let exampleNumber = desc?.exampleNumber
-//                        if (exampleNumber != nil) {
-//                            let phoneNumber = try PhoneNumber(rawNumber: exampleNumber!, region: codeID)
-//                            print("raw number \(phoneNumber.rawNumber) - country code \(phoneNumber.countryCode) -  national number \(phoneNumber.nationalNumber)")
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        catch {
-//            XCTFail()
-//        }
-//    }
-////
-    func testPerformanceSimple() {
-        let numberOfParses = 1000
-        let startTime = NSDate()
-        print("start time \(startTime)")
-        var endTime = NSDate()
-        var numberArray : [String] = []
-        for var numberIdx = 0; numberIdx <= numberOfParses; numberIdx++ {
-            numberArray.append("+5491187654321")
+    func testAllExampleNumbers() {
+        do {
+            let metaDataArray = PhoneNumberKit().metadata.items.filter{$0.codeID.characters.count == 2 && $0.codeID == "GB"}
+            for metadata in metaDataArray {
+                let codeID = metadata.codeID
+                let metaDataDescriptions = [metadata.generalDesc, metadata.fixedLine, metadata.mobile, metadata.tollFree, metadata.premiumRate, metadata.sharedCost, metadata.voip, metadata.voicemail, metadata.pager, metadata.uan, metadata.emergency]
+                for desc in metaDataDescriptions {
+                    if (desc != nil) {
+                        let exampleNumber = desc?.exampleNumber
+                        if (exampleNumber != nil) {
+                            let phoneNumber = try PhoneNumber(rawNumber: exampleNumber!, region: codeID)
+                            print("raw number \(phoneNumber.rawNumber) - country code \(phoneNumber.countryCode) -  national number \(phoneNumber.nationalNumber)")
+                        }
+                    }
+                }
+            }
         }
-        let phoneNumbers = PhoneNumberKit().parseMultiplePhoneNumbers(numberArray, region: "FR")
-        print(phoneNumbers)
-        endTime = NSDate()
-        let timeInterval = endTime.timeIntervalSinceDate(startTime)
-        print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds, numbers \(phoneNumbers)")
-        self.waitForExpectationsWithTimeout(100, handler: nil)
-
-//        do {
-//            let startTime = NSDate()
-//            var endTime = NSDate()
-//            for var numberIdx = 0; numberIdx <= numberOfParses; numberIdx++ {
-//                let phoneNumber6 = try PhoneNumber(rawNumber: "+5491187654321", region: "AR")
-//                XCTAssertNotNil(phoneNumber6)
-//                if (numberIdx == numberOfParses) {
-//                    endTime = NSDate()
-//                }
-//            }
-//            let timeInterval = endTime.timeIntervalSinceDate(startTime)
-//            print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
-//            XCTAssertTrue(timeInterval < 1)
-//        }
-//        catch {
-//            XCTFail()
-//        }
+        catch {
+            XCTFail()
+        }
     }
+//
+//    func testPerformanceSimple() {
+//        let numberOfParses = 1000
+//        let startTime = NSDate()
+//        var endTime = NSDate()
+//        var numberArray : [String] = []
+//        for var numberIdx = 0; numberIdx < numberOfParses; numberIdx++ {
+//            numberArray.append("+5491187654321")
+//        }
+//        let phoneNumbers = PhoneNumberKit().parseMultiplePhoneNumbers(numberArray, region: "AR")
+//        XCTAssertTrue(phoneNumbers.count == numberOfParses)
+//
+//        endTime = NSDate()
+//        let timeInterval = endTime.timeIntervalSinceDate(startTime)
+//        print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
+//        XCTAssertTrue(timeInterval < 1)
+//    }
 //
 //    func testPerformanceHard() {
 //        let numberOfParses = 1000
