@@ -12,38 +12,74 @@ class RegularExpressions {
     
     static let sharedInstance = RegularExpressions()
     
-    var regularExpresions: [String : NSRegularExpression] = [:]
+    var regularExpresions: [String:NSRegularExpression] = [:]
+
+    var phoneDataDetector: NSDataDetector?
 
     // MARK: Regular expression
     
     func regexWithPattern(pattern: String) throws -> NSRegularExpression {
-        if (regularExpresions[pattern] == nil) {
+        var safeRegex = regularExpresions
+        if let regex = safeRegex[pattern] {
+            return regex
+        }
+        else {
             do {
-                var currentPattern : NSRegularExpression
+                var currentPattern: NSRegularExpression
                 currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpressionOptions.CaseInsensitive)
-                regularExpresions[pattern] = currentPattern
+                safeRegex.updateValue(currentPattern, forKey: pattern)
+                self.regularExpresions = safeRegex
                 return currentPattern
             }
             catch {
                 throw PNRegexError.General
             }
         }
-        else {
-            return regularExpresions[pattern]!
-        }
     }
     
     func regexMatches(pattern: String, string: String) throws -> [NSTextCheckingResult] {
         do {
+            let internalString = string
             let currentPattern =  try regexWithPattern(pattern)
             // NSRegularExpression accepts Swift strings but works with NSString under the hood. Safer to bridge to NSString for taking range.
-            let nsString = string as NSString
+            let nsString = internalString as NSString
             let stringRange = NSMakeRange(0, nsString.length)
-            let matches = currentPattern.matchesInString(string, options: [], range: stringRange)
+            let matches = currentPattern.matchesInString(internalString, options: [], range: stringRange)
             return matches
         }
         catch {
             throw PNRegexError.General
+        }
+    }
+    
+    func phoneDataDetectorMatches(string: String) throws -> [NSTextCheckingResult] {
+        var dataDetector: NSDataDetector
+        if let pdDetector = phoneDataDetector {
+            dataDetector = pdDetector.copy() as! NSDataDetector
+        }
+        else {
+            do {
+                dataDetector = try NSDataDetector(types: NSTextCheckingType.PhoneNumber.rawValue)
+                self.phoneDataDetector = dataDetector
+            }
+            catch {
+                throw PNRegexError.General
+            }
+        }
+        let nsString = string as NSString
+        let stringRange = NSMakeRange(0, nsString.length)
+        let matches = dataDetector.matchesInString(string, options: [], range: stringRange)
+        if matches.isEmpty == false {
+            return matches
+        }
+        else {
+            let fallBackMatches = try regexMatches(PNValidPhoneNumberPattern, string: string)
+            if fallBackMatches.isEmpty == false {
+                return fallBackMatches
+            }
+            else {
+                throw PNParsingError.NotANumber
+            }
         }
     }
     
@@ -94,7 +130,7 @@ class RegularExpressions {
         if (pattern == nil) {
             return false
         }
-        var isMatchingEntirely : Bool = false
+        var isMatchingEntirely: Bool = false
         do {
             let matches = try regexMatches(pattern!, string: string)
             let nsString = string as NSString
@@ -154,9 +190,9 @@ class RegularExpressions {
         }
     }
     
-    func stringByReplacingOccurrences(string: String, map : [String:String], removeNonMatches : Bool) -> String? {
+    func stringByReplacingOccurrences(string: String, map: [String:String], removeNonMatches: Bool) -> String? {
         let targetString = NSMutableString ()
-        let copiedString : NSString = string
+        let copiedString: NSString = string
         for var i = 0; i < string.characters.count; i++ {
             var oneChar = copiedString.characterAtIndex(i)
             let keyString = NSString(characters: &oneChar, length: 1) as String
@@ -204,7 +240,7 @@ class RegularExpressions {
 // MARK: Extensions
 
 extension String {
-    func substringWithNSRange(range : NSRange) -> String {
+    func substringWithNSRange(range: NSRange) -> String {
         let nsString = self as NSString
         return nsString.substringWithRange(range)
     }

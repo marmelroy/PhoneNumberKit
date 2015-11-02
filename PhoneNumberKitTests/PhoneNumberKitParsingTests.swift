@@ -23,7 +23,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
     
     func testFailingNumber() {
         do {
-            let phoneNumber1 = try PhoneNumber(rawNumber: "860123456789", region:"CH")
+            let phoneNumber1 = try PhoneNumber(rawNumber: "+5491187654321 ABC123", region: "AR")
             XCTAssertNotNil(phoneNumber1)
         }
         catch {
@@ -156,7 +156,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
     func testAllExampleNumbers() {
         do {
             let metaDataArray = PhoneNumberKit().metadata.items.filter{$0.codeID.characters.count == 2}
-            for metadata in  metaDataArray {
+            for metadata in metaDataArray {
                 let codeID = metadata.codeID
                 let metaDataDescriptions = [metadata.generalDesc, metadata.fixedLine, metadata.mobile, metadata.tollFree, metadata.premiumRate, metadata.sharedCost, metadata.voip, metadata.voicemail, metadata.pager, metadata.uan, metadata.emergency]
                 for desc in metaDataDescriptions {
@@ -174,28 +174,21 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTFail()
         }
     }
-    
-//    TODO: Target improved performance so that 2000 parses take less than 1 second
-//    func testPerformance() {
-//        let numberOfParses = 300
-//        do {
-//            _ = PhoneNumberKit()
-//            let startTime = NSDate()
-//            var endTime = NSDate()
-//            for var numberIdx = 0; numberIdx <= numberOfParses; numberIdx++ {
-//                let phoneNumber6 = try PhoneNumber(rawNumber: "+5491187654321", region: "AR")
-//                XCTAssertNotNil(phoneNumber6)
-//                if (numberIdx == numberOfParses) {
-//                    endTime = NSDate()
-//                }
-//            }
-//            let timeInterval = endTime.timeIntervalSinceDate(startTime)
-//            print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
-//            XCTAssertTrue(timeInterval < 1)
-//        }
-//        catch {
-//            XCTFail()
-//        }
-//    }
+
+    func testPerformanceSimple() {
+        let numberOfParses = 1000
+        let startTime = NSDate()
+        var endTime = NSDate()
+        var numberArray: [String] = []
+        for var numberIdx = 0; numberIdx < numberOfParses; numberIdx++ {
+            numberArray.append("+5491187654321")
+        }
+        let phoneNumbers = PhoneNumberKit().parseMultiple(numberArray, region: "AR")
+        XCTAssertTrue(phoneNumbers.count == numberOfParses)
+        endTime = NSDate()
+        let timeInterval = endTime.timeIntervalSinceDate(startTime)
+        print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
+        XCTAssertTrue(timeInterval < 1)
+    }
 
 }
