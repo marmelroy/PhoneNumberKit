@@ -53,15 +53,14 @@ class RegularExpressions {
     }
     
     func phoneDataDetectorMatches(string: String) throws -> [NSTextCheckingResult] {
-        var dDetector : NSDataDetector
-        if let dataDetector = phoneDataDetector {
-            dDetector = dataDetector.copy() as! NSDataDetector
+        var dataDetector : NSDataDetector
+        if let pdDetector = phoneDataDetector {
+            dataDetector = pdDetector.copy() as! NSDataDetector
         }
         else {
             do {
-                let dataDetector = try NSDataDetector(types: NSTextCheckingType.PhoneNumber.rawValue)
+                dataDetector = try NSDataDetector(types: NSTextCheckingType.PhoneNumber.rawValue)
                 let lockQueue = dispatch_queue_create("com.test.LockQueue", nil)
-                dDetector = dataDetector.copy() as! NSDataDetector
                 dispatch_sync(lockQueue) {
                     self.phoneDataDetector = dataDetector
                 }
@@ -72,7 +71,7 @@ class RegularExpressions {
         }
         let nsString = string as NSString
         let stringRange = NSMakeRange(0, nsString.length)
-        let matches = dDetector.matchesInString(string, options: [], range: stringRange)
+        let matches = dataDetector.matchesInString(string, options: [], range: stringRange)
         if matches.isEmpty == false {
             return matches
         }
