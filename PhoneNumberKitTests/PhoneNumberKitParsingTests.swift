@@ -176,16 +176,15 @@ class PhoneNumberKitParsingTests: XCTestCase {
     }
 
     func testPerformanceSimple() {
-        let numberOfParses = 2000
+        let numberOfParses = 1000
         let startTime = NSDate()
         var endTime = NSDate()
         var numberArray : [String] = []
         for var numberIdx = 0; numberIdx < numberOfParses; numberIdx++ {
             numberArray.append("+5491187654321")
         }
-        let phoneNumbers = PhoneNumberKit().parseMultiplePhoneNumbers(numberArray, region: "AR")
+        let phoneNumbers = PhoneNumberKit().parseMultiple(numberArray, region: "AR")
         XCTAssertTrue(phoneNumbers.count == numberOfParses)
-
         endTime = NSDate()
         let timeInterval = endTime.timeIntervalSinceDate(startTime)
         print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")

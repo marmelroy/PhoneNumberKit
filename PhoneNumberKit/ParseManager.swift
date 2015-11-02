@@ -9,16 +9,12 @@
 import Foundation
 
 class ParseManager {
-    
-    static let sharedInstance = ParseManager()
-    
+        
     let regex = RegularExpressions.sharedInstance
     
     let metadata = Metadata.sharedInstance
     
     let parser = PhoneNumberParser()
-    
-    var startTime =  NSDate()
     
     private var multiParseArray = SynchronizedArray<PhoneNumber>()
     
@@ -28,9 +24,6 @@ class ParseManager {
         var rawNumber: String?
         var leadingZero: Bool = false
         var numberExtension: String?
-        private var parsingNationalNumber: String?
-        private var parsingRegion: String?
-
     }
     
     func parsePhoneNumber(rawNumber: String, region: String) throws -> InternalPhoneNumber {
@@ -77,11 +70,7 @@ class ParseManager {
         // If country code is not default, grab countrycode metadata
         if let cCode = phoneNumber.countryCode {
             if cCode != regionMetaData!.countryCode {
-                let countryMetadata = self.metadata.metadataPerCode[cCode]
-                if  (countryMetadata == nil) {
-                    throw PNParsingError.InvalidCountryCode
-                }
-                regionMetaData = countryMetadata
+                regionMetaData = self.metadata.metadataPerCode[cCode]
             }
         }
         
@@ -96,11 +85,11 @@ class ParseManager {
         phoneNumber.leadingZero = nationalNumber.hasPrefix("0")
         phoneNumber.nationalNumber = UInt64(nationalNumber)!
 
-        
         return phoneNumber
     }
     
     func multiParse(rawNumbers: [String], region : String) -> [PhoneNumber] {
+        multiParseArray = SynchronizedArray<PhoneNumber>()
         let queue = NSOperationQueue()
         var operationArray : [ParseOperation<InternalPhoneNumber>] = []
         let completionOperation = ParseOperation<Bool>()
@@ -137,7 +126,33 @@ class ParseManager {
         return operation
     }
 
-    
 }
 
 
+public class SynchronizedArray<T> {
+    public var array: [T] = []
+    private let accessQueue = dispatch_queue_create("SynchronizedArrayAccess", DISPATCH_QUEUE_SERIAL)
+    
+    public func append(newElement: T) {
+        dispatch_async(self.accessQueue) {
+            self.array.append(newElement)
+        }
+    }
+    
+    public subscript(index: Int) -> T {
+        set {
+            dispatch_async(self.accessQueue) {
+                self.array[index] = newValue
+            }
+        }
+        get {
+            var element: T!
+            
+            dispatch_sync(self.accessQueue) {
+                element = self.array[index]
+            }
+            
+            return element
+        }
+    }
+}

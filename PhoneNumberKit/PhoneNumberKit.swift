@@ -13,14 +13,17 @@ public class PhoneNumberKit : NSObject {
     
     let metadata = Metadata.sharedInstance
     
-    // MARK: Parssing
+    // MARK: Parsing
     
-    // Get a list of all the countries in the metadata database
-    public func parseMultiplePhoneNumbers(rawNumbers : [String], region: String) -> [PhoneNumber] {
-        let parseManager = ParseManager.sharedInstance
-        return parseManager.multiParse(rawNumbers, region: region)
+    // Fastest way to parse an array of phone numbers, returns an array of valid PhoneNumber objects. Uses default region code.
+    public func parseMultiple(rawNumbers : [String]) -> [PhoneNumber] {
+        return ParseManager().multiParse(rawNumbers, region: self.defaultRegionCode())
     }
-
+    
+    // Fastest way to parse an array of phone numbers. Allows you to specifiy custom region code.
+    public func parseMultiple(rawNumbers : [String], region: String) -> [PhoneNumber] {
+        return ParseManager().multiParse(rawNumbers, region: region)
+    }
 
     // MARK: Country and region code
     

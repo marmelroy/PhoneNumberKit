@@ -84,6 +84,8 @@ class Metadata {
     
 }
 
+// MARK: Types
+
 struct MetadataTerritory {
     var generalDesc: MetadataPhoneNumberDesc?
     var fixedLine: MetadataPhoneNumberDesc?
@@ -136,28 +138,18 @@ extension MetadataTerritory {
     }
 }
 
+struct MetadataPhoneNumberDesc {
+    var nationalNumberPattern: String?
+    var possibleNumberPattern: String?
+    var exampleNumber: String?
+}
+
 extension MetadataPhoneNumberDesc {
     init(jsondDict: NSDictionary?) {
         self.nationalNumberPattern = jsondDict?.valueForKey("nationalNumberPattern") as? String
         self.possibleNumberPattern = jsondDict?.valueForKey("possibleNumberPattern") as? String
         self.exampleNumber = jsondDict?.valueForKey("exampleNumber") as? String
-
+        
     }
-}
-
-struct MetadataPhoneNumberDesc {
-    var nationalNumberPattern: String?
-    var possibleNumberPattern: String?
-    var exampleNumber: String?
-
-}
-
-struct MetadataPhoneNumberFormat {
-    var pattern: String
-    var format: String
-    var leadingDigitsPatterns: [String]
-    var nationalPrefixFormattingRule: String
-    var nationalPrefixOptionalWhenFormatting: Bool
-    var domesticCarrierCodeFormattingRule: String
 }
 
