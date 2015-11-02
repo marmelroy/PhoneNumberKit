@@ -65,6 +65,8 @@ extension PhoneNumber {
         }
     }
     
+    // MARK: Formatting
+    
     /**
      Formats a phone number to E164 format (e.g. +33689123456)
      - Returns: A string representing the phone number in E164 format.
