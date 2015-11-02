@@ -68,7 +68,7 @@ phoneNumber.countryCode
 phoneNumber.nationalNumber
 phoneNumber.numberExtension
 phoneNumber.rawNumber
-phoneNumber.type // e.g Mobile or Fixed, computed on request
+phoneNumber.type // e.g Mobile or Fixed
 ```
 
 ### Setting up with Carthage
