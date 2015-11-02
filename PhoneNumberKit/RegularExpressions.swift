@@ -73,10 +73,18 @@ class RegularExpressions {
         let nsString = string as NSString
         let stringRange = NSMakeRange(0, nsString.length)
         let matches = dDetector.matchesInString(string, options: [], range: stringRange)
-        if matches.isEmpty {
-            throw PNParsingError.NotANumber
+        if matches.isEmpty == false {
+            return matches
         }
-        return matches
+        else {
+            let fallBackMatches = try regexMatches(PNValidPhoneNumberPattern, string: string)
+            if fallBackMatches.isEmpty == false {
+                return fallBackMatches
+            }
+            else {
+                throw PNParsingError.NotANumber
+            }
+        }
     }
     
     // MARK: Match helpers
