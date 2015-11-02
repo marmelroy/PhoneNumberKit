@@ -18,12 +18,12 @@ Parsed ☎️#️⃣ object
 - Parameter type: Computed phone number type on access. Returns from an enumeration - PNPhoneNumberType.
 */
 public struct PhoneNumber {
-    let countryCode: UInt64
-    private(set) var leadingZero: Bool = false
-    let nationalNumber: UInt64
-    let numberExtension: String?
-    let rawNumber: String
-    var type: PNPhoneNumberType {
+    public let countryCode: UInt64
+    private(set) public var leadingZero: Bool = false
+    public let nationalNumber: UInt64
+    public let numberExtension: String?
+    public let rawNumber: String
+    public var type: PNPhoneNumberType {
         get {
             let parser = PhoneNumberParser()
             let type: PNPhoneNumberType = parser.checkNumberType(String(nationalNumber), countryCode: countryCode)
@@ -37,7 +37,7 @@ public extension PhoneNumber {
     Parse a string into a phone number object using default region. Can throw.
     - Parameter rawNumber: String to be parsed to phone number struct.
     */
-    init(rawNumber: String) throws {
+    public init(rawNumber: String) throws {
         let defaultRegion = PhoneNumberKit().defaultRegionCode()
         try self.init(rawNumber: rawNumber, region: defaultRegion)
     }
@@ -47,7 +47,7 @@ public extension PhoneNumber {
     - Parameter rawNumber: String to be parsed to phone number struct.
     - Parameter region: ISO 639 compliant region code.
     */
-    init(rawNumber: String, region: String) throws {
+    public init(rawNumber: String, region: String) throws {
         let phoneNumber = try ParseManager().parsePhoneNumber(rawNumber, region: region)
         self = phoneNumber
     }
