@@ -8,26 +8,20 @@
 
 import Foundation
 
+/**
+Custom NSOperation for phone number parsing that supports throwing closures.
+*/
 class ParseOperation<OutputType>: NSOperation {
     
-    typealias OpClosure = (parseOp: ParseOperation<OutputType>) -> Void
-    typealias OpThrowingClosure = (parseOp: ParseOperation<OutputType>) throws -> Void
-    
-    override final var asynchronous: Bool { return true }
+    typealias OperationClosure = (parseOp: ParseOperation<OutputType>) -> Void
+    typealias OperationThrowingClosure = (parseOp: ParseOperation<OutputType>) throws -> Void
     override final var executing: Bool { return state == .Executing }
     override final var finished: Bool { return state == .Finished }
-    
-    private var implementationHandler: OpThrowingClosure?
-    private var completionHandler: OpClosure?
-    private var cancellationHandler: OpClosure?
-
-    private var whenFinishedOnceToken: dispatch_once_t = 0
-    private var finishOnceToken: dispatch_once_t = 0
-    private var cancelOnceToken: dispatch_once_t = 0
-    
-    private(set) var output: AsyncOpValue<OutputType> = .None(PNParsingError.TechnicalError)
-
-    private var state = AsyncOpState.Initial {
+    private var completionHandler: OperationClosure?
+    private var implementationHandler: OperationThrowingClosure?
+    private var dispatchOnceToken: dispatch_once_t = 0
+    private(set) var output: ParseOperationValue<OutputType> = .None(PNParsingError.TechnicalError)
+    private var state = ParseOperationState.Initial {
         willSet {
             if newValue != state {
                 willChangeValueForState(newValue)
@@ -42,97 +36,107 @@ class ParseOperation<OutputType>: NSOperation {
         }
     }
     
-    required override init() {
-        super.init()
-    }
+    // MARK: Lifecycle
     
-    override  func start() {
+    /**
+    Start operation, perform implementation or finish with errors.
+    */
+    override func start() {
         if !cancelled {
             main()
-        } else {
+        }
+        else {
             finish(with: .None(.TechnicalError))
         }
     }
     
+    /**
+    Main operation, tries to perform the implementation handler.
+    */
     override func main() {
         func main_performImplementation() {
             if let implementationHandler = self.implementationHandler {
                 self.implementationHandler = nil
                 do {
                     try implementationHandler(parseOp: self)
-                } catch {
-                    finish(with: error)
                 }
-            } else {
+                catch {
+                    finish(with: PNParsingError.TechnicalError)
+                }
+            }
+            else {
                 finish(with: PNParsingError.TechnicalError)
             }
         }
-        
         autoreleasepool {
             main_performImplementation() // happy path
         }
     }
 
-    
-    override func cancel() {
-        dispatch_once(&cancelOnceToken) {
-            super.cancel()
-            self.cancellationHandler?(parseOp: self)
-            self.cancellationHandler = nil
-        }
-    }
-    
-}
-
-public protocol AsyncOpInputProvider {
-    typealias ProvidedInputValueType
-    func provideAsyncOpInput() -> AsyncOpValue<ProvidedInputValueType>
-}
-
-public enum AsyncOpValue<ValueType>: AsyncOpInputProvider {
-    case None(PNParsingError)
-    case Some(ValueType)
-    
-    public typealias ProvidedInputValueType = ValueType
-    public func provideAsyncOpInput() -> AsyncOpValue<ProvidedInputValueType> {
-        return self
-    }
 }
 
 extension ParseOperation {
-    
-    func onStart(implementationHandler: OpThrowingClosure) {
+    /**
+    Provide implementation handler for operation
+    - Parameter implementationHandler: Potentially throwing implementation closure.
+    */
+    func onStart(implementationHandler: OperationThrowingClosure) {
         self.implementationHandler = implementationHandler
     }
     
-    func whenFinished(whenFinishedQueue completionHandlerQueue: NSOperationQueue = NSOperationQueue.mainQueue(), completionHandler: OpClosure) {
+    /**
+    Provide completion handler for operation
+    - Parameter completionHandler: Completion closure.
+    */
+    func whenFinished(whenFinishedQueue completionHandlerQueue: NSOperationQueue = NSOperationQueue.mainQueue(), completionHandler: OperationClosure) {
         guard self.completionHandler == nil else { return }
         self.completionHandler = completionHandler
     }
     
-    func onCancel(cancellationHandler: OpClosure) {
-        self.cancellationHandler = cancellationHandler
+    /**
+    Send a did change value for key notification
+    - Parameter state: ParseOperationState.
+    */
+    func didChangeValueForState(state: ParseOperationState) {
+        guard let key = state.key else { return }
+        didChangeValueForKey(key)
     }
-   
+    
+    /**
+    Send a will change value for key notification
+    - Parameter state: ParseOperationState.
+    */
+    func willChangeValueForState(state: ParseOperationState) {
+        guard let key = state.key else { return }
+        willChangeValueForKey(key)
+    }
+    
+    /**
+    Finish with an output value
+    - Parameter value: Output of valid type.
+    */
     final func finish(with value: OutputType) {
         finish(with: .Some(value))
     }
     
-    final func finish(with asyncOpValueError: PNParsingError) {
-        finish(with: .None(asyncOpValueError))
+    /**
+    Finish with a parsing error
+    - Parameter parseOperationValueError: Parsing error.
+    */
+    final func finish(with parseOperationValueError: PNParsingError) {
+        finish(with: .None(parseOperationValueError))
     }
     
-    final func finish(with failureError: ErrorType) {
-        finish(with: .None(PNParsingError.TechnicalError))
-    }
-    
-    func finish(with asyncOpValue: AsyncOpValue<OutputType>) {
-        dispatch_once(&finishOnceToken) {
-            self.output = asyncOpValue
+    /**
+    Process operation finish
+    - Parameter parseOperationValue: Outyput type or error.
+    */
+    func finish(with parseOperationValue: ParseOperationValue<OutputType>) {
+        dispatch_once(&dispatchOnceToken) {
+            self.output = parseOperationValue
             guard let completionHandler = self.completionHandler else { return }
             self.completionHandler = nil
             self.implementationHandler = nil
-            self.cancellationHandler = nil
             completionHandler(parseOp: self)
             self.state = .Finished
         }
@@ -140,8 +144,23 @@ extension ParseOperation {
     
 }
 
-extension AsyncOpValue {
-    
+
+/**
+ParseOperationValue enumeration, can contain a valuetype or an error.
+*/
+public enum ParseOperationValue<ValueType>: ParseOperationValueProvider {
+    case None(PNParsingError)
+    case Some(ValueType)
+    public typealias ProvidedInputValueType = ValueType
+    public func provideAsyncOpInput() -> ParseOperationValue<ProvidedInputValueType> {
+        return self
+    }
+}
+
+extension ParseOperationValue {
+    /**
+    Get value, can return a value type or throw an error.
+    */
     public func getValue() throws -> ValueType {
         switch self {
         case .None:
@@ -151,6 +170,9 @@ extension AsyncOpValue {
         }
     }
     
+    /**
+    Access value, can return a value type or nil (can't throw).
+    */
     public var value: ValueType? {
         switch self {
         case .None:
@@ -160,6 +182,9 @@ extension AsyncOpValue {
         }
     }
     
+    /**
+    Access error, can return an error or nil (can't throw).
+    */
     public var noneError: PNParsingError? {
         switch self {
         case .None(let error):
@@ -168,21 +193,23 @@ extension AsyncOpValue {
             return nil
         }
     }
-    
 }
 
-public enum ParseOperationResultStatus {
-    case Pending
-    case Succeeded
-    case Cancelled
-    case Failed
+/**
+Value provider protocol.
+*/
+public protocol ParseOperationValueProvider {
+    typealias ProvidedInputValueType
+    func provideAsyncOpInput() -> ParseOperationValue<ProvidedInputValueType>
 }
 
-private enum AsyncOpState {
+/**
+Operation state enum.
+*/
+enum ParseOperationState {
     case Initial
     case Executing
     case Finished
-    
     var key: String? {
         switch self {
         case .Executing:
@@ -193,18 +220,4 @@ private enum AsyncOpState {
             return nil
         }
     }
-}
-
-private extension ParseOperation {
-    
-    func willChangeValueForState(state: AsyncOpState) {
-        guard let key = state.key else { return }
-        willChangeValueForKey(key)
-    }
-    
-    func didChangeValueForState(state: AsyncOpState) {
-        guard let key = state.key else { return }
-        didChangeValueForKey(key)
-    }
-    
 }

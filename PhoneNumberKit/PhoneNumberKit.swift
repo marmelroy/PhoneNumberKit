@@ -25,11 +25,11 @@ public class PhoneNumberKit: NSObject {
     }
     
     /**
-     Fastest way to parse an array of phone numbers. Uses custom region code.
-     - Parameter rawNumbers: An array of raw number strings.
-     - Parameter region: ISO 639 compliant region code.
-     - Returns: An array of valid PhoneNumber objects.
-     */
+    Fastest way to parse an array of phone numbers. Uses custom region code.
+    - Parameter rawNumbers: An array of raw number strings.
+    - Parameter region: ISO 639 compliant region code.
+    - Returns: An array of valid PhoneNumber objects.
+    */
     func parseMultiple(rawNumbers: [String], region: String) -> [PhoneNumber] {
         return ParseManager().multiParse(rawNumbers, region: region)
     }
@@ -46,39 +46,39 @@ public class PhoneNumberKit: NSObject {
     }
     
     /**
-     Get an array of ISO 639 compliant region codes corresponding to a given country code.
-     - Parameter code: An international country code (e.g 44 for the UK).
-     - Returns: An optional array of ISO 639 compliant region codes.
-     */
+    Get an array of ISO 639 compliant region codes corresponding to a given country code.
+    - Parameter code: An international country code (e.g 44 for the UK).
+    - Returns: An optional array of ISO 639 compliant region codes.
+    */
     func countriesForCode(code: UInt64) -> [String]? {
         let results = metadata.fetchCountriesForCode(code)?.map{$0.codeID}
         return results
     }
     
     /**
-     Get an main ISO 639 compliant region code for a given country code.
-     - Parameter code: An international country code (e.g 1 for the US).
-     - Returns: A ISO 639 compliant region code string.
-     */
+    Get an main ISO 639 compliant region code for a given country code.
+    - Parameter code: An international country code (e.g 1 for the US).
+    - Returns: A ISO 639 compliant region code string.
+    */
     func mainCountryForCode(code: UInt64) -> String? {
         let country = metadata.fetchMainCountryMetadataForCode(code)
         return country?.codeID
     }
     
     /**
-     Get an international country code for an ISO 639 compliant region code
-     - Parameter country: ISO 639 compliant region code.
-     - Returns: An international country code (e.g. 33 for France).
-     */
+    Get an international country code for an ISO 639 compliant region code
+    - Parameter country: ISO 639 compliant region code.
+    - Returns: An international country code (e.g. 33 for France).
+    */
     func codeForCountry(country: String) -> UInt64? {
         let results = metadata.fetchMetadataForCountry(country)?.countryCode
         return results
     }
     
     /**
-     Get a user's default region code,
-     - Returns: A computed value for the user's current region - based on the iPhone's carrier and if not available, the device region.
-     */
+    Get a user's default region code,
+    - Returns: A computed value for the user's current region - based on the iPhone's carrier and if not available, the device region.
+    */
     func defaultRegionCode() -> String {
         let networkInfo = CTTelephonyNetworkInfo()
         let carrier = networkInfo.subscriberCellularProvider

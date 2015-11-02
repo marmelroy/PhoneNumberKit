@@ -90,10 +90,10 @@ class Metadata {
     
 
     /**
-     Get the MetadataTerritory objects for an ISO 639 compliant region code.
-     - Parameter country: ISO 639 compliant region code (e.g "GB" for the UK).
-     - Returns: A MetadataTerritory object.
-     */
+    Get the MetadataTerritory objects for an ISO 639 compliant region code.
+    - Parameter country: ISO 639 compliant region code (e.g "GB" for the UK).
+    - Returns: A MetadataTerritory object.
+    */
     func fetchMetadataForCountry(country: String) -> MetadataTerritory? {
         let results = items.filter { $0.codeID == country.uppercaseString}
         return results.first

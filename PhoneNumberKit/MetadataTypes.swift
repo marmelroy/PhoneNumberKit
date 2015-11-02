@@ -54,9 +54,9 @@ struct MetadataTerritory {
 
 extension MetadataTerritory {
     /**
-     Parse a json dictionary into a MetadataTerritory.
-     - Parameter jsondDict: json dictionary from attached json metadata file.
-     */
+    Parse a json dictionary into a MetadataTerritory.
+    - Parameter jsondDict: json dictionary from attached json metadata file.
+    */
     init(jsondDict: NSDictionary) {
         self.generalDesc = MetadataPhoneNumberDesc(jsondDict: (jsondDict.valueForKey("generalDesc") as? NSDictionary)!)
         self.fixedLine = MetadataPhoneNumberDesc(jsondDict: (jsondDict.valueForKey("fixedLine") as? NSDictionary))
@@ -105,9 +105,9 @@ struct MetadataPhoneNumberDesc {
 
 extension MetadataPhoneNumberDesc {
     /**
-     Parse a json dictionary into a MetadataTerritory.
-     - Parameter jsondDict: json dictionary from attached json metadata file.
-     */
+    Parse a json dictionary into a MetadataTerritory.
+    - Parameter jsondDict: json dictionary from attached json metadata file.
+    */
     init(jsondDict: NSDictionary?) {
         self.nationalNumberPattern = jsondDict?.valueForKey("nationalNumberPattern") as? String
         self.possibleNumberPattern = jsondDict?.valueForKey("possibleNumberPattern") as? String

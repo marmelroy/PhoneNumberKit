@@ -10,11 +10,9 @@ import Foundation
 
 class ParseManager {
     
-    let regex = RegularExpressions.sharedInstance
-    
     let metadata = Metadata.sharedInstance
-    
     let parser = PhoneNumberParser()
+    let regex = RegularExpressions.sharedInstance
     
     private var multiParseArray = SynchronizedArray<PhoneNumber>()
     
