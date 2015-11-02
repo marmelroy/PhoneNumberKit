@@ -8,46 +8,52 @@
 
 import Foundation
 
-public struct PhoneNumber {
-    private(set) public var countryCode: UInt64?
-    private(set) public var nationalNumber: UInt64?
-    private(set) public var rawNumber: String?
-    private(set) public var leadingZero: Bool = false
-    private(set) public var numberExtension: String?
-    public var type: PNPhoneNumberType { // Compute type on get
+/**
+ Parsed ☎️#️⃣ object
+ - Parameter countryCode: Country dialing code as an unsigned. Int.
+ - Parameter leadingZero: Some countries (e.g. Italy) require leading zeros. Bool.
+ - Parameter nationalNumber: National number as an unsigned. Int.
+ - Parameter numberExtension: Extension if available. String. Optional
+ - Parameter rawNumber: String used to generate phone number strict
+ - Parameter type: Computed phone number type on access. Returns from an enumeration - PNPhoneNumberType.
+ */
+struct PhoneNumber {
+    let countryCode: UInt64
+    private(set) var leadingZero: Bool = false
+    let nationalNumber: UInt64
+    let numberExtension: String?
+    let rawNumber: String
+    var type: PNPhoneNumberType { // Compute type on get
         get {
-            if let nNumber = nationalNumber, let cCode = countryCode {
-                let parser = PhoneNumberParser()
-                let type : PNPhoneNumberType = parser.extractNumberType(String(nNumber), countryCode: cCode)
-                return type
-            }
-            return PNPhoneNumberType.Unknown
+            let parser = PhoneNumberParser()
+            let type : PNPhoneNumberType = parser.extractNumberType(String(nationalNumber), countryCode: countryCode)
+            return type
         }
     }
 }
 
-public extension PhoneNumber {
+extension PhoneNumber {
     
     // Parse raw number (with default SIM region)
-    public init(rawNumber: String) throws {
+    init(rawNumber: String) throws {
         let phoneNumberKit = PhoneNumberKit()
         let defaultRegion = phoneNumberKit.defaultRegionCode()
         try self.init(rawNumber: rawNumber, region : defaultRegion)
     }
     
     // Parse raw number with custom region
-    public init(rawNumber: String, region: String) throws {
+    init(rawNumber: String, region: String) throws {
         let region = region.uppercaseString
         let phoneNumber = try ParseManager().parsePhoneNumber(rawNumber, region: region)
-        self.countryCode = phoneNumber.countryCode
-        self.nationalNumber = phoneNumber.nationalNumber
-        self.rawNumber = phoneNumber.rawNumber
+        self.countryCode = phoneNumber.countryCode!
+        self.nationalNumber = phoneNumber.nationalNumber!
+        self.rawNumber = phoneNumber.rawNumber!
         self.leadingZero = phoneNumber.leadingZero
         self.numberExtension = phoneNumber.numberExtension
     }
     
     // Parse raw number with custom region
-    public init(rawNumber: String, countryCode: UInt64?, nationalNumber: UInt64?, leadingZero: Bool, numberExtension: String?) {
+    init(rawNumber: String, countryCode: UInt64, nationalNumber: UInt64, leadingZero: Bool, numberExtension: String?) {
         self.countryCode = countryCode
         self.nationalNumber = nationalNumber
         self.rawNumber = rawNumber
@@ -57,46 +63,43 @@ public extension PhoneNumber {
     
     private func adjustedNationalNumber() -> String? {
         // Adding leading zero if needed
-        if let nNumber = nationalNumber {
-            if (self.leadingZero == true) {
-                return "0" + String(nNumber)
-            }
-            else {
-                return String(nNumber)
-            }
+        if (self.leadingZero == true) {
+            return "0" + String(nationalNumber)
         }
-        return nil
+        else {
+            return String(nationalNumber)
+        }
     }
     
     // Format to E164 format (e.g. +33689123456)
-    public func toE164() -> String? {
-        if let cCode = countryCode, let aNumber = adjustedNationalNumber() {
-            let formattedNumber : String = "+" + String(cCode) + aNumber
+    func toE164() -> String? {
+        if let aNumber = adjustedNationalNumber() {
+            let formattedNumber : String = "+" + String(countryCode) + aNumber
             return formattedNumber
         }
         return nil
     }
     
     // Format to International format (e.g. +33 689123456)
-    public func toInternational() -> String? {
-        if let cCode = countryCode, let aNumber = adjustedNationalNumber() {
-            let formattedNumber : String = "+" + String(cCode) + " " + aNumber
+    func toInternational() -> String? {
+        if let aNumber = adjustedNationalNumber() {
+            let formattedNumber : String = "+" + String(countryCode) + " " + aNumber
             return formattedNumber
         }
         return nil
     }
     
     // Format to actionable RFC format (e.g. tel:+33-689123456)
-    public func toRFC3966() -> String? {
-        if let cCode = countryCode, let aNumber = adjustedNationalNumber() {
-            let formattedNumber : String = "tel:+" + String(cCode) + "-" + aNumber
+    func toRFC3966() -> String? {
+        if let aNumber = adjustedNationalNumber() {
+            let formattedNumber : String = "tel:+" + String(countryCode) + "-" + aNumber
             return formattedNumber
         }
         return nil
     }
 
     // Format to local national format (e.g. 0689123456)
-    public func toNational() -> String? {
+    func toNational() -> String? {
         if let aNumber = adjustedNationalNumber() {
             let formattedNumber : String = "0" + aNumber
             return formattedNumber

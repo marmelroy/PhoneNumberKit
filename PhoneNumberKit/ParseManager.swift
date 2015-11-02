@@ -103,8 +103,8 @@ class ParseManager {
             let parseTask = SingleParseTask(rawNumber, region:region)
             parseTask.whenFinished { operation in
                 if let internalPhoneNumber = operation.output.value {
-                    let phoneNumber = PhoneNumber(rawNumber: rawNumber, countryCode: internalPhoneNumber.countryCode, nationalNumber: internalPhoneNumber.nationalNumber, leadingZero: internalPhoneNumber.leadingZero, numberExtension: internalPhoneNumber.numberExtension)
-                    self.multiParseArray.append(phoneNumber)
+//                    let phoneNumber = PhoneNumber(rawNumber: rawNumber, countryCode: internalPhoneNumber.countryCode, nationalNumber: internalPhoneNumber.nationalNumber, leadingZero: internalPhoneNumber.leadingZero, numberExtension: internalPhoneNumber.numberExtension)
+//                    self.multiParseArray.append(phoneNumber)
                 }
             }
             operationArray.append(parseTask)
