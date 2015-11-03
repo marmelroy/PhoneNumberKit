@@ -31,6 +31,14 @@ enum PNValidationResult:  ErrorType {
 
 // MARK: Public Enums
 
+/**
+Enumeration for parsing error types
+- TechnicalError: A generic error occured.
+- NotANumber: The string provided is not a number
+- TooLong: The string provided is too long to be a valid number
+- TooShort: The string provided is too short to be a valid number
+- InvalidCountryCode: A country code could not be found or the one found was invalid
+*/
 public enum PNParsingError:  ErrorType {
     case TechnicalError
     case NotANumber
@@ -39,17 +47,31 @@ public enum PNParsingError:  ErrorType {
     case InvalidCountryCode
 }
 
+/**
+ Phone number type enumeration
+ - FixedLine: Fixed line numbers
+ - Mobile: Mobile numbers
+ - Pager: Pager numbers
+ - PersonalNumber: Personal number numbers
+ - PremiumRate: Premium rate numbers
+ - SharedCost: Shared cost numbers
+ - TollFree: Toll free numbers
+ - Voicemail: Voice mail numbers
+ - VOIP: Voip numbers
+ - UAN: UAN numbers
+ - Unknown: Unknown number type
+ */
 public enum PNPhoneNumberType {
     case FixedLine
     case Mobile
-    case TollFree
+    case Pager
+    case PersonalNumber
     case PremiumRate
     case SharedCost
-    case VOIP
-    case PersonalNumber
-    case Pager
-    case UAN
+    case TollFree
     case Voicemail
+    case VOIP
+    case UAN
     case Unknown
 }
 
