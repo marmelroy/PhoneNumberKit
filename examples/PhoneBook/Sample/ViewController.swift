@@ -13,6 +13,8 @@ import PhoneNumberKit
 
 class ViewController: UIViewController, CNContactPickerDelegate {
 
+    let phoneNumberKit = PhoneNumberKit()
+
     @IBOutlet weak var parsedNumberLabel: UILabel!
     @IBOutlet weak var parsedCountryCodeLabel: UILabel!
     @IBOutlet weak var parsedCountryLabel: UILabel!
@@ -53,7 +55,7 @@ class ViewController: UIViewController, CNContactPickerDelegate {
             let phoneNumber = try PhoneNumber(rawNumber: number)
             parsedNumberLabel.text = phoneNumber.toInternational()
             parsedCountryCodeLabel.text = String(phoneNumber.countryCode)
-            let regionCode = PhoneNumberKit().mainCountryForCode(phoneNumber.countryCode)
+            let regionCode = phoneNumberKit.mainCountryForCode(phoneNumber.countryCode)
             let country = NSLocale.currentLocale().displayNameForKey(NSLocaleCountryCode, value: regionCode!)
             parsedCountryLabel.text = country
         }

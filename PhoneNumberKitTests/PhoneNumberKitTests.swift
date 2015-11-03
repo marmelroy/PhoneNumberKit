@@ -34,21 +34,22 @@ class PhoneNumberKitTests: XCTestCase {
         }
     }
     
-    // French number with extension
+//    // French number with extension
     func testNumberWithExtension() {
-        let testNumber = "+33689555555 ext. 84"
+        let testNumber = "+33-689-5-5555-5 ext. 84"
         do {
             let phoneNumber = try PhoneNumber(rawNumber: testNumber)
+            print(phoneNumber.numberExtension)
             XCTAssertEqual(phoneNumber.countryCode, 33)
+            XCTAssertEqual(phoneNumber.numberExtension, "84")
             XCTAssertEqual(phoneNumber.nationalNumber, 689555555)
             XCTAssertEqual(phoneNumber.leadingZero, false)
-            XCTAssertEqual(phoneNumber.numberExtension, "84")
         }
         catch {
             XCTFail()
         }
     }
-    
+
     // French number with a plus
     func testValidNumberWithPlusNoWhiteSpace() {
         let testNumber = "+33689555555"
@@ -79,25 +80,6 @@ class PhoneNumberKitTests: XCTestCase {
             XCTFail()
         }
     }
-
-    
-    // French number with brackets
-    func testValidNumberWithBrackets() {
-        let testNumber = "+33 (0) 6 89 01 73 83"
-        do {
-            let phoneNumber = try PhoneNumber(rawNumber: testNumber)
-            XCTAssertEqual(phoneNumber.toE164(), "+33689017383")
-            XCTAssertEqual(phoneNumber.countryCode, 33)
-            XCTAssertEqual(phoneNumber.nationalNumber, 689017383)
-            XCTAssertEqual(phoneNumber.leadingZero, false)
-        }
-        catch {
-            XCTFail()
-        }
-    }
-
-    
-    
 
 
     // English number with an American IDD (default region for testing enivronment)
@@ -181,11 +163,8 @@ class PhoneNumberKitTests: XCTestCase {
             phoneNumber.toE164()
             XCTFail()
         }
-        catch PNParsingError.TooLong {
-            XCTAssert(true)
-        }
         catch {
-            XCTAssert(false)
+            XCTAssert(true)
         }
     }
 
