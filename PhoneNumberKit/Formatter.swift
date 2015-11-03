@@ -8,6 +8,27 @@
 
 import Foundation
 
+class Formatter {
+    
+    func formatExtension(phoneNumber: PhoneNumber, regionMetadata: MetadataTerritory) -> String {
+        if let extn = phoneNumber.numberExtension {
+            if let preferredExtnPrefix = regionMetadata.preferredExtnPrefix {
+                return "\(preferredExtnPrefix)\(extn)"
+            }
+            else {
+                return "\(PNDefaultExtnPrefix)\(extn)"
+            }
+        }
+        return ""
+    }
+    
+    func formatNationalNumber(phoneNumber: PhoneNumber, regionMetadata: MetadataTerritory) -> String {
+        return ""
+    }
+
+
+}
+
 public extension PhoneNumber {
     
     // MARK: Formatting
@@ -26,16 +47,16 @@ public extension PhoneNumber {
      - Returns: A string representing the phone number in International format.
      */
     public func toInternational() -> String {
+        let formatter = Formatter()
+        let metadata = Metadata.sharedInstance
+        if let regionMetadata = metadata.metadataPerCode[countryCode] {
+            let formattedExtension = formatter.formatExtension(self, regionMetadata: regionMetadata)
+            let formattedNationalNumber = ""
+//            NSString *formattedNationalNumber = [self formatNsn:nationalSignificantNumber metadata:metadata phoneNumberFormat:numberFormat carrierCode:nil];
+
+        }
+        
         let formattedNumber: String = "+" + String(countryCode) + " " + adjustedNationalNumber()
-        return formattedNumber
-    }
-    
-    /**
-     Formats a phone number to actionable RFC format (e.g. tel:+33-689123456)
-     - Returns: A string representing the phone number in RFC format.
-     */
-    public func toRFC3966() -> String {
-        let formattedNumber: String = "tel:+" + String(countryCode) + "-" + adjustedNationalNumber()
         return formattedNumber
     }
     

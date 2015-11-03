@@ -10,6 +10,12 @@ import Foundation
 
 // MARK: Private Enums
 
+enum PNNumberFormat {
+    case E164
+    case International
+    case National
+}
+
 enum PNCountryCodeSource {
     case NumberWithPlusSign
     case NumberWithIDD
@@ -84,6 +90,7 @@ let PNMaxLengthForNSN: Int = 16
 let PNNonBreakingSpace: String = "\u{00a0}"
 let PNPlusChars: String = "+＋"
 let PNValidDigitsString: String = "0-9０-９٠-٩۰-۹"
+let PNDefaultExtnPrefix: String = " ext. "
 
 // MARK: Patterns
 

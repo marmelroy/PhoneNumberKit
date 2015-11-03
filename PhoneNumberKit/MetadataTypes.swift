@@ -38,6 +38,7 @@ struct MetadataTerritory {
     let nationalPrefix: String?
     let nationalPrefixForParsing: String?
     let nationalPrefixTransformRule: String?
+    let preferredExtnPrefix: String?
     let emergency: MetadataPhoneNumberDesc?
     let fixedLine: MetadataPhoneNumberDesc?
     let generalDesc: MetadataPhoneNumberDesc?
@@ -83,6 +84,7 @@ extension MetadataTerritory {
         else {
             self.nationalPrefixForParsing = possibleNationalPrefixForParsing
         }
+        self.preferredExtnPrefix = jsondDict.valueForKey("_preferredExtnPrefix") as? String
         let _mainCountryForCode = jsondDict.valueForKey("_mainCountryForCode") as? NSString
         if (_mainCountryForCode != nil) {
             self.mainCountryForCode = _mainCountryForCode!.boolValue
@@ -105,7 +107,7 @@ struct MetadataPhoneNumberDesc {
 
 extension MetadataPhoneNumberDesc {
     /**
-    Parse a json dictionary into a MetadataTerritory.
+    Parse a json dictionary into a MetadataPhoneNumberDesc.
     - Parameter jsondDict: json dictionary from attached json metadata file.
     */
     init(jsondDict: NSDictionary?) {
@@ -113,5 +115,31 @@ extension MetadataPhoneNumberDesc {
         self.possibleNumberPattern = jsondDict?.valueForKey("possibleNumberPattern") as? String
         self.exampleNumber = jsondDict?.valueForKey("exampleNumber") as? String
         
+    }
+}
+
+struct MetadataPhoneNumberFormat {
+    let pattern: String?
+    let format: String?
+    let leadingDigitsPatterns: String?
+    let nationalPrefixFormattingRule: String?
+    let nationalPrefixOptionalWhenFormatting: Bool?
+    let domesticCarrierCodeFormattingRule: String?
+}
+
+extension MetadataPhoneNumberFormat {
+    /**
+     Parse a json dictionary into a MetadataPhoneNumberFormat.
+     - Parameter jsondDict: json dictionary from attached json metadata file.
+     */
+    init(jsondDict: NSDictionary?) {
+        self.pattern = jsondDict?.valueForKey("nationalNumberPattern") as? String
+        self.format = jsondDict?.valueForKey("format") as? String
+        self.leadingDigitsPatterns = jsondDict?.valueForKey("leadingDigits") as? String
+        self.nationalPrefixFormattingRule = jsondDict?.valueForKey("_nationalPrefixFormattingRule") as? String
+        if let _nationalPrefixOptionalWhenFormatting = jsondDict?.valueForKey("_nationalPrefixOptionalWhenFormatting") as? NSString {
+            self.nationalPrefixOptionalWhenFormatting = _nationalPrefixOptionalWhenFormatting.boolValue
+        }
+        self.domesticCarrierCodeFormattingRule = jsondDict?.valueForKey("_carrierCodeFormattingRule") as? String
     }
 }
