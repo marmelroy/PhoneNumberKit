@@ -24,7 +24,7 @@ class Formatter {
         return ""
     }
     
-    func formatNationalNumber(nationalNumber: String, regionMetadata: MetadataTerritory) -> String {
+    func formatNationalNumber(nationalNumber: String, regionMetadata: MetadataTerritory, desiredFormatType: PNNumberFormat) -> String {
         let formats = regionMetadata.numberFormats
         var selectedFormat : MetadataPhoneNumberFormat?
         for format in formats {
@@ -35,49 +35,30 @@ class Formatter {
             }
         }
         if let format = selectedFormat {
-            
+            let result = formatNationalNumber(nationalNumber, formatPattern: format, desiredFormatType: desiredFormatType)
+            return ""
         }
         else {
             return nationalNumber
         }
+    }
+    
+    func formatNationalNumber(nationalNumber: String, formatPattern: MetadataPhoneNumberFormat, desiredFormatType: PNNumberFormat)  -> String {
+        let numberFormatRule = formatPattern.format
+        var formattedNationalNumber : String?
+        let nationalPrefixFormattingRule = formatPattern.nationalPrefixFormattingRule
+        if (desiredFormatType == PNNumberFormat.National && regex.hasValue(nationalPrefixFormattingRule)){
+            let replacePattern = regex.replaceFirstStringByRegex(numberFormatRule!, string: PNFirstGroupPattern, templateString: nationalPrefixFormattingRule!)
+            formattedNationalNumber = self.regex.replaceStringByRegex(formatPattern.pattern!, string: nationalNumber, template: replacePattern)
+        }
+        else {
+            formattedNationalNumber = self.regex.replaceStringByRegex(formatPattern.pattern!, string: nationalNumber, template: numberFormatRule!)
+        }
+        
+
         return ""
     }
     
-//    - (NSString *)formatNsnUsingPattern:(NSString *)nationalNumber formattingPattern:(NBNumberFormat*)formattingPattern numberFormat:(NBEPhoneNumberFormat)numberFormat carrierCode:(NSString *)opt_carrierCode
-//    {
-//    NSString *numberFormatRule = formattingPattern.format;
-//    NSString *domesticCarrierCodeFormattingRule = formattingPattern.domesticCarrierCodeFormattingRule;
-//    NSString *formattedNationalNumber = @"";
-//    
-//    if (numberFormat == NBEPhoneNumberFormatNATIONAL && [NBMetadataHelper hasValue:opt_carrierCode] && domesticCarrierCodeFormattingRule.length > 0) {
-//    // Replace the $CC in the formatting rule with the desired carrier code.
-//    NSString *carrierCodeFormattingRule = [self replaceStringByRegex:domesticCarrierCodeFormattingRule regex:CC_PATTERN withTemplate:opt_carrierCode];
-//    // Now replace the $FG in the formatting rule with the first group and
-//    // the carrier code combined in the appropriate way.
-//    numberFormatRule = [self replaceFirstStringByRegex:numberFormatRule regex:FIRST_GROUP_PATTERN
-//    withTemplate:carrierCodeFormattingRule];
-//    formattedNationalNumber = [self replaceStringByRegex:nationalNumber regex:formattingPattern.pattern withTemplate:numberFormatRule];
-//    } else {
-//    // Use the national prefix formatting rule instead.
-//    NSString *nationalPrefixFormattingRule = formattingPattern.nationalPrefixFormattingRule;
-//    if (numberFormat == NBEPhoneNumberFormatNATIONAL && [NBMetadataHelper hasValue:nationalPrefixFormattingRule]) {
-//    NSString *replacePattern = [self replaceFirstStringByRegex:numberFormatRule regex:FIRST_GROUP_PATTERN withTemplate:nationalPrefixFormattingRule];
-//    formattedNationalNumber = [self replaceStringByRegex:nationalNumber regex:formattingPattern.pattern withTemplate:replacePattern];
-//    } else {
-//    formattedNationalNumber = [self replaceStringByRegex:nationalNumber regex:formattingPattern.pattern withTemplate:numberFormatRule];
-//    }
-//    }
-//    
-//    if (numberFormat == NBEPhoneNumberFormatRFC3966) {
-//    // Strip any leading punctuation.
-//    formattedNationalNumber = [self replaceStringByRegex:formattedNationalNumber regex:[NSString stringWithFormat:@"^%@", SEPARATOR_PATTERN] withTemplate:@""];
-//    
-//    // Replace the rest with a dash between each number group.
-//    formattedNationalNumber = [self replaceStringByRegex:formattedNationalNumber regex:SEPARATOR_PATTERN withTemplate:@"-"];
-//    }
-//    return formattedNationalNumber;
-//    }
-
 }
 
 public extension PhoneNumber {
@@ -102,8 +83,7 @@ public extension PhoneNumber {
         let metadata = Metadata.sharedInstance
         if let regionMetadata = metadata.metadataPerCode[countryCode] {
             let formattedExtension = formatter.formatExtension(self, regionMetadata: regionMetadata)
-            let formattedNationalNumber = formatter.formatNationalNumber(adjustedNationalNumber(), regionMetadata: regionMetadata)
-
+            let formattedNationalNumber = formatter.formatNationalNumber(adjustedNationalNumber(), regionMetadata: regionMetadata, desiredFormatType: PNNumberFormat.International)
         }
         
         let formattedNumber: String = "+" + String(countryCode) + " " + adjustedNationalNumber()

@@ -91,6 +91,7 @@ let PNNonBreakingSpace: String = "\u{00a0}"
 let PNPlusChars: String = "+＋"
 let PNValidDigitsString: String = "0-9０-９٠-٩۰-۹"
 let PNDefaultExtnPrefix: String = " ext. "
+let PNFirstGroupPattern: String =  "(\\$\\d)"
 
 // MARK: Patterns
 

@@ -147,7 +147,7 @@ extension MetadataPhoneNumberFormat {
      - Parameter jsondDict: json dictionary from attached json metadata file.
      */
     init(jsondDict: NSDictionary?) {
-        self.pattern = jsondDict?.valueForKey("nationalNumberPattern") as? String
+        self.pattern = jsondDict?.valueForKey("_pattern") as? String
         self.format = jsondDict?.valueForKey("format") as? String
         self.leadingDigitsPatterns = jsondDict?.valueForKey("leadingDigits") as? String
         self.nationalPrefixFormattingRule = jsondDict?.valueForKey("_nationalPrefixFormattingRule") as? String
