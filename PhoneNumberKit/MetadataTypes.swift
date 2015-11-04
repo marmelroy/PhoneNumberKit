@@ -51,6 +51,8 @@ struct MetadataTerritory {
     let voicemail: MetadataPhoneNumberDesc?
     let voip: MetadataPhoneNumberDesc?
     let uan: MetadataPhoneNumberDesc?
+    var numberFormats: [MetadataPhoneNumberFormat] = []
+
 }
 
 extension MetadataTerritory {
@@ -89,6 +91,18 @@ extension MetadataTerritory {
         if (_mainCountryForCode != nil) {
             self.mainCountryForCode = _mainCountryForCode!.boolValue
         }
+        if let availableFormats = jsondDict.valueForKey("availableFormats")?.valueForKey("numberFormat") {
+            if let formatsArray = availableFormats as? NSArray {
+                for format in formatsArray {
+                    let processedFormat = MetadataPhoneNumberFormat(jsondDict: format as? NSDictionary)
+                    self.numberFormats.append(processedFormat)
+                }
+            }
+            if let format = availableFormats as? NSDictionary {
+                let processedFormat = MetadataPhoneNumberFormat(jsondDict: format)
+                self.numberFormats.append(processedFormat)
+            }
+        }
     }
 }
 
@@ -123,7 +137,7 @@ struct MetadataPhoneNumberFormat {
     let format: String?
     let leadingDigitsPatterns: String?
     let nationalPrefixFormattingRule: String?
-    let nationalPrefixOptionalWhenFormatting: Bool?
+    var nationalPrefixOptionalWhenFormatting: Bool = false
     let domesticCarrierCodeFormattingRule: String?
 }
 
