@@ -12,7 +12,7 @@ class Formatter {
     
     let regex = RegularExpressions.sharedInstance
     
-    func formatExtension(phoneNumber: PhoneNumber, regionMetadata: MetadataTerritory) -> String {
+    func formatExtension(phoneNumber: PhoneNumber, regionMetadata: MetadataTerritory) -> String? {
         if let extn = phoneNumber.numberExtension {
             if let preferredExtnPrefix = regionMetadata.preferredExtnPrefix {
                 return "\(preferredExtnPrefix)\(extn)"
@@ -21,7 +21,7 @@ class Formatter {
                 return "\(PNDefaultExtnPrefix)\(extn)"
             }
         }
-        return ""
+        return nil
     }
     
     func formatNationalNumber(nationalNumber: String, regionMetadata: MetadataTerritory, desiredFormatType: PNNumberFormat) -> String {
@@ -36,7 +36,7 @@ class Formatter {
         }
         if let format = selectedFormat {
             let result = formatNationalNumber(nationalNumber, formatPattern: format, desiredFormatType: desiredFormatType)
-            return ""
+            return result
         }
         else {
             return nationalNumber
@@ -56,7 +56,7 @@ class Formatter {
         }
         
 
-        return ""
+        return formattedNationalNumber!
     }
     
 }
@@ -81,12 +81,14 @@ public extension PhoneNumber {
     public func toInternational() -> String {
         let formatter = Formatter()
         let metadata = Metadata.sharedInstance
+        var formattedNationalNumber = adjustedNationalNumber()
         if let regionMetadata = metadata.metadataPerCode[countryCode] {
-            let formattedExtension = formatter.formatExtension(self, regionMetadata: regionMetadata)
-            let formattedNationalNumber = formatter.formatNationalNumber(adjustedNationalNumber(), regionMetadata: regionMetadata, desiredFormatType: PNNumberFormat.International)
+            formattedNationalNumber = formatter.formatNationalNumber(adjustedNationalNumber(), regionMetadata: regionMetadata, desiredFormatType: PNNumberFormat.International)
+            if let formattedExtension = formatter.formatExtension(self, regionMetadata: regionMetadata) {
+                formattedNationalNumber = formattedNationalNumber + formattedExtension
+            }
         }
-        
-        let formattedNumber: String = "+" + String(countryCode) + " " + adjustedNationalNumber()
+        let formattedNumber: String = "+" + String(countryCode) + " " + formattedNationalNumber
         return formattedNumber
     }
     
