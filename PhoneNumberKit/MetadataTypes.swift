@@ -142,6 +142,8 @@ extension MetadataPhoneNumberDesc {
  MetadataPhoneNumberFormat object
  - Parameter pattern: Regex pattern. Optional.
  - Parameter format: Formatting template. Optional.
+ - Parameter intlFormat: International formatting template. Optional.
+
  - Parameter leadingDigitsPatterns: Leading digits regex pattern. Optional.
  - Parameter nationalPrefixFormattingRule: National prefix formatting rule. Optional.
  - Parameter nationalPrefixOptionalWhenFormatting: National prefix optional bool. Optional.
@@ -150,6 +152,7 @@ extension MetadataPhoneNumberDesc {
 struct MetadataPhoneNumberFormat {
     let pattern: String?
     let format: String?
+    let intlFormat: String?
     let leadingDigitsPatterns: String?
     var nationalPrefixFormattingRule: String?
     var nationalPrefixOptionalWhenFormatting: Bool = false
@@ -164,6 +167,7 @@ extension MetadataPhoneNumberFormat {
     init(jsondDict: NSDictionary?) {
         self.pattern = jsondDict?.valueForKey("pattern") as? String
         self.format = jsondDict?.valueForKey("format") as? String
+        self.intlFormat = jsondDict?.valueForKey("intlFormat") as? String
         self.leadingDigitsPatterns = jsondDict?.valueForKey("leadingDigits") as? String
         self.nationalPrefixFormattingRule = jsondDict?.valueForKey("nationalPrefixFormattingRule") as? String
         if let _nationalPrefixOptionalWhenFormatting = jsondDict?.valueForKey("nationalPrefixOptionalWhenFormatting") as? NSString {

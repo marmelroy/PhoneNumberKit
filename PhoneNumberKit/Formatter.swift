@@ -22,7 +22,7 @@ class Formatter {
         let metadata = Metadata.sharedInstance
         var formattedNationalNumber = phoneNumber.adjustedNationalNumber()
         if let regionMetadata = metadata.metadataPerCode[phoneNumber.countryCode] {
-            formattedNationalNumber = formatNationalNumber(formattedNationalNumber, regionMetadata: regionMetadata, desiredFormatType: PNNumberFormat.National)
+            formattedNationalNumber = formatNationalNumber(formattedNationalNumber, regionMetadata: regionMetadata, formatType: formatType)
             if let formattedExtension = formatExtension(phoneNumber.numberExtension, regionMetadata: regionMetadata) {
                 formattedNationalNumber = formattedNationalNumber + formattedExtension
             }
@@ -53,7 +53,7 @@ class Formatter {
      - Parameter nationalNumber: National number string.
      - Returns: Modified nationalNumber for display.
      */
-    func formatNationalNumber(nationalNumber: String, regionMetadata: MetadataTerritory, desiredFormatType: PNNumberFormat) -> String {
+    func formatNationalNumber(nationalNumber: String, regionMetadata: MetadataTerritory, formatType: PNNumberFormat) -> String {
         let formats = regionMetadata.numberFormats
         var selectedFormat : MetadataPhoneNumberFormat?
         for format in formats {
@@ -62,9 +62,14 @@ class Formatter {
                     selectedFormat = format
                 }
             }
+            else {
+                if (regex.matchesEntirely(format.pattern, string: String(nationalNumber))) {
+                    selectedFormat = format
+                }
+            }
         }
         if let formatPattern = selectedFormat {
-            let numberFormatRule = formatPattern.format
+            let numberFormatRule = (formatType == PNNumberFormat.International) ? formatPattern.intlFormat : formatPattern.format
             var formattedNationalNumber : String?
             var prefixFormattingRule = formatPattern.nationalPrefixFormattingRule
             if prefixFormattingRule?.characters.count > 0 {
@@ -77,7 +82,7 @@ class Formatter {
                     prefixFormattingRule = ""
                 }
             }
-            if (desiredFormatType == PNNumberFormat.National && regex.hasValue(prefixFormattingRule)){
+            if (formatType == PNNumberFormat.National && regex.hasValue(prefixFormattingRule)){
                 let replacePattern = regex.replaceFirstStringByRegex(PNFirstGroupPattern, string: numberFormatRule!, templateString: prefixFormattingRule!)
                 formattedNationalNumber = self.regex.replaceStringByRegex(formatPattern.pattern!, string: nationalNumber, template: replacePattern)
             }
