@@ -11,8 +11,25 @@ import Foundation
 class Formatter {
     
     // MARK: Formatting functions
-    
     let regex = RegularExpressions.sharedInstance
+    
+    /**
+     Formats phone numbers for display
+     - Parameter phoneNumber: Phone number object.
+     - Returns: Modified national number ready for display.
+     */
+    func formatPhoneNumber(phoneNumber: PhoneNumber, formatType: PNNumberFormat) -> String {
+        let metadata = Metadata.sharedInstance
+        var formattedNationalNumber = phoneNumber.adjustedNationalNumber()
+        if let regionMetadata = metadata.metadataPerCode[phoneNumber.countryCode] {
+            formattedNationalNumber = formatNationalNumber(formattedNationalNumber, regionMetadata: regionMetadata, desiredFormatType: PNNumberFormat.National)
+            if let formattedExtension = formatExtension(phoneNumber.numberExtension, regionMetadata: regionMetadata) {
+                formattedNationalNumber = formattedNationalNumber + formattedExtension
+            }
+        }
+        return formattedNationalNumber
+    }
+
     
     /**
      Formats extension for display
@@ -49,9 +66,19 @@ class Formatter {
         if let formatPattern = selectedFormat {
             let numberFormatRule = formatPattern.format
             var formattedNationalNumber : String?
-            let nationalPrefixFormattingRule = formatPattern.nationalPrefixFormattingRule
-            if (desiredFormatType == PNNumberFormat.National && regex.hasValue(nationalPrefixFormattingRule)){
-                let replacePattern = regex.replaceFirstStringByRegex(numberFormatRule!, string: PNFirstGroupPattern, templateString: nationalPrefixFormattingRule!)
+            var prefixFormattingRule = formatPattern.nationalPrefixFormattingRule
+            if prefixFormattingRule?.characters.count > 0 {
+                let nationalPrefix = regionMetadata.nationalPrefix
+                if nationalPrefix?.characters.count > 0 {
+                    prefixFormattingRule = regex.replaceStringByRegex(PNNPPattern, string: prefixFormattingRule!, template: nationalPrefix!)
+                    prefixFormattingRule = regex.replaceStringByRegex(PNFGPattern, string: prefixFormattingRule!, template:"\\$1")
+                }
+                else {
+                    prefixFormattingRule = ""
+                }
+            }
+            if (desiredFormatType == PNNumberFormat.National && regex.hasValue(prefixFormattingRule)){
+                let replacePattern = regex.replaceFirstStringByRegex(PNFirstGroupPattern, string: numberFormatRule!, templateString: prefixFormattingRule!)
                 formattedNationalNumber = self.regex.replaceStringByRegex(formatPattern.pattern!, string: nationalNumber, template: replacePattern)
             }
             else {
@@ -80,29 +107,24 @@ public extension PhoneNumber {
     }
     
     /**
-     Formats a phone number to International format (e.g. +33 689123456)
+     Formats a phone number to International format (e.g. +33 6 89 12 34 56)
      - Returns: A string representing the phone number in International format.
      */
     public func toInternational() -> String {
         let formatter = Formatter()
-        let metadata = Metadata.sharedInstance
-        var formattedNationalNumber = adjustedNationalNumber()
-        if let regionMetadata = metadata.metadataPerCode[countryCode] {
-            formattedNationalNumber = formatter.formatNationalNumber(adjustedNationalNumber(), regionMetadata: regionMetadata, desiredFormatType: PNNumberFormat.International)
-            if let formattedExtension = formatter.formatExtension(self.numberExtension, regionMetadata: regionMetadata) {
-                formattedNationalNumber = formattedNationalNumber + formattedExtension
-            }
-        }
+        let formattedNationalNumber = formatter.formatPhoneNumber(self, formatType: .International)
         let formattedNumber: String = "+" + String(countryCode) + " " + formattedNationalNumber
         return formattedNumber
     }
     
     /**
-     Formats a phone number to local national format (e.g. 0689123456)
+     Formats a phone number to local national format (e.g. 06 89 12 34 56)
      - Returns: A string representing the phone number in the local national format.
      */
     public func toNational() -> String {
-        let formattedNumber: String = "0" + adjustedNationalNumber()
+        let formatter = Formatter()
+        let formattedNationalNumber = formatter.formatPhoneNumber(self, formatType: .National)
+        let formattedNumber: String = formattedNationalNumber
         return formattedNumber
     }
     
