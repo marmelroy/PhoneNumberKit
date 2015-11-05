@@ -132,6 +132,15 @@ extension MetadataPhoneNumberDesc {
     }
 }
 
+/**
+ MetadataPhoneNumberFormat object
+ - Parameter pattern: Regex pattern. Optional.
+ - Parameter format: Formatting template. Optional.
+ - Parameter leadingDigitsPatterns: Leading digits regex pattern. Optional.
+ - Parameter nationalPrefixFormattingRule: National prefix formatting rule. Optional.
+ - Parameter nationalPrefixOptionalWhenFormatting: National prefix optional bool. Optional.
+ - Parameter domesticCarrierCodeFormattingRule: Domestic carrier code formatting rule. Optional.
+ */
 struct MetadataPhoneNumberFormat {
     let pattern: String?
     let format: String?

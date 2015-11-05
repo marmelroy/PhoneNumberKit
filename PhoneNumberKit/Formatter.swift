@@ -10,20 +10,32 @@ import Foundation
 
 class Formatter {
     
+    // MARK: Formatting functions
+    
     let regex = RegularExpressions.sharedInstance
     
-    func formatExtension(phoneNumber: PhoneNumber, regionMetadata: MetadataTerritory) -> String? {
-        if let extn = phoneNumber.numberExtension {
+    /**
+     Formats extension for display
+     - Parameter numberExtension: Number extension string.
+     - Returns: Modified number extension with either a preferred extension prefix or the default one.
+     */
+    func formatExtension(numberExtension: String?, regionMetadata: MetadataTerritory) -> String? {
+        if let extns = numberExtension {
             if let preferredExtnPrefix = regionMetadata.preferredExtnPrefix {
-                return "\(preferredExtnPrefix)\(extn)"
+                return "\(preferredExtnPrefix)\(extns)"
             }
             else {
-                return "\(PNDefaultExtnPrefix)\(extn)"
+                return "\(PNDefaultExtnPrefix)\(extns)"
             }
         }
         return nil
     }
     
+    /**
+     Formats national number for display
+     - Parameter nationalNumber: National number string.
+     - Returns: Modified nationalNumber for display.
+     */
     func formatNationalNumber(nationalNumber: String, regionMetadata: MetadataTerritory, desiredFormatType: PNNumberFormat) -> String {
         let formats = regionMetadata.numberFormats
         var selectedFormat : MetadataPhoneNumberFormat?
@@ -34,36 +46,29 @@ class Formatter {
                 }
             }
         }
-        if let format = selectedFormat {
-            let result = formatNationalNumber(nationalNumber, formatPattern: format, desiredFormatType: desiredFormatType)
-            return result
+        if let formatPattern = selectedFormat {
+            let numberFormatRule = formatPattern.format
+            var formattedNationalNumber : String?
+            let nationalPrefixFormattingRule = formatPattern.nationalPrefixFormattingRule
+            if (desiredFormatType == PNNumberFormat.National && regex.hasValue(nationalPrefixFormattingRule)){
+                let replacePattern = regex.replaceFirstStringByRegex(numberFormatRule!, string: PNFirstGroupPattern, templateString: nationalPrefixFormattingRule!)
+                formattedNationalNumber = self.regex.replaceStringByRegex(formatPattern.pattern!, string: nationalNumber, template: replacePattern)
+            }
+            else {
+                formattedNationalNumber = self.regex.replaceStringByRegex(formatPattern.pattern!, string: nationalNumber, template: numberFormatRule!)
+            }
+            return formattedNationalNumber!
         }
         else {
             return nationalNumber
         }
     }
     
-    func formatNationalNumber(nationalNumber: String, formatPattern: MetadataPhoneNumberFormat, desiredFormatType: PNNumberFormat)  -> String {
-        let numberFormatRule = formatPattern.format
-        var formattedNationalNumber : String?
-        let nationalPrefixFormattingRule = formatPattern.nationalPrefixFormattingRule
-        if (desiredFormatType == PNNumberFormat.National && regex.hasValue(nationalPrefixFormattingRule)){
-            let replacePattern = regex.replaceFirstStringByRegex(numberFormatRule!, string: PNFirstGroupPattern, templateString: nationalPrefixFormattingRule!)
-            formattedNationalNumber = self.regex.replaceStringByRegex(formatPattern.pattern!, string: nationalNumber, template: replacePattern)
-        }
-        else {
-            formattedNationalNumber = self.regex.replaceStringByRegex(formatPattern.pattern!, string: nationalNumber, template: numberFormatRule!)
-        }
-        
-
-        return formattedNationalNumber!
-    }
-    
 }
 
 public extension PhoneNumber {
     
-    // MARK: Formatting
+    // MARK: Formatting extenstions to PhoneNumber
     
     /**
     Formats a phone number to E164 format (e.g. +33689123456)
@@ -84,7 +89,7 @@ public extension PhoneNumber {
         var formattedNationalNumber = adjustedNationalNumber()
         if let regionMetadata = metadata.metadataPerCode[countryCode] {
             formattedNationalNumber = formatter.formatNationalNumber(adjustedNationalNumber(), regionMetadata: regionMetadata, desiredFormatType: PNNumberFormat.International)
-            if let formattedExtension = formatter.formatExtension(self, regionMetadata: regionMetadata) {
+            if let formattedExtension = formatter.formatExtension(self.numberExtension, regionMetadata: regionMetadata) {
                 formattedNationalNumber = formattedNationalNumber + formattedExtension
             }
         }
