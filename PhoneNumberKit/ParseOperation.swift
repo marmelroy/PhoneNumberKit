@@ -127,7 +127,7 @@ extension ParseOperation {
     
     /**
     Process operation finish
-    - Parameter parseOperationValue: Outyput type or error.
+    - Parameter parseOperationValue: Output type or error.
     */
     func finish(with parseOperationValue: ParseOperationValue<OutputType>) {
         dispatch_once(&dispatchOnceToken) {
@@ -144,14 +144,14 @@ extension ParseOperation {
 
 /**
 ParseOperationValue enumeration, can contain a valuetype or an error.
+- None: Value representing a parsing error.
+- Some: Any operationvalue.
+- ProvidedInputValueType: Alias for any operationvalue.
 */
 public enum ParseOperationValue<ValueType>: ParseOperationValueProvider {
     case None(PNParsingError)
     case Some(ValueType)
     public typealias ProvidedInputValueType = ValueType
-    public func provideAsyncOpInput() -> ParseOperationValue<ProvidedInputValueType> {
-        return self
-    }
 }
 
 extension ParseOperationValue {
@@ -197,7 +197,6 @@ Value provider protocol.
 */
 public protocol ParseOperationValueProvider {
     typealias ProvidedInputValueType
-    func provideAsyncOpInput() -> ParseOperationValue<ProvidedInputValueType>
 }
 
 /**

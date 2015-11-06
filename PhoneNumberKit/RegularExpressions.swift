@@ -174,6 +174,31 @@ class RegularExpressions {
         }
     }
     
+    func replaceStringByRegex(pattern: String, string: String, template: String) -> String {
+        do {
+            var replacementResult = string
+            let regex =  try regexWithPattern(pattern)
+            // NSRegularExpression accepts Swift strings but works with NSString under the hood. Safer to bridge to NSString for taking range.
+            let nsString = string as NSString
+            let stringRange = NSMakeRange(0, nsString.length)
+            let matches = regex.matchesInString(string,
+                options: [], range: stringRange)
+            if (matches.count == 1) {
+                let range = regex.rangeOfFirstMatchInString(string, options: [], range: stringRange)
+                if (range.location != NSNotFound) {
+                    replacementResult = regex.stringByReplacingMatchesInString(string.mutableCopy() as! String, options: [], range: range, withTemplate: template)
+                }
+                return replacementResult
+            }
+            else if (matches.count > 1) {
+                replacementResult = regex.stringByReplacingMatchesInString(string.mutableCopy() as! String, options: [], range: stringRange, withTemplate: template)
+            }
+            return replacementResult
+        } catch {
+            return string
+        }
+    }
+    
     func replaceFirstStringByRegex(pattern: String, string: String, templateString: String) -> String {
         do {
             // NSRegularExpression accepts Swift strings but works with NSString under the hood. Safer to bridge to NSString for taking range.

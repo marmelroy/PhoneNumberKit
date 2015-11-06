@@ -10,6 +10,12 @@ import Foundation
 
 // MARK: Private Enums
 
+enum PNNumberFormat {
+    case E164
+    case International
+    case National
+}
+
 enum PNCountryCodeSource {
     case NumberWithPlusSign
     case NumberWithIDD
@@ -31,6 +37,14 @@ enum PNValidationResult:  ErrorType {
 
 // MARK: Public Enums
 
+/**
+Enumeration for parsing error types
+- TechnicalError: A generic error occured.
+- NotANumber: The string provided is not a number
+- TooLong: The string provided is too long to be a valid number
+- TooShort: The string provided is too short to be a valid number
+- InvalidCountryCode: A country code could not be found or the one found was invalid
+*/
 public enum PNParsingError:  ErrorType {
     case TechnicalError
     case NotANumber
@@ -39,17 +53,31 @@ public enum PNParsingError:  ErrorType {
     case InvalidCountryCode
 }
 
+/**
+ Phone number type enumeration
+ - FixedLine: Fixed line numbers
+ - Mobile: Mobile numbers
+ - Pager: Pager numbers
+ - PersonalNumber: Personal number numbers
+ - PremiumRate: Premium rate numbers
+ - SharedCost: Shared cost numbers
+ - TollFree: Toll free numbers
+ - Voicemail: Voice mail numbers
+ - VOIP: Voip numbers
+ - UAN: UAN numbers
+ - Unknown: Unknown number type
+ */
 public enum PNPhoneNumberType {
     case FixedLine
     case Mobile
-    case TollFree
+    case Pager
+    case PersonalNumber
     case PremiumRate
     case SharedCost
-    case VOIP
-    case PersonalNumber
-    case Pager
-    case UAN
+    case TollFree
     case Voicemail
+    case VOIP
+    case UAN
     case Unknown
 }
 
@@ -62,6 +90,10 @@ let PNMaxLengthForNSN: Int = 16
 let PNNonBreakingSpace: String = "\u{00a0}"
 let PNPlusChars: String = "+＋"
 let PNValidDigitsString: String = "0-9０-９٠-٩۰-۹"
+let PNDefaultExtnPrefix: String = " ext. "
+let PNFirstGroupPattern: String = "(\\$\\d)"
+let PNNPPattern: String = "\\$NP"
+let PNFGPattern: String = "\\$FG"
 
 // MARK: Patterns
 

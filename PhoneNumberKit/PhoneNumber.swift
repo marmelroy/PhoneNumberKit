@@ -9,7 +9,7 @@
 import Foundation
 
 /**
-Parsed ☎️#️⃣ object
+Parsed phone number object
 - Parameter countryCode: Country dialing code as an unsigned. Int.
 - Parameter leadingZero: Some countries (e.g. Italy) require leading zeros. Bool.
 - Parameter nationalNumber: National number as an unsigned. Int.
@@ -51,58 +51,7 @@ public extension PhoneNumber {
         let phoneNumber = try ParseManager().parsePhoneNumber(rawNumber, region: region)
         self = phoneNumber
     }
-        
-    /**
-    Adjust national number for display by adding leading zero if needed. Used for basic formatting functions.
-    - Returns: A string representing the adjusted national number.
-    */
-    private func adjustedNationalNumber() -> String {
-        if (self.leadingZero == true) {
-            return "0" + String(nationalNumber)
-        }
-        else {
-            return String(nationalNumber)
-        }
-    }
-    
-    // MARK: Formatting
-    
-    /**
-    Formats a phone number to E164 format (e.g. +33689123456)
-    - Returns: A string representing the phone number in E164 format.
-    */
-    public func toE164() -> String {
-        let formattedNumber: String = "+" + String(countryCode) + adjustedNationalNumber()
-        return formattedNumber
-    }
-    
-    /**
-    Formats a phone number to International format (e.g. +33 689123456)
-    - Returns: A string representing the phone number in International format.
-    */
-    public func toInternational() -> String {
-        let formattedNumber: String = "+" + String(countryCode) + " " + adjustedNationalNumber()
-        return formattedNumber
-    }
-    
-    /**
-    Formats a phone number to actionable RFC format (e.g. tel:+33-689123456)
-    - Returns: A string representing the phone number in RFC format.
-    */
-    public func toRFC3966() -> String {
-        let formattedNumber: String = "tel:+" + String(countryCode) + "-" + adjustedNationalNumber()
-        return formattedNumber
-    }
 
-    /**
-    Formats a phone number to local national format (e.g. 0689123456)
-    - Returns: A string representing the phone number in the local national format.
-    */
-    public func toNational() -> String {
-        let formattedNumber: String = "0" + adjustedNationalNumber()
-        return formattedNumber
-    }
-    
 }
 
 
