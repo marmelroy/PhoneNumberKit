@@ -37,7 +37,7 @@ To parse and validate a string, initialize a PhoneNumber object and supply the s
 ```swift
 do {
     let phoneNumber = try PhoneNumber(rawNumber:"+33 6 89 017383")
-    let phoneNumberForCustomDefaultRegion = try PhoneNumber(rawNumber: "+44 20 7031 3000", region: "GB")
+    let phoneNumberCustomDefaultRegion = try PhoneNumber(rawNumber: "+44 20 7031 3000", region: "GB")
 }
 catch {
     print("Generic parser error")
@@ -48,7 +48,7 @@ If you need to parse and validate a large amount of numbers at once, there is a 
 ```swift
 let rawNumberArray = ["0291 12345678", "+49 291 12345678", "04134 1234", "09123 12345"]
 let phoneNumbers = PhoneNumberKit().parseMultiple(rawNumberArray)
-let phoneNumbersForCustomDefaultRegion = PhoneNumberKit().parseMultiple(rawNumberArray, region: "DE")
+let phoneNumbersCustomDefaultRegion = PhoneNumberKit().parseMultiple(rawNumberArray, region: "DE")
 ```
 
 You can also query countries for a dialing code or the dailing code for a given country
