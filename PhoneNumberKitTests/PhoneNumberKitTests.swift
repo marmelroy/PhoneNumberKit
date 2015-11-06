@@ -19,6 +19,19 @@ class PhoneNumberKitTests: XCTestCase {
         super.tearDown()
     }
     
+    
+    // Invalid american number, GitHub issue #8 by j-pk
+    func testInvalidNumberE() {
+        do {
+            let phoneNumber = try PhoneNumber(rawNumber: "202 00e 0000", region: "US")
+            print(phoneNumber.toE164())
+            XCTFail()
+        }
+        catch {
+            XCTAssert(true)
+        }
+    }
+
     // Italian number with a leading zero
     func testItalianLeadingZero() {
         let testNumber = "+39 0549555555"
@@ -34,7 +47,7 @@ class PhoneNumberKitTests: XCTestCase {
         }
     }
     
-//    // French number with extension
+    // French number with extension
     func testNumberWithExtension() {
         let testNumber = "+33-689-5-5555-5 ext. 84"
         do {
