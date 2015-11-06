@@ -57,19 +57,23 @@ class Formatter {
         let formats = regionMetadata.numberFormats
         var selectedFormat : MetadataPhoneNumberFormat?
         for format in formats {
-            if let leadingDigitPattern = format.leadingDigitsPatterns {
+            if let leadingDigitPattern = format.leadingDigitsPatterns?.last {
                 if (regex.stringPositionByRegex(leadingDigitPattern, string: String(nationalNumber)) == 0) {
-                    selectedFormat = format
+                    if (regex.matchesEntirely(format.pattern, string: String(nationalNumber))) {
+                        selectedFormat = format
+                        break;
+                    }
                 }
             }
             else {
                 if (regex.matchesEntirely(format.pattern, string: String(nationalNumber))) {
                     selectedFormat = format
+                    break;
                 }
             }
         }
         if let formatPattern = selectedFormat {
-            let numberFormatRule = (formatType == PNNumberFormat.International) ? formatPattern.intlFormat : formatPattern.format
+            let numberFormatRule = (formatType == PNNumberFormat.International && formatPattern.intlFormat != nil) ? formatPattern.intlFormat : formatPattern.format
             var formattedNationalNumber : String?
             var prefixFormattingRule = formatPattern.nationalPrefixFormattingRule
             if prefixFormattingRule?.characters.count > 0 {

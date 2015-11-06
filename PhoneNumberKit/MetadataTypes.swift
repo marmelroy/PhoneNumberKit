@@ -153,7 +153,7 @@ struct MetadataPhoneNumberFormat {
     let pattern: String?
     let format: String?
     let intlFormat: String?
-    let leadingDigitsPatterns: String?
+    let leadingDigitsPatterns: [String]?
     var nationalPrefixFormattingRule: String?
     var nationalPrefixOptionalWhenFormatting: Bool = false
     let domesticCarrierCodeFormattingRule: String?
@@ -168,7 +168,18 @@ extension MetadataPhoneNumberFormat {
         self.pattern = jsondDict?.valueForKey("pattern") as? String
         self.format = jsondDict?.valueForKey("format") as? String
         self.intlFormat = jsondDict?.valueForKey("intlFormat") as? String
-        self.leadingDigitsPatterns = jsondDict?.valueForKey("leadingDigits") as? String
+        var leadingDigits : [String] = []
+        if let leadingDigitsPatterns = jsondDict?.valueForKey("leadingDigits") {
+            if let leadingDigitArray = leadingDigitsPatterns as? NSArray {
+                for leadingDigit in leadingDigitArray {
+                    leadingDigits.append(leadingDigit as! String)
+                }
+            }
+            if let leadingDigit = leadingDigitsPatterns as? String {
+                leadingDigits.append(leadingDigit)
+            }
+        }
+        self.leadingDigitsPatterns = leadingDigits
         self.nationalPrefixFormattingRule = jsondDict?.valueForKey("nationalPrefixFormattingRule") as? String
         if let _nationalPrefixOptionalWhenFormatting = jsondDict?.valueForKey("nationalPrefixOptionalWhenFormatting") as? NSString {
             self.nationalPrefixOptionalWhenFormatting = _nationalPrefixOptionalWhenFormatting.boolValue
