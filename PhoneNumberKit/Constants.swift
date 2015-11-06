@@ -39,6 +39,7 @@ enum PNValidationResult:  ErrorType {
 
 /**
 Enumeration for parsing error types
+
 - TechnicalError: A generic error occured.
 - NotANumber: The string provided is not a number
 - TooLong: The string provided is too long to be a valid number
@@ -55,6 +56,7 @@ public enum PNParsingError:  ErrorType {
 
 /**
  Phone number type enumeration
+ 
  - FixedLine: Fixed line numbers
  - Mobile: Mobile numbers
  - Pager: Pager numbers
