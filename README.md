@@ -13,7 +13,8 @@ Inspired by Google's libphonenumber.
 --- | --- 
 :white_check_mark: | Match Google's libphonenumber accuracy by passing tests against all example numbers
 :white_check_mark: | Faster performance. 1000 parses -> ~0.3 seconds.
-:x: | Better formatter and an AsYouType formatter for UITextField
+:white_check_mark: | Better formatter. Match Google's libphonenumber. 
+:x: | AsYouType formatter for UITextField.
 
 ## Features
 
@@ -59,7 +60,9 @@ phoneNumberKit.codeForCountry("FR")
 
 Formatting a parsed phone number to a string is also very easy
 ```swift
-phoneNumber.toE164()
+phoneNumber.toE164() // +61236618300
+phoneNumber.toInternational() // +61 2 3661 8300
+phoneNumber.toNational() // (02) 3661 8300
 ```
 
 You can access the following properties of a PhoneNumber object
