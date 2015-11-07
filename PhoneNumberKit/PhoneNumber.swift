@@ -10,12 +10,13 @@ import Foundation
 
 /**
 Parsed phone number object
-- Parameter countryCode: Country dialing code as an unsigned. Int.
-- Parameter leadingZero: Some countries (e.g. Italy) require leading zeros. Bool.
-- Parameter nationalNumber: National number as an unsigned. Int.
-- Parameter numberExtension: Extension if available. String. Optional
-- Parameter rawNumber: String used to generate phone number struct
-- Parameter type: Computed phone number type on access. Returns from an enumeration - PNPhoneNumberType.
+ 
+- CountryCode: Country dialing code as an unsigned. Int.
+- LeadingZero: Some countries (e.g. Italy) require leading zeros. Bool.
+- NationalNumber: National number as an unsigned. Int.
+- NumberExtension: Extension if available. String. Optional
+- RawNumber: String used to generate phone number struct
+- Type: Computed phone number type on access. Returns from an enumeration - PNPhoneNumberType.
 */
 public struct PhoneNumber {
     public let countryCode: UInt64
