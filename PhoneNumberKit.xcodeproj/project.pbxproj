@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		341EF9C01BEDC2290037B216 /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 341EF9BF1BEDC2290037B216 /* TextField.swift */; };
 		3420CF5E1BE8959F00FAE34F /* Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3420CF5D1BE8959F00FAE34F /* Formatter.swift */; };
 		3422D9BA1BE6A2D500867D02 /* ParseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3422D9B91BE6A2D500867D02 /* ParseManager.swift */; };
 		342418681BB6E5A000EE70E7 /* PhoneNumberKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 342418671BB6E5A000EE70E7 /* PhoneNumberKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -38,6 +39,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		341EF9BF1BEDC2290037B216 /* TextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextField.swift; sourceTree = "<group>"; };
 		3420CF5D1BE8959F00FAE34F /* Formatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Formatter.swift; sourceTree = "<group>"; };
 		3422D9B91BE6A2D500867D02 /* ParseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseManager.swift; sourceTree = "<group>"; };
 		342418641BB6E5A000EE70E7 /* PhoneNumberKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PhoneNumberKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -113,6 +115,7 @@
 			children = (
 				342418671BB6E5A000EE70E7 /* PhoneNumberKit.h */,
 				342418691BB6E5A000EE70E7 /* Info.plist */,
+				341EF9BF1BEDC2290037B216 /* TextField.swift */,
 				346922681BC023A60023482F /* PhoneNumberKit.swift */,
 				3420CF5D1BE8959F00FAE34F /* Formatter.swift */,
 				3424187F1BB705B500EE70E7 /* PhoneNumber.swift */,
@@ -258,6 +261,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				342418821BB70F5200EE70E7 /* PhoneNumberParser.swift in Sources */,
+				341EF9C01BEDC2290037B216 /* TextField.swift in Sources */,
 				346922671BC01DCC0023482F /* Metadata.swift in Sources */,
 				3420CF5E1BE8959F00FAE34F /* Formatter.swift in Sources */,
 				346922691BC023A60023482F /* PhoneNumberKit.swift in Sources */,
