@@ -113,7 +113,15 @@ class PhoneNumberParser {
             return .Unknown
         }
         if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.fixedLine)) {
-            return .FixedLine
+            if metadata.fixedLine?.nationalNumberPattern == metadata.mobile?.nationalNumberPattern {
+                return .FixedOrMobile
+            }
+            else if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.mobile)) {
+                return .FixedOrMobile
+            }
+            else {
+                return .FixedLine
+            }
         }
         if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.mobile)) {
             return .Mobile
