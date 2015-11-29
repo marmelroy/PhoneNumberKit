@@ -59,6 +59,7 @@ public enum PNParsingError:  ErrorType {
  
  - FixedLine: Fixed line numbers
  - Mobile: Mobile numbers
+ - FixedOrMobile: Either fixed or mobile numbers if we can't tell conclusively.
  - Pager: Pager numbers
  - PersonalNumber: Personal number numbers
  - PremiumRate: Premium rate numbers
@@ -72,6 +73,7 @@ public enum PNParsingError:  ErrorType {
 public enum PNPhoneNumberType {
     case FixedLine
     case Mobile
+    case FixedOrMobile
     case Pager
     case PersonalNumber
     case PremiumRate

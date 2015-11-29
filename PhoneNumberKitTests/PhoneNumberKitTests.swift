@@ -32,6 +32,18 @@ class PhoneNumberKitTests: XCTestCase {
         }
     }
     
+    // Invalid american number, GitHub issue #9 by lobodin
+    func testAmbiguousFixedOrMobileNumber() {
+        do {
+            let phoneNumber = try PhoneNumber(rawNumber: "+16307792428", region: "US")
+            print(phoneNumber.toE164())
+            XCTAssertEqual(phoneNumber.type, PNPhoneNumberType.FixedOrMobile)
+        }
+        catch {
+            XCTFail()
+        }
+    }
+
 
     // Italian number with a leading zero
     func testItalianLeadingZero() {
