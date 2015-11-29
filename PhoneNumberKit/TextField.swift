@@ -16,7 +16,6 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     let parser = PhoneNumberParser()
     let partialFormatter = PartialFormatter()
 
-    var rawValue = String()
     
     override public var delegate: UITextFieldDelegate? {
         get {
@@ -93,15 +92,17 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
     
     public func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+
         var nsString = textField.text! as NSString
         nsString = nsString.stringByReplacingCharactersInRange(range, withString: string)
-        rawValue = parser.normalizePhoneNumber(nsString as String)
-        let defaultRegion = "FR"
+        let defaultRegion = PhoneNumberKit().defaultRegionCode()
         do {
         let formattedNationalNumber = try partialFormatter.formatPartial(nsString as String, region: defaultRegion)
             textField.text = formattedNationalNumber
         }
-        catch {}
+        catch {
+            textField.text = nsString as String
+        }
         return false
     }
 

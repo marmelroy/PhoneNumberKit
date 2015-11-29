@@ -62,20 +62,25 @@ class PartialFormatter {
         }
         // National Prefix Strip (7)
         if (nationalNumber.characters.count > 0) {
-            nationalNumber = self.parser.normalizePhoneNumber(nationalNumber)
+            nationalNumber = self.normalizePhoneNumber(nationalNumber)
             self.parser.stripNationalPrefix(&nationalNumber, metadata: regionMetaData)
             let formatter = Formatter()
             let formattedNationalNumber = formatter.formatNationalNumber(nationalNumber, regionMetadata: regionMetaData, formatType: format)
             let generalNumberDesc = regionMetaData.generalDesc
             if (self.regex.hasValue(generalNumberDesc!.nationalNumberPattern) == false || self.parser.isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc!) == false) {
-                return rawNumber
+                return self.normalizePhoneNumber(rawNumber)
             }
             finalString = finalString + " " + formattedNationalNumber
             return finalString
         }
         else {
-            return rawNumber
+            return self.normalizePhoneNumber(rawNumber)
         }
     }
     
+    
+    func normalizePhoneNumber(number: String) -> String {
+        return regex.stringByReplacingOccurrences(number, map: PNPartialFormatterNormalizationMappings, removeNonMatches: true)!
+    }
+
 }
