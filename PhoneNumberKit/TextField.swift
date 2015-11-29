@@ -14,8 +14,7 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     weak public var externalDelegate: UITextFieldDelegate?
     
     let parser = PhoneNumberParser()
-    let formatter = Formatter()
-    let metadata = Metadata.sharedInstance
+    let partialFormatter = PartialFormatter()
 
     var rawValue = String()
     
@@ -97,9 +96,12 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         var nsString = textField.text! as NSString
         nsString = nsString.stringByReplacingCharactersInRange(range, withString: string)
         rawValue = parser.normalizePhoneNumber(nsString as String)
-        let defaultRegion = "FR"
-        let formattedNationalNumber = formatter.formatNationalNumber(textField.text!, regionMetadata: metadata.metadataPerCountry[defaultRegion]!, formatType: PNNumberFormat.National)
+        let defaultRegion = PhoneNumberKit().defaultRegionCode()
+        do {
+        let formattedNationalNumber = try partialFormatter.formatPartial(nsString as String, region: defaultRegion)
         print(formattedNationalNumber)
+        }
+        catch {}
         return true
     }
 
