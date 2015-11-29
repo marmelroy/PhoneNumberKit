@@ -96,13 +96,13 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         var nsString = textField.text! as NSString
         nsString = nsString.stringByReplacingCharactersInRange(range, withString: string)
         rawValue = parser.normalizePhoneNumber(nsString as String)
-        let defaultRegion = PhoneNumberKit().defaultRegionCode()
+        let defaultRegion = "FR"
         do {
         let formattedNationalNumber = try partialFormatter.formatPartial(nsString as String, region: defaultRegion)
-        print(formattedNationalNumber)
+            textField.text = formattedNationalNumber
         }
         catch {}
-        return true
+        return false
     }
 
 }
