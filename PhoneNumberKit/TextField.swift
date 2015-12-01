@@ -136,6 +136,12 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     public func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
         let cursorDocumentBeginning =  textField.beginningOfDocument
         let originalTextField = textField.text! as NSString
+        let nonNumericSet = NSCharacterSet.decimalDigitCharacterSet().invertedSet
+        let changedRange = originalTextField.substringWithRange(range) as NSString
+        var nonNumericRange = true
+        if (changedRange.rangeOfCharacterFromSet(nonNumericSet).location == NSNotFound) {
+            nonNumericRange = false
+        }
         // Find character after the end of cursor
         let modifiedTextField = originalTextField.stringByReplacingCharactersInRange(range, withString: string)
         let defaultRegion = PhoneNumberKit().defaultRegionCode()
@@ -143,10 +149,20 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             let formattedNationalNumber = try partialFormatter.formatPartial(modifiedTextField as String, region: defaultRegion)
             let selectedTextRange = selectionRangeForNumberReplacement(textField, formattedString: formattedNationalNumber)
             textField.text = formattedNationalNumber
-            if let selectedTextRange = selectedTextRange, let selectionRangePosition = textField.positionFromPosition(cursorDocumentBeginning, offset: selectedTextRange.location) {
-                let selectionRange = textField.textRangeFromPosition(selectionRangePosition, toPosition: selectionRangePosition)
-                textField.selectedTextRange = selectionRange
+            if (range.length == 1 && string.isEmpty && nonNumericRange)
+            {
+                if let textRange = textField.selectedTextRange, let selectionRangePosition = textField.positionFromPosition(textRange.start, offset: -1) {
+                    let selectionRange = textField.textRangeFromPosition(selectionRangePosition, toPosition: selectionRangePosition)
+                    textField.selectedTextRange = selectionRange
+                }
             }
+            else {
+                if let selectedTextRange = selectedTextRange, let selectionRangePosition = textField.positionFromPosition(cursorDocumentBeginning, offset: selectedTextRange.location) {
+                    let selectionRange = textField.textRangeFromPosition(selectionRangePosition, toPosition: selectionRangePosition)
+                    textField.selectedTextRange = selectionRange
+                }
+            }
+            
         }
         catch {
             textField.text = modifiedTextField
