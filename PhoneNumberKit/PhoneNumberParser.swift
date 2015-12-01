@@ -45,11 +45,11 @@ class PhoneNumberParser {
             }
             let potentialCountryCode = extractPotentialCountryCode(fullNumber, nationalNumber: &nationalNumber)
             if (potentialCountryCode != 0) {
-                return potentialCountryCode!
+                if let countryCode = potentialCountryCode {
+                    return countryCode
+                }
             }
-            else {
-                return 0
-            }
+            return 0
         }
         else {
             let defaultCountryCode = String(metadata.countryCode)
@@ -88,8 +88,10 @@ class PhoneNumberParser {
         for var i = 1; i <= maxCountryCode && i <= numberLength; i++ {
             let stringRange = NSMakeRange(0, i)
             let subNumber = nsFullNumber.substringWithRange(stringRange)
-            let potentialCountryCode = UInt64(subNumber)
-            let regionCodes = metadata.metadataPerCode[potentialCountryCode!]
+            guard let potentialCountryCode = UInt64(subNumber) else {
+                return nil
+            }
+            let regionCodes = metadata.metadataPerCode[potentialCountryCode]
             if (regionCodes != nil) {
                 nationalNumber = nsFullNumber.substringFromIndex(i)
                 return potentialCountryCode

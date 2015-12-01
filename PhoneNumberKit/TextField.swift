@@ -13,10 +13,13 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     
     weak public var externalDelegate: UITextFieldDelegate?
     
+    public var region = PhoneNumberKit().defaultRegionCode()
+
     let parser = PhoneNumberParser()
     let partialFormatter = PartialFormatter()
 
-    
+    let nonNumericSet = NSCharacterSet.decimalDigitCharacterSet().invertedSet
+
     override public var delegate: UITextFieldDelegate? {
         get {
           return self.externalDelegate
@@ -91,42 +94,51 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         }
     }
     
-    func extractNumberFollowingCursor(textField: UITextField, inout numberEndOccurance: Int) -> String? {
-        let originalTextField = textField.text! as NSString
-        let cursorDocumentBeginning =  textField.beginningOfDocument
-        let nonNumericSet = NSCharacterSet.decimalDigitCharacterSet().invertedSet
-        if let selectedTextRange = textField.selectedTextRange {
-            let cursorEnd = textField.offsetFromPosition(cursorDocumentBeginning, toPosition: selectedTextRange.end)
-            for var i = cursorEnd; i < originalTextField.length; i++  {
-                let cursorRange = NSMakeRange(i, 1)
-                let cursorEndNumber: NSString = originalTextField.substringWithRange(cursorRange)
-                if (cursorEndNumber.rangeOfCharacterFromSet(nonNumericSet).location == NSNotFound) {
-                    for var j = cursorRange.location; j < originalTextField.length; j++  {
-                        let candidateCharacter = originalTextField.substringWithRange(NSMakeRange(j, 1))
-                        if candidateCharacter == cursorEndNumber {
-                            numberEndOccurance++
-                        }
+    // MARK: Phone number formatting
+    
+    internal struct CursorPosition {
+        let numberAfterCursor: String
+        let repetitionCountFromEnd: Int
+    }
+    
+    internal func extractCursorPosition() -> CursorPosition? {
+        var repetitionCountFromEnd = 0
+        // Check that there is text in the UITextField
+        guard let text = text, let selectedTextRange = selectedTextRange else {
+            return nil
+        }
+        let textAsNSString = text as NSString
+        let cursorEnd = offsetFromPosition(beginningOfDocument, toPosition: selectedTextRange.end)
+        // Look for the next valid number after the cursor, when found return a CursorPosition struct
+        for var i = cursorEnd; i < textAsNSString.length; i++  {
+            let cursorRange = NSMakeRange(i, 1)
+            let candidateNumberAfterCursor: NSString = textAsNSString.substringWithRange(cursorRange)
+            if (candidateNumberAfterCursor.rangeOfCharacterFromSet(nonNumericSet).location == NSNotFound) {
+                for var j = cursorRange.location; j < textAsNSString.length; j++  {
+                    let candidateCharacter = textAsNSString.substringWithRange(NSMakeRange(j, 1))
+                    if candidateCharacter == candidateNumberAfterCursor {
+                        repetitionCountFromEnd++
                     }
-                    return cursorEndNumber as String
                 }
+                return CursorPosition(numberAfterCursor: candidateNumberAfterCursor as String, repetitionCountFromEnd: repetitionCountFromEnd)
             }
         }
         return nil
     }
     
-    func selectionRangeForNumberReplacement(textField: UITextField, formattedString: String) -> NSRange? {
-        var numberOccurance = 0
-        let formattedTextField = formattedString as NSString
-        var formattedOccurance = 0
-        if let cursorEndCharacter = extractNumberFollowingCursor(textField, numberEndOccurance: &numberOccurance) {
-            for var i = (formattedTextField.length - 1); i >= 0; i--  {
-                let candidateRange = NSMakeRange(i, 1)
-                let candidateCharacter = formattedTextField.substringWithRange(candidateRange)
-                if candidateCharacter == cursorEndCharacter {
-                    formattedOccurance++
-                    if formattedOccurance  == numberOccurance {
-                        return candidateRange
-                    }
+    internal func selectionRangeForNumberReplacement(textField: UITextField, formattedText: String) -> NSRange? {
+        let textAsNSString = formattedText as NSString
+        var countFromEnd = 0
+        guard let cursorPosition = extractCursorPosition() else {
+            return nil
+        }
+        for var i = (textAsNSString.length - 1); i >= 0; i--  {
+            let candidateRange = NSMakeRange(i, 1)
+            let candidateCharacter = textAsNSString.substringWithRange(candidateRange)
+            if candidateCharacter == cursorPosition.numberAfterCursor {
+                countFromEnd++
+                if countFromEnd == cursorPosition.repetitionCountFromEnd {
+                    return candidateRange
                 }
             }
         }
@@ -134,21 +146,17 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
     
     public func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-        let cursorDocumentBeginning =  textField.beginningOfDocument
-        let originalTextField = textField.text! as NSString
-        let nonNumericSet = NSCharacterSet.decimalDigitCharacterSet().invertedSet
-        let changedRange = originalTextField.substringWithRange(range) as NSString
-        var nonNumericRange = true
-        if (changedRange.rangeOfCharacterFromSet(nonNumericSet).location == NSNotFound) {
-            nonNumericRange = false
+        guard let text = text else {
+            return false
         }
-        // Find character after the end of cursor
-        let modifiedTextField = originalTextField.stringByReplacingCharactersInRange(range, withString: string)
-        let defaultRegion = PhoneNumberKit().defaultRegionCode()
+        let textAsNSString = text as NSString
+        let changedRange = textAsNSString.substringWithRange(range) as NSString
+        let modifiedTextField = textAsNSString.stringByReplacingCharactersInRange(range, withString: string)
         do {
-            let formattedNationalNumber = try partialFormatter.formatPartial(modifiedTextField as String, region: defaultRegion)
-            let selectedTextRange = selectionRangeForNumberReplacement(textField, formattedString: formattedNationalNumber)
+            let formattedNationalNumber = try partialFormatter.formatPartial(modifiedTextField as String, region: region.uppercaseString)
+            let selectedTextRange = selectionRangeForNumberReplacement(textField, formattedText: formattedNationalNumber)
             textField.text = formattedNationalNumber
+            let nonNumericRange = (changedRange.rangeOfCharacterFromSet(nonNumericSet).location != NSNotFound)
             if (range.length == 1 && string.isEmpty && nonNumericRange)
             {
                 if let textRange = textField.selectedTextRange, let selectionRangePosition = textField.positionFromPosition(textRange.start, offset: -1) {
@@ -157,12 +165,11 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
                 }
             }
             else {
-                if let selectedTextRange = selectedTextRange, let selectionRangePosition = textField.positionFromPosition(cursorDocumentBeginning, offset: selectedTextRange.location) {
+                if let selectedTextRange = selectedTextRange, let selectionRangePosition = textField.positionFromPosition(beginningOfDocument, offset: selectedTextRange.location) {
                     let selectionRange = textField.textRangeFromPosition(selectionRangePosition, toPosition: selectionRangePosition)
                     textField.selectedTextRange = selectionRange
                 }
             }
-            
         }
         catch {
             textField.text = modifiedTextField
