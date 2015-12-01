@@ -97,7 +97,7 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         let nonNumericSet = NSCharacterSet.decimalDigitCharacterSet().invertedSet
         if let selectedTextRange = textField.selectedTextRange {
             let cursorEnd = textField.offsetFromPosition(cursorDocumentBeginning, toPosition: selectedTextRange.end)
-            for var i = cursorEnd; i < originalTextField.length; i--  {
+            for var i = cursorEnd; i < originalTextField.length; i++  {
                 let cursorRange = NSMakeRange(i, 1)
                 let cursorEndNumber: NSString = originalTextField.substringWithRange(cursorRange)
                 if (cursorEndNumber.rangeOfCharacterFromSet(nonNumericSet).location == NSNotFound) {
@@ -119,7 +119,7 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         let formattedTextField = formattedString as NSString
         var formattedOccurance = 0
         if let cursorEndCharacter = extractNumberFollowingCursor(textField, numberEndOccurance: &numberOccurance) {
-            for var i = (formattedTextField.length - 1); i > 0; i--  {
+            for var i = (formattedTextField.length - 1); i >= 0; i--  {
                 let candidateRange = NSMakeRange(i, 1)
                 let candidateCharacter = formattedTextField.substringWithRange(candidateRange)
                 if candidateCharacter == cursorEndCharacter {
