@@ -91,20 +91,20 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         }
     }
     
-    func extractNumberFollowingCursor(textField: UITextField, inout numberOccurance: Int) -> String? {
+    func extractNumberFollowingCursor(textField: UITextField, inout numberEndOccurance: Int) -> String? {
         let originalTextField = textField.text! as NSString
         let cursorDocumentBeginning =  textField.beginningOfDocument
         let nonNumericSet = NSCharacterSet.decimalDigitCharacterSet().invertedSet
         if let selectedTextRange = textField.selectedTextRange {
             let cursorEnd = textField.offsetFromPosition(cursorDocumentBeginning, toPosition: selectedTextRange.end)
-            for var i = cursorEnd; i < originalTextField.length; i++  {
+            for var i = cursorEnd; i < originalTextField.length; i--  {
                 let cursorRange = NSMakeRange(i, 1)
                 let cursorEndNumber: NSString = originalTextField.substringWithRange(cursorRange)
                 if (cursorEndNumber.rangeOfCharacterFromSet(nonNumericSet).location == NSNotFound) {
-                    for var j = 0; j < cursorRange.location; j++  {
+                    for var j = cursorRange.location; j < originalTextField.length; j++  {
                         let candidateCharacter = originalTextField.substringWithRange(NSMakeRange(j, 1))
                         if candidateCharacter == cursorEndNumber {
-                            numberOccurance++
+                            numberEndOccurance++
                         }
                     }
                     return cursorEndNumber as String
@@ -118,15 +118,15 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         var numberOccurance = 0
         let formattedTextField = formattedString as NSString
         var formattedOccurance = 0
-        if let cursorEndCharacter = extractNumberFollowingCursor(textField, numberOccurance: &numberOccurance) {
-            for var i = 0; i < formattedTextField.length; i++  {
+        if let cursorEndCharacter = extractNumberFollowingCursor(textField, numberEndOccurance: &numberOccurance) {
+            for var i = (formattedTextField.length - 1); i > 0; i--  {
                 let candidateRange = NSMakeRange(i, 1)
                 let candidateCharacter = formattedTextField.substringWithRange(candidateRange)
                 if candidateCharacter == cursorEndCharacter {
+                    formattedOccurance++
                     if formattedOccurance  == numberOccurance {
                         return candidateRange
                     }
-                    formattedOccurance++
                 }
             }
         }
