@@ -61,6 +61,7 @@ class PartialFormatter {
         var regionMetaData =  self.metadata.metadataPerCountry[region]!
         
         var extractedCountryCode: ExtractedCountryCode
+        
         do {
             extractedCountryCode = try self.parser.extractCountryCode(nationalNumber, metadata: regionMetaData)
         }
@@ -73,11 +74,23 @@ class PartialFormatter {
                 throw PNParsingError.InvalidCountryCode
             }
         }
+        
+        var iddPrefix: String?
+        if extractedCountryCode.countryCodeSource == .NumberWithIDD, let iddPattern = regionMetaData.internationalPrefix {
+            let matched = try regex.regexMatches(iddPattern as String, string: rawNumber as String).first
+            iddPrefix = rawNumber.substringWithNSRange(matched!.range)
+        }
+    
+
         nationalNumber = extractedCountryCode.nationalNumber
         var countryCode = extractedCountryCode.countryCode
         var format = PNNumberFormat.National
         if (countryCode == 0) {
             countryCode = regionMetaData.countryCode
+        }
+        else if extractedCountryCode.countryCodeSource == .NumberWithIDD, let iddPrefix = iddPrefix {
+            finalString = "\(iddPrefix) \(countryCode)"
+            format = PNNumberFormat.International
         }
         else {
             finalString = "+\(countryCode)"
@@ -100,7 +113,6 @@ class PartialFormatter {
             }
             let formatter = Formatter()
             let formattedNationalNumber = formatter.formatNationalNumber(chosenFormat, regionMetadata: regionMetaData, formatType: format)
-          4
             var rebuiltString = String()
             var rebuiltIndex = 0
             for character in formattedNationalNumber.characters {
@@ -136,7 +148,10 @@ class PartialFormatter {
     
     
     func normalizePhoneNumber(number: String) -> String {
-        return regex.stringByReplacingOccurrences(number, map: PNPartialFormatterNormalizationMappings, removeNonMatches: true)!
+        if let result = regex.stringByReplacingOccurrences(number, map: PNPartialFormatterNormalizationMappings, removeNonMatches: true) {
+            return result
+        }
+        return number
     }
 
 }
