@@ -14,6 +14,31 @@ class PartialFormatter {
     let parser = PhoneNumberParser()
     let regex = RegularExpressions.sharedInstance
 
+    func getAvailableFormats(regionMetadata: MetadataTerritory) -> [MetadataPhoneNumberFormat] {
+        var possibleFormats = [MetadataPhoneNumberFormat]()
+        let formatList = regionMetadata.numberFormats
+        for format in formatList {
+            if isFormatEligible(format) {
+                possibleFormats.append(format)
+            }
+        }
+        return possibleFormats
+    }
+    
+    func isFormatEligible(format: MetadataPhoneNumberFormat) -> Bool {
+        guard let pattern = format.pattern else {
+            return false
+        }
+        do {
+            let fallBackMatches = try regex.regexMatches(PNEligibleAsYouTypePattern, string: pattern)
+            return (fallBackMatches.count == 0)
+        }
+        catch {
+            return false
+        }
+    }
+    
+    
     /**
      Partial number formatter
      - Parameter rawNumber: Phone number object.
@@ -65,8 +90,8 @@ class PartialFormatter {
         if (nationalNumber.characters.count > 0) {
             nationalNumber = self.normalizePhoneNumber(nationalNumber)
             self.parser.stripNationalPrefix(&nationalNumber, metadata: regionMetaData)
-            
-            let array = try regex.matchedStringByRegex((regionMetaData.generalDesc?.nationalNumberPattern)!, string: PNLongPhoneNumber)
+            let formats = self.getAvailableFormats(regionMetaData)
+            let array = try regex.matchedStringByRegex((formats.first?.pattern)!, string: PNLongPhoneNumber)
             let formatter = Formatter()
             let formattedNationalNumber = formatter.formatNationalNumber(array.first!, regionMetadata: regionMetaData, formatType: format)
             
@@ -89,11 +114,15 @@ class PartialFormatter {
                 let remainingNationalNumber: String = nationalNumber.substringFromIndex(nationalCharacterIndex)
                 rebuiltString.appendContentsOf(remainingNationalNumber)
             }
-            rebuiltString = rebuiltString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+            rebuiltString = rebuiltString.stringByTrimmingCharactersInSet(NSCharacterSet.alphanumericCharacterSet().invertedSet)
+            let reFormattedNationalNumber = formatter.formatNationalNumber(rebuiltString, regionMetadata: regionMetaData, formatType: format)
+            print(reFormattedNationalNumber)
             if finalString.characters.count > 0 {
                 finalString = finalString + " " + rebuiltString
                 return finalString
             }
+
+            
             return rebuiltString
         }
         else {
