@@ -147,6 +147,21 @@ class RegularExpressions {
         }
     }
     
+    func matchedStringByRegex(pattern: String, string: String) throws -> [String] {
+        do {
+            let matches = try regexMatches(pattern, string: string)
+            var matchedStrings = [String]()
+            for match in matches {
+                let processedString = string.substringWithNSRange(match.range)
+                matchedStrings.append(processedString)
+            }
+            return matchedStrings
+        }
+        catch {
+        }
+        return []
+    }
+    
     // MARK: String and replace
     
     func replaceStringByRegex(pattern: String, string: String) -> String {

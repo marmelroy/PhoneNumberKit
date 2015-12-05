@@ -60,18 +60,41 @@ class PartialFormatter {
         if countryCode != regionMetaData.countryCode {
             regionMetaData = self.metadata.metadataPerCode[countryCode]!
         }
+        
         // National Prefix Strip (7)
         if (nationalNumber.characters.count > 0) {
             nationalNumber = self.normalizePhoneNumber(nationalNumber)
             self.parser.stripNationalPrefix(&nationalNumber, metadata: regionMetaData)
+            
+            let array = try regex.matchedStringByRegex((regionMetaData.generalDesc?.nationalNumberPattern)!, string: PNLongPhoneNumber)
             let formatter = Formatter()
-            let formattedNationalNumber = formatter.formatNationalNumber(nationalNumber, regionMetadata: regionMetaData, formatType: format)
-            let generalNumberDesc = regionMetaData.generalDesc
-            if (self.regex.hasValue(generalNumberDesc!.nationalNumberPattern) == false || self.parser.isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc!) == false) {
-                return self.normalizePhoneNumber(rawNumber)
+            let formattedNationalNumber = formatter.formatNationalNumber(array.first!, regionMetadata: regionMetaData, formatType: format)
+            
+            var rebuiltString = String()
+            var rebuiltIndex = 0
+            for character in formattedNationalNumber.characters {
+                if character == "9" {
+                    if rebuiltIndex < nationalNumber.characters.count {
+                        let nationalCharacterIndex = nationalNumber.startIndex.advancedBy(rebuiltIndex)
+                        rebuiltString.append(nationalNumber[nationalCharacterIndex])
+                        rebuiltIndex++
+                    }
+                }
+                else {
+                    rebuiltString.append(character)
+                }
             }
-            finalString = finalString + " " + formattedNationalNumber
-            return finalString
+            if rebuiltIndex < nationalNumber.characters.count {
+                let nationalCharacterIndex = nationalNumber.startIndex.advancedBy(rebuiltIndex)
+                let remainingNationalNumber: String = nationalNumber.substringFromIndex(nationalCharacterIndex)
+                rebuiltString.appendContentsOf(remainingNationalNumber)
+            }
+            rebuiltString = rebuiltString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+            if finalString.characters.count > 0 {
+                finalString = finalString + " " + rebuiltString
+                return finalString
+            }
+            return rebuiltString
         }
         else {
             return self.normalizePhoneNumber(rawNumber)

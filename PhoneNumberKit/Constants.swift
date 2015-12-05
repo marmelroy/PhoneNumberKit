@@ -87,6 +87,7 @@ public enum PNPhoneNumberType {
 
 // MARK: Constants
 
+let PNDigitPlaceholder = "\u{2008}"
 let PNMinLengthForNSN: Int = 2
 let PNMaxInputStringLength: Int = 250
 let PNMaxLengthCountryCode: Int = 3
@@ -98,6 +99,7 @@ let PNDefaultExtnPrefix: String = " ext. "
 let PNFirstGroupPattern: String = "(\\$\\d)"
 let PNNPPattern: String = "\\$NP"
 let PNFGPattern: String = "\\$FG"
+let PNLongPhoneNumber: String = "999999999999999"
 
 // MARK: Patterns
 
