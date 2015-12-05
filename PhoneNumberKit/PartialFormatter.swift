@@ -59,19 +59,22 @@ class PartialFormatter {
             throw PNParsingError.InvalidCountryCode
         }
         var regionMetaData =  self.metadata.metadataPerCountry[region]!
-        var countryCode: UInt64 = 0
+        
+        var extractedCountryCode: ExtractedCountryCode
         do {
-            countryCode = try self.parser.extractCountryCode(nationalNumber, nationalNumber: &nationalNumber, metadata: regionMetaData)
+            extractedCountryCode = try self.parser.extractCountryCode(nationalNumber, metadata: regionMetaData)
         }
         catch {
             do {
                 let plusRemovedNumberString = self.regex.replaceStringByRegex(PNLeadingPlusCharsPattern, string: nationalNumber as String)
-                countryCode = try self.parser.extractCountryCode(plusRemovedNumberString, nationalNumber: &nationalNumber, metadata: regionMetaData)
+                extractedCountryCode = try self.parser.extractCountryCode(plusRemovedNumberString, metadata: regionMetaData)
             }
             catch {
                 throw PNParsingError.InvalidCountryCode
             }
         }
+        nationalNumber = extractedCountryCode.nationalNumber
+        var countryCode = extractedCountryCode.countryCode
         var format = PNNumberFormat.National
         if (countryCode == 0) {
             countryCode = regionMetaData.countryCode
@@ -92,9 +95,12 @@ class PartialFormatter {
             self.parser.stripNationalPrefix(&nationalNumber, metadata: regionMetaData)
             let formats = self.getAvailableFormats(regionMetaData)
             let array = try regex.matchedStringByRegex((formats.first?.pattern)!, string: PNLongPhoneNumber)
+            guard let chosenFormat = array.first else {
+                throw PNParsingError.InvalidCountryCode
+            }
             let formatter = Formatter()
-            let formattedNationalNumber = formatter.formatNationalNumber(array.first!, regionMetadata: regionMetaData, formatType: format)
-            
+            let formattedNationalNumber = formatter.formatNationalNumber(chosenFormat, regionMetadata: regionMetaData, formatType: format)
+          4
             var rebuiltString = String()
             var rebuiltIndex = 0
             for character in formattedNationalNumber.characters {
@@ -115,8 +121,6 @@ class PartialFormatter {
                 rebuiltString.appendContentsOf(remainingNationalNumber)
             }
             rebuiltString = rebuiltString.stringByTrimmingCharactersInSet(NSCharacterSet.alphanumericCharacterSet().invertedSet)
-            let reFormattedNationalNumber = formatter.formatNationalNumber(rebuiltString, regionMetadata: regionMetaData, formatType: format)
-            print(reFormattedNationalNumber)
             if finalString.characters.count > 0 {
                 finalString = finalString + " " + rebuiltString
                 return finalString

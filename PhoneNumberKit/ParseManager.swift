@@ -38,19 +38,21 @@ class ParseManager {
             throw PNParsingError.InvalidCountryCode
         }
         var regionMetaData =  self.metadata.metadataPerCountry[region]!
-        var countryCode: UInt64 = 0
+        var extractedCountryCode: ExtractedCountryCode
         do {
-            countryCode = try self.parser.extractCountryCode(nationalNumber, nationalNumber: &nationalNumber, metadata: regionMetaData)
+            extractedCountryCode = try self.parser.extractCountryCode(nationalNumber, metadata: regionMetaData)
         }
         catch {
             do {
                 let plusRemovedNumberString = self.regex.replaceStringByRegex(PNLeadingPlusCharsPattern, string: nationalNumber as String)
-                countryCode = try self.parser.extractCountryCode(plusRemovedNumberString, nationalNumber: &nationalNumber, metadata: regionMetaData)
+                extractedCountryCode = try self.parser.extractCountryCode(plusRemovedNumberString, metadata: regionMetaData)
             }
             catch {
                 throw PNParsingError.InvalidCountryCode
             }
         }
+        nationalNumber = extractedCountryCode.nationalNumber
+        var countryCode = extractedCountryCode.countryCode
         if (countryCode == 0) {
             countryCode = regionMetaData.countryCode
         }

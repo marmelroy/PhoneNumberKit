@@ -35,7 +35,8 @@ class PhoneNumberParser {
     - Parameter metadata: Metadata territory object.
     - Returns: Country code is UInt64.
     */
-    func extractCountryCode(number: String, inout nationalNumber: String, metadata: MetadataTerritory) throws -> UInt64 {
+    func extractCountryCode(number: String, metadata: MetadataTerritory) throws -> ExtractedCountryCode {
+        var nationalNumber = number
         var fullNumber = number
         let possibleCountryIddPrefix = metadata.internationalPrefix
         let countryCodeSource = stripInternationalPrefixAndNormalize(&fullNumber, possibleIddPrefix: possibleCountryIddPrefix)
@@ -46,10 +47,10 @@ class PhoneNumberParser {
             let potentialCountryCode = extractPotentialCountryCode(fullNumber, nationalNumber: &nationalNumber)
             if (potentialCountryCode != 0) {
                 if let countryCode = potentialCountryCode {
-                    return countryCode
+                    return ExtractedCountryCode(nationalNumber: nationalNumber, countryCode: countryCode, countryCodeSource: countryCodeSource)
                 }
             }
-            return 0
+            return ExtractedCountryCode(nationalNumber: nationalNumber, countryCode: 0, countryCodeSource: countryCodeSource)
         }
         else {
             let defaultCountryCode = String(metadata.countryCode)
@@ -62,11 +63,11 @@ class PhoneNumberParser {
                 let possibleNumberPattern = metadata.generalDesc?.possibleNumberPattern
                 if ((!regex.matchesEntirely(validNumberPattern!, string: fullNumber as String) && regex.matchesEntirely(validNumberPattern!, string: potentialNationalNumberStr as! String)) || regex.testStringLengthAgainstPattern(possibleNumberPattern!, string: fullNumber as String) == PNValidationResult.TooLong) {
                     nationalNumber = potentialNationalNumberStr as! String
-                    return UInt64(defaultCountryCode)!
+                    return ExtractedCountryCode(nationalNumber: nationalNumber, countryCode: UInt64(defaultCountryCode)!, countryCodeSource: countryCodeSource)
                 }
             }
         }
-        return 0
+        return ExtractedCountryCode(nationalNumber: nationalNumber, countryCode: 0, countryCodeSource: countryCodeSource)
     }
     
     /**
@@ -299,6 +300,11 @@ class PhoneNumberParser {
             }
         }
     }
-    
+}
+
+internal struct ExtractedCountryCode {
+    let nationalNumber: String
+    let countryCode: UInt64
+    let countryCodeSource: PNCountryCodeSource
 }
 
