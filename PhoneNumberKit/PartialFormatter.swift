@@ -38,6 +38,33 @@ class PartialFormatter {
         }
     }
     
+    func extractNationalNumberPrefix(rawNumber: String, regionMetadata: MetadataTerritory, countryCodeSource: PNCountryCodeSource) -> String {
+        do {
+            let matches = try regex.regexMatches(String(regionMetadata.countryCode), string: rawNumber)
+            guard let firstMatch = matches.first else {
+                return String()
+            }
+            let range = firstMatch.range
+            let adjustedRange = NSMakeRange(0, range.location + range.length)
+            let nationalNumberPrefix: String = rawNumber.substringWithNSRange(adjustedRange)
+            if let iddPattern = regionMetadata.internationalPrefix where countryCodeSource == PNCountryCodeSource.NumberWithIDD {
+                let matched = try regex.regexMatches(iddPattern as String, string: rawNumber as String).first
+                if let matchedRange = matched?.range {
+                    let character = " " as Character
+                    var numberPrefix = nationalNumberPrefix
+                    let index = nationalNumberPrefix.startIndex.advancedBy(matchedRange.location).advancedBy(matchedRange.length)
+                    numberPrefix.insert(character, atIndex: index)
+                    return numberPrefix
+                }
+            }
+            return nationalNumberPrefix as String
+        }
+        catch {
+            return String()
+        }
+
+    }
+    
     
     /**
      Partial number formatter
@@ -46,22 +73,22 @@ class PartialFormatter {
      - Returns: Modified national number ready for display.
      */
     func formatPartial(rawNumber: String, region: String) throws -> String {
-        if rawNumber.characters.count <= 3 {
-            return rawNumber
+        let startsWithPlus = regex.matchesAtStart(PNLeadingPlusCharsPattern, string: rawNumber)
+        let preNormalized = self.normalizePhoneNumber(rawNumber)
+        if preNormalized.characters.count <= 3 || (rawNumber.characters.first != "0" && startsWithPlus == false) {
+            return preNormalized
         }
         // Make sure region is in uppercase so that it matches metadata (1)
         let region = region.uppercaseString
         // Extract number (2)
         var nationalNumber = rawNumber
-        var finalString = ""
+        var nationalNumberPrefix = String()
         // Country code parse (3)
         if (self.metadata.metadataPerCountry[region] == nil) {
             throw PNParsingError.InvalidCountryCode
         }
         var regionMetaData =  self.metadata.metadataPerCountry[region]!
-        
         var extractedCountryCode: ExtractedCountryCode
-        
         do {
             extractedCountryCode = try self.parser.extractCountryCode(nationalNumber, metadata: regionMetaData)
         }
@@ -75,44 +102,50 @@ class PartialFormatter {
             }
         }
         
-        var iddPrefix: String?
-        if extractedCountryCode.countryCodeSource == .NumberWithIDD, let iddPattern = regionMetaData.internationalPrefix {
-            let matched = try regex.regexMatches(iddPattern as String, string: rawNumber as String).first
-            iddPrefix = rawNumber.substringWithNSRange(matched!.range)
-        }
-    
-
+        // Apply extracted country code, prepare prefix and select format (5)
         nationalNumber = extractedCountryCode.nationalNumber
         var countryCode = extractedCountryCode.countryCode
         var format = PNNumberFormat.National
         if (countryCode == 0) {
+            if extractedCountryCode.countryCodeSource == .DefaultCountry {
             countryCode = regionMetaData.countryCode
+            }
+            else {
+                throw PNParsingError.InvalidCountryCode
+            }
         }
-        else if extractedCountryCode.countryCodeSource == .NumberWithIDD, let iddPrefix = iddPrefix {
-            finalString = "\(iddPrefix) \(countryCode)"
+        if extractedCountryCode.countryCodeSource != .DefaultCountry {
             format = PNNumberFormat.International
         }
-        else {
-            finalString = "+\(countryCode)"
-            format = PNNumberFormat.International
-        }
+
+        // Account for a potential IDD prefix (4)
+        
+        
         // Nomralized number (5)
         // If country code is not default, grab correct metadata (6)
         if countryCode != regionMetaData.countryCode {
             regionMetaData = self.metadata.metadataPerCode[countryCode]!
         }
         
+        nationalNumberPrefix = extractNationalNumberPrefix(preNormalized, regionMetadata: regionMetaData, countryCodeSource: extractedCountryCode.countryCodeSource)
+
+        
         // National Prefix Strip (7)
         if (nationalNumber.characters.count > 0) {
             nationalNumber = self.normalizePhoneNumber(nationalNumber)
             self.parser.stripNationalPrefix(&nationalNumber, metadata: regionMetaData)
-            let formats = self.getAvailableFormats(regionMetaData)
-            let array = try regex.matchedStringByRegex((formats.first?.pattern)!, string: PNLongPhoneNumber)
+            guard let firstFormat = self.getAvailableFormats(regionMetaData).first, let pattern = firstFormat.pattern else {
+                throw PNParsingError.InvalidCountryCode
+            }
+            let array = try regex.matchedStringByRegex(pattern, string: PNLongPhoneNumber)
             guard let chosenFormat = array.first else {
                 throw PNParsingError.InvalidCountryCode
             }
             let formatter = Formatter()
             let formattedNationalNumber = formatter.formatNationalNumber(chosenFormat, regionMetadata: regionMetaData, formatType: format)
+            if formattedNationalNumber == "NA" {
+                throw PNParsingError.NotANumber
+            }
             var rebuiltString = String()
             var rebuiltIndex = 0
             for character in formattedNationalNumber.characters {
@@ -133,12 +166,9 @@ class PartialFormatter {
                 rebuiltString.appendContentsOf(remainingNationalNumber)
             }
             rebuiltString = rebuiltString.stringByTrimmingCharactersInSet(NSCharacterSet.alphanumericCharacterSet().invertedSet)
-            if finalString.characters.count > 0 {
-                finalString = finalString + " " + rebuiltString
-                return finalString
+            if nationalNumberPrefix.characters.count > 0 {
+                return "\(nationalNumberPrefix) \(rebuiltString)"
             }
-
-            
             return rebuiltString
         }
         else {
