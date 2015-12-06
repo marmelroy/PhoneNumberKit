@@ -38,15 +38,21 @@ class PartialFormatter {
         }
     }
     
-    func extractNationalNumberPrefix(rawNumber: String, regionMetadata: MetadataTerritory, countryCodeSource: PNCountryCodeSource) -> String {
+    struct NationalNumberPrefixExtract {
+        let prefix: String
+        let nationalNumer: String
+    }
+    
+    func extractNationalNumberPrefix(rawNumber: String, regionMetadata: MetadataTerritory, countryCodeSource: PNCountryCodeSource) -> NationalNumberPrefixExtract {
         do {
             let matches = try regex.regexMatches(String(regionMetadata.countryCode), string: rawNumber)
             guard let firstMatch = matches.first else {
-                return String()
+                return NationalNumberPrefixExtract(prefix: String(), nationalNumer: rawNumber)
             }
             let range = firstMatch.range
             let adjustedRange = NSMakeRange(0, range.location + range.length)
             let nationalNumberPrefix: String = rawNumber.substringWithNSRange(adjustedRange)
+            let nationalNumber = rawNumber.substringWithNSRange(NSMakeRange(adjustedRange.length, rawNumber.characters.count - adjustedRange.length))
             if let iddPattern = regionMetadata.internationalPrefix where countryCodeSource == PNCountryCodeSource.NumberWithIDD {
                 let matched = try regex.regexMatches(iddPattern as String, string: rawNumber as String).first
                 if let matchedRange = matched?.range {
@@ -54,13 +60,14 @@ class PartialFormatter {
                     var numberPrefix = nationalNumberPrefix
                     let index = nationalNumberPrefix.startIndex.advancedBy(matchedRange.location).advancedBy(matchedRange.length)
                     numberPrefix.insert(character, atIndex: index)
-                    return numberPrefix
+                    return NationalNumberPrefixExtract(prefix: numberPrefix, nationalNumer: nationalNumber)
+
                 }
             }
-            return nationalNumberPrefix as String
+            return NationalNumberPrefixExtract(prefix: nationalNumberPrefix, nationalNumer: nationalNumber)
         }
         catch {
-            return String()
+            return NationalNumberPrefixExtract(prefix: String(), nationalNumer: rawNumber)
         }
 
     }
@@ -127,8 +134,10 @@ class PartialFormatter {
             regionMetaData = self.metadata.metadataPerCode[countryCode]!
         }
         
-        nationalNumberPrefix = extractNationalNumberPrefix(preNormalized, regionMetadata: regionMetaData, countryCodeSource: extractedCountryCode.countryCodeSource)
-
+        let extractedPrefix = extractNationalNumberPrefix(preNormalized, regionMetadata: regionMetaData, countryCodeSource: extractedCountryCode.countryCodeSource)
+        
+        nationalNumberPrefix = extractedPrefix.prefix
+        nationalNumber = extractedPrefix.nationalNumer
         
         // National Prefix Strip (7)
         if (nationalNumber.characters.count > 0) {
