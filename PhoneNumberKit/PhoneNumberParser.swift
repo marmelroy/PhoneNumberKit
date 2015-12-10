@@ -81,18 +81,21 @@ class PhoneNumberParser {
             return 0
         }
         let numberLength = nsFullNumber.length
-        var maxCountryCode = PNMaxLengthCountryCode
+        let maxCountryCode = PNMaxLengthCountryCode
+        var startPosition = 0
         if (fullNumber.hasPrefix("+")) {
-            maxCountryCode = PNMaxLengthCountryCode + 1
+            if (nsFullNumber.length == 1) {
+                return 0
+            }
+            startPosition = 1
         }
         for var i = 1; i <= maxCountryCode && i <= numberLength; i++ {
-            let stringRange = NSMakeRange(0, i)
+            let stringRange = NSMakeRange(startPosition, i)
             let subNumber = nsFullNumber.substringWithRange(stringRange)
-            let potentialCountryCode = UInt64(subNumber)
-            let regionCodes = metadata.metadataPerCode[potentialCountryCode!]
-            if (regionCodes != nil) {
-                nationalNumber = nsFullNumber.substringFromIndex(i)
-                return potentialCountryCode
+            if let potentialCountryCode = UInt64(subNumber)
+                where metadata.metadataPerCode[potentialCountryCode] != nil {
+                    nationalNumber = nsFullNumber.substringFromIndex(i)
+                    return potentialCountryCode
             }
         }
         return 0
