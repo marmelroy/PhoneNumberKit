@@ -10,18 +10,19 @@ import Foundation
 
 // MARK: Private Enums
 
-enum PhoneNumberFormat {
-    case E164
-    case International
-    case National
-}
-
 enum PhoneNumberCountryCodeSource {
     case NumberWithPlusSign
     case NumberWithIDD
     case NumberWithoutPlusSign
     case DefaultCountry
 }
+
+enum PhoneNumberFormat {
+    case E164
+    case International
+    case National
+}
+
 
 // MARK: Public Enums
 
@@ -84,18 +85,18 @@ public enum PhoneNumberType {
 
 // MARK: Constants
 
+let defaultCountry = "US"
+let defaultExtnPrefix = " ext. "
+let firstGroupPattern = "(\\$\\d)"
+let fgPattern = "\\$FG"
 let minLengthForNSN = 2
 let maxInputStringLength = 250
 let maxLengthCountryCode = 3
 let maxLengthForNSN = 16
 let nonBreakingSpace = "\u{00a0}"
+let npPattern = "\\$NP"
 let plusChars = "+＋"
 let validDigitsString = "0-9０-９٠-٩۰-۹"
-let defaultCountry = "US"
-let defaultExtnPrefix = " ext. "
-let firstGroupPattern = "(\\$\\d)"
-let npPattern = "\\$NP"
-let fgPattern = "\\$FG"
 
 // MARK: Patterns
 

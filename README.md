@@ -7,22 +7,21 @@
 Swift framework for parsing, formatting and validating international phone numbers.
 Inspired by Google's libphonenumber.
 
-### :construction: PhoneNumberKit is currently alpha software :construction:
+### :construction: PhoneNumberKit is currently beta software :construction:
 
- | Objective
---- | --- 
-:white_check_mark: | Match Google's libphonenumber accuracy by passing tests against all example numbers
-:white_check_mark: | Faster performance. 1000 parses -> ~0.3 seconds.
-:white_check_mark: | Better formatter. Match Google's libphonenumber. 
-:x: | AsYouType formatter for UITextField.
+ | Remaining Objectives
+--- | ---
+ | AsYouType formatter for UITextField.
+ | Battle-test PhoneNumberKit in a major app (100k+ users).
 
 ## Features
 
 - Quickly validate, normalize and extract the elements of any phone number string.    
-- Special function to quickly parse a large array of raw phone numbers. 
+- Match the accuracy of Google's JavaScript implementation of libphonenumber by passing tests against all example numbers.
+- Special function to quickly parse a large array of raw phone numbers. 1000 parses -> ~0.3 seconds.
 - Automatically grab the default region code from the phone's SIM (or if unavailable, the device's region). You can override this if you need to.
 - Convert country codes to country names and vice versa.
-- Simple Swift 2.0 syntax and readable codebase.
+- Simple Swift syntax and a lightweight readable codebase.
 - PhoneNumberKit uses the best-in-class metadata and basic approach from Google's libphonenumber project. By not being a direct port, PhoneNumberKit can focus on a smaller feature-set that's cleaner, faster and more readable.
 
 ## Usage
