@@ -82,13 +82,16 @@ public class PhoneNumberKit: NSObject {
     public func defaultRegionCode() -> String {
         let networkInfo = CTTelephonyNetworkInfo()
         let carrier = networkInfo.subscriberCellularProvider
-        if (carrier != nil && (carrier!.isoCountryCode != nil)) {
-            return carrier!.isoCountryCode!.uppercaseString;
-        } else {
-            let currentLocale = NSLocale.currentLocale()
-            let countryCode: String = currentLocale.objectForKey(NSLocaleCountryCode) as! String
-            return countryCode.uppercaseString;
+        if let isoCountryCode = carrier?.isoCountryCode {
+            return isoCountryCode.uppercaseString
         }
+        else {
+            let currentLocale = NSLocale.currentLocale()
+            if let countryCode = currentLocale.objectForKey(NSLocaleCountryCode) as? String {
+                return countryCode.uppercaseString
+            }
+        }
+        return PNDefaultCountry
     }
 
 }
