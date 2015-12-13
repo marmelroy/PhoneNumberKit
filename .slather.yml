@@ -1,3 +1,0 @@
-ci_service: travis_ci
-coverage_service: coveralls
-xcodeproj: PhoneNumberKit.xcodeproj
