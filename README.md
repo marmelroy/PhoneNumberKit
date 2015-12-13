@@ -11,8 +11,8 @@ Inspired by Google's libphonenumber.
 
  | Remaining Objectives
 --- | ---
- | AsYouType formatter for UITextField.
- | Battle-test PhoneNumberKit in a major app (100k+ users).
+📝 | AsYouType formatter for UITextField.
+⚔ | Battle-test PhoneNumberKit in a major app (100k+ users).
 
 ## Features
 
