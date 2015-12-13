@@ -12,7 +12,7 @@ class RegularExpressions {
     
     static let sharedInstance = RegularExpressions()
     
-    var regularExpresions: [String:NSRegularExpression] = [:]
+    var regularExpresions = [String:NSRegularExpression]()
 
     var phoneDataDetector: NSDataDetector?
 
@@ -157,14 +157,14 @@ class RegularExpressions {
             let stringRange = NSMakeRange(0, nsString.length)
             let matches = regex.matchesInString(string,
                 options: [], range: stringRange)
-            if (matches.count == 1) {
+            if matches.count == 1 {
                 let range = regex.rangeOfFirstMatchInString(string, options: [], range: stringRange)
-                if (range.location != NSNotFound) {
+                if range.location != NSNotFound {
                     replacementResult = regex.stringByReplacingMatchesInString(string, options: [], range: range, withTemplate: "")
                 }
                 return replacementResult
             }
-            else if (matches.count > 1) {
+            else if matches.count > 1 {
                 replacementResult = regex.stringByReplacingMatchesInString(string, options: [], range: stringRange, withTemplate: "")
             }
             return replacementResult
@@ -182,14 +182,14 @@ class RegularExpressions {
             let stringRange = NSMakeRange(0, nsString.length)
             let matches = regex.matchesInString(string,
                 options: [], range: stringRange)
-            if (matches.count == 1) {
+            if matches.count == 1 {
                 let range = regex.rangeOfFirstMatchInString(string, options: [], range: stringRange)
-                if (range.location != NSNotFound) {
+                if range.location != NSNotFound {
                     replacementResult = regex.stringByReplacingMatchesInString(string, options: [], range: range, withTemplate: template)
                 }
                 return replacementResult
             }
-            else if (matches.count > 1) {
+            else if matches.count > 1 {
                 replacementResult = regex.stringByReplacingMatchesInString(string, options: [], range: stringRange, withTemplate: template)
             }
             return replacementResult
@@ -205,7 +205,7 @@ class RegularExpressions {
             let stringRange = NSMakeRange(0, nsString.length)
             let regex = try regexWithPattern(pattern)
             let range = regex.rangeOfFirstMatchInString(string, options: [], range: stringRange)
-            if (range.location != NSNotFound) {
+            if range.location != NSNotFound {
                 nsString = regex.stringByReplacingMatchesInString(string, options: [], range: range, withTemplate: templateString)
             }
             return nsString as String
@@ -223,7 +223,7 @@ class RegularExpressions {
             if let mappedValue = map[keyString.uppercaseString] {
                 targetString.appendString(mappedValue)
             }
-            else if (removeNonMatches == false) {
+            else if removeNonMatches == false {
                 targetString.appendString(keyString as String)
             }
         }

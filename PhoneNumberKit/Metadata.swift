@@ -12,9 +12,9 @@ class Metadata {
     
     static let sharedInstance = Metadata()
     
-    var items: [MetadataTerritory] = []
-    var metadataPerCode: [UInt64: MetadataTerritory] = [:]
-    var metadataPerCountry: [String: MetadataTerritory] = [:]
+    var items = [MetadataTerritory]()
+    var metadataPerCode = [UInt64: MetadataTerritory]()
+    var metadataPerCountry = [String: MetadataTerritory]()
     
     /**
      Private init populates metadata items and the two hashed dictionaries for faster lookup.
@@ -22,7 +22,7 @@ class Metadata {
     private init () {
         items = populateItems()
         for item in items {
-            if (metadataPerCode[item.countryCode] == nil || item.mainCountryForCode == true) {
+            if metadataPerCode[item.countryCode] == nil || item.mainCountryForCode == true {
                 metadataPerCode[item.countryCode] = item
             }
             metadataPerCountry[item.codeID] = item
@@ -104,5 +104,3 @@ class Metadata {
     }
     
 }
-
-

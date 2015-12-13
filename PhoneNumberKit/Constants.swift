@@ -56,7 +56,6 @@ public enum PhoneNumberParsingError: ErrorType {
 
 /**
  Phone number type enumeration
- 
  - FixedLine: Fixed line numbers
  - Mobile: Mobile numbers
  - FixedOrMobile: Either fixed or mobile numbers if we can't tell conclusively.

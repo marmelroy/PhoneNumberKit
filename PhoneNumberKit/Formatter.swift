@@ -55,7 +55,7 @@ class Formatter {
      */
     func formatNationalNumber(nationalNumber: String, regionMetadata: MetadataTerritory, formatType: PhoneNumberFormat) -> String {
         let formats = regionMetadata.numberFormats
-        var selectedFormat : MetadataPhoneNumberFormat?
+        var selectedFormat: MetadataPhoneNumberFormat?
         for format in formats {
             if let leadingDigitPattern = format.leadingDigitsPatterns?.last {
                 if (regex.stringPositionByRegex(leadingDigitPattern, string: String(nationalNumber)) == 0) {
@@ -82,7 +82,7 @@ class Formatter {
                 prefixFormattingRule = regex.replaceStringByRegex(npPattern, string: nationalPrefixFormattingRule, template: nationalPrefix)
                 prefixFormattingRule = regex.replaceStringByRegex(fgPattern, string: prefixFormattingRule, template:"\\$1")
             }
-            if (formatType == PhoneNumberFormat.National && regex.hasValue(prefixFormattingRule)){
+            if formatType == PhoneNumberFormat.National && regex.hasValue(prefixFormattingRule){
                 let replacePattern = regex.replaceFirstStringByRegex(firstGroupPattern, string: numberFormatRule, templateString: prefixFormattingRule)
                 formattedNationalNumber = self.regex.replaceStringByRegex(pattern, string: nationalNumber, template: replacePattern)
             }
@@ -138,7 +138,7 @@ public extension PhoneNumber {
      - Returns: A string representing the adjusted national number.
      */
     private func adjustedNationalNumber() -> String {
-        if (self.leadingZero == true) {
+        if self.leadingZero == true {
             return "0" + String(nationalNumber)
         }
         else {
@@ -147,5 +147,3 @@ public extension PhoneNumber {
     }
     
 }
-
-
