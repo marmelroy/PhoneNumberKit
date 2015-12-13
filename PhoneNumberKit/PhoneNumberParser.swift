@@ -276,24 +276,23 @@ class PhoneNumberParser {
         let prefixPattern = String(format: "^(?:%@)", possibleNationalPrefix)
         do {
             let matches = try regex.regexMatches(prefixPattern, string: number)
-            if (matches.isEmpty == false) {
+            if let firstMatch = matches.first {
                 let nationalNumberRule = metadata.generalDesc?.nationalNumberPattern
-                let firstMatch = matches.first
-                let firstMatchString = number.substringWithNSRange(firstMatch!.range)
-                let numOfGroups = firstMatch!.numberOfRanges - 1
-                let transformRule = metadata.nationalPrefixTransformRule
+                let firstMatchString = number.substringWithNSRange(firstMatch.range)
+                let numOfGroups = firstMatch.numberOfRanges - 1
+                
                 var transformedNumber: String = String()
-                let firstRange = firstMatch?.rangeAtIndex(numOfGroups)
-                let firstMatchStringWithGroup = (firstRange!.location != NSNotFound && firstRange!.location < number.characters.count) ? number.substringWithNSRange(firstRange!):  String()
-                let noTransform = (transformRule == nil || transformRule?.characters.count == 0 || regex.hasValue(firstMatchStringWithGroup) == false)
-                if (noTransform ==  true) {
+                let firstRange = firstMatch.rangeAtIndex(numOfGroups)
+                let firstMatchStringWithGroup = (firstRange.location != NSNotFound && firstRange.location < number.characters.count) ? number.substringWithNSRange(firstRange):  String()
+                let firstMatchStringWithGroupHasValue = regex.hasValue(firstMatchStringWithGroup)
+                if let transformRule = metadata.nationalPrefixTransformRule where firstMatchStringWithGroupHasValue == true {
+                    transformedNumber = regex.replaceFirstStringByRegex(prefixPattern, string: number, templateString: transformRule)
+                }
+                else {
                     let index = number.startIndex.advancedBy(firstMatchString.characters.count)
                     transformedNumber = number.substringFromIndex(index)
                 }
-                else {
-                    transformedNumber = regex.replaceFirstStringByRegex(prefixPattern, string: number, templateString: transformRule!)
-                }
-                if (regex.hasValue(nationalNumberRule!) && regex.matchesEntirely(nationalNumberRule!, string: number) && regex.matchesEntirely(nationalNumberRule!, string: transformedNumber) == false){
+                if (regex.hasValue(nationalNumberRule) && regex.matchesEntirely(nationalNumberRule, string: number) && regex.matchesEntirely(nationalNumberRule, string: transformedNumber) == false){
                     return
                 }
                 number = transformedNumber

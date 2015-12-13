@@ -54,8 +54,8 @@ class RegularExpressions {
     
     func phoneDataDetectorMatches(string: String) throws -> [NSTextCheckingResult] {
         var dataDetector: NSDataDetector
-        if let pdDetector = phoneDataDetector {
-            dataDetector = pdDetector.copy() as! NSDataDetector
+        if let phoneDataDetector = phoneDataDetector {
+            dataDetector = phoneDataDetector
         }
         else {
             do {
@@ -102,9 +102,8 @@ class RegularExpressions {
     func stringPositionByRegex(pattern: String, string: String) -> Int {
         do {
             let matches = try regexMatches(pattern, string: string)
-            if (matches.count > 0) {
-                let match = matches.first
-                return (match!.range.location)
+            if let match = matches.first {
+                return (match.range.location)
             }
             return -1
         } catch {
@@ -113,11 +112,11 @@ class RegularExpressions {
     }
     
     func matchesExist(pattern: String?, string: String) -> Bool {
-        if (pattern == nil) {
+        guard let pattern = pattern else {
             return false
         }
         do {
-            let matches = try regexMatches(pattern!, string: string)
+            let matches = try regexMatches(pattern, string: string)
             return matches.count > 0
         }
         catch {
@@ -127,12 +126,12 @@ class RegularExpressions {
 
     
     func matchesEntirely(pattern: String?, string: String) -> Bool {
-        if (pattern == nil) {
+        guard let pattern = pattern else {
             return false
         }
         var isMatchingEntirely: Bool = false
         do {
-            let matches = try regexMatches(pattern!, string: string)
+            let matches = try regexMatches(pattern, string: string)
             let nsString = string as NSString
             let stringRange = NSMakeRange(0, nsString.length)
             for match in matches {
@@ -161,12 +160,12 @@ class RegularExpressions {
             if (matches.count == 1) {
                 let range = regex.rangeOfFirstMatchInString(string, options: [], range: stringRange)
                 if (range.location != NSNotFound) {
-                    replacementResult = regex.stringByReplacingMatchesInString(string.mutableCopy() as! String, options: [], range: range, withTemplate: "")
+                    replacementResult = regex.stringByReplacingMatchesInString(string, options: [], range: range, withTemplate: "")
                 }
                 return replacementResult
             }
             else if (matches.count > 1) {
-                replacementResult = regex.stringByReplacingMatchesInString(string.mutableCopy() as! String, options: [], range: stringRange, withTemplate: "")
+                replacementResult = regex.stringByReplacingMatchesInString(string, options: [], range: stringRange, withTemplate: "")
             }
             return replacementResult
         } catch {
@@ -186,12 +185,12 @@ class RegularExpressions {
             if (matches.count == 1) {
                 let range = regex.rangeOfFirstMatchInString(string, options: [], range: stringRange)
                 if (range.location != NSNotFound) {
-                    replacementResult = regex.stringByReplacingMatchesInString(string.mutableCopy() as! String, options: [], range: range, withTemplate: template)
+                    replacementResult = regex.stringByReplacingMatchesInString(string, options: [], range: range, withTemplate: template)
                 }
                 return replacementResult
             }
             else if (matches.count > 1) {
-                replacementResult = regex.stringByReplacingMatchesInString(string.mutableCopy() as! String, options: [], range: stringRange, withTemplate: template)
+                replacementResult = regex.stringByReplacingMatchesInString(string, options: [], range: stringRange, withTemplate: template)
             }
             return replacementResult
         } catch {
@@ -221,9 +220,8 @@ class RegularExpressions {
         for var i = 0; i < string.characters.count; i++ {
             var oneChar = copiedString.characterAtIndex(i)
             let keyString = NSString(characters: &oneChar, length: 1) as String
-            let mappedValue = map[keyString.uppercaseString]
-            if (mappedValue != nil) {
-                targetString.appendString(mappedValue!)
+            if let mappedValue = map[keyString.uppercaseString] {
+                targetString.appendString(mappedValue)
             }
             else if (removeNonMatches == false) {
                 targetString.appendString(keyString as String)
@@ -235,12 +233,12 @@ class RegularExpressions {
     // MARK: Validations
     
     func hasValue(value: NSString?) -> Bool {
-        if (value == nil) {
+        guard let value = value else {
             return false
         }
         let spaceCharSet = NSMutableCharacterSet(charactersInString: PNNonBreakingSpace)
         spaceCharSet.formUnionWithCharacterSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-        if (value!.stringByTrimmingCharactersInSet(spaceCharSet).characters.count == 0) {
+        if (value.stringByTrimmingCharactersInSet(spaceCharSet).characters.count == 0) {
             return false
         }
         return true
