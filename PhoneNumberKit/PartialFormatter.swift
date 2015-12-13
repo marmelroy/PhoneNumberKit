@@ -80,6 +80,9 @@ class PartialFormatter {
      - Returns: Modified national number ready for display.
      */
     func formatPartial(rawNumber: String, region: String) throws -> String {
+        
+        
+        
         let startsWithPlus = regex.matchesAtStart(PNLeadingPlusCharsPattern, string: rawNumber)
         let preNormalized = self.normalizePhoneNumber(rawNumber)
         if preNormalized.characters.count <= 3 || (rawNumber.characters.first != "0" && startsWithPlus == false) {
@@ -142,7 +145,6 @@ class PartialFormatter {
         // National Prefix Strip (7)
         if (nationalNumber.characters.count > 0) {
             nationalNumber = self.normalizePhoneNumber(nationalNumber)
-            self.parser.stripNationalPrefix(&nationalNumber, metadata: regionMetaData)
             guard let firstFormat = self.getAvailableFormats(regionMetaData).first, let pattern = firstFormat.pattern else {
                 throw PNParsingError.InvalidCountryCode
             }
@@ -192,5 +194,21 @@ class PartialFormatter {
         }
         return number
     }
+    
+    func isDigitOrLeadingPlusSign(number: String) -> Bool {
+        let lastCharacter = String(number.characters.last)
+        let digitPattern = "([\(PNValidDigitsString)])"
+        let plusPattern = "[\(PNPlusChars)]+"
+        var isDigitPattern = false
+        var isPlusPattern = false
+        do {
+            isDigitPattern = try regex.regexMatches(digitPattern, string: lastCharacter).count > 0
+            isPlusPattern = try regex.regexMatches(plusPattern, string: lastCharacter).count > 0
+        }
+        catch {
+        }
+        return isDigitPattern || (number.characters.count == 1 && isPlusPattern)
+    }
+    
 
 }
