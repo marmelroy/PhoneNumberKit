@@ -206,7 +206,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
                 let codeID = metadata.codeID
                 let metaDataDescriptions = [metadata.generalDesc, metadata.fixedLine, metadata.mobile, metadata.tollFree, metadata.premiumRate, metadata.sharedCost, metadata.voip, metadata.voicemail, metadata.pager, metadata.uan, metadata.emergency]
                 for desc in metaDataDescriptions {
-                    if (desc != nil) {
+                    if desc != nil {
                         let exampleNumber = desc?.exampleNumber
                         if (exampleNumber != nil) {
                             let phoneNumber = try PhoneNumber(rawNumber: exampleNumber!, region: codeID)

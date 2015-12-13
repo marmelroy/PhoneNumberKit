@@ -91,7 +91,7 @@ public class PhoneNumberKit: NSObject {
                 return countryCode.uppercaseString
             }
         }
-        return PNDefaultCountry
+        return defaultCountry
     }
 
 }

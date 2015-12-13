@@ -19,7 +19,7 @@ class ParseOperation<OutputType>: NSOperation {
     private var completionHandler: OperationClosure?
     private var implementationHandler: OperationThrowingClosure?
     private var dispatchOnceToken: dispatch_once_t = 0
-    private(set) var output: ParseOperationValue<OutputType> = .None(PNParsingError.TechnicalError)
+    private(set) var output: ParseOperationValue<OutputType> = .None(PhoneNumberParsingError.TechnicalError)
     private var state = ParseOperationState.Initial {
         willSet {
             if newValue != state {
@@ -60,11 +60,11 @@ class ParseOperation<OutputType>: NSOperation {
                     try implementationHandler(parseOp: self)
                 }
                 catch {
-                    finish(with: PNParsingError.TechnicalError)
+                    finish(with: .TechnicalError)
                 }
             }
             else {
-                finish(with: PNParsingError.TechnicalError)
+                finish(with: .TechnicalError)
             }
         }
         autoreleasepool {
@@ -121,7 +121,7 @@ extension ParseOperation {
     Finish with a parsing error
     - Parameter parseOperationValueError: Parsing error.
     */
-    final func finish(with parseOperationValueError: PNParsingError) {
+    final func finish(with parseOperationValueError: PhoneNumberParsingError) {
         finish(with: .None(parseOperationValueError))
     }
     
@@ -149,7 +149,7 @@ ParseOperationValue enumeration, can contain a valuetype or an error.
 - ProvidedInputValueType: Alias for any operationvalue.
 */
 enum ParseOperationValue<ValueType>: ParseOperationValueProvider {
-    case None(PNParsingError)
+    case None(PhoneNumberParsingError)
     case Some(ValueType)
     typealias ProvidedInputValueType = ValueType
 }
@@ -161,7 +161,7 @@ extension ParseOperationValue {
     func getValue() throws -> ValueType {
         switch self {
         case .None:
-            throw PNParsingError.TechnicalError
+            throw PhoneNumberParsingError.TechnicalError
         case .Some(let value):
             return value
         }
@@ -182,7 +182,7 @@ extension ParseOperationValue {
     /**
     Access error, can return an error or nil (can't throw).
     */
-    var noneError: PNParsingError? {
+    var noneError: PhoneNumberParsingError? {
         switch self {
         case .None(let error):
             return error

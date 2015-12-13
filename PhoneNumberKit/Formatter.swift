@@ -18,7 +18,7 @@ class Formatter {
      - Parameter phoneNumber: Phone number object.
      - Returns: Modified national number ready for display.
      */
-    func formatPhoneNumber(phoneNumber: PhoneNumber, formatType: PNNumberFormat) -> String {
+    func formatPhoneNumber(phoneNumber: PhoneNumber, formatType: PhoneNumberFormat) -> String {
         let metadata = Metadata.sharedInstance
         var formattedNationalNumber = phoneNumber.adjustedNationalNumber()
         if let regionMetadata = metadata.metadataPerCode[phoneNumber.countryCode] {
@@ -42,7 +42,7 @@ class Formatter {
                 return "\(preferredExtnPrefix)\(extns)"
             }
             else {
-                return "\(PNDefaultExtnPrefix)\(extns)"
+                return "\(defaultExtnPrefix)\(extns)"
             }
         }
         return nil
@@ -53,7 +53,7 @@ class Formatter {
      - Parameter nationalNumber: National number string.
      - Returns: Modified nationalNumber for display.
      */
-    func formatNationalNumber(nationalNumber: String, regionMetadata: MetadataTerritory, formatType: PNNumberFormat) -> String {
+    func formatNationalNumber(nationalNumber: String, regionMetadata: MetadataTerritory, formatType: PhoneNumberFormat) -> String {
         let formats = regionMetadata.numberFormats
         var selectedFormat : MetadataPhoneNumberFormat?
         for format in formats {
@@ -73,17 +73,17 @@ class Formatter {
             }
         }
         if let formatPattern = selectedFormat {
-            guard let numberFormatRule = (formatType == PNNumberFormat.International && formatPattern.intlFormat != nil) ? formatPattern.intlFormat : formatPattern.format, let pattern = formatPattern.pattern else {
+            guard let numberFormatRule = (formatType == PhoneNumberFormat.International && formatPattern.intlFormat != nil) ? formatPattern.intlFormat : formatPattern.format, let pattern = formatPattern.pattern else {
                 return nationalNumber
             }
             var formattedNationalNumber = String()
             var prefixFormattingRule = String()
             if let nationalPrefixFormattingRule = formatPattern.nationalPrefixFormattingRule, let nationalPrefix = regionMetadata.nationalPrefix {
-                prefixFormattingRule = regex.replaceStringByRegex(PNNPPattern, string: nationalPrefixFormattingRule, template: nationalPrefix)
-                prefixFormattingRule = regex.replaceStringByRegex(PNFGPattern, string: prefixFormattingRule, template:"\\$1")
+                prefixFormattingRule = regex.replaceStringByRegex(npPattern, string: nationalPrefixFormattingRule, template: nationalPrefix)
+                prefixFormattingRule = regex.replaceStringByRegex(fgPattern, string: prefixFormattingRule, template:"\\$1")
             }
-            if (formatType == PNNumberFormat.National && regex.hasValue(prefixFormattingRule)){
-                let replacePattern = regex.replaceFirstStringByRegex(PNFirstGroupPattern, string: numberFormatRule, templateString: prefixFormattingRule)
+            if (formatType == PhoneNumberFormat.National && regex.hasValue(prefixFormattingRule)){
+                let replacePattern = regex.replaceFirstStringByRegex(firstGroupPattern, string: numberFormatRule, templateString: prefixFormattingRule)
                 formattedNationalNumber = self.regex.replaceStringByRegex(pattern, string: nationalNumber, template: replacePattern)
             }
             else {

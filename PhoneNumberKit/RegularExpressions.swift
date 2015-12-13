@@ -32,7 +32,7 @@ class RegularExpressions {
                 return currentPattern
             }
             catch {
-                throw PNRegexError.General
+                throw PhoneNumberRegexError.General
             }
         }
     }
@@ -48,7 +48,7 @@ class RegularExpressions {
             return matches
         }
         catch {
-            throw PNRegexError.General
+            throw PhoneNumberRegexError.General
         }
     }
     
@@ -63,7 +63,7 @@ class RegularExpressions {
                 self.phoneDataDetector = dataDetector
             }
             catch {
-                throw PNRegexError.General
+                throw PhoneNumberRegexError.General
             }
         }
         let nsString = string as NSString
@@ -73,12 +73,12 @@ class RegularExpressions {
             return matches
         }
         else {
-            let fallBackMatches = try regexMatches(PNValidPhoneNumberPattern, string: string)
+            let fallBackMatches = try regexMatches(validPhoneNumberPattern, string: string)
             if fallBackMatches.isEmpty == false {
                 return fallBackMatches
             }
             else {
-                throw PNParsingError.NotANumber
+                throw PhoneNumberParsingError.NotANumber
             }
         }
     }
@@ -236,7 +236,7 @@ class RegularExpressions {
         guard let value = value else {
             return false
         }
-        let spaceCharSet = NSMutableCharacterSet(charactersInString: PNNonBreakingSpace)
+        let spaceCharSet = NSMutableCharacterSet(charactersInString: nonBreakingSpace)
         spaceCharSet.formUnionWithCharacterSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
         if (value.stringByTrimmingCharactersInSet(spaceCharSet).characters.count == 0) {
             return false
@@ -244,15 +244,15 @@ class RegularExpressions {
         return true
     }
     
-    func testStringLengthAgainstPattern(pattern: String, string: String) -> PNValidationResult {
+    func testStringLengthAgainstPattern(pattern: String, string: String) -> PhoneNumberValidationResult {
         if (matchesEntirely(pattern, string: string)) {
-            return PNValidationResult.IsPossible
+            return PhoneNumberValidationResult.IsPossible
         }
         if (stringPositionByRegex(pattern, string: string) == 0) {
-            return PNValidationResult.TooLong
+            return PhoneNumberValidationResult.TooLong
         }
         else {
-            return PNValidationResult.TooShort
+            return PhoneNumberValidationResult.TooShort
         }
     }
     
