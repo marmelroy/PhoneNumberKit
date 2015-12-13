@@ -34,40 +34,36 @@ class ParseManager {
         // Strip and extract extension (3)
         let numberExtension = self.parser.stripExtension(&nationalNumber)
         // Country code parse (4)
-        if (self.metadata.metadataPerCountry[region] == nil) {
+        guard var regionMetadata =  self.metadata.metadataPerCountry[region] else {
             throw PNParsingError.InvalidCountryCode
         }
-        var regionMetaData =  self.metadata.metadataPerCountry[region]!
-        var extractedCountryCode: ExtractedCountryCode
+        var countryCode: UInt64 = 0
         do {
-            extractedCountryCode = try self.parser.extractCountryCode(nationalNumber, metadata: regionMetaData)
+            countryCode = try self.parser.extractCountryCode(nationalNumber, nationalNumber: &nationalNumber, metadata: regionMetadata)
         }
         catch {
             do {
                 let plusRemovedNumberString = self.regex.replaceStringByRegex(PNLeadingPlusCharsPattern, string: nationalNumber as String)
-                extractedCountryCode = try self.parser.extractCountryCode(plusRemovedNumberString, metadata: regionMetaData)
+                countryCode = try self.parser.extractCountryCode(plusRemovedNumberString, nationalNumber: &nationalNumber, metadata: regionMetadata)
             }
             catch {
                 throw PNParsingError.InvalidCountryCode
             }
         }
-        nationalNumber = extractedCountryCode.nationalNumber
-        var countryCode = extractedCountryCode.countryCode
         if (countryCode == 0) {
-            countryCode = regionMetaData.countryCode
+            countryCode = regionMetadata.countryCode
         }
         // Nomralized number (5)
         nationalNumber = self.parser.normalizePhoneNumber(nationalNumber)
         // If country code is not default, grab correct metadata (6)
-        if countryCode != regionMetaData.countryCode {
-            regionMetaData = self.metadata.metadataPerCode[countryCode]!
+        if countryCode != regionMetadata.countryCode, let countryMetadata = self.metadata.metadataPerCode[countryCode] {
+            regionMetadata = countryMetadata
         }
         // National Prefix Strip (7)
-        self.parser.stripNationalPrefix(&nationalNumber, metadata: regionMetaData)
+        self.parser.stripNationalPrefix(&nationalNumber, metadata: regionMetadata)
         
         // Test number against general number description for correct metadata (8)
-        let generalNumberDesc = regionMetaData.generalDesc
-        if (self.regex.hasValue(generalNumberDesc!.nationalNumberPattern) == false || self.parser.isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc!) == false) {
+        if let generalNumberDesc = regionMetadata.generalDesc where (self.regex.hasValue(generalNumberDesc.nationalNumberPattern) == false || self.parser.isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc) == false) {
             throw PNParsingError.NotANumber
         }
         // Finalize remaining parameters and create phone number object (9)

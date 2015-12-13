@@ -230,7 +230,7 @@ class RegularExpressions {
         }
     }
     
-    func stringByReplacingOccurrences(string: String, map: [String:String], removeNonMatches: Bool) -> String? {
+    func stringByReplacingOccurrences(string: String, map: [String:String], removeNonMatches: Bool) -> String {
         let targetString = NSMutableString ()
         let copiedString: NSString = string
         for var i = 0; i < string.characters.count; i++ {
