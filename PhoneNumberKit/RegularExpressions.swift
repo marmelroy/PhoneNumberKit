@@ -32,7 +32,7 @@ class RegularExpressions {
                 return currentPattern
             }
             catch {
-                throw PhoneNumberRegexError.General
+                throw PhoneNumberError.GeneralError
             }
         }
     }
@@ -48,7 +48,7 @@ class RegularExpressions {
             return matches
         }
         catch {
-            throw PhoneNumberRegexError.General
+            throw PhoneNumberError.GeneralError
         }
     }
     
@@ -63,7 +63,7 @@ class RegularExpressions {
                 self.phoneDataDetector = dataDetector
             }
             catch {
-                throw PhoneNumberRegexError.General
+                throw PhoneNumberError.GeneralError
             }
         }
         let nsString = string as NSString
@@ -78,7 +78,7 @@ class RegularExpressions {
                 return fallBackMatches
             }
             else {
-                throw PhoneNumberParsingError.NotANumber
+                throw PhoneNumberError.NotANumber
             }
         }
     }
@@ -244,15 +244,12 @@ class RegularExpressions {
         return true
     }
     
-    func testStringLengthAgainstPattern(pattern: String, string: String) -> PhoneNumberValidationResult {
+    func testStringLengthAgainstPattern(pattern: String, string: String) -> Bool {
         if (matchesEntirely(pattern, string: string)) {
-            return PhoneNumberValidationResult.IsPossible
-        }
-        if (stringPositionByRegex(pattern, string: string) == 0) {
-            return PhoneNumberValidationResult.TooLong
+            return true
         }
         else {
-            return PhoneNumberValidationResult.TooShort
+            return false
         }
     }
     

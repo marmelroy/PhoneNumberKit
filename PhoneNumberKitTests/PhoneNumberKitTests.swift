@@ -218,7 +218,7 @@ class PhoneNumberKitTests: XCTestCase {
             phoneNumber.toE164()
             XCTFail()
         }
-        catch PhoneNumberParsingError.NotANumber {
+        catch PhoneNumberError.NotANumber {
             XCTAssert(true)
         }
         catch {

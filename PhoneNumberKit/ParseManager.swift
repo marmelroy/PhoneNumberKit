@@ -35,7 +35,7 @@ class ParseManager {
         let numberExtension = self.parser.stripExtension(&nationalNumber)
         // Country code parse (4)
         guard var regionMetadata =  self.metadata.metadataPerCountry[region] else {
-            throw PhoneNumberParsingError.InvalidCountryCode
+            throw PhoneNumberError.InvalidCountryCode
         }
         var countryCode: UInt64 = 0
         do {
@@ -47,7 +47,7 @@ class ParseManager {
                 countryCode = try self.parser.extractCountryCode(plusRemovedNumberString, nationalNumber: &nationalNumber, metadata: regionMetadata)
             }
             catch {
-                throw PhoneNumberParsingError.InvalidCountryCode
+                throw PhoneNumberError.InvalidCountryCode
             }
         }
         if countryCode == 0 {
@@ -64,12 +64,12 @@ class ParseManager {
         
         // Test number against general number description for correct metadata (8)
         if let generalNumberDesc = regionMetadata.generalDesc where (self.regex.hasValue(generalNumberDesc.nationalNumberPattern) == false || self.parser.isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc) == false) {
-            throw PhoneNumberParsingError.NotANumber
+            throw PhoneNumberError.NotANumber
         }
         // Finalize remaining parameters and create phone number object (9)
         let leadingZero = nationalNumber.hasPrefix("0")
         guard let finalNationalNumber = UInt64(nationalNumber) else{
-            throw PhoneNumberParsingError.NotANumber
+            throw PhoneNumberError.NotANumber
         }
         let phoneNumber = PhoneNumber(countryCode: countryCode, leadingZero: leadingZero, nationalNumber: finalNationalNumber, numberExtension: numberExtension, rawNumber: rawNumber)
         return phoneNumber

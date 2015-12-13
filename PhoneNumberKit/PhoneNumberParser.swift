@@ -43,7 +43,7 @@ class PhoneNumberParser {
         let countryCodeSource = stripInternationalPrefixAndNormalize(&fullNumber, possibleIddPrefix: possibleCountryIddPrefix)
         if countryCodeSource != .DefaultCountry {
             if fullNumber.characters.count <= minLengthForNSN {
-                throw PhoneNumberParsingError.TooShort
+                throw PhoneNumberError.TooShort
             }
             if let potentialCountryCode = extractPotentialCountryCode(fullNumber, nationalNumber: &nationalNumber) where potentialCountryCode != 0 {
                 return potentialCountryCode
@@ -62,7 +62,7 @@ class PhoneNumberParser {
                 }
                 stripNationalPrefix(&potentialNationalNumber, metadata: metadata)
                 let potentialNationalNumberStr = String(potentialNationalNumber.copy())
-                if ((!regex.matchesEntirely(validNumberPattern, string: fullNumber) && regex.matchesEntirely(validNumberPattern, string: potentialNationalNumberStr )) || regex.testStringLengthAgainstPattern(possibleNumberPattern, string: fullNumber as String) == PhoneNumberValidationResult.TooLong) {
+                if ((!regex.matchesEntirely(validNumberPattern, string: fullNumber) && regex.matchesEntirely(validNumberPattern, string: potentialNationalNumberStr )) || regex.testStringLengthAgainstPattern(possibleNumberPattern, string: fullNumber as String) == false) {
                     nationalNumber = potentialNationalNumberStr
                     if let countryCode = UInt64(defaultCountryCode) {
                         return UInt64(countryCode)

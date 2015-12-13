@@ -23,35 +23,33 @@ enum PhoneNumberCountryCodeSource {
     case DefaultCountry
 }
 
-enum PhoneNumberRegexError: ErrorType {
-    case General
-}
-
-enum PhoneNumberValidationResult: ErrorType {
-    case Unknown
-    case IsPossible
-    case InvalidCountryCode
-    case TooShort
-    case TooLong
-}
-
 // MARK: Public Enums
 
 /**
 Enumeration for parsing error types
 
-- TechnicalError: A generic error occured.
+- GeneralError: A general error occured.
+- InvalidCountryCode: A country code could not be found or the one found was invalid
 - NotANumber: The string provided is not a number
 - TooLong: The string provided is too long to be a valid number
 - TooShort: The string provided is too short to be a valid number
-- InvalidCountryCode: A country code could not be found or the one found was invalid
 */
-public enum PhoneNumberParsingError: ErrorType {
-    case TechnicalError
+public enum PhoneNumberError: ErrorType {
+    case GeneralError
+    case InvalidCountryCode
     case NotANumber
     case TooLong
     case TooShort
-    case InvalidCountryCode
+    
+    public var description: String {
+        switch self {
+        case .GeneralError: return NSLocalizedString("An error occured whilst validating the phone number.", comment: "")
+        case .InvalidCountryCode: return NSLocalizedString("The country code is invalid.", comment: "")
+        case .NotANumber: return NSLocalizedString("The number provided is invalid.", comment: "")
+        case .TooLong: return NSLocalizedString("The number provided is too long.", comment: "")
+        case .TooShort: return NSLocalizedString("The number provided is too show.", comment: "")
+        }
+    }
 }
 
 /**
