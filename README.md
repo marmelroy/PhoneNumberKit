@@ -16,13 +16,15 @@ Inspired by Google's libphonenumber.
 
 ## Features
 
-- Quickly validate, normalize and extract the elements of any phone number string.    
-- Match the accuracy of Google's JavaScript implementation of libphonenumber by passing tests against all example numbers.
-- Special function to quickly parse a large array of raw phone numbers. 1000 parses -> ~0.3 seconds.
-- Automatically grab the default region code from the phone's SIM (or if unavailable, the device's region). You can override this if you need to.
-- Convert country codes to country names and vice versa.
-- Simple Swift syntax and a lightweight readable codebase.
-- PhoneNumberKit uses the best-in-class metadata and basic approach from Google's libphonenumber project. By not being a direct port, PhoneNumberKit can focus on a smaller feature-set that's cleaner, faster and more readable.
+| Features
+--- | ---
+📞 | Validate, normalize and extract the elements of any phone number string.
+💯 | Simple Swift syntax and a lightweight readable codebase.
+🏎 | Speed. Including a special function to quickly parse a large array of raw phone numbers. 1000 parses -> ~0.3 seconds.
+📚 | Uses the best-in-class metadata and basic approach from Google's libPhoneNumber project but benefits from not being a direct port. PhoneNumberKit can focus on a smaller feature-set that's cleaner, faster and more readable.
+🎖 | Fully tested to match the accuracy of Google's JavaScript implementation of libPhoneNumber.
+📱 | Built for iOS. Automatically grabs the default region code from the phone's SIM (or if unavailable, the device's region). You can override this.
+🇺🇸 | Convert country codes to country names and vice versa.
 
 ## Usage
 
