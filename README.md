@@ -20,10 +20,10 @@ Inspired by Google's libphonenumber.
 --------------------------|------------------------------------------------------------
 :phone: | Validate, normalize and extract the elements of any phone number string.
 :100: | Simple Swift syntax and a lightweight readable codebase.
-:checkered_flag: | Fast. Including a special function to quickly parse a large array of raw phone numbers. 1000 parses -> ~0.3 seconds.
-:books: | Uses the best-in-class metadata and basic approach from Google's libPhoneNumber project but benefits from not being a direct port. PhoneNumberKit can focus on a smaller feature-set that's cleaner, faster and more readable. 
+:checkered_flag: | Fast. 1000 parses -> ~0.3 seconds.
+:books: | Best-in-class metadata from Google's libPhoneNumber project. 
 :trophy: | Fully tested to match the accuracy of Google's JavaScript implementation of libPhoneNumber.
-:iphone: | Built for iOS. Automatically grabs the default region code from the phone's SIM (or if unavailable, the device's region). You can override this.
+:iphone: | Built for iOS. Automatically grabs the default region code from the phone.
 :us: | Convert country codes to country names and vice versa
 
 ## Usage
