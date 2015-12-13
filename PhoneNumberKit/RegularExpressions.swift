@@ -89,7 +89,7 @@ class RegularExpressions {
         do {
             let matches = try regexMatches(pattern, string: string)
             for match in matches {
-                if (match.range.location == 0) {
+                if match.range.location == 0 {
                     return true
                 }
             }
@@ -238,7 +238,7 @@ class RegularExpressions {
         }
         let spaceCharSet = NSMutableCharacterSet(charactersInString: nonBreakingSpace)
         spaceCharSet.formUnionWithCharacterSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-        if (value.stringByTrimmingCharactersInSet(spaceCharSet).characters.count == 0) {
+        if value.stringByTrimmingCharactersInSet(spaceCharSet).characters.count == 0 {
             return false
         }
         return true

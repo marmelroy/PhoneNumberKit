@@ -42,7 +42,7 @@ class PhoneNumberParser {
         }
         let countryCodeSource = stripInternationalPrefixAndNormalize(&fullNumber, possibleIddPrefix: possibleCountryIddPrefix)
         if countryCodeSource != .DefaultCountry {
-            if (fullNumber.characters.count <= minLengthForNSN) {
+            if fullNumber.characters.count <= minLengthForNSN {
                 throw PhoneNumberParsingError.TooShort
             }
             if let potentialCountryCode = extractPotentialCountryCode(fullNumber, nationalNumber: &nationalNumber) where potentialCountryCode != 0 {
@@ -88,7 +88,7 @@ class PhoneNumberParser {
         let maxCountryCode = maxLengthCountryCode
         var startPosition = 0
         if fullNumber.hasPrefix("+") {
-            if (nsFullNumber.length == 1) {
+            if nsFullNumber.length == 1 {
                 return 0
             }
             startPosition = 1

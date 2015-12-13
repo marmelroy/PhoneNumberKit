@@ -208,7 +208,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
                 for desc in metaDataDescriptions {
                     if desc != nil {
                         let exampleNumber = desc?.exampleNumber
-                        if (exampleNumber != nil) {
+                        if exampleNumber != nil {
                             let phoneNumber = try PhoneNumber(rawNumber: exampleNumber!, region: codeID)
                             XCTAssertNotNil(phoneNumber)
                         }

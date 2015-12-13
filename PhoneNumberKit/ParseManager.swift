@@ -50,7 +50,7 @@ class ParseManager {
                 throw PhoneNumberParsingError.InvalidCountryCode
             }
         }
-        if (countryCode == 0) {
+        if countryCode == 0 {
             countryCode = regionMetadata.countryCode
         }
         // Nomralized number (5)
