@@ -38,16 +38,21 @@ class Metadata {
     func populateItems() -> [MetadataTerritory] {
         var territoryArray: [MetadataTerritory] = [MetadataTerritory]()
         let frameworkBundle = NSBundle(forClass: PhoneNumberKit.self)
-        let jsonPath = frameworkBundle.pathForResource("PhoneNumberMetadata", ofType: "json")
-        let jsonData = NSData(contentsOfFile: jsonPath!)
+        guard let jsonPath = frameworkBundle.pathForResource("PhoneNumberMetadata", ofType: "json"), let jsonData = NSData(contentsOfFile: jsonPath) else {
+            return territoryArray
+        }
         do {
-            let jsonObjects: NSDictionary = try NSJSONSerialization.JSONObjectWithData(jsonData!, options: NSJSONReadingOptions.AllowFragments) as! NSDictionary
-            let metaDataDict: NSDictionary = jsonObjects["phoneNumberMetadata"] as! NSDictionary
-            let metaDataTerritories: NSDictionary = metaDataDict["territories"] as! NSDictionary
-            let metaDataTerritoryArray: NSArray = metaDataTerritories["territory"] as! NSArray
-            for territory in metaDataTerritoryArray {
-                let parsedTerritory = MetadataTerritory(jsondDict: territory as! NSDictionary)
-                territoryArray.append(parsedTerritory)
+            let jsonObjects = try NSJSONSerialization.JSONObjectWithData(jsonData, options: NSJSONReadingOptions.AllowFragments)
+            let metadataDict = jsonObjects["phoneNumberMetadata"] as? NSDictionary
+            let metadataTerritories = metadataDict?["territories"] as? NSDictionary
+            guard let metadataTerritoryArray = metadataTerritories?["territory"] as? NSArray else{
+                return territoryArray
+            }
+            for territory in metadataTerritoryArray {
+                if let territoryDict = territory as? NSDictionary {
+                    let parsedTerritory = MetadataTerritory(jsondDict: territoryDict)
+                    territoryArray.append(parsedTerritory)
+                }
             }
             return territoryArray
         }
@@ -74,18 +79,17 @@ class Metadata {
     - Returns: A MetadataTerritory object.
     */
     func fetchMainCountryMetadataForCode(code: UInt64) -> MetadataTerritory? {
-        let results = items.filter { $0.countryCode == code}
-        if (results.count > 0) {
-            var mainResult: MetadataTerritory
-            if (results.count > 1) {
-                mainResult = results.filter { $0.mainCountryForCode == true}.first!
-            }
-            else {
-                mainResult = results.first!
-            }
-            return mainResult
+        let countryResults = items.filter { $0.countryCode == code}
+        let mainCountryResults = countryResults.filter { $0.mainCountryForCode == true}
+        if let mainCountry = mainCountryResults.first {
+            return mainCountry
         }
-        return nil
+        else if let firstCountry = countryResults.first {
+            return firstCountry
+        }
+        else {
+            return nil
+        }
     }
     
 

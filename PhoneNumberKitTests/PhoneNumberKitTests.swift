@@ -20,6 +20,11 @@ class PhoneNumberKitTests: XCTestCase {
     }
     
     
+    func testMetadataMainCountryFetch() {
+        let countryMetadata = Metadata.sharedInstance.fetchMainCountryMetadataForCode(1)
+        XCTAssertEqual(countryMetadata?.codeID, "US")
+    }
+    
     // Invalid american number, GitHub issue #8 by j-pk
     func testInvalidNumberE() {
         do {
