@@ -40,7 +40,7 @@ class ViewController: UIViewController, CNContactPickerDelegate {
     
     func contactPicker(picker: CNContactPickerViewController, didSelectContact contact: CNContact) {
         if contact.phoneNumbers.count > 0 {
-            if let phoneNumber = contact.phoneNumbers.first.value as? CNPhoneNumber {
+            if let phoneNumber = contact.phoneNumbers.first.value {
                 parseNumber(phoneNumber.stringValue)
             }
         }
