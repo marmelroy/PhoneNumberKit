@@ -12,23 +12,35 @@ class RegularExpressions {
     
     static let sharedInstance = RegularExpressions()
     
-    var regularExpresions = [String:NSRegularExpression]()
-
+    private let regexQueue = dispatch_queue_create("regex", DISPATCH_QUEUE_CONCURRENT)
+    var regularExpressions = [String:NSRegularExpression]()
+    
     var phoneDataDetector: NSDataDetector?
 
     // MARK: Regular expression
     
     func regexWithPattern(pattern: String) throws -> NSRegularExpression {
-        var safeRegex = regularExpresions
-        if let regex = safeRegex[pattern] {
-            return regex
+        
+        var regex : NSRegularExpression?
+        
+        dispatch_sync(self.regexQueue) {
+            regex = self.regularExpressions[pattern]
         }
-        else {
+        
+        if let regex = regex {
+            return regex
+        } else {
             do {
                 var currentPattern: NSRegularExpression
                 currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpressionOptions.CaseInsensitive)
-                safeRegex.updateValue(currentPattern, forKey: pattern)
-                self.regularExpresions = safeRegex
+                
+                dispatch_barrier_async(self.regexQueue) {
+                    [weak self] in
+                    if let strongSelf = self {
+                        strongSelf.regularExpressions.updateValue(currentPattern, forKey: pattern)
+                    }
+                }
+                
                 return currentPattern
             }
             catch {
