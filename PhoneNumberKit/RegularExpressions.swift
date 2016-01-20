@@ -227,9 +227,9 @@ class RegularExpressions {
     
     func stringByReplacingOccurrences(string: String, map: [String:String], removeNonMatches: Bool) -> String {
         var targetString = String()
-        let copiedString: NSString = string
+        let copiedString = string
         for var i = 0; i < string.characters.count; i++ {
-            let oneChar = copiedString.characterAtIndex(i)
+            let oneChar = copiedString[copiedString.startIndex.advancedBy(i)]
             let keyString = String(oneChar)
             if let mappedValue = map[keyString.uppercaseString] {
                 targetString.appendContentsOf(mappedValue)
