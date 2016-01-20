@@ -221,19 +221,19 @@ class RegularExpressions {
     }
     
     func stringByReplacingOccurrences(string: String, map: [String:String], removeNonMatches: Bool) -> String {
-        let targetString = NSMutableString ()
+        var targetString = String()
         let copiedString: NSString = string
         for var i = 0; i < string.characters.count; i++ {
-            var oneChar = copiedString.characterAtIndex(i)
-            let keyString = NSString(characters: &oneChar, length: 1) as String
+            let oneChar = copiedString.characterAtIndex(i)
+            let keyString = String(oneChar)
             if let mappedValue = map[keyString.uppercaseString] {
-                targetString.appendString(mappedValue)
+                targetString.appendContentsOf(mappedValue)
             }
             else if removeNonMatches == false {
-                targetString.appendString(keyString as String)
+                targetString.appendContentsOf(keyString as String)
             }
         }
-        return targetString as String
+        return targetString
     }
     
     // MARK: Validations
