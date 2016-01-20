@@ -15,6 +15,12 @@ class RegularExpressions {
     var regularExpresions = [String:NSRegularExpression]()
 
     var phoneDataDetector: NSDataDetector?
+    
+    var spaceCharacterSet: NSCharacterSet = {
+        let characterSet = NSMutableCharacterSet(charactersInString: "\u{00a0}")
+        characterSet.formUnionWithCharacterSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+        return characterSet
+    }()
 
     // MARK: Regular expression
     
@@ -233,15 +239,15 @@ class RegularExpressions {
     // MARK: Validations
     
     func hasValue(value: NSString?) -> Bool {
-        guard let value = value else {
+        if let valueString = value {
+            if valueString.stringByTrimmingCharactersInSet(spaceCharacterSet).characters.count == 0 {
+                return false
+            }
+            return true
+        }
+        else {
             return false
         }
-        let spaceCharSet = NSMutableCharacterSet(charactersInString: nonBreakingSpace)
-        spaceCharSet.formUnionWithCharacterSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-        if value.stringByTrimmingCharactersInSet(spaceCharSet).characters.count == 0 {
-            return false
-        }
-        return true
     }
     
     func testStringLengthAgainstPattern(pattern: String, string: String) -> Bool {
