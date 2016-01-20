@@ -21,6 +21,11 @@ class RegularExpressions {
         characterSet.formUnionWithCharacterSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
         return characterSet
     }()
+    
+    deinit {
+        regularExpresions.removeAll()
+        phoneDataDetector = nil
+    }
 
     // MARK: Regular expression
     
@@ -31,7 +36,7 @@ class RegularExpressions {
         }
         else {
             do {
-                var currentPattern: NSRegularExpression
+                let currentPattern: NSRegularExpression
                 currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpressionOptions.CaseInsensitive)
                 safeRegex.updateValue(currentPattern, forKey: pattern)
                 self.regularExpresions = safeRegex
@@ -59,9 +64,9 @@ class RegularExpressions {
     }
     
     func phoneDataDetectorMatches(string: String) throws -> [NSTextCheckingResult] {
-        var dataDetector: NSDataDetector
-        if let phoneDataDetector = phoneDataDetector {
-            dataDetector = phoneDataDetector
+        let dataDetector: NSDataDetector
+        if let detector = phoneDataDetector {
+            dataDetector = detector
         }
         else {
             do {

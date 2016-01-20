@@ -29,6 +29,12 @@ class Metadata {
         }
     }
     
+    deinit {
+        items.removeAll()
+        metadataPerCode.removeAll()
+        metadataPerCountry.removeAll()
+    }
+    
     // MARK: Metadata population
     
     /**
