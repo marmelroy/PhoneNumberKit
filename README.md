@@ -21,7 +21,7 @@ Inspired by Google's libphonenumber.
 :phone: | Validate, normalize and extract the elements of any phone number string.
 :100: | Simple Swift syntax and a lightweight readable codebase.
 :checkered_flag: | Fast. 1000 parses -> ~0.3 seconds.
-:books: | Best-in-class metadata from Google's libPhoneNumber project. 
+:books: | Best-in-class metadata from Google's libPhoneNumber project.
 :trophy: | Fully tested to match the accuracy of Google's JavaScript implementation of libPhoneNumber.
 :iphone: | Built for iOS. Automatically grabs the default region code from the phone.
 :us: | Convert country codes to country names and vice versa
@@ -95,5 +95,5 @@ github "marmelroy/PhoneNumberKit"
 ### Setting up with [CocoaPods](http://cocoapods.org/?q=PhoneNumberKit)
 ```ruby
 source 'https://github.com/CocoaPods/Specs.git'
-pod 'PhoneNumberKit', '~> 0.1'
+pod 'PhoneNumberKit', '~> 0.3'
 ```
