@@ -228,7 +228,7 @@ class RegularExpressions {
     func stringByReplacingOccurrences(string: String, map: [String:String], removeNonMatches: Bool) -> String {
         var targetString = String()
         let copiedString = string
-        for var i = 0; i < string.characters.count; i++ {
+        for i in 0 ..< string.characters.count {
             let oneChar = copiedString[copiedString.startIndex.advancedBy(i)]
             let keyString = String(oneChar)
             if let mappedValue = map[keyString.uppercaseString] {

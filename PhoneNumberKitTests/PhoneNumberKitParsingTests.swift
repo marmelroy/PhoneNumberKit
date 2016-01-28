@@ -226,7 +226,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
         let startTime = NSDate()
         var endTime = NSDate()
         var numberArray: [String] = []
-        for var numberIdx = 0; numberIdx < numberOfParses; numberIdx++ {
+        for _ in 0 ..< numberOfParses {
             numberArray.append("+5491187654321")
         }
         let phoneNumbers = PhoneNumberKit().parseMultiple(numberArray, region: "AR")
