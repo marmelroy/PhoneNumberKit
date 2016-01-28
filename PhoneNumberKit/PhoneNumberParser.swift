@@ -93,7 +93,10 @@ class PhoneNumberParser {
             }
             startPosition = 1
         }
-        for var i = 1; i <= maxCountryCode && i <= numberLength; i++ {
+        for i in 1...numberLength {
+            if i > maxCountryCode {
+                break
+            }
             let stringRange = NSMakeRange(startPosition, i)
             let subNumber = nsFullNumber.substringWithRange(stringRange)
             if let potentialCountryCode = UInt64(subNumber)
