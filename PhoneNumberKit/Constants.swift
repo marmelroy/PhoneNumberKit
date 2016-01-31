@@ -48,7 +48,7 @@ public enum PhoneNumberError: ErrorType {
         case .InvalidCountryCode: return NSLocalizedString("The country code is invalid.", comment: "")
         case .NotANumber: return NSLocalizedString("The number provided is invalid.", comment: "")
         case .TooLong: return NSLocalizedString("The number provided is too long.", comment: "")
-        case .TooShort: return NSLocalizedString("The number provided is too show.", comment: "")
+        case .TooShort: return NSLocalizedString("The number provided is too short.", comment: "")
         }
     }
 }
