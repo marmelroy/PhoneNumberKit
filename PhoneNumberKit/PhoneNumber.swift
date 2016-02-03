@@ -20,14 +20,14 @@ Parsed phone number object
 */
 public struct PhoneNumber {
     public let countryCode: UInt64
-    private(set) public var leadingZero: Bool = false
+    private(set) public var leadingZero = false
     public let nationalNumber: UInt64
     public let numberExtension: String?
     public let rawNumber: String
-    public var type: PNPhoneNumberType {
+    public var type: PhoneNumberType {
         get {
             let parser = PhoneNumberParser()
-            let type: PNPhoneNumberType = parser.checkNumberType(String(nationalNumber), countryCode: countryCode)
+            let type: PhoneNumberType = parser.checkNumberType(String(nationalNumber), countryCode: countryCode)
             return type
         }
     }

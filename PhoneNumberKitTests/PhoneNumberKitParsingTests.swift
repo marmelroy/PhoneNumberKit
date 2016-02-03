@@ -206,9 +206,9 @@ class PhoneNumberKitParsingTests: XCTestCase {
                 let codeID = metadata.codeID
                 let metaDataDescriptions = [metadata.generalDesc, metadata.fixedLine, metadata.mobile, metadata.tollFree, metadata.premiumRate, metadata.sharedCost, metadata.voip, metadata.voicemail, metadata.pager, metadata.uan, metadata.emergency]
                 for desc in metaDataDescriptions {
-                    if (desc != nil) {
+                    if desc != nil {
                         let exampleNumber = desc?.exampleNumber
-                        if (exampleNumber != nil) {
+                        if exampleNumber != nil {
                             let phoneNumber = try PhoneNumber(rawNumber: exampleNumber!, region: codeID)
                             XCTAssertNotNil(phoneNumber)
                         }
@@ -226,7 +226,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
         let startTime = NSDate()
         var endTime = NSDate()
         var numberArray: [String] = []
-        for var numberIdx = 0; numberIdx < numberOfParses; numberIdx++ {
+        for _ in 0 ..< numberOfParses {
             numberArray.append("+5491187654321")
         }
         let phoneNumbers = PhoneNumberKit().parseMultiple(numberArray, region: "AR")

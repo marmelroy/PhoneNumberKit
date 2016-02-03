@@ -19,7 +19,7 @@ class ParseOperation<OutputType>: NSOperation {
     private var completionHandler: OperationClosure?
     private var implementationHandler: OperationThrowingClosure?
     private var dispatchOnceToken: dispatch_once_t = 0
-    private(set) var output: ParseOperationValue<OutputType> = .None(PNParsingError.TechnicalError)
+    private(set) var output: ParseOperationValue<OutputType> = .None(PhoneNumberError.GeneralError)
     private var state = ParseOperationState.Initial {
         willSet {
             if newValue != state {
@@ -45,7 +45,7 @@ class ParseOperation<OutputType>: NSOperation {
             main()
         }
         else {
-            finish(with: .None(.TechnicalError))
+            finish(with: .None(.GeneralError))
         }
     }
     
@@ -60,11 +60,11 @@ class ParseOperation<OutputType>: NSOperation {
                     try implementationHandler(parseOp: self)
                 }
                 catch {
-                    finish(with: PNParsingError.TechnicalError)
+                    finish(with: .GeneralError)
                 }
             }
             else {
-                finish(with: PNParsingError.TechnicalError)
+                finish(with: .GeneralError)
             }
         }
         autoreleasepool {
@@ -121,7 +121,7 @@ extension ParseOperation {
     Finish with a parsing error
     - Parameter parseOperationValueError: Parsing error.
     */
-    final func finish(with parseOperationValueError: PNParsingError) {
+    final func finish(with parseOperationValueError: PhoneNumberError) {
         finish(with: .None(parseOperationValueError))
     }
     
@@ -148,20 +148,20 @@ ParseOperationValue enumeration, can contain a valuetype or an error.
 - Some: Any operationvalue.
 - ProvidedInputValueType: Alias for any operationvalue.
 */
-public enum ParseOperationValue<ValueType>: ParseOperationValueProvider {
-    case None(PNParsingError)
+enum ParseOperationValue<ValueType>: ParseOperationValueProvider {
+    case None(PhoneNumberError)
     case Some(ValueType)
-    public typealias ProvidedInputValueType = ValueType
+    typealias ProvidedInputValueType = ValueType
 }
 
 extension ParseOperationValue {
     /**
     Get value, can return a value type or throw an error.
     */
-    public func getValue() throws -> ValueType {
+    func getValue() throws -> ValueType {
         switch self {
         case .None:
-            throw PNParsingError.TechnicalError
+            throw PhoneNumberError.GeneralError
         case .Some(let value):
             return value
         }
@@ -170,7 +170,7 @@ extension ParseOperationValue {
     /**
     Access value, can return a value type or nil (can't throw).
     */
-    public var value: ValueType? {
+    var value: ValueType? {
         switch self {
         case .None:
             return nil
@@ -182,7 +182,7 @@ extension ParseOperationValue {
     /**
     Access error, can return an error or nil (can't throw).
     */
-    public var noneError: PNParsingError? {
+    var noneError: PhoneNumberError? {
         switch self {
         case .None(let error):
             return error

@@ -18,7 +18,7 @@ class Formatter {
      - Parameter phoneNumber: Phone number object.
      - Returns: Modified national number ready for display.
      */
-    func formatPhoneNumber(phoneNumber: PhoneNumber, formatType: PNNumberFormat) -> String {
+    func formatPhoneNumber(phoneNumber: PhoneNumber, formatType: PhoneNumberFormat) -> String {
         let metadata = Metadata.sharedInstance
         var formattedNationalNumber = phoneNumber.adjustedNationalNumber()
         if let regionMetadata = metadata.metadataPerCode[phoneNumber.countryCode] {
@@ -42,7 +42,7 @@ class Formatter {
                 return "\(preferredExtnPrefix)\(extns)"
             }
             else {
-                return "\(PNDefaultExtnPrefix)\(extns)"
+                return "\(defaultExtnPrefix)\(extns)"
             }
         }
         return nil
@@ -53,9 +53,9 @@ class Formatter {
      - Parameter nationalNumber: National number string.
      - Returns: Modified nationalNumber for display.
      */
-    func formatNationalNumber(nationalNumber: String, regionMetadata: MetadataTerritory, formatType: PNNumberFormat) -> String {
+    func formatNationalNumber(nationalNumber: String, regionMetadata: MetadataTerritory, formatType: PhoneNumberFormat) -> String {
         let formats = regionMetadata.numberFormats
-        var selectedFormat : MetadataPhoneNumberFormat?
+        var selectedFormat: MetadataPhoneNumberFormat?
         for format in formats {
             if let leadingDigitPattern = format.leadingDigitsPatterns?.last {
                 if (regex.stringPositionByRegex(leadingDigitPattern, string: String(nationalNumber)) == 0) {
@@ -73,27 +73,23 @@ class Formatter {
             }
         }
         if let formatPattern = selectedFormat {
-            let numberFormatRule = (formatType == PNNumberFormat.International && formatPattern.intlFormat != nil) ? formatPattern.intlFormat : formatPattern.format
-            var formattedNationalNumber : String?
-            var prefixFormattingRule = formatPattern.nationalPrefixFormattingRule
-            if prefixFormattingRule?.characters.count > 0 {
-                let nationalPrefix = regionMetadata.nationalPrefix
-                if nationalPrefix?.characters.count > 0 {
-                    prefixFormattingRule = regex.replaceStringByRegex(PNNPPattern, string: prefixFormattingRule!, template: nationalPrefix!)
-                    prefixFormattingRule = regex.replaceStringByRegex(PNFGPattern, string: prefixFormattingRule!, template:"\\$1")
-                }
-                else {
-                    prefixFormattingRule = ""
-                }
+            guard let numberFormatRule = (formatType == PhoneNumberFormat.International && formatPattern.intlFormat != nil) ? formatPattern.intlFormat : formatPattern.format, let pattern = formatPattern.pattern else {
+                return nationalNumber
             }
-            if (formatType == PNNumberFormat.National && regex.hasValue(prefixFormattingRule)){
-                let replacePattern = regex.replaceFirstStringByRegex(PNFirstGroupPattern, string: numberFormatRule!, templateString: prefixFormattingRule!)
-                formattedNationalNumber = self.regex.replaceStringByRegex(formatPattern.pattern!, string: nationalNumber, template: replacePattern)
+            var formattedNationalNumber = String()
+            var prefixFormattingRule = String()
+            if let nationalPrefixFormattingRule = formatPattern.nationalPrefixFormattingRule, let nationalPrefix = regionMetadata.nationalPrefix {
+                prefixFormattingRule = regex.replaceStringByRegex(npPattern, string: nationalPrefixFormattingRule, template: nationalPrefix)
+                prefixFormattingRule = regex.replaceStringByRegex(fgPattern, string: prefixFormattingRule, template:"\\$1")
+            }
+            if formatType == PhoneNumberFormat.National && regex.hasValue(prefixFormattingRule){
+                let replacePattern = regex.replaceFirstStringByRegex(firstGroupPattern, string: numberFormatRule, templateString: prefixFormattingRule)
+                formattedNationalNumber = self.regex.replaceStringByRegex(pattern, string: nationalNumber, template: replacePattern)
             }
             else {
-                formattedNationalNumber = self.regex.replaceStringByRegex(formatPattern.pattern!, string: nationalNumber, template: numberFormatRule!)
+                formattedNationalNumber = self.regex.replaceStringByRegex(pattern, string: nationalNumber, template: numberFormatRule)
             }
-            return formattedNationalNumber!
+            return formattedNationalNumber
         }
         else {
             return nationalNumber
@@ -111,7 +107,7 @@ public extension PhoneNumber {
     - Returns: A string representing the phone number in E164 format.
     */
     public func toE164() -> String {
-        let formattedNumber: String = "+" + String(countryCode) + adjustedNationalNumber()
+        let formattedNumber = "+" + String(countryCode) + adjustedNationalNumber()
         return formattedNumber
     }
     
@@ -122,7 +118,7 @@ public extension PhoneNumber {
     public func toInternational() -> String {
         let formatter = Formatter()
         let formattedNationalNumber = formatter.formatPhoneNumber(self, formatType: .International)
-        let formattedNumber: String = "+" + String(countryCode) + " " + formattedNationalNumber
+        let formattedNumber = "+" + String(countryCode) + " " + formattedNationalNumber
         return formattedNumber
     }
     
@@ -133,7 +129,7 @@ public extension PhoneNumber {
     public func toNational() -> String {
         let formatter = Formatter()
         let formattedNationalNumber = formatter.formatPhoneNumber(self, formatType: .National)
-        let formattedNumber: String = formattedNationalNumber
+        let formattedNumber = formattedNationalNumber
         return formattedNumber
     }
     
@@ -142,7 +138,7 @@ public extension PhoneNumber {
      - Returns: A string representing the adjusted national number.
      */
     private func adjustedNationalNumber() -> String {
-        if (self.leadingZero == true) {
+        if self.leadingZero == true {
             return "0" + String(nationalNumber)
         }
         else {
@@ -151,5 +147,3 @@ public extension PhoneNumber {
     }
     
 }
-
-

@@ -35,7 +35,7 @@ class ParseManager {
         let numberExtension = self.parser.stripExtension(&nationalNumber)
         // Country code parse (4)
         guard var regionMetadata =  self.metadata.metadataPerCountry[region] else {
-            throw PNParsingError.InvalidCountryCode
+            throw PhoneNumberError.InvalidCountryCode
         }
         var countryCode: UInt64 = 0
         do {
@@ -43,14 +43,14 @@ class ParseManager {
         }
         catch {
             do {
-                let plusRemovedNumberString = self.regex.replaceStringByRegex(PNLeadingPlusCharsPattern, string: nationalNumber as String)
+                let plusRemovedNumberString = self.regex.replaceStringByRegex(leadingPlusCharsPattern, string: nationalNumber as String)
                 countryCode = try self.parser.extractCountryCode(plusRemovedNumberString, nationalNumber: &nationalNumber, metadata: regionMetadata)
             }
             catch {
-                throw PNParsingError.InvalidCountryCode
+                throw PhoneNumberError.InvalidCountryCode
             }
         }
-        if (countryCode == 0) {
+        if countryCode == 0 {
             countryCode = regionMetadata.countryCode
         }
         // Nomralized number (5)
@@ -64,11 +64,13 @@ class ParseManager {
         
         // Test number against general number description for correct metadata (8)
         if let generalNumberDesc = regionMetadata.generalDesc where (self.regex.hasValue(generalNumberDesc.nationalNumberPattern) == false || self.parser.isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc) == false) {
-            throw PNParsingError.NotANumber
+            throw PhoneNumberError.NotANumber
         }
         // Finalize remaining parameters and create phone number object (9)
         let leadingZero = nationalNumber.hasPrefix("0")
-        let finalNationalNumber = UInt64(nationalNumber)!
+        guard let finalNationalNumber = UInt64(nationalNumber) else{
+            throw PhoneNumberError.NotANumber
+        }
         let phoneNumber = PhoneNumber(countryCode: countryCode, leadingZero: leadingZero, nationalNumber: finalNationalNumber, numberExtension: numberExtension, rawNumber: rawNumber)
         return phoneNumber
     }

@@ -63,7 +63,7 @@ extension MetadataTerritory {
     - Parameter jsondDict: json dictionary from attached json metadata file.
     */
     init(jsondDict: NSDictionary) {
-        self.generalDesc = MetadataPhoneNumberDesc(jsondDict: (jsondDict.valueForKey("generalDesc") as? NSDictionary)!)
+        self.generalDesc = MetadataPhoneNumberDesc(jsondDict: (jsondDict.valueForKey("generalDesc") as? NSDictionary))
         self.fixedLine = MetadataPhoneNumberDesc(jsondDict: (jsondDict.valueForKey("fixedLine") as? NSDictionary))
         self.mobile = MetadataPhoneNumberDesc(jsondDict: (jsondDict.valueForKey("mobile") as? NSDictionary))
         self.tollFree = MetadataPhoneNumberDesc(jsondDict: (jsondDict.valueForKey("tollFree") as? NSDictionary))
@@ -90,9 +90,8 @@ extension MetadataTerritory {
         }
         self.preferredExtnPrefix = jsondDict.valueForKey("preferredExtnPrefix") as? String
         self.nationalPrefixFormattingRule = jsondDict.valueForKey("nationalPrefixFormattingRule") as? String
-        let _mainCountryForCode = jsondDict.valueForKey("mainCountryForCode") as? NSString
-        if (_mainCountryForCode != nil) {
-            self.mainCountryForCode = _mainCountryForCode!.boolValue
+        if let mainCountryForCode = jsondDict.valueForKey("mainCountryForCode") as? NSString {
+            self.mainCountryForCode = mainCountryForCode.boolValue
         }
         if let availableFormats = jsondDict.valueForKey("availableFormats")?.valueForKey("numberFormat") {
             if let formatsArray = availableFormats as? NSArray {
@@ -168,11 +167,11 @@ extension MetadataPhoneNumberFormat {
         self.pattern = jsondDict?.valueForKey("pattern") as? String
         self.format = jsondDict?.valueForKey("format") as? String
         self.intlFormat = jsondDict?.valueForKey("intlFormat") as? String
-        var leadingDigits : [String] = []
+        var leadingDigits = [String]()
         if let leadingDigitsPatterns = jsondDict?.valueForKey("leadingDigits") {
-            if let leadingDigitArray = leadingDigitsPatterns as? NSArray {
+            if let leadingDigitArray = leadingDigitsPatterns as? [String] {
                 for leadingDigit in leadingDigitArray {
-                    leadingDigits.append(leadingDigit as! String)
+                    leadingDigits.append(leadingDigit)
                 }
             }
             if let leadingDigit = leadingDigitsPatterns as? String {

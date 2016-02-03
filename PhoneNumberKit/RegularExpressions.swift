@@ -12,9 +12,20 @@ class RegularExpressions {
     
     static let sharedInstance = RegularExpressions()
     
-    var regularExpresions: [String:NSRegularExpression] = [:]
+    var regularExpresions = [String:NSRegularExpression]()
 
     var phoneDataDetector: NSDataDetector?
+    
+    var spaceCharacterSet: NSCharacterSet = {
+        let characterSet = NSMutableCharacterSet(charactersInString: "\u{00a0}")
+        characterSet.formUnionWithCharacterSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+        return characterSet
+    }()
+    
+    deinit {
+        regularExpresions.removeAll()
+        phoneDataDetector = nil
+    }
 
     // MARK: Regular expression
     
@@ -25,14 +36,14 @@ class RegularExpressions {
         }
         else {
             do {
-                var currentPattern: NSRegularExpression
+                let currentPattern: NSRegularExpression
                 currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpressionOptions.CaseInsensitive)
                 safeRegex.updateValue(currentPattern, forKey: pattern)
                 self.regularExpresions = safeRegex
                 return currentPattern
             }
             catch {
-                throw PNRegexError.General
+                throw PhoneNumberError.GeneralError
             }
         }
     }
@@ -48,14 +59,14 @@ class RegularExpressions {
             return matches
         }
         catch {
-            throw PNRegexError.General
+            throw PhoneNumberError.GeneralError
         }
     }
     
     func phoneDataDetectorMatches(string: String) throws -> [NSTextCheckingResult] {
-        var dataDetector: NSDataDetector
-        if let pdDetector = phoneDataDetector {
-            dataDetector = pdDetector.copy() as! NSDataDetector
+        let dataDetector: NSDataDetector
+        if let detector = phoneDataDetector {
+            dataDetector = detector
         }
         else {
             do {
@@ -63,7 +74,7 @@ class RegularExpressions {
                 self.phoneDataDetector = dataDetector
             }
             catch {
-                throw PNRegexError.General
+                throw PhoneNumberError.GeneralError
             }
         }
         let nsString = string as NSString
@@ -73,12 +84,12 @@ class RegularExpressions {
             return matches
         }
         else {
-            let fallBackMatches = try regexMatches(PNValidPhoneNumberPattern, string: string)
+            let fallBackMatches = try regexMatches(validPhoneNumberPattern, string: string)
             if fallBackMatches.isEmpty == false {
                 return fallBackMatches
             }
             else {
-                throw PNParsingError.NotANumber
+                throw PhoneNumberError.NotANumber
             }
         }
     }
@@ -89,7 +100,7 @@ class RegularExpressions {
         do {
             let matches = try regexMatches(pattern, string: string)
             for match in matches {
-                if (match.range.location == 0) {
+                if match.range.location == 0 {
                     return true
                 }
             }
@@ -102,9 +113,8 @@ class RegularExpressions {
     func stringPositionByRegex(pattern: String, string: String) -> Int {
         do {
             let matches = try regexMatches(pattern, string: string)
-            if (matches.count > 0) {
-                let match = matches.first
-                return (match!.range.location)
+            if let match = matches.first {
+                return (match.range.location)
             }
             return -1
         } catch {
@@ -113,11 +123,11 @@ class RegularExpressions {
     }
     
     func matchesExist(pattern: String?, string: String) -> Bool {
-        if (pattern == nil) {
+        guard let pattern = pattern else {
             return false
         }
         do {
-            let matches = try regexMatches(pattern!, string: string)
+            let matches = try regexMatches(pattern, string: string)
             return matches.count > 0
         }
         catch {
@@ -127,12 +137,12 @@ class RegularExpressions {
 
     
     func matchesEntirely(pattern: String?, string: String) -> Bool {
-        if (pattern == nil) {
+        guard let pattern = pattern else {
             return false
         }
         var isMatchingEntirely: Bool = false
         do {
-            let matches = try regexMatches(pattern!, string: string)
+            let matches = try regexMatches(pattern, string: string)
             let nsString = string as NSString
             let stringRange = NSMakeRange(0, nsString.length)
             for match in matches {
@@ -173,15 +183,15 @@ class RegularExpressions {
             let stringRange = NSMakeRange(0, nsString.length)
             let matches = regex.matchesInString(string,
                 options: [], range: stringRange)
-            if (matches.count == 1) {
+            if matches.count == 1 {
                 let range = regex.rangeOfFirstMatchInString(string, options: [], range: stringRange)
-                if (range.location != NSNotFound) {
-                    replacementResult = regex.stringByReplacingMatchesInString(string.mutableCopy() as! String, options: [], range: range, withTemplate: "")
+                if range.location != NSNotFound {
+                    replacementResult = regex.stringByReplacingMatchesInString(string, options: [], range: range, withTemplate: "")
                 }
                 return replacementResult
             }
-            else if (matches.count > 1) {
-                replacementResult = regex.stringByReplacingMatchesInString(string.mutableCopy() as! String, options: [], range: stringRange, withTemplate: "")
+            else if matches.count > 1 {
+                replacementResult = regex.stringByReplacingMatchesInString(string, options: [], range: stringRange, withTemplate: "")
             }
             return replacementResult
         } catch {
@@ -198,15 +208,15 @@ class RegularExpressions {
             let stringRange = NSMakeRange(0, nsString.length)
             let matches = regex.matchesInString(string,
                 options: [], range: stringRange)
-            if (matches.count == 1) {
+            if matches.count == 1 {
                 let range = regex.rangeOfFirstMatchInString(string, options: [], range: stringRange)
-                if (range.location != NSNotFound) {
-                    replacementResult = regex.stringByReplacingMatchesInString(string.mutableCopy() as! String, options: [], range: range, withTemplate: template)
+                if range.location != NSNotFound {
+                    replacementResult = regex.stringByReplacingMatchesInString(string, options: [], range: range, withTemplate: template)
                 }
                 return replacementResult
             }
-            else if (matches.count > 1) {
-                replacementResult = regex.stringByReplacingMatchesInString(string.mutableCopy() as! String, options: [], range: stringRange, withTemplate: template)
+            else if matches.count > 1 {
+                replacementResult = regex.stringByReplacingMatchesInString(string, options: [], range: stringRange, withTemplate: template)
             }
             return replacementResult
         } catch {
@@ -221,7 +231,7 @@ class RegularExpressions {
             let stringRange = NSMakeRange(0, nsString.length)
             let regex = try regexWithPattern(pattern)
             let range = regex.rangeOfFirstMatchInString(string, options: [], range: stringRange)
-            if (range.location != NSNotFound) {
+            if range.location != NSNotFound {
                 nsString = regex.stringByReplacingMatchesInString(string, options: [], range: range, withTemplate: templateString)
             }
             return nsString as String
@@ -231,45 +241,41 @@ class RegularExpressions {
     }
     
     func stringByReplacingOccurrences(string: String, map: [String:String], removeNonMatches: Bool) -> String {
-        let targetString = NSMutableString ()
-        let copiedString: NSString = string
-        for var i = 0; i < string.characters.count; i++ {
-            var oneChar = copiedString.characterAtIndex(i)
-            let keyString = NSString(characters: &oneChar, length: 1) as String
-            let mappedValue = map[keyString.uppercaseString]
-            if (mappedValue != nil) {
-                targetString.appendString(mappedValue!)
+        var targetString = String()
+        let copiedString = string
+        for i in 0 ..< string.characters.count {
+            let oneChar = copiedString[copiedString.startIndex.advancedBy(i)]
+            let keyString = String(oneChar)
+            if let mappedValue = map[keyString.uppercaseString] {
+                targetString.appendContentsOf(mappedValue)
             }
-            else if (removeNonMatches == false) {
-                targetString.appendString(keyString as String)
+            else if removeNonMatches == false {
+                targetString.appendContentsOf(keyString as String)
             }
         }
-        return targetString as String
+        return targetString
     }
     
     // MARK: Validations
     
     func hasValue(value: NSString?) -> Bool {
-        if (value == nil) {
-            return false
-        }
-        let spaceCharSet = NSMutableCharacterSet(charactersInString: PNNonBreakingSpace)
-        spaceCharSet.formUnionWithCharacterSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-        if (value!.stringByTrimmingCharactersInSet(spaceCharSet).characters.count == 0) {
-            return false
-        }
-        return true
-    }
-    
-    func testStringLengthAgainstPattern(pattern: String, string: String) -> PNValidationResult {
-        if (matchesEntirely(pattern, string: string)) {
-            return PNValidationResult.IsPossible
-        }
-        if (stringPositionByRegex(pattern, string: string) == 0) {
-            return PNValidationResult.TooLong
+        if let valueString = value {
+            if valueString.stringByTrimmingCharactersInSet(spaceCharacterSet).characters.count == 0 {
+                return false
+            }
+            return true
         }
         else {
-            return PNValidationResult.TooShort
+            return false
+        }
+    }
+    
+    func testStringLengthAgainstPattern(pattern: String, string: String) -> Bool {
+        if (matchesEntirely(pattern, string: string)) {
+            return true
+        }
+        else {
+            return false
         }
     }
     

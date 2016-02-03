@@ -1,8 +1,18 @@
 # Change Log
 
-## [Unreleased](https://github.com/marmelroy/PhoneNumberKit/tree/HEAD)
+## [0.2](https://github.com/marmelroy/PhoneNumberKit/tree/0.2) (2015-12-13)
+[Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/0.1.7...0.2)
 
-[Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/0.1.6...HEAD)
+**Closed issues:**
+
+- Add a FixedLineOrMobile type [\#9](https://github.com/marmelroy/PhoneNumberKit/issues/9)
+
+**Merged pull requests:**
+
+- Fix crash when passing phone number with plus to `extractPotentialCou… [\#10](https://github.com/marmelroy/PhoneNumberKit/pull/10) ([Constantine-Fry](https://github.com/Constantine-Fry))
+
+## [0.1.7](https://github.com/marmelroy/PhoneNumberKit/tree/0.1.7) (2015-11-21)
+[Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/0.1.6...0.1.7)
 
 **Closed issues:**
 

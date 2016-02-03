@@ -38,16 +38,12 @@ class ViewController: UIViewController, CNContactPickerDelegate {
             animated: true, completion: nil)
     }
     
-    
     func contactPicker(picker: CNContactPickerViewController, didSelectContact contact: CNContact) {
-        if (contact.phoneNumbers.count > 0) {
-            let phoneNumber : CNPhoneNumber = contact.phoneNumbers.first!.value as! CNPhoneNumber
-            parseNumber(phoneNumber.stringValue)
-        }
-        else {
+        guard let firstPhoneNumber = contact.phoneNumbers.first, let phoneNumber = firstPhoneNumber.value as? CNPhoneNumber else {
             clearResults()
-            print("Something went wrong")
+            return;
         }
+        parseNumber(phoneNumber.stringValue)
     }
 
     func parseNumber(number: String) {
@@ -55,9 +51,10 @@ class ViewController: UIViewController, CNContactPickerDelegate {
             let phoneNumber = try PhoneNumber(rawNumber: number)
             parsedNumberLabel.text = phoneNumber.toInternational()
             parsedCountryCodeLabel.text = String(phoneNumber.countryCode)
-            let regionCode = phoneNumberKit.mainCountryForCode(phoneNumber.countryCode)
-            let country = NSLocale.currentLocale().displayNameForKey(NSLocaleCountryCode, value: regionCode!)
-            parsedCountryLabel.text = country
+            if let regionCode = phoneNumberKit.mainCountryForCode(phoneNumber.countryCode) {
+                let country = NSLocale.currentLocale().displayNameForKey(NSLocaleCountryCode, value: regionCode)
+                parsedCountryLabel.text = country
+            }
         }
         catch {
             clearResults()
@@ -70,8 +67,5 @@ class ViewController: UIViewController, CNContactPickerDelegate {
         parsedCountryCodeLabel.text = notAvailable
         parsedCountryLabel.text = notAvailable
     }
-    
-
 
 }
-

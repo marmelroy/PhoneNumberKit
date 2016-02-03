@@ -19,6 +19,10 @@ class PhoneNumberKitTests: XCTestCase {
         super.tearDown()
     }
     
+    func testMetadataMainCountryFetch() {
+        let countryMetadata = Metadata.sharedInstance.fetchMainCountryMetadataForCode(1)
+        XCTAssertEqual(countryMetadata?.codeID, "US")
+    }
     
     // Invalid american number, GitHub issue #8 by j-pk
     func testInvalidNumberE() {
@@ -37,7 +41,7 @@ class PhoneNumberKitTests: XCTestCase {
         do {
             let phoneNumber = try PhoneNumber(rawNumber: "+16307792428", region: "US")
             print(phoneNumber.toE164())
-            XCTAssertEqual(phoneNumber.type, PNPhoneNumberType.FixedOrMobile)
+            XCTAssertEqual(phoneNumber.type, PhoneNumberType.FixedOrMobile)
         }
         catch {
             XCTFail()
@@ -84,7 +88,7 @@ class PhoneNumberKitTests: XCTestCase {
             XCTAssertEqual(phoneNumber.countryCode, 33)
             XCTAssertEqual(phoneNumber.nationalNumber, 689555555)
             XCTAssertEqual(phoneNumber.leadingZero, false)
-            XCTAssertEqual(phoneNumber.type, PNPhoneNumberType.Mobile)
+            XCTAssertEqual(phoneNumber.type, PhoneNumberType.Mobile)
         }
         catch {
             XCTFail()
@@ -136,7 +140,7 @@ class PhoneNumberKitTests: XCTestCase {
             XCTFail()
         }
     }
-
+    
     //  American number with no prefix from an American phone (default region for testing enivronment)
     func testValidLocalNumberWithNoPrefixNoWhiteSpace() {
         let testNumber = "2015555555"
@@ -214,7 +218,7 @@ class PhoneNumberKitTests: XCTestCase {
             phoneNumber.toE164()
             XCTFail()
         }
-        catch PNParsingError.NotANumber {
+        catch PhoneNumberError.NotANumber {
             XCTAssert(true)
         }
         catch {
@@ -240,7 +244,6 @@ class PhoneNumberKitTests: XCTestCase {
         let phoneNumberKit = PhoneNumberKit()
         XCTAssertEqual(phoneNumberKit.codeForCountry("FOOBAR"), nil)
     }
-
     
     //  Test countries for code function
     func testCountriesForCodeValid() {
