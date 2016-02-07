@@ -9,6 +9,8 @@
 import XCTest
 @testable import PhoneNumberKit
 
+import PhoneNumberKit
+
 class PhoneNumberKitTests: XCTestCase {
     
     override func setUp() {
@@ -17,6 +19,11 @@ class PhoneNumberKitTests: XCTestCase {
     
     override func tearDown() {
         super.tearDown()
+    }
+    
+    func testPartialFormatter() {
+        let partialFormatter = PartialFormatter(region: "FR")
+        partialFormatter.formatPartial("001689017")
     }
     
     func testMetadataMainCountryFetch() {

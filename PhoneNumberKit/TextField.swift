@@ -153,7 +153,7 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         let changedRange = textAsNSString.substringWithRange(range) as NSString
         let modifiedTextField = textAsNSString.stringByReplacingCharactersInRange(range, withString: string)
         do {
-            let formattedNationalNumber = try partialFormatter.formatPartial(modifiedTextField as String, region: region.uppercaseString)
+            let formattedNationalNumber = try partialFormatter.formatPartial(modifiedTextField as String)
             let selectedTextRange = selectionRangeForNumberReplacement(textField, formattedText: formattedNationalNumber)
             textField.text = formattedNationalNumber
             let nonNumericRange = (changedRange.rangeOfCharacterFromSet(nonNumericSet).location != NSNotFound)

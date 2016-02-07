@@ -106,6 +106,14 @@ let capturingDigitPattern = "([0-9０-９٠-٩۰-۹])"
 
 let extnPattern = "\\;(.*)"
 
+let iddPattern = "^(?:\\+|%@)"
+
+let formatPattern = "^(?:%@)$"
+
+let prefixSeparatorPattern = "[- ]"
+
+let eligibleAsYouTypePattern = "^[-x‐-―−ー－-／ ­​⁠　()（）［］.\\[\\]/~⁓∼～]*(\\$\\d[-x‐-―−ー－-／ ­​⁠　()（）［］.\\[\\]/~⁓∼～]*)+$"
+
 let leadingPlusCharsPattern = "^[+＋]+"
 
 let secondNumberStartPattern = "[\\\\\\/] *x"
