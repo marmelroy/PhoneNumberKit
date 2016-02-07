@@ -13,10 +13,14 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     
     weak public var externalDelegate: UITextFieldDelegate?
     
-    public var region = PhoneNumberKit().defaultRegionCode()
+    public var region = PhoneNumberKit().defaultRegionCode() {
+        didSet {
+            partialFormatter = PartialFormatter(region: region)
+        }
+    }
 
     let parser = PhoneNumberParser()
-    let partialFormatter = PartialFormatter()
+    var partialFormatter = PartialFormatter()
 
     let nonNumericSet = NSCharacterSet.decimalDigitCharacterSet().invertedSet
 
@@ -152,34 +156,23 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         let textAsNSString = text as NSString
         let changedRange = textAsNSString.substringWithRange(range) as NSString
         let modifiedTextField = textAsNSString.stringByReplacingCharactersInRange(range, withString: string)
-        do {
-            let formattedNationalNumber = try partialFormatter.formatPartial(modifiedTextField as String)
-            let selectedTextRange = selectionRangeForNumberReplacement(textField, formattedText: formattedNationalNumber)
-            textField.text = formattedNationalNumber
-            let nonNumericRange = (changedRange.rangeOfCharacterFromSet(nonNumericSet).location != NSNotFound)
-            if (range.length == 1 && string.isEmpty && nonNumericRange)
-            {
-                if let textRange = textField.selectedTextRange, let selectionRangePosition = textField.positionFromPosition(textRange.start, offset: -1) {
-                    let selectionRange = textField.textRangeFromPosition(selectionRangePosition, toPosition: selectionRangePosition)
-                    textField.selectedTextRange = selectionRange
-                }
-            }
-            else {
-                if let selectedTextRange = selectedTextRange, let selectionRangePosition = textField.positionFromPosition(beginningOfDocument, offset: selectedTextRange.location) {
-                    let selectionRange = textField.textRangeFromPosition(selectionRangePosition, toPosition: selectionRangePosition)
-                    textField.selectedTextRange = selectionRange
-                }
+        let formattedNationalNumber = partialFormatter.formatPartial(modifiedTextField as String)
+        let selectedTextRange = selectionRangeForNumberReplacement(textField, formattedText: formattedNationalNumber)
+        textField.text = formattedNationalNumber
+        let nonNumericRange = (changedRange.rangeOfCharacterFromSet(nonNumericSet).location != NSNotFound)
+        if (range.length == 1 && string.isEmpty && nonNumericRange)
+        {
+            if let textRange = textField.selectedTextRange, let selectionRangePosition = textField.positionFromPosition(textRange.start, offset: -1) {
+                let selectionRange = textField.textRangeFromPosition(selectionRangePosition, toPosition: selectionRangePosition)
+                textField.selectedTextRange = selectionRange
             }
         }
-        catch {
-            let selectedTextRange = selectionRangeForNumberReplacement(textField, formattedText: modifiedTextField)
-            textField.text = modifiedTextField
+        else {
             if let selectedTextRange = selectedTextRange, let selectionRangePosition = textField.positionFromPosition(beginningOfDocument, offset: selectedTextRange.location) {
                 let selectionRange = textField.textRangeFromPosition(selectionRangePosition, toPosition: selectionRangePosition)
                 textField.selectedTextRange = selectionRange
             }
         }
-
         return false
     }
 
