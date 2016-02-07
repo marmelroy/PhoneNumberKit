@@ -35,7 +35,16 @@ public class PartialFormatter {
     }
     
     func formatPartial(rawNumber: String) -> String {
-        if rawNumber.isEmpty || rawNumber.characters.count < 3 {
+        if rawNumber.isEmpty || rawNumber.characters.count <= 3 {
+            return rawNumber
+        }
+        do {
+            let validNumberMatches = try regex.regexMatches(validPhoneNumberPattern, string: rawNumber)
+            if validNumberMatches.count == 0 {
+                return rawNumber
+            }
+        }
+        catch {
             return rawNumber
         }
         currentMetadata = defaultMetadata
