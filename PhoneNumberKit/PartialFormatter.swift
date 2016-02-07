@@ -35,6 +35,11 @@ public class PartialFormatter {
     }
     
     func formatPartial(rawNumber: String) -> String {
+        if rawNumber.isEmpty || rawNumber.characters.count < 3 {
+            return rawNumber
+        }
+        currentMetadata = defaultMetadata
+        prefixBeforeNationalNumber = String()
         let iddFreeNumber = self.attemptToExtractIDD(rawNumber)
         let normalizedNumber = self.parser.normalizePhoneNumber(iddFreeNumber)
         var nationalNumber = self.attemptToExtractCountryCallingCode(normalizedNumber)
