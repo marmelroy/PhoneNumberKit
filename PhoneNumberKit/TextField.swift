@@ -160,7 +160,7 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         let selectedTextRange = selectionRangeForNumberReplacement(textField, formattedText: formattedNationalNumber)
         textField.text = formattedNationalNumber
         let nonNumericRange = (changedRange.rangeOfCharacterFromSet(nonNumericSet).location != NSNotFound)
-        if (range.length == 1 && string.isEmpty && nonNumericRange)
+        if (range.length == 1 && string.isEmpty && nonNumericRange && selectedTextRange != nil)
         {
             if let textRange = textField.selectedTextRange, let selectionRangePosition = textField.positionFromPosition(textRange.start, offset: -1) {
                 let selectionRange = textField.textRangeFromPosition(selectionRangePosition, toPosition: selectionRangePosition)

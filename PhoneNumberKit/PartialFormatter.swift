@@ -65,6 +65,9 @@ public class PartialFormatter {
         if prefixBeforeNationalNumber.characters.count > 0 {
             finalNumber.appendContentsOf(prefixBeforeNationalNumber)
         }
+        if shouldAddSpaceAfterNationalPrefix {
+            finalNumber.appendContentsOf(" ")
+        }
         if nationalNumber.characters.count > 0 {
             finalNumber.appendContentsOf(nationalNumber)
         }
@@ -123,7 +126,13 @@ public class PartialFormatter {
         if let potentialCountryCode = self.parser.extractPotentialCountryCode(rawNumber, nationalNumber: &numberWithoutCountryCallingCode) where potentialCountryCode != 0 {
             processedNumber = numberWithoutCountryCallingCode
             currentMetadata = metadata.fetchMainCountryMetadataForCode(potentialCountryCode)
-            prefixBeforeNationalNumber.appendContentsOf("\(potentialCountryCode) ")
+            prefixBeforeNationalNumber.appendContentsOf("\(potentialCountryCode)")
+            if rawNumber.rangeOfString("\(potentialCountryCode)")?.endIndex < rawNumber.endIndex {
+                shouldAddSpaceAfterNationalPrefix = true
+            }
+            else {
+                shouldAddSpaceAfterNationalPrefix = false
+            }
         }
         return processedNumber
     }
