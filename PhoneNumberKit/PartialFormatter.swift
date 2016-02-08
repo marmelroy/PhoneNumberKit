@@ -52,6 +52,7 @@ public class PartialFormatter {
         let iddFreeNumber = self.attemptToExtractIDD(rawNumber)
         let normalizedNumber = self.parser.normalizePhoneNumber(iddFreeNumber)
         var nationalNumber = self.attemptToExtractCountryCallingCode(normalizedNumber)
+        nationalNumber = self.attemptToExtractNationalPrefix(nationalNumber)
         if let formats = self.getAvailableFormats() {
             nationalNumber = self.attemptToFormat(nationalNumber, formats: formats)
         }
@@ -79,6 +80,26 @@ public class PartialFormatter {
                     if rawNumber.characters.first != "+" {
                         prefixBeforeNationalNumber.appendContentsOf(" ")
                     }
+                }
+            }
+        }
+        catch {
+            return processedNumber
+        }
+        return processedNumber
+    }
+    
+    func attemptToExtractNationalPrefix(rawNumber: String) -> String {
+        var processedNumber = rawNumber
+        do {
+            if let nationalPrefix = currentMetadata?.nationalPrefixForParsing {
+                let nationalPrefixPattern = String(format: nationalPrefixParsingPattern, arguments: [nationalPrefix])
+                let matches = try regex.matchedStringByRegex(nationalPrefixPattern, string: rawNumber)
+                if let m = matches.first {
+                    let startCallingCode = m.characters.count
+                    let index = rawNumber.startIndex.advancedBy(startCallingCode)
+                    processedNumber = rawNumber.substringFromIndex(index)
+                    prefixBeforeNationalNumber.appendContentsOf(rawNumber.substringToIndex(index))
                 }
             }
         }

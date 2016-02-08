@@ -110,6 +110,8 @@ let iddPattern = "^(?:\\+|%@)"
 
 let formatPattern = "^(?:%@)$"
 
+let nationalPrefixParsingPattern = "^(?:%@)"
+
 let prefixSeparatorPattern = "[- ]"
 
 let eligibleAsYouTypePattern = "^[-x‐-―−ー－-／ ­​⁠　()（）［］.\\[\\]/~⁓∼～]*(\\$\\d[-x‐-―−ー－-／ ­​⁠　()（）［］.\\[\\]/~⁓∼～]*)+$"
