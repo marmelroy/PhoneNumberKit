@@ -57,8 +57,8 @@ public class PartialFormatter {
             if let formattedNumber = self.attemptToFormat(nationalNumber, formats: formats) {
                 nationalNumber = formattedNumber
             }
-            else if let firstFormat = formats.first, let firstPattern = firstFormat.pattern, let template = createFormattingTemplate(firstFormat, rawNumber: nationalNumber) {
-                nationalNumber = regex.replaceStringByRegex(firstPattern, string: nationalNumber, template: template)
+            else if let firstFormat = formats.first, let template = createFormattingTemplate(firstFormat, rawNumber: nationalNumber) {
+                nationalNumber = applyFormattingTemplate(template, rawNumber: nationalNumber)
             }
         }
         var finalNumber = String()
@@ -225,6 +225,30 @@ public class PartialFormatter {
         
         }
         return nil
+    }
+    
+    func applyFormattingTemplate(template: String, rawNumber: String) -> String {
+        var rebuiltString = String()
+        var rebuiltIndex = 0
+        for character in template.characters {
+            if character == digitPlaceholder.characters.first {
+                if rebuiltIndex < rawNumber.characters.count {
+                    let nationalCharacterIndex = rawNumber.startIndex.advancedBy(rebuiltIndex)
+                    rebuiltString.append(rawNumber[nationalCharacterIndex])
+                    rebuiltIndex++
+                }
+            }
+            else {
+                rebuiltString.append(character)
+            }
+        }
+        if rebuiltIndex < rawNumber.characters.count {
+            let nationalCharacterIndex = rawNumber.startIndex.advancedBy(rebuiltIndex)
+            let remainingNationalNumber: String = rawNumber.substringFromIndex(nationalCharacterIndex)
+            rebuiltString.appendContentsOf(remainingNationalNumber)
+        }
+        rebuiltString = rebuiltString.stringByTrimmingCharactersInSet(NSCharacterSet.alphanumericCharacterSet().invertedSet)
+        return rebuiltString
     }
     
 }
