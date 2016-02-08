@@ -54,7 +54,12 @@ public class PartialFormatter {
         var nationalNumber = self.attemptToExtractCountryCallingCode(normalizedNumber)
         nationalNumber = self.attemptToExtractNationalPrefix(nationalNumber)
         if let formats = self.getAvailableFormats() {
-            nationalNumber = self.attemptToFormat(nationalNumber, formats: formats)
+            if let formattedNumber = self.attemptToFormat(nationalNumber, formats: formats) {
+                nationalNumber = formattedNumber
+            }
+            else if let firstFormat = formats.first, let firstPattern = firstFormat.pattern, let template = createFormattingTemplate(firstFormat, rawNumber: nationalNumber) {
+                nationalNumber = regex.replaceStringByRegex(firstPattern, string: nationalNumber, template: template)
+            }
         }
         var finalNumber = String()
         if prefixBeforeNationalNumber.characters.count > 0 {
@@ -150,7 +155,7 @@ public class PartialFormatter {
         }
     }
     
-    func attemptToFormat(rawNumber: String, formats: [MetadataPhoneNumberFormat]) -> String {
+    func attemptToFormat(rawNumber: String, formats: [MetadataPhoneNumberFormat]) -> String? {
         for format in formats {
             if let pattern = format.pattern, let formatTemplate = format.format {
                 let patternRegExp = String(format: formatPattern, arguments: [pattern])
@@ -173,6 +178,53 @@ public class PartialFormatter {
                 }
             }
         }
-        return rawNumber
+        return nil
     }
+    
+    
+    
+    func createFormattingTemplate(format: MetadataPhoneNumberFormat, rawNumber: String) -> String?  {
+        guard var numberPattern = format.pattern, let numberFormat = format.format else {
+            return nil
+        }
+        guard numberPattern.rangeOfString("|") == nil else {
+            return nil
+        }
+        do {
+            let characterClassRegex = try regex.regexWithPattern(characterClassPattern)
+            var nsString = numberPattern as NSString
+            var stringRange = NSMakeRange(0, nsString.length)
+            numberPattern = characterClassRegex.stringByReplacingMatchesInString(numberPattern, options: [], range: stringRange, withTemplate: "\\\\d")
+    
+            let standaloneDigitRegex = try regex.regexWithPattern(standaloneDigitPattern)
+            nsString = numberPattern as NSString
+            stringRange = NSMakeRange(0, nsString.length)
+            numberPattern = standaloneDigitRegex.stringByReplacingMatchesInString(numberPattern, options: [], range: stringRange, withTemplate: "\\\\d")
+            
+            if let tempTemplate = getFormattingTemplate(numberPattern, numberFormat: numberFormat, rawNumber: rawNumber) {
+                return tempTemplate
+            }
+        }
+        catch { }
+        return nil
+    }
+    
+    func getFormattingTemplate(numberPattern: String, numberFormat: String, rawNumber: String) -> String? {
+        do {
+            let matches =  try regex.matchedStringByRegex(numberPattern, string: longPhoneNumber)
+            if let match = matches.first {
+                if match.characters.count < rawNumber.characters.count {
+                    return nil
+                }
+                var template = regex.replaceStringByRegex(numberPattern, string: match, template: numberFormat)
+                template = regex.replaceStringByRegex("9", string: template, template: digitPlaceholder)
+                return template
+            }
+        }
+        catch {
+        
+        }
+        return nil
+    }
+    
 }
