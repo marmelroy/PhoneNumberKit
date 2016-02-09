@@ -101,6 +101,46 @@ class PartialFormatterTests: XCTestCase {
         testNumber = "+33689555555"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+33 6 89 55 55 55")
     }
+    
+    func testFrenchNumberIDDFromAmericanRegion()  {
+        let partialFormatter = PartialFormatter(region: "US")
+        var testNumber = "0"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "0")
+        testNumber = "01"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "01")
+        testNumber = "011"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "011")
+        testNumber = "0113"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "011 3")
+        testNumber = "01133"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "011 33")
+        testNumber = "011336"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "011 33 6")
+        testNumber = "0113368"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "011 33 6 8")
+        testNumber = "01133689"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "011 33 6 89")
+        testNumber = "011336895"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "011 33 6 89 5")
+        testNumber = "0113368955"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "011 33 6 89 55")
+        testNumber = "01133689555"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "011 33 6 89 55 5")
+        testNumber = "011336895555"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "011 33 6 89 55 55")
+        testNumber = "0113368955555"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "011 33 6 89 55 55 5")
+        testNumber = "01133689555555"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "011 33 6 89 55 55 55")
+    }
+
+    
+    func testInvalidNumberNotANumber() {
+        let partialFormatter = PartialFormatter(region: "US")
+        let testNumber = "ae4c08c6-be33-40ef-a417-e5166e307b5e"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber),  "ae4c08c6-be33-40ef-a417-e5166e307b5e")
+    }
+
 
 }
 

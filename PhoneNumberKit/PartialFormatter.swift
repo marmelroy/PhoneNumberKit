@@ -81,7 +81,8 @@ public class PartialFormatter {
         if prefixBeforeNationalNumber.characters.count > 0 {
             finalNumber.appendContentsOf(prefixBeforeNationalNumber)
         }
-        if shouldAddSpaceAfterNationalPrefix {
+        let normalizedprefixBeforeNationalNumber = parser.normalizePhoneNumber(prefixBeforeNationalNumber)
+        if normalizedprefixBeforeNationalNumber.characters.count < rawNumber.characters.count {
             finalNumber.appendContentsOf(" ")
         }
         if nationalNumber.characters.count > 0 {
@@ -103,9 +104,6 @@ public class PartialFormatter {
                     let index = rawNumber.startIndex.advancedBy(startCallingCode)
                     processedNumber = rawNumber.substringFromIndex(index)
                     prefixBeforeNationalNumber = rawNumber.substringToIndex(index)
-                    if rawNumber.characters.first != "+" {
-                        prefixBeforeNationalNumber.appendContentsOf(" ")
-                    }
                 }
             }
         }
@@ -144,13 +142,10 @@ public class PartialFormatter {
         if let potentialCountryCode = self.parser.extractPotentialCountryCode(rawNumber, nationalNumber: &numberWithoutCountryCallingCode) where potentialCountryCode != 0 {
             processedNumber = numberWithoutCountryCallingCode
             currentMetadata = metadata.fetchMainCountryMetadataForCode(potentialCountryCode)
+            if prefixBeforeNationalNumber.isEmpty == false && prefixBeforeNationalNumber.characters.first != "+" {
+                prefixBeforeNationalNumber.appendContentsOf(" ")
+            }
             prefixBeforeNationalNumber.appendContentsOf("\(potentialCountryCode)")
-            if rawNumber.rangeOfString("\(potentialCountryCode)")?.endIndex < rawNumber.endIndex {
-                shouldAddSpaceAfterNationalPrefix = true
-            }
-            else {
-                shouldAddSpaceAfterNationalPrefix = false
-            }
         }
         return processedNumber
     }
