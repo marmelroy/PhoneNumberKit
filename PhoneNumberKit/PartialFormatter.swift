@@ -55,7 +55,8 @@ public class PartialFormatter {
         }
         do {
             let validNumberMatches = try regex.regexMatches(validPhoneNumberPattern, string: rawNumber)
-            if validNumberMatches.count == 0 {
+            let validStart = regex.stringPositionByRegex(validStartPattern, string: rawNumber)
+            if validNumberMatches.count == 0 || validStart != 0 {
                 return rawNumber
             }
         }
