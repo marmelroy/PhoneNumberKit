@@ -21,11 +21,6 @@ class PhoneNumberKitTests: XCTestCase {
         super.tearDown()
     }
     
-    func testPartialFormatter() {
-        let partialFormatter = PartialFormatter(region: "FR")
-        partialFormatter.formatPartial("001689017")
-    }
-    
     func testMetadataMainCountryFetch() {
         let countryMetadata = Metadata.sharedInstance.fetchMainCountryMetadataForCode(1)
         XCTAssertEqual(countryMetadata?.codeID, "US")
