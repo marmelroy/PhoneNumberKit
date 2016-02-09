@@ -49,6 +49,7 @@ public class PartialFormatter {
         }
         currentMetadata = defaultMetadata
         prefixBeforeNationalNumber = String()
+        shouldAddSpaceAfterNationalPrefix = false
         let iddFreeNumber = self.attemptToExtractIDD(rawNumber)
         let normalizedNumber = self.parser.normalizePhoneNumber(iddFreeNumber)
         var nationalNumber = self.attemptToExtractCountryCallingCode(normalizedNumber)
@@ -152,16 +153,17 @@ public class PartialFormatter {
     }
     
     func isFormatEligible(format: MetadataPhoneNumberFormat) -> Bool {
-        guard let pattern = format.pattern else {
+        guard let phoneFormat = format.format else {
             return false
         }
         do {
-            let fallBackMatches = try regex.regexMatches(eligibleAsYouTypePattern, string: pattern)
-            return (fallBackMatches.count == 0)
+            let validRegex = try regex.regexWithPattern(eligibleAsYouTypePattern)
+            if validRegex.firstMatchInString(phoneFormat, options: [], range: NSMakeRange(0, phoneFormat.characters.count)) != nil {
+                return true
+            }
         }
-        catch {
-            return false
-        }
+        catch {}
+        return false
     }
     
     func attemptToFormat(rawNumber: String, formats: [MetadataPhoneNumberFormat]) -> String? {
