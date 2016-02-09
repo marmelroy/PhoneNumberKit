@@ -70,6 +70,11 @@ public class PartialFormatter {
         let normalizedNumber = parser.normalizePhoneNumber(iddFreeNumber)
         var nationalNumber = extractCountryCallingCode(normalizedNumber)
         nationalNumber = extractNationalPrefix(nationalNumber)
+        if nationalNumber.hasPrefix("0") {
+            nationalNumber = nationalNumber.substringFromIndex(nationalNumber.startIndex.advancedBy(1))
+            prefixBeforeNationalNumber.appendContentsOf("0")
+        }
+
         if let formats = availableFormats() {
             if let formattedNumber = applyFormat(nationalNumber, formats: formats) {
                 nationalNumber = formattedNumber
