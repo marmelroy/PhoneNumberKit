@@ -82,13 +82,16 @@ public class PartialFormatter {
         if prefixBeforeNationalNumber.characters.count > 0 {
             finalNumber.appendContentsOf(prefixBeforeNationalNumber)
         }
-        let normalizedprefixBeforeNationalNumber = parser.normalizePhoneNumber(prefixBeforeNationalNumber)
-        if normalizedprefixBeforeNationalNumber.characters.count < rawNumber.characters.count {
-            finalNumber.appendContentsOf(" ")
+        if shouldAddSpaceAfterNationalPrefix && prefixBeforeNationalNumber.characters.count > 0 && prefixBeforeNationalNumber.characters.last != separatorBeforeNationalNumber.characters.first  {
+            finalNumber.appendContentsOf(separatorBeforeNationalNumber)
         }
         if nationalNumber.characters.count > 0 {
             finalNumber.appendContentsOf(nationalNumber)
         }
+        if finalNumber.characters.last == separatorBeforeNationalNumber.characters.first {
+            finalNumber = finalNumber.substringToIndex(finalNumber.endIndex.predecessor())
+        }
+
         return finalNumber
     }
     
@@ -114,23 +117,36 @@ public class PartialFormatter {
         return processedNumber
     }
     
+    func isNanpaNumberWithNationalPrefix(rawNumber: String) -> Bool {
+        if currentMetadata?.countryCode != 1 {
+            return false
+        }
+        return (rawNumber.characters.first == "1" && String(rawNumber.characters.startIndex.advancedBy(1)) != "0" && String(rawNumber.characters.startIndex.advancedBy(1)) != "1")
+    }
+    
     func extractNationalPrefix(rawNumber: String) -> String {
         var processedNumber = rawNumber
-        do {
-            if let nationalPrefix = currentMetadata?.nationalPrefixForParsing {
-                let nationalPrefixPattern = String(format: nationalPrefixParsingPattern, arguments: [nationalPrefix])
-                let matches = try regex.matchedStringByRegex(nationalPrefixPattern, string: rawNumber)
-                if let m = matches.first {
-                    let startCallingCode = m.characters.count
-                    let index = rawNumber.startIndex.advancedBy(startCallingCode)
-                    processedNumber = rawNumber.substringFromIndex(index)
-                    prefixBeforeNationalNumber.appendContentsOf(rawNumber.substringToIndex(index))
+        var startOfNationalNumber: Int = 0
+        if isNanpaNumberWithNationalPrefix(rawNumber) {
+            prefixBeforeNationalNumber.appendContentsOf("1 ")
+        }
+        else {
+            do {
+                if let nationalPrefix = currentMetadata?.nationalPrefixForParsing {
+                    let nationalPrefixPattern = String(format: nationalPrefixParsingPattern, arguments: [nationalPrefix])
+                    let matches = try regex.matchedStringByRegex(nationalPrefixPattern, string: rawNumber)
+                    if let m = matches.first {
+                        startOfNationalNumber = m.characters.count
+                    }
                 }
             }
+            catch {
+                return processedNumber
+                }
         }
-        catch {
-            return processedNumber
-        }
+        let index = rawNumber.startIndex.advancedBy(startOfNationalNumber)
+        processedNumber = rawNumber.substringFromIndex(index)
+        prefixBeforeNationalNumber.appendContentsOf(rawNumber.substringToIndex(index))
         return processedNumber
     }
     
@@ -140,13 +156,13 @@ public class PartialFormatter {
             return rawNumber
         }
         var numberWithoutCountryCallingCode = String()
+        if prefixBeforeNationalNumber.isEmpty == false && prefixBeforeNationalNumber.characters.first != "+" {
+            prefixBeforeNationalNumber.appendContentsOf(separatorBeforeNationalNumber)
+        }
         if let potentialCountryCode = self.parser.extractPotentialCountryCode(rawNumber, nationalNumber: &numberWithoutCountryCallingCode) where potentialCountryCode != 0 {
             processedNumber = numberWithoutCountryCallingCode
             currentMetadata = metadata.fetchMainCountryMetadataForCode(potentialCountryCode)
-            if prefixBeforeNationalNumber.isEmpty == false && prefixBeforeNationalNumber.characters.first != "+" {
-                prefixBeforeNationalNumber.appendContentsOf(" ")
-            }
-            prefixBeforeNationalNumber.appendContentsOf("\(potentialCountryCode)")
+            prefixBeforeNationalNumber.appendContentsOf("\(potentialCountryCode) ")
         }
         return processedNumber
     }
@@ -226,6 +242,13 @@ public class PartialFormatter {
             numberPattern = standaloneDigitRegex.stringByReplacingMatchesInString(numberPattern, options: [], range: stringRange, withTemplate: "\\\\d")
             
             if let tempTemplate = getFormattingTemplate(numberPattern, numberFormat: numberFormat, rawNumber: rawNumber) {
+                if let nationalPrefixFormattingRule = format.nationalPrefixFormattingRule {
+                    let separatorRegex = try regex.regexWithPattern(prefixSeparatorPattern)
+                    let nationalPrefixMatch = separatorRegex.firstMatchInString(nationalPrefixFormattingRule, options: [], range:  NSMakeRange(0, nationalPrefixFormattingRule.characters.count))
+                    if nationalPrefixMatch != nil {
+                        shouldAddSpaceAfterNationalPrefix = true
+                    }
+                }
                 return tempTemplate
             }
         }

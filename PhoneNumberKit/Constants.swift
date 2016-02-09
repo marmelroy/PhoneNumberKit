@@ -99,7 +99,7 @@ let npPattern = "\\$NP"
 let plusChars = "+＋"
 let validDigitsString = "0-9０-９٠-٩۰-۹"
 let digitPlaceholder = "\u{2008}"
-
+let separatorBeforeNationalNumber = " "
 
 // MARK: Patterns
 
