@@ -136,23 +136,23 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         let changedRange = textAsNSString.substringWithRange(range) as NSString
         let modifiedTextField = textAsNSString.stringByReplacingCharactersInRange(range, withString: string)
         let formattedNationalNumber = partialFormatter.formatPartial(modifiedTextField as String)
-        let selectedTextRange = selectionRangeForNumberReplacement(textField, formattedText: formattedNationalNumber)
-        textField.text = formattedNationalNumber
+        var selectedTextRange: NSRange?
         
         let nonNumericRange = (changedRange.rangeOfCharacterFromSet(nonNumericSet).location != NSNotFound)
-        if (range.length == 1 && string.isEmpty && nonNumericRange && selectedTextRange != nil)
+        if (range.length == 1 && string.isEmpty && nonNumericRange)
         {
-            if let textRange = textField.selectedTextRange, let selectionRangePosition = textField.positionFromPosition(textRange.start, offset: -1) {
-                let selectionRange = textField.textRangeFromPosition(selectionRangePosition, toPosition: selectionRangePosition)
-                textField.selectedTextRange = selectionRange
-            }
+            selectedTextRange = selectionRangeForNumberReplacement(textField, formattedText: modifiedTextField)
+            textField.text = modifiedTextField
         }
         else {
-            if let selectedTextRange = selectedTextRange, let selectionRangePosition = textField.positionFromPosition(beginningOfDocument, offset: selectedTextRange.location) {
-                let selectionRange = textField.textRangeFromPosition(selectionRangePosition, toPosition: selectionRangePosition)
-                textField.selectedTextRange = selectionRange
-            }
+            selectedTextRange = selectionRangeForNumberReplacement(textField, formattedText: formattedNationalNumber)
+            textField.text = formattedNationalNumber
         }
+        if let selectedTextRange = selectedTextRange, let selectionRangePosition = textField.positionFromPosition(beginningOfDocument, offset: selectedTextRange.location) {
+            let selectionRange = textField.textRangeFromPosition(selectionRangePosition, toPosition: selectionRangePosition)
+            textField.selectedTextRange = selectionRange
+        }
+
         return false
     }
     
