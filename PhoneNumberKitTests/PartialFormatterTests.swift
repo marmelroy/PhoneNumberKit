@@ -140,6 +140,63 @@ class PartialFormatterTests: XCTestCase {
         let testNumber = "ae4c08c6-be33-40ef-a417-e5166e307b5e"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber),  "ae4c08c6-be33-40ef-a417-e5166e307b5e")
     }
+    
+    // +390549555555
+    func testItalianLeadingZeroFromUS()  {
+        let partialFormatter = PartialFormatter(region: "US")
+        var testNumber = "+"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+")
+        testNumber = "+3"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+3")
+        testNumber = "+39"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39")
+        testNumber = "+390"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39 0")
+        testNumber = "+3905"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39 05")
+        testNumber = "+39054"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39 054")
+        testNumber = "+390549"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39 0549")
+        testNumber = "+3905495"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39 0549 5")
+        testNumber = "+39054955"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39 0549 55")
+        testNumber = "+390549555"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39 0549 555")
+        testNumber = "+3905495555"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39 0549 5555")
+        testNumber = "+39054955555"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39 0549 55555")
+        testNumber = "+390549555555"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39 0549 555555")
+
+    }
+    
+    func testFrenchNumberLocal()  {
+        let partialFormatter = PartialFormatter(region: "FR")
+        var testNumber = "0"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "0")
+        testNumber = "06"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "06")
+        testNumber = "068"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "06 8")
+        testNumber = "0689"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "06 89")
+        testNumber = "06895"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "06 89 5")
+        testNumber = "068955"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "06 89 55")
+        testNumber = "0689555"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "06 89 55 5")
+        testNumber = "06895555"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "06 89 55 55")
+        testNumber = "068955555"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "06 89 55 55 5")
+        testNumber = "0689555555"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "06 89 55 55 55")
+    }
+
 
 
 }
