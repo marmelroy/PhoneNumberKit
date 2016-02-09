@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// Partial formatter
 public class PartialFormatter {
     
     let metadata = Metadata.sharedInstance
@@ -28,14 +29,28 @@ public class PartialFormatter {
         self.init(region: region)
     }
     
-    init(region: String) {
+    /**
+     Inits a partial formatter with a custom region
+     
+     - parameter region: ISO 639 compliant region code.
+     
+     - returns: PartialFormatter object
+     */
+    public init(region: String) {
         defaultRegion = region
         defaultMetadata = metadata.fetchMetadataForCountry(defaultRegion)
         currentMetadata = defaultMetadata
     }
     
-    func formatPartial(rawNumber: String) -> String {
-        if rawNumber.isEmpty || rawNumber.characters.count <= 3 {
+    /**
+     Formats a partial string (for use in TextField)
+     
+     - parameter rawNumber: Unformatted phone number string
+     
+     - returns: Formatted phone number string.
+     */
+    public func formatPartial(rawNumber: String) -> String {
+        if rawNumber.isEmpty || rawNumber.characters.count < 3 {
             return rawNumber
         }
         do {
@@ -50,12 +65,12 @@ public class PartialFormatter {
         currentMetadata = defaultMetadata
         prefixBeforeNationalNumber = String()
         shouldAddSpaceAfterNationalPrefix = false
-        let iddFreeNumber = self.attemptToExtractIDD(rawNumber)
-        let normalizedNumber = self.parser.normalizePhoneNumber(iddFreeNumber)
-        var nationalNumber = self.attemptToExtractCountryCallingCode(normalizedNumber)
-        nationalNumber = self.attemptToExtractNationalPrefix(nationalNumber)
-        if let formats = self.getAvailableFormats() {
-            if let formattedNumber = self.attemptToFormat(nationalNumber, formats: formats) {
+        let iddFreeNumber = extractIDD(rawNumber)
+        let normalizedNumber = parser.normalizePhoneNumber(iddFreeNumber)
+        var nationalNumber = extractCountryCallingCode(normalizedNumber)
+        nationalNumber = extractNationalPrefix(nationalNumber)
+        if let formats = availableFormats() {
+            if let formattedNumber = applyFormat(nationalNumber, formats: formats) {
                 nationalNumber = formattedNumber
             }
             else if let firstFormat = formats.first, let template = createFormattingTemplate(firstFormat, rawNumber: nationalNumber) {
@@ -75,7 +90,9 @@ public class PartialFormatter {
         return finalNumber
     }
     
-    func attemptToExtractIDD(rawNumber: String) -> String {
+    //MARK: Formatting functions
+    
+    func extractIDD(rawNumber: String) -> String {
         var processedNumber = rawNumber
         do {
             if let internationalPrefix = currentMetadata?.internationalPrefix {
@@ -98,7 +115,7 @@ public class PartialFormatter {
         return processedNumber
     }
     
-    func attemptToExtractNationalPrefix(rawNumber: String) -> String {
+    func extractNationalPrefix(rawNumber: String) -> String {
         var processedNumber = rawNumber
         do {
             if let nationalPrefix = currentMetadata?.nationalPrefixForParsing {
@@ -118,7 +135,7 @@ public class PartialFormatter {
         return processedNumber
     }
     
-    func attemptToExtractCountryCallingCode(rawNumber: String) -> String {
+    func extractCountryCallingCode(rawNumber: String) -> String {
         var processedNumber = rawNumber
         if rawNumber.isEmpty {
             return rawNumber
@@ -138,7 +155,7 @@ public class PartialFormatter {
         return processedNumber
     }
 
-    func getAvailableFormats() -> [MetadataPhoneNumberFormat]? {
+    func availableFormats() -> [MetadataPhoneNumberFormat]? {
         var possibleFormats = [MetadataPhoneNumberFormat]()
         if let metadata = currentMetadata {
             let formatList = metadata.numberFormats
@@ -166,7 +183,7 @@ public class PartialFormatter {
         return false
     }
     
-    func attemptToFormat(rawNumber: String, formats: [MetadataPhoneNumberFormat]) -> String? {
+    func applyFormat(rawNumber: String, formats: [MetadataPhoneNumberFormat]) -> String? {
         for format in formats {
             if let pattern = format.pattern, let formatTemplate = format.format {
                 let patternRegExp = String(format: formatPattern, arguments: [pattern])
