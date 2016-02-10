@@ -57,13 +57,11 @@ public class PartialFormatter {
         // Reset variables
         resetVariables()
         let iddFreeNumber = extractIDD(rawNumber)
-        let normalizedNumber = parser.normalizePhoneNumber(iddFreeNumber)
-        var nationalNumber = extractCountryCallingCode(normalizedNumber)
+        var nationalNumber = parser.normalizePhoneNumber(iddFreeNumber)
+        if prefixBeforeNationalNumber.characters.count > 0 {
+            nationalNumber = extractCountryCallingCode(nationalNumber)
+        }
         nationalNumber = extractNationalPrefix(nationalNumber)
-//        if nationalNumber.hasPrefix("0") {
-//            nationalNumber = nationalNumber.substringFromIndex(nationalNumber.startIndex.advancedBy(1))
-//            prefixBeforeNationalNumber.appendContentsOf("0")
-//        }
 
         if let formats = availableFormats(nationalNumber) {
             if let formattedNumber = applyFormat(nationalNumber, formats: formats) {
@@ -211,17 +209,17 @@ public class PartialFormatter {
             for format in formatList {
                 if isFormatEligible(format) {
                     tempPossibleFormats.append(format)
-                }
-                if let leadingDigitPattern = format.leadingDigitsPatterns?.last {
-                    if (regex.stringPositionByRegex(leadingDigitPattern, string: String(rawNumber)) == 0) {
+                    if let leadingDigitPattern = format.leadingDigitsPatterns?.last {
+                        if (regex.stringPositionByRegex(leadingDigitPattern, string: String(rawNumber)) == 0) {
+                            if (regex.matchesEntirely(format.pattern, string: String(rawNumber))) {
+                                possibleFormats.append(format)
+                            }
+                        }
+                    }
+                    else {
                         if (regex.matchesEntirely(format.pattern, string: String(rawNumber))) {
                             possibleFormats.append(format)
                         }
-                    }
-                }
-                else {
-                    if (regex.matchesEntirely(format.pattern, string: String(rawNumber))) {
-                        possibleFormats.append(format)
                     }
                 }
             }
