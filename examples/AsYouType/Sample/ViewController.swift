@@ -19,7 +19,7 @@ class ViewController: UIViewController, CNContactPickerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        textField.region = "US"
+        textField.region = "FR"
         textField.becomeFirstResponder()
     }
 

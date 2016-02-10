@@ -99,7 +99,7 @@ public class PartialFormatter {
     //MARK: Formatting Tests
     
     internal func isValidRawNumber(rawNumber: String) -> Bool {
-        if rawNumber.isEmpty || rawNumber.characters.count < 3 {
+        if rawNumber.isEmpty || rawNumber.characters.count < 4 {
             return false
         }
         do {
