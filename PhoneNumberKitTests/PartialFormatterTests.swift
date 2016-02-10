@@ -157,19 +157,19 @@ class PartialFormatterTests: XCTestCase {
         testNumber = "+39054"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39 054")
         testNumber = "+390549"
-//        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39 0549")
-//        testNumber = "+3905495"
-//        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39 0549 5")
-//        testNumber = "+39054955"
-//        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39 0549 55")
-//        testNumber = "+390549555"
-//        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39 0549 555")
-//        testNumber = "+3905495555"
-//        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39 0549 5555")
-//        testNumber = "+39054955555"
-//        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39 0549 55555")
-//        testNumber = "+390549555555"
-//        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39 0549 555555")
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39 0549")
+        testNumber = "+3905495"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39 0549 5")
+        testNumber = "+39054955"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39 0549 55")
+        testNumber = "+390549555"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39 0549 555")
+        testNumber = "+3905495555"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39 0549 5555")
+        testNumber = "+39054955555"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39 0549 55555")
+        testNumber = "+390549555555"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39 0549 555555")
 
     }
     
@@ -213,14 +213,14 @@ class PartialFormatterTests: XCTestCase {
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "1 800-25")
         testNumber = "1800253"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "1 800-253")
-//        testNumber = "18002530"
-//        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "1 800-253-0")
-//        testNumber = "180025300"
-//        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "1 800-253-00")
-//        testNumber = "1800253000"
-//        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "1 800-253-000")
-//        testNumber = "18002530000"
-//        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "1 800-253-0000")
+        testNumber = "18002530"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "1 800-253-0")
+        testNumber = "180025300"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "1 800-253-00")
+        testNumber = "1800253000"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "1 800-253-000")
+        testNumber = "18002530000"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "1 800-253-0000")
     }
 
 }

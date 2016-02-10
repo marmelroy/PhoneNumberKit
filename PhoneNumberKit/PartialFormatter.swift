@@ -50,32 +50,22 @@ public class PartialFormatter {
      - returns: Formatted phone number string.
      */
     public func formatPartial(rawNumber: String) -> String {
-        if rawNumber.isEmpty || rawNumber.characters.count < 3 {
+        // Check if number is valid for parsing, if not return raw
+        if isValidRawNumber(rawNumber) == false {
             return rawNumber
         }
-        do {
-            let validNumberMatches = try regex.regexMatches(validPhoneNumberPattern, string: rawNumber)
-            let validStart = regex.stringPositionByRegex(validStartPattern, string: rawNumber)
-            if validNumberMatches.count == 0 || validStart != 0 {
-                return rawNumber
-            }
-        }
-        catch {
-            return rawNumber
-        }
-        currentMetadata = defaultMetadata
-        prefixBeforeNationalNumber = String()
-        shouldAddSpaceAfterNationalPrefix = false
+        // Reset variables
+        resetVariables()
         let iddFreeNumber = extractIDD(rawNumber)
         let normalizedNumber = parser.normalizePhoneNumber(iddFreeNumber)
         var nationalNumber = extractCountryCallingCode(normalizedNumber)
         nationalNumber = extractNationalPrefix(nationalNumber)
-        if nationalNumber.hasPrefix("0") {
-            nationalNumber = nationalNumber.substringFromIndex(nationalNumber.startIndex.advancedBy(1))
-            prefixBeforeNationalNumber.appendContentsOf("0")
-        }
+//        if nationalNumber.hasPrefix("0") {
+//            nationalNumber = nationalNumber.substringFromIndex(nationalNumber.startIndex.advancedBy(1))
+//            prefixBeforeNationalNumber.appendContentsOf("0")
+//        }
 
-        if let formats = availableFormats() {
+        if let formats = availableFormats(nationalNumber) {
             if let formattedNumber = applyFormat(nationalNumber, formats: formats) {
                 nationalNumber = formattedNumber
             }
@@ -100,7 +90,55 @@ public class PartialFormatter {
         return finalNumber
     }
     
-    //MARK: Formatting functions
+    //MARK: Formatting Functions
+    
+    internal func resetVariables() {
+        currentMetadata = defaultMetadata
+        prefixBeforeNationalNumber = String()
+        shouldAddSpaceAfterNationalPrefix = false
+    }
+    
+    //MARK: Formatting Tests
+    
+    internal func isValidRawNumber(rawNumber: String) -> Bool {
+        if rawNumber.isEmpty || rawNumber.characters.count < 3 {
+            return false
+        }
+        do {
+            let validNumberMatches = try regex.regexMatches(validPhoneNumberPattern, string: rawNumber)
+            let validStart = regex.stringPositionByRegex(validStartPattern, string: rawNumber)
+            if validNumberMatches.count == 0 || validStart != 0 {
+                return false
+            }
+        }
+        catch {
+            return false
+        }
+        return true
+    }
+    
+    internal func isNanpaNumberWithNationalPrefix(rawNumber: String) -> Bool {
+        if currentMetadata?.countryCode != 1 {
+            return false
+        }
+        return (rawNumber.characters.first == "1" && String(rawNumber.characters.startIndex.advancedBy(1)) != "0" && String(rawNumber.characters.startIndex.advancedBy(1)) != "1")
+    }
+    
+    func isFormatEligible(format: MetadataPhoneNumberFormat) -> Bool {
+        guard let phoneFormat = format.format else {
+            return false
+        }
+        do {
+            let validRegex = try regex.regexWithPattern(eligibleAsYouTypePattern)
+            if validRegex.firstMatchInString(phoneFormat, options: [], range: NSMakeRange(0, phoneFormat.characters.count)) != nil {
+                return true
+            }
+        }
+        catch {}
+        return false
+    }
+    
+    //MARK: Formatting Extractions
     
     func extractIDD(rawNumber: String) -> String {
         var processedNumber = rawNumber
@@ -120,13 +158,6 @@ public class PartialFormatter {
             return processedNumber
         }
         return processedNumber
-    }
-    
-    func isNanpaNumberWithNationalPrefix(rawNumber: String) -> Bool {
-        if currentMetadata?.countryCode != 1 {
-            return false
-        }
-        return (rawNumber.characters.first == "1" && String(rawNumber.characters.startIndex.advancedBy(1)) != "0" && String(rawNumber.characters.startIndex.advancedBy(1)) != "1")
     }
     
     func extractNationalPrefix(rawNumber: String) -> String {
@@ -172,33 +203,36 @@ public class PartialFormatter {
         return processedNumber
     }
 
-    func availableFormats() -> [MetadataPhoneNumberFormat]? {
+    func availableFormats(rawNumber: String) -> [MetadataPhoneNumberFormat]? {
+        var tempPossibleFormats = [MetadataPhoneNumberFormat]()
         var possibleFormats = [MetadataPhoneNumberFormat]()
         if let metadata = currentMetadata {
             let formatList = metadata.numberFormats
             for format in formatList {
                 if isFormatEligible(format) {
-                    possibleFormats.append(format)
+                    tempPossibleFormats.append(format)
                 }
+                if let leadingDigitPattern = format.leadingDigitsPatterns?.last {
+                    if (regex.stringPositionByRegex(leadingDigitPattern, string: String(rawNumber)) == 0) {
+                        if (regex.matchesEntirely(format.pattern, string: String(rawNumber))) {
+                            possibleFormats.append(format)
+                        }
+                    }
+                }
+                else {
+                    if (regex.matchesEntirely(format.pattern, string: String(rawNumber))) {
+                        possibleFormats.append(format)
+                    }
+                }
+            }
+            if possibleFormats.count == 0 {
+                possibleFormats.appendContentsOf(tempPossibleFormats)
             }
             return possibleFormats
         }
         return nil
     }
     
-    func isFormatEligible(format: MetadataPhoneNumberFormat) -> Bool {
-        guard let phoneFormat = format.format else {
-            return false
-        }
-        do {
-            let validRegex = try regex.regexWithPattern(eligibleAsYouTypePattern)
-            if validRegex.firstMatchInString(phoneFormat, options: [], range: NSMakeRange(0, phoneFormat.characters.count)) != nil {
-                return true
-            }
-        }
-        catch {}
-        return false
-    }
     
     func applyFormat(rawNumber: String, formats: [MetadataPhoneNumberFormat]) -> String? {
         for format in formats {
