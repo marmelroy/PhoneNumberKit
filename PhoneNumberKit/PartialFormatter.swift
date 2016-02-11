@@ -104,7 +104,7 @@ public class PartialFormatter {
     //MARK: Formatting Tests
     
     internal func isValidRawNumber(rawNumber: String) -> Bool {
-        if rawNumber.isEmpty || rawNumber.characters.count < 4 {
+        if rawNumber.isEmpty || rawNumber.characters.count < 3 {
             return false
         }
         do {
@@ -328,7 +328,9 @@ public class PartialFormatter {
                 }
             }
             else {
+                if rebuiltIndex < rawNumber.characters.count {
                 rebuiltString.append(character)
+                }
             }
         }
         if rebuiltIndex < rawNumber.characters.count {
@@ -337,6 +339,7 @@ public class PartialFormatter {
             rebuiltString.appendContentsOf(remainingNationalNumber)
         }
         rebuiltString = rebuiltString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+
         return rebuiltString
     }
     

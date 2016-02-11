@@ -180,7 +180,7 @@ class PartialFormatterTests: XCTestCase {
         testNumber = "06"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "06")
         testNumber = "068"
-        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "068")
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "06 8")
         testNumber = "0689"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "06 89")
         testNumber = "06895"
