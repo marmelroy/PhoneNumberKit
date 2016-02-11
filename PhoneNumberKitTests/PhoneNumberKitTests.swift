@@ -9,6 +9,8 @@
 import XCTest
 @testable import PhoneNumberKit
 
+import PhoneNumberKit
+
 class PhoneNumberKitTests: XCTestCase {
     
     override func setUp() {

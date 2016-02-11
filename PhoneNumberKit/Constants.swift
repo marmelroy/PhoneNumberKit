@@ -89,6 +89,7 @@ let defaultCountry = "US"
 let defaultExtnPrefix = " ext. "
 let firstGroupPattern = "(\\$\\d)"
 let fgPattern = "\\$FG"
+let longPhoneNumber = "999999999999999"
 let minLengthForNSN = 2
 let maxInputStringLength = 250
 let maxLengthCountryCode = 3
@@ -97,6 +98,8 @@ let nonBreakingSpace = "\u{00a0}"
 let npPattern = "\\$NP"
 let plusChars = "+＋"
 let validDigitsString = "0-9０-９٠-٩۰-۹"
+let digitPlaceholder = "\u{2008}"
+let separatorBeforeNationalNumber = " "
 
 // MARK: Patterns
 
@@ -105,6 +108,20 @@ let allNormalizationMappings = ["0":"0", "1":"1", "2":"2", "3":"3", "4":"4", "5"
 let capturingDigitPattern = "([0-9０-９٠-٩۰-۹])"
 
 let extnPattern = "\\;(.*)"
+
+let iddPattern = "^(?:\\+|%@)"
+
+let formatPattern = "^(?:%@)$"
+
+let characterClassPattern = "\\[([^\\[\\]])*\\]"
+
+let standaloneDigitPattern = "\\d(?=[^,}][^,}])"
+
+let nationalPrefixParsingPattern = "^(?:%@)"
+
+let prefixSeparatorPattern = "[- ]"
+
+let eligibleAsYouTypePattern = "^[-x‐-―−ー－-／ ­​⁠　()（）［］.\\[\\]/~⁓∼～]*(\\$\\d[-x‐-―−ー－-／ ­​⁠　()（）［］.\\[\\]/~⁓∼～]*)+$"
 
 let leadingPlusCharsPattern = "^[+＋]+"
 
