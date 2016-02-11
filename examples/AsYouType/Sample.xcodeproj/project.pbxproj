@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		341EF9CA1BEDC2B60037B216 /* PhoneNumberKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 341EF9C71BEDC2A40037B216 /* PhoneNumberKit.framework */; };
-		341EF9CB1BEDC2B60037B216 /* PhoneNumberKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 341EF9C71BEDC2A40037B216 /* PhoneNumberKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		344D87571BDED6A200487684 /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 344D87561BDED6A200487684 /* Contacts.framework */; };
 		344D875A1BDED6A600487684 /* ContactsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 344D87591BDED6A600487684 /* ContactsUI.framework */; };
 		3472096B1BB808D1004DE6DA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3472096A1BB808D1004DE6DA /* AppDelegate.swift */; };
@@ -21,27 +19,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		341EF9C61BEDC2A40037B216 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 341EF9C11BEDC2A40037B216 /* PhoneNumberKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 342418641BB6E5A000EE70E7;
-			remoteInfo = PhoneNumberKit;
-		};
-		341EF9C81BEDC2A40037B216 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 341EF9C11BEDC2A40037B216 /* PhoneNumberKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 3424186E1BB6E5A000EE70E7;
-			remoteInfo = PhoneNumberKitTests;
-		};
-		341EF9CC1BEDC2B60037B216 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 341EF9C11BEDC2A40037B216 /* PhoneNumberKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 342418631BB6E5A000EE70E7;
-			remoteInfo = PhoneNumberKit;
-		};
 		3472097C1BB808D1004DE6DA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3472095F1BB808D1004DE6DA /* Project object */;
@@ -58,7 +35,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				341EF9CB1BEDC2B60037B216 /* PhoneNumberKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -66,7 +42,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		341EF9C11BEDC2A40037B216 /* PhoneNumberKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PhoneNumberKit.xcodeproj; path = ../../PhoneNumberKit.xcodeproj; sourceTree = "<group>"; };
 		344D87561BDED6A200487684 /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
 		344D87591BDED6A600487684 /* ContactsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ContactsUI.framework; path = System/Library/Frameworks/ContactsUI.framework; sourceTree = SDKROOT; };
 		347209671BB808D1004DE6DA /* Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Sample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -90,7 +65,6 @@
 				344D875A1BDED6A600487684 /* ContactsUI.framework in Frameworks */,
 				344D87571BDED6A200487684 /* Contacts.framework in Frameworks */,
 				3472098E1BB80A4F004DE6DA /* Foundation.framework in Frameworks */,
-				341EF9CA1BEDC2B60037B216 /* PhoneNumberKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,19 +78,9 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		341EF9C21BEDC2A40037B216 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				341EF9C71BEDC2A40037B216 /* PhoneNumberKit.framework */,
-				341EF9C91BEDC2A40037B216 /* PhoneNumberKitTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		3472095E1BB808D1004DE6DA = {
 			isa = PBXGroup;
 			children = (
-				341EF9C11BEDC2A40037B216 /* PhoneNumberKit.xcodeproj */,
 				347209691BB808D1004DE6DA /* Sample */,
 				3472097E1BB808D1004DE6DA /* SampleTests */,
 				347209681BB808D1004DE6DA /* Products */,
@@ -172,7 +136,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				341EF9CD1BEDC2B60037B216 /* PBXTargetDependency */,
 			);
 			name = Sample;
 			productName = Sample;
@@ -226,12 +189,6 @@
 			mainGroup = 3472095E1BB808D1004DE6DA;
 			productRefGroup = 347209681BB808D1004DE6DA /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 341EF9C21BEDC2A40037B216 /* Products */;
-					ProjectRef = 341EF9C11BEDC2A40037B216 /* PhoneNumberKit.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				347209661BB808D1004DE6DA /* Sample */,
@@ -239,23 +196,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		341EF9C71BEDC2A40037B216 /* PhoneNumberKit.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = PhoneNumberKit.framework;
-			remoteRef = 341EF9C61BEDC2A40037B216 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		341EF9C91BEDC2A40037B216 /* PhoneNumberKitTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = PhoneNumberKitTests.xctest;
-			remoteRef = 341EF9C81BEDC2A40037B216 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		347209651BB808D1004DE6DA /* Resources */ = {
@@ -298,11 +238,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		341EF9CD1BEDC2B60037B216 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = PhoneNumberKit;
-			targetProxy = 341EF9CC1BEDC2B60037B216 /* PBXContainerItemProxy */;
-		};
 		3472097D1BB808D1004DE6DA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 347209661BB808D1004DE6DA /* Sample */;

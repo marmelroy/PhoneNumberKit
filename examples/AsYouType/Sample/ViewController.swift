@@ -19,10 +19,7 @@ class ViewController: UIViewController, CNContactPickerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        textField.region = "FR"
         textField.becomeFirstResponder()
-        let text = PartialFormatter().formatPartial("+336895555")
-        print(text)
     }
 
 }
