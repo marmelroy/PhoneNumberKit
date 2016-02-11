@@ -67,8 +67,13 @@ public class PartialFormatter {
             if let formattedNumber = applyFormat(nationalNumber, formats: formats) {
                 nationalNumber = formattedNumber
             }
-            else if let firstFormat = formats.first, let template = createFormattingTemplate(firstFormat, rawNumber: nationalNumber) {
-                nationalNumber = applyFormattingTemplate(template, rawNumber: nationalNumber)
+            else {
+                for format in formats {
+                    if let template = createFormattingTemplate(format, rawNumber: nationalNumber) {
+                        nationalNumber = applyFormattingTemplate(template, rawNumber: nationalNumber)
+                        break
+                    }
+                }
             }
         }
         var finalNumber = String()
@@ -331,7 +336,7 @@ public class PartialFormatter {
             let remainingNationalNumber: String = rawNumber.substringFromIndex(nationalCharacterIndex)
             rebuiltString.appendContentsOf(remainingNationalNumber)
         }
-        rebuiltString = rebuiltString.stringByTrimmingCharactersInSet(NSCharacterSet.alphanumericCharacterSet().invertedSet)
+        rebuiltString = rebuiltString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
         return rebuiltString
     }
     

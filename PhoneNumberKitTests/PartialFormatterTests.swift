@@ -180,7 +180,7 @@ class PartialFormatterTests: XCTestCase {
         testNumber = "06"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "06")
         testNumber = "068"
-        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "06 8")
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "068")
         testNumber = "0689"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "06 89")
         testNumber = "06895"
@@ -200,25 +200,26 @@ class PartialFormatterTests: XCTestCase {
     func testUSTollFreeNumber() {
         let partialFormatter = PartialFormatter(region: "US")
         var testNumber = "8"
-//        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "8")
-//        testNumber = "80"
-//        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "80")
-//        testNumber = "800"
-//        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "800")
-//        testNumber = "8002"
-//        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "800-2")
-//        testNumber = "80025"
-//        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "800-25")
-//        testNumber = "800253"
-//        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "800-253")
-//        testNumber = "8002530"
-//        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "800-2530")
-//        testNumber = "80025300"
-//        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "80025300")
+        print(partialFormatter.formatPartial("800253000"), "(800) 253-000")
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "8")
+        testNumber = "80"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "80")
+        testNumber = "800"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "800")
+        testNumber = "8002"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "800-2")
+        testNumber = "80025"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "800-25")
+        testNumber = "800253"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "800-253")
+        testNumber = "8002530"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "800-2530")
+        testNumber = "80025300"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "(800) 253-00")
         testNumber = "800253000"
-        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "800253000")
-//        testNumber = "8002530000"
-//        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "(800) 253-0000")
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "(800) 253-000")
+        testNumber = "8002530000"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "(800) 253-0000")
     }
 
 }
