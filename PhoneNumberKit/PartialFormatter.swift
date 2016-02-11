@@ -24,7 +24,12 @@ public class PartialFormatter {
 
     //MARK: Lifecycle
     
-    convenience init() {
+    /**
+    Initialise a partial formatter with the default region
+    
+    - returns: PartialFormatter object
+    */
+    public convenience init() {
         let region = PhoneNumberKit().defaultRegionCode()
         self.init(region: region)
     }

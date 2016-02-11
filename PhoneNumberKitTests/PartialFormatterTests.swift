@@ -200,7 +200,6 @@ class PartialFormatterTests: XCTestCase {
     func testUSTollFreeNumber() {
         let partialFormatter = PartialFormatter(region: "US")
         var testNumber = "8"
-        print(partialFormatter.formatPartial("800253000"), "(800) 253-000")
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "8")
         testNumber = "80"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "80")
@@ -221,6 +220,6 @@ class PartialFormatterTests: XCTestCase {
         testNumber = "8002530000"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "(800) 253-0000")
     }
-
+    
 }
 

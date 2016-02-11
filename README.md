@@ -11,7 +11,6 @@ Inspired by Google's libphonenumber.
 
  | Remaining Objectives
 --- | ---
-📝 | AsYouType formatter for UITextField.
 ⚔ | Battle-test PhoneNumberKit in a major app (100k+ users).
 
 ## Features
@@ -24,6 +23,7 @@ Inspired by Google's libphonenumber.
 :books: | Best-in-class metadata from Google's libPhoneNumber project.
 :trophy: | Fully tested to match the accuracy of Google's JavaScript implementation of libPhoneNumber.
 :iphone: | Built for iOS. Automatically grabs the default region code from the phone.
+📝 | Editable (!) AsYouType formatter for UITextField.
 :us: | Convert country codes to country names and vice versa
 
 ## Usage
@@ -50,6 +50,15 @@ If you need to parse and validate a large amount of numbers at once, there is a 
 let rawNumberArray = ["0291 12345678", "+49 291 12345678", "04134 1234", "09123 12345"]
 let phoneNumbers = PhoneNumberKit().parseMultiple(rawNumberArray)
 let phoneNumbersCustomDefaultRegion = PhoneNumberKit().parseMultiple(rawNumberArray, region: "DE")
+```
+
+To use the AsYouTypeFormatter, just replace your UITextField with a PhoneNumberTextField.
+
+PhoneNumberTextField automatically formats phone numbers and gives the user full editing capabilities. If you want to customize you can use the PartialFormatter directly. The default region code is automatically computed but can be overridden if needed.  
+```swift
+let textField = PhoneNumberTextField()
+
+PartialFormatter().formatPartial("+336895555") // +33 6 89 55 55
 ```
 
 You can also query countries for a dialing code or the dailing code for a given country
@@ -95,5 +104,5 @@ github "marmelroy/PhoneNumberKit"
 ### Setting up with [CocoaPods](http://cocoapods.org/?q=PhoneNumberKit)
 ```ruby
 source 'https://github.com/CocoaPods/Specs.git'
-pod 'PhoneNumberKit', '~> 0.3'
+pod 'PhoneNumberKit', '~> 0.6'
 ```

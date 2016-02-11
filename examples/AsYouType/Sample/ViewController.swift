@@ -21,6 +21,8 @@ class ViewController: UIViewController, CNContactPickerDelegate {
         super.viewDidLoad()
         textField.region = "FR"
         textField.becomeFirstResponder()
+        let text = PartialFormatter().formatPartial("+336895555")
+        print(text)
     }
 
 }
