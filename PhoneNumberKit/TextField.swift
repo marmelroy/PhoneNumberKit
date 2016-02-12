@@ -160,15 +160,15 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     //MARK: UITextfield Delegate
     
     public func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
-		return _delegate?.textFieldShouldBeginEditing?(textField) ?? true
+        return _delegate?.textFieldShouldBeginEditing?(textField) ?? true
     }
     
     public func textFieldDidBeginEditing(textField: UITextField) {
-		_delegate?.textFieldDidBeginEditing?(textField)
+        _delegate?.textFieldDidBeginEditing?(textField)
     }
     
     public func textFieldShouldEndEditing(textField: UITextField) -> Bool {
-		return _delegate?.textFieldShouldEndEditing?(textField) ?? true
+        return _delegate?.textFieldShouldEndEditing?(textField) ?? true
     }
     
     public func textFieldDidEndEditing(textField: UITextField) {
@@ -176,7 +176,7 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
     
     public func textFieldShouldClear(textField: UITextField) -> Bool {
-		return _delegate?.textFieldShouldClear?(textField) ?? true
+        return _delegate?.textFieldShouldClear?(textField) ?? true
     }
     
     public func textFieldShouldReturn(textField: UITextField) -> Bool {
