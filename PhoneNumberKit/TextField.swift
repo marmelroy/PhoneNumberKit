@@ -159,52 +159,26 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     //MARK: UITextfield Delegate
     
     public func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
-        if ((_delegate?.respondsToSelector("textFieldShouldBeginEditing:")) != nil) {
-            return _delegate!.textFieldShouldBeginEditing!(textField)
-        }
-        else {
-            return true
-        }
+		return _delegate?.textFieldShouldBeginEditing?(textField) ?? true
     }
     
     public func textFieldDidBeginEditing(textField: UITextField) {
-        if ((_delegate?.respondsToSelector("textFieldDidBeginEditing:")) != nil) {
-            _delegate!.textFieldDidBeginEditing!(textField)
-        }
+		_delegate?.textFieldDidBeginEditing?(textField)
     }
     
     public func textFieldShouldEndEditing(textField: UITextField) -> Bool {
-        if ((_delegate?.respondsToSelector("textFieldShouldEndEditing:")) != nil) {
-            return _delegate!.textFieldShouldEndEditing!(textField)
-        }
-        else {
-            return true
-        }
+		return _delegate?.textFieldShouldEndEditing?(textField) ?? true
     }
     
     public func textFieldDidEndEditing(textField: UITextField) {
-        if ((_delegate?.respondsToSelector("textFieldDidEndEditing:")) != nil) {
-            _delegate!.textFieldDidEndEditing!(textField)
-        }
+        _delegate?.textFieldDidEndEditing?(textField)
     }
     
     public func textFieldShouldClear(textField: UITextField) -> Bool {
-        if ((_delegate?.respondsToSelector("textFieldShouldClear:")) != nil) {
-            return _delegate!.textFieldShouldClear!(textField)
-        }
-        else {
-            return true
-        }
+		return _delegate?.textFieldShouldClear?(textField) ?? true
     }
     
     public func textFieldShouldReturn(textField: UITextField) -> Bool {
-        if ((_delegate?.respondsToSelector("textFieldShouldReturn:")) != nil) {
-            return _delegate!.textFieldShouldReturn!(textField)
-        }
-        else {
-            return true
-        }
+        return _delegate?.textFieldShouldReturn?(textField) ?? true
     }
-
-
 }
