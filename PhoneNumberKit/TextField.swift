@@ -143,13 +143,12 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         {
             selectedTextRange = selectionRangeForNumberReplacement(textField, formattedText: modifiedTextField)
             textField.text = modifiedTextField
-            sendActionsForControlEvents(.EditingChanged)
         }
         else {
             selectedTextRange = selectionRangeForNumberReplacement(textField, formattedText: formattedNationalNumber)
             textField.text = formattedNationalNumber
-            sendActionsForControlEvents(.EditingChanged)
         }
+        sendActionsForControlEvents(.EditingChanged)
         if let selectedTextRange = selectedTextRange, let selectionRangePosition = textField.positionFromPosition(beginningOfDocument, offset: selectedTextRange.location) {
             let selectionRange = textField.textRangeFromPosition(selectionRangePosition, toPosition: selectionRangePosition)
             textField.selectedTextRange = selectionRange
