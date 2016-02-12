@@ -221,9 +221,9 @@ public class PartialFormatter {
                     tempPossibleFormats.append(format)
                     if let leadingDigitPattern = format.leadingDigitsPatterns?.last {
                         if (regex.stringPositionByRegex(leadingDigitPattern, string: String(rawNumber)) == 0) {
-                            if (regex.matchesEntirely(format.pattern, string: String(rawNumber))) {
+//                            if (regex.matchesEntirely(format.pattern, string: String(rawNumber))) {
                                 possibleFormats.append(format)
-                            }
+//                            }
                         }
                     }
                     else {
