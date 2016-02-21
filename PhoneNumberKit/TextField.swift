@@ -34,7 +34,7 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             return _delegate
         }
         set {
-            self._delegate = delegate
+            self._delegate = newValue
         }
     }
     
