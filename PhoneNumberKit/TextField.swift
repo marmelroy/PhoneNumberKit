@@ -132,6 +132,12 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         guard let text = text else {
             return false
         }
+
+        // allow delegate to intervene
+        guard _delegate?.textField?(textField, shouldChangeCharactersInRange: range, replacementString: string) ?? true else {
+            return false
+        }
+
         let textAsNSString = text as NSString
         let changedRange = textAsNSString.substringWithRange(range) as NSString
         let modifiedTextField = textAsNSString.stringByReplacingCharactersInRange(range, withString: string)
