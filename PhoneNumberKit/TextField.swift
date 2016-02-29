@@ -38,6 +38,19 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         }
     }
     
+    //MARK: Status
+
+    public var currentRegion: String {
+        get {
+            return partialFormatter.currentRegion
+        }
+    }
+    public var isValidNumber: Bool {
+        get {
+            return partialFormatter.isValidNumber
+        }
+    }
+    
      //MARK: Lifecycle
     
     /**
@@ -132,6 +145,12 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         guard let text = text else {
             return false
         }
+
+        // allow delegate to intervene
+        guard _delegate?.textField?(textField, shouldChangeCharactersInRange: range, replacementString: string) ?? true else {
+            return false
+        }
+
         let textAsNSString = text as NSString
         let changedRange = textAsNSString.substringWithRange(range) as NSString
         let modifiedTextField = textAsNSString.stringByReplacingCharactersInRange(range, withString: string)
