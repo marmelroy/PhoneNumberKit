@@ -21,7 +21,18 @@ public class PartialFormatter {
     var currentMetadata: MetadataTerritory?
     var prefixBeforeNationalNumber =  String()
     var shouldAddSpaceAfterNationalPrefix = false
+    
+    //MARK: Status
 
+    public var currentRegion: String {
+        get {
+            return currentMetadata?.codeID ?? defaultRegion
+        }
+    }
+
+    private(set) var validNumber = false
+    
+    
     //MARK: Lifecycle
     
     /**
@@ -55,6 +66,13 @@ public class PartialFormatter {
      - returns: Formatted phone number string.
      */
     public func formatPartial(rawNumber: String) -> String {
+        // determine if number is valid by trying to instantiate a PhoneNumber object with it
+        do {
+            try _ = PhoneNumber(rawNumber: rawNumber)
+            validNumber = true
+        } catch {
+            validNumber = false
+        }
         // Check if number is valid for parsing, if not return raw
         if isValidRawNumber(rawNumber) == false {
             return rawNumber

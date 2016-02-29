@@ -38,6 +38,19 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         }
     }
     
+    //MARK: Status
+
+    public var currentRegion: String {
+        get {
+            return partialFormatter.currentRegion
+        }
+    }
+    public var validNumber: Bool {
+        get {
+            return partialFormatter.validNumber
+        }
+    }
+    
      //MARK: Lifecycle
     
     /**
