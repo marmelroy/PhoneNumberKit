@@ -30,7 +30,7 @@ public class PartialFormatter {
         }
     }
 
-    private(set) var validNumber = false
+    private(set) var isValidNumber = false
     
     
     //MARK: Lifecycle
@@ -69,9 +69,9 @@ public class PartialFormatter {
         // determine if number is valid by trying to instantiate a PhoneNumber object with it
         do {
             try _ = PhoneNumber(rawNumber: rawNumber)
-            validNumber = true
+            isValidNumber = true
         } catch {
-            validNumber = false
+            isValidNumber = false
         }
         // Check if number is valid for parsing, if not return raw
         if isValidRawNumber(rawNumber) == false {

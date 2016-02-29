@@ -45,9 +45,9 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             return partialFormatter.currentRegion
         }
     }
-    public var validNumber: Bool {
+    public var isValidNumber: Bool {
         get {
-            return partialFormatter.validNumber
+            return partialFormatter.isValidNumber
         }
     }
     
