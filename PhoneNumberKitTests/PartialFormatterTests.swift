@@ -248,5 +248,25 @@ class PartialFormatterTests: XCTestCase {
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "07739 555555")
     }
     
+    // MARK: region prediction
+    func testMinimalFrenchNumber() {
+        let partialFormatter = PartialFormatter(region: "US")
+        partialFormatter.formatPartial("+33")
+        XCTAssertEqual(partialFormatter.currentRegion, "FR")
+    }
+    
+    func testMinimalUSNumberFromFrance() {
+        let partialFormatter = PartialFormatter(region: "FR")
+        partialFormatter.formatPartial("+1")
+        XCTAssertEqual(partialFormatter.currentRegion, "US")
+    }
+    
+    func testRegionResetsWithEachCallToFormatPartial() {
+        let partialFormatter = PartialFormatter(region: "DE")
+        partialFormatter.formatPartial("+1 212 555 1212")
+        XCTAssertEqual(partialFormatter.currentRegion, "US")
+        partialFormatter.formatPartial("invalid raw number")
+        XCTAssertEqual(partialFormatter.currentRegion, "DE")
+    }
 }
 
