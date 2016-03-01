@@ -128,7 +128,9 @@ public class PartialFormatter {
     
     internal func isValidRawNumber(rawNumber: String) -> Bool {
         do {
-            let validPartialPattern = "[+＋]?(\\s*\\d\\s*)+$|\(validPhoneNumberPattern)"
+            // In addition to validPhoneNumberPattern, 
+            // accept any sequence of digits and whitespace, prefixed or not by a plus sign
+            let validPartialPattern = "[+＋]?(\\s*\\d)+\\s*$|\(validPhoneNumberPattern)"
             let validNumberMatches = try regex.regexMatches(validPartialPattern, string: rawNumber)
             let validStart = regex.stringPositionByRegex(validStartPattern, string: rawNumber)
             if validNumberMatches.count == 0 || validStart != 0 {
