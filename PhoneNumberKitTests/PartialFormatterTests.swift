@@ -265,11 +265,8 @@ class PartialFormatterTests: XCTestCase {
         let partialFormatter = PartialFormatter(region: "DE")
         partialFormatter.formatPartial("+1 212 555 1212")
         XCTAssertEqual(partialFormatter.currentRegion, "US")
-        partialFormatter.formatPartial("akareanvatheroaengaekf")
+        partialFormatter.formatPartial("invalid raw number")
         XCTAssertEqual(partialFormatter.currentRegion, "DE")
     }
-    
-    
-    
 }
 
