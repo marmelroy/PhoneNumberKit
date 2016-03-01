@@ -66,19 +66,18 @@ public class PartialFormatter {
      - returns: Formatted phone number string.
      */
     public func formatPartial(rawNumber: String) -> String {
-        // determine if number is valid by trying to instantiate a PhoneNumber object with it
+        // Always reset variables with each new raw number
+        resetVariables()
+        // Check if number is valid for parsing, if not return raw
+        guard isValidRawNumber(rawNumber) else {
+            return rawNumber
+        }
+        // Determine if number is valid by trying to instantiate a PhoneNumber object with it
         do {
             try _ = PhoneNumber(rawNumber: rawNumber)
             isValidNumber = true
-        } catch {
-            isValidNumber = false
-        }
-        // Check if number is valid for parsing, if not return raw
-        if isValidRawNumber(rawNumber) == false {
-            return rawNumber
-        }
-        // Reset variables
-        resetVariables()
+        } catch {}
+        
         let iddFreeNumber = extractIDD(rawNumber)
         var nationalNumber = parser.normalizePhoneNumber(iddFreeNumber)
         if prefixBeforeNationalNumber.characters.count > 0 {
@@ -119,6 +118,7 @@ public class PartialFormatter {
     //MARK: Formatting Functions
     
     internal func resetVariables() {
+        isValidNumber = false
         currentMetadata = defaultMetadata
         prefixBeforeNationalNumber = String()
         shouldAddSpaceAfterNationalPrefix = false
@@ -127,11 +127,9 @@ public class PartialFormatter {
     //MARK: Formatting Tests
     
     internal func isValidRawNumber(rawNumber: String) -> Bool {
-        if rawNumber.isEmpty || rawNumber.characters.count < 3 {
-            return false
-        }
         do {
-            let validNumberMatches = try regex.regexMatches(validPhoneNumberPattern, string: rawNumber)
+            let validPartialPattern = "[+＋]?(\\s*\\d\\s*)+$|\(validPhoneNumberPattern)"
+            let validNumberMatches = try regex.regexMatches(validPartialPattern, string: rawNumber)
             let validStart = regex.stringPositionByRegex(validStartPattern, string: rawNumber)
             if validNumberMatches.count == 0 || validStart != 0 {
                 return false
