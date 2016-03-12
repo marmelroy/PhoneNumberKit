@@ -43,7 +43,7 @@ class ParseManager {
         }
         catch {
             do {
-                let plusRemovedNumberString = self.regex.replaceStringByRegex(leadingPlusCharsPattern, string: nationalNumber as String)
+                let plusRemovedNumberString = self.regex.replaceStringByRegex(PhoneNumberPatterns.leadingPlusCharsPattern, string: nationalNumber as String)
                 countryCode = try self.parser.extractCountryCode(plusRemovedNumberString, nationalNumber: &nationalNumber, metadata: regionMetadata)
             }
             catch {

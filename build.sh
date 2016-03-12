@@ -2,7 +2,7 @@
 
 # **** Update me when new Xcode versions are released! ****
 PLATFORM="platform=iOS Simulator,OS=9.1,name=iPhone 6"
-SDK="iphonesimulator9.1"
+SDK="iphonesimulator"
 
 
 # It is pitch black.

@@ -23,7 +23,7 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     
     let nonNumericSet: NSCharacterSet = {
         var mutableSet = NSCharacterSet.decimalDigitCharacterSet().invertedSet.mutableCopy() as! NSMutableCharacterSet
-        mutableSet.removeCharactersInString(plusChars)
+        mutableSet.removeCharactersInString(PhoneNumberConstants.plusChars)
         return mutableSet
     }()
     

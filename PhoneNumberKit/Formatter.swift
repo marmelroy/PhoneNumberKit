@@ -42,7 +42,7 @@ class Formatter {
                 return "\(preferredExtnPrefix)\(extns)"
             }
             else {
-                return "\(defaultExtnPrefix)\(extns)"
+                return "\(PhoneNumberConstants.defaultExtnPrefix)\(extns)"
             }
         }
         return nil
@@ -79,11 +79,11 @@ class Formatter {
             var formattedNationalNumber = String()
             var prefixFormattingRule = String()
             if let nationalPrefixFormattingRule = formatPattern.nationalPrefixFormattingRule, let nationalPrefix = regionMetadata.nationalPrefix {
-                prefixFormattingRule = regex.replaceStringByRegex(npPattern, string: nationalPrefixFormattingRule, template: nationalPrefix)
-                prefixFormattingRule = regex.replaceStringByRegex(fgPattern, string: prefixFormattingRule, template:"\\$1")
+                prefixFormattingRule = regex.replaceStringByRegex(PhoneNumberPatterns.npPattern, string: nationalPrefixFormattingRule, template: nationalPrefix)
+                prefixFormattingRule = regex.replaceStringByRegex(PhoneNumberPatterns.fgPattern, string: prefixFormattingRule, template:"\\$1")
             }
             if formatType == PhoneNumberFormat.National && regex.hasValue(prefixFormattingRule){
-                let replacePattern = regex.replaceFirstStringByRegex(firstGroupPattern, string: numberFormatRule, templateString: prefixFormattingRule)
+                let replacePattern = regex.replaceFirstStringByRegex(PhoneNumberPatterns.firstGroupPattern, string: numberFormatRule, templateString: prefixFormattingRule)
                 formattedNationalNumber = self.regex.replaceStringByRegex(pattern, string: nationalNumber, template: replacePattern)
             }
             else {
