@@ -84,7 +84,7 @@ class RegularExpressions {
             return matches
         }
         else {
-            let fallBackMatches = try regexMatches(validPhoneNumberPattern, string: string)
+            let fallBackMatches = try regexMatches(PhoneNumberPatterns.validPhoneNumberPattern, string: string)
             if fallBackMatches.isEmpty == false {
                 return fallBackMatches
             }
