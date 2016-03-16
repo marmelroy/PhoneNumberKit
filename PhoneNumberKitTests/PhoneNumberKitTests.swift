@@ -260,4 +260,22 @@ class PhoneNumberKitTests: XCTestCase {
         XCTAssertEqual(phoneNumberKit.countriesForCode(424242)?.count, 0)
     }
 
+    //  Test region code for number function
+    func testGetRegionCode() {
+        guard let phoneNumber = try? PhoneNumber(rawNumber: "+39 3123456789") else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(PhoneNumberKit().regionCodeForNumber(phoneNumber), "IT")
+    }
+
+    //  Test region code for number in a region that uses leading digits
+    func testGetRegionCodeLeadingDigits() {
+        guard let phoneNumber = try? PhoneNumber(rawNumber: "876-123-4567") else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(PhoneNumberKit().regionCodeForNumber(phoneNumber), "JM")
+    }
+
 }
