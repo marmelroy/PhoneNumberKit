@@ -68,7 +68,7 @@ public class PhoneNumberKit: NSObject {
 
     /**
     Get the region code for the given phone number
-    - Paramter number: The phone number
+    - Parameter number: The phone number
     - Returns: Region code, eg "US", or nil if the region cannot be determined
     */
     public func regionCodeForNumber(number: PhoneNumber) -> String? {
