@@ -87,6 +87,7 @@ class PhoneNumberKitTests: XCTestCase {
         do {
             let phoneNumber = try PhoneNumber(rawNumber: testNumber)
             XCTAssertEqual(phoneNumber.toE164(), testNumber)
+            XCTAssertEqual(phoneNumber.toInternational(false), "6 89 55 55 55")
             XCTAssertEqual(phoneNumber.countryCode, 33)
             XCTAssertEqual(phoneNumber.nationalNumber, 689555555)
             XCTAssertEqual(phoneNumber.leadingZero, false)
@@ -112,7 +113,7 @@ class PhoneNumberKitTests: XCTestCase {
         }
     }
 
-
+    
     // English number with an American IDD (default region for testing enivronment)
     func testValidNumberWithAmericanIDDNoWhiteSpace() {
         let testNumber = "011447739555555"

@@ -106,20 +106,25 @@ public extension PhoneNumber {
     Formats a phone number to E164 format (e.g. +33689123456)
     - Returns: A string representing the phone number in E164 format.
     */
-    public func toE164() -> String {
-        let formattedNumber = "+" + String(countryCode) + adjustedNationalNumber()
-        return formattedNumber
+    public func toE164(prefix: Bool = true) -> String {
+        let formattedNationalNumber = adjustedNationalNumber()
+        if prefix == false {
+            return formattedNationalNumber
+        }
+        return "+\(String(countryCode))\(formattedNationalNumber)"
     }
     
     /**
      Formats a phone number to International format (e.g. +33 6 89 12 34 56)
      - Returns: A string representing the phone number in International format.
      */
-    public func toInternational() -> String {
+    public func toInternational(prefix: Bool = true) -> String {
         let formatter = Formatter()
         let formattedNationalNumber = formatter.formatPhoneNumber(self, formatType: .International)
-        let formattedNumber = "+" + String(countryCode) + " " + formattedNationalNumber
-        return formattedNumber
+        if prefix == false {
+            return formattedNationalNumber
+        }
+        return "+\(String(countryCode)) \(formattedNationalNumber)"
     }
     
     /**
