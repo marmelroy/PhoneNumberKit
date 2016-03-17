@@ -30,6 +30,7 @@ MetadataTerritory object
 - Parameter voicemail: MetadataPhoneNumberDesc for voice mail numbers
 - Parameter voip: MetadataPhoneNumberDesc for voip numbers
 - Parameter uan: MetadataPhoneNumberDesc for uan numbers
+- Parameter leadingDigits: Optional leading digits for the territory
 */
 struct MetadataTerritory {
     let codeID: String
@@ -54,6 +55,7 @@ struct MetadataTerritory {
     let voip: MetadataPhoneNumberDesc?
     let uan: MetadataPhoneNumberDesc?
     var numberFormats: [MetadataPhoneNumberFormat] = []
+    let leadingDigits: String?
 
 }
 
@@ -108,6 +110,7 @@ extension MetadataTerritory {
                 self.numberFormats.append(processedFormat)
             }
         }
+        self.leadingDigits = jsondDict.valueForKey("leadingDigits") as? String
     }
 }
 
