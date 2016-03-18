@@ -200,25 +200,39 @@ class PhoneNumberKitParsingTests: XCTestCase {
     }
     
     func testAllExampleNumbers() {
-        do {
-            let metaDataArray = PhoneNumberKit().metadata.items.filter{$0.codeID.characters.count == 2}
-            for metadata in metaDataArray {
-                let codeID = metadata.codeID
-                let metaDataDescriptions = [metadata.generalDesc, metadata.fixedLine, metadata.mobile, metadata.tollFree, metadata.premiumRate, metadata.sharedCost, metadata.voip, metadata.voicemail, metadata.pager, metadata.uan, metadata.emergency]
-                for desc in metaDataDescriptions {
-                    if desc != nil {
-                        let exampleNumber = desc?.exampleNumber
-                        if exampleNumber != nil {
-                            let phoneNumber = try PhoneNumber(rawNumber: exampleNumber!, region: codeID)
+        let metaDataArray = PhoneNumberKit().metadata.items.filter{$0.codeID.characters.count == 2}
+        for metadata in metaDataArray {
+            let codeID = metadata.codeID
+            let metaDataDescriptions = [metadata.generalDesc, metadata.fixedLine, metadata.mobile, metadata.tollFree, metadata.premiumRate, metadata.sharedCost, metadata.voip, metadata.voicemail, metadata.pager, metadata.uan, metadata.emergency]
+            for desc in metaDataDescriptions {
+                if desc != nil {
+                    if let exampleNumber = desc?.exampleNumber {
+                        do {
+                            let phoneNumber = try PhoneNumber(rawNumber: exampleNumber, region: codeID)
                             XCTAssertNotNil(phoneNumber)
+                        } catch (let e) {
+                            XCTFail("Failed to create PhoneNumber for \(exampleNumber): \(e)")
                         }
                     }
                 }
             }
         }
-        catch {
+    }
+
+    func testRegexMatchesEntirely() {
+        let pattern = "[2-9]\\d{8}|860\\d{9}"
+        let number = "860123456789"
+        let regex = RegularExpressions()
+        XCTAssert(regex.matchesEntirely(pattern, string: number))
+        XCTAssertFalse(regex.matchesEntirely("8", string: number))
+    }
+
+    func testUSTollFreeNumberType() {
+        guard let number = try? PhoneNumber(rawNumber: "8002345678") else {
             XCTFail()
+            return
         }
+        XCTAssertEqual(number.type, PhoneNumberType.TollFree)
     }
 
     func testPerformanceSimple() {
