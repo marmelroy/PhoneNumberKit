@@ -234,7 +234,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
         endTime = NSDate()
         let timeInterval = endTime.timeIntervalSinceDate(startTime)
         print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
-        XCTAssertTrue(timeInterval < 1)
+        XCTAssertTrue(timeInterval < 5)
     }
 
 }
