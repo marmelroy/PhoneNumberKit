@@ -105,14 +105,14 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         let textAsNSString = text as NSString
         let cursorEnd = offsetFromPosition(beginningOfDocument, toPosition: selectedTextRange.end)
         // Look for the next valid number after the cursor, when found return a CursorPosition struct
-        for var i = cursorEnd; i < textAsNSString.length; i++  {
+        for i in cursorEnd ..< textAsNSString.length  {
             let cursorRange = NSMakeRange(i, 1)
             let candidateNumberAfterCursor: NSString = textAsNSString.substringWithRange(cursorRange)
             if (candidateNumberAfterCursor.rangeOfCharacterFromSet(nonNumericSet).location == NSNotFound) {
-                for var j = cursorRange.location; j < textAsNSString.length; j++  {
+                for j in cursorRange.location ..< textAsNSString.length  {
                     let candidateCharacter = textAsNSString.substringWithRange(NSMakeRange(j, 1))
                     if candidateCharacter == candidateNumberAfterCursor {
-                        repetitionCountFromEnd++
+                        repetitionCountFromEnd += 1
                     }
                 }
                 return CursorPosition(numberAfterCursor: candidateNumberAfterCursor as String, repetitionCountFromEnd: repetitionCountFromEnd)
@@ -128,16 +128,18 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         guard let cursorPosition = extractCursorPosition() else {
             return nil
         }
-        for var i = (textAsNSString.length - 1); i >= 0; i--  {
+        
+        for i in (textAsNSString.length - 1).stride(through: 0, by: -1) {
             let candidateRange = NSMakeRange(i, 1)
             let candidateCharacter = textAsNSString.substringWithRange(candidateRange)
             if candidateCharacter == cursorPosition.numberAfterCursor {
-                countFromEnd++
+                countFromEnd += 1
                 if countFromEnd == cursorPosition.repetitionCountFromEnd {
                     return candidateRange
                 }
             }
         }
+
         return nil
     }
     

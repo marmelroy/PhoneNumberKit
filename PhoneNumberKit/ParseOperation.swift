@@ -196,7 +196,7 @@ extension ParseOperationValue {
 Value provider protocol.
 */
 public protocol ParseOperationValueProvider {
-    typealias ProvidedInputValueType
+    associatedtype ProvidedInputValueType
 }
 
 /**

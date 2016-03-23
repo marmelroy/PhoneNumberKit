@@ -347,7 +347,7 @@ public class PartialFormatter {
                 if rebuiltIndex < rawNumber.characters.count {
                     let nationalCharacterIndex = rawNumber.startIndex.advancedBy(rebuiltIndex)
                     rebuiltString.append(rawNumber[nationalCharacterIndex])
-                    rebuiltIndex++
+                    rebuiltIndex += 1
                 }
             }
             else {
