@@ -19,7 +19,7 @@ MODE="$1"
 
 if [ "$MODE" = "build" ]; then
     echo "Building PhoneNumberKit."
-    xctool \
+    xcodebuild \
         -project PhoneNumberKit.xcodeproj \
         -scheme PhoneNumberKit \
         -sdk "$SDK" \
