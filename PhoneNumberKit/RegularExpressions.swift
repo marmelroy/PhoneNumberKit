@@ -137,24 +137,11 @@ class RegularExpressions {
 
     
     func matchesEntirely(pattern: String?, string: String) -> Bool {
-        guard let pattern = pattern else {
+        guard var pattern = pattern else {
             return false
         }
-        var isMatchingEntirely: Bool = false
-        do {
-            let matches = try regexMatches(pattern, string: string)
-            let nsString = string as NSString
-            let stringRange = NSMakeRange(0, nsString.length)
-            for match in matches {
-                if (NSEqualRanges(match.range, stringRange)) {
-                    isMatchingEntirely = true
-                }
-            }
-            return isMatchingEntirely
-        }
-        catch {
-            return false
-        }
+        pattern = "^\(pattern)$"
+        return matchesExist(pattern, string: string)
     }
     
     func matchedStringByRegex(pattern: String, string: String) throws -> [String] {
