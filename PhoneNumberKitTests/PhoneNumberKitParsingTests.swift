@@ -203,13 +203,32 @@ class PhoneNumberKitParsingTests: XCTestCase {
         let metaDataArray = PhoneNumberKit().metadata.items.filter{$0.codeID.characters.count == 2}
         for metadata in metaDataArray {
             let codeID = metadata.codeID
-            let metaDataDescriptions = [metadata.generalDesc, metadata.fixedLine, metadata.mobile, metadata.tollFree, metadata.premiumRate, metadata.sharedCost, metadata.voip, metadata.voicemail, metadata.pager, metadata.uan, metadata.emergency]
-            for desc in metaDataDescriptions {
-                if desc != nil {
-                    if let exampleNumber = desc?.exampleNumber {
+            let metadataWithTypes: [(MetadataPhoneNumberDesc?, PhoneNumberType?)] = [
+                (metadata.generalDesc, nil),
+                (metadata.fixedLine, .FixedLine),
+                (metadata.mobile, .Mobile),
+                (metadata.tollFree, .TollFree),
+                (metadata.premiumRate, .PremiumRate),
+                (metadata.sharedCost, .SharedCost),
+                (metadata.voip, .VOIP),
+                (metadata.voicemail, .Voicemail),
+                (metadata.pager, .Pager),
+                (metadata.uan, .UAN),
+                (metadata.emergency, nil),
+            ]
+            metadataWithTypes.forEach { record in
+                if let desc = record.0 {
+                    if let exampleNumber = desc.exampleNumber {
                         do {
                             let phoneNumber = try PhoneNumber(rawNumber: exampleNumber, region: codeID)
                             XCTAssertNotNil(phoneNumber)
+                            if let type = record.1 {
+                                if phoneNumber.type == .FixedOrMobile {
+                                    XCTAssert(type == .FixedLine || type == .Mobile)
+                                } else {
+                                    XCTAssertEqual(phoneNumber.type, type, "Expected type \(type) for number \(phoneNumber)")
+                                }
+                            }
                         } catch (let e) {
                             XCTFail("Failed to create PhoneNumber for \(exampleNumber): \(e)")
                         }
@@ -233,6 +252,55 @@ class PhoneNumberKitParsingTests: XCTestCase {
             return
         }
         XCTAssertEqual(number.type, PhoneNumberType.TollFree)
+    }
+
+    func testBelizeTollFreeType() {
+        guard let number = try? PhoneNumber(rawNumber: "08001234123", region: "BZ") else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(number.type, PhoneNumberType.TollFree)
+    }
+
+    func testItalyFixedLineType() {
+        guard let number = try? PhoneNumber(rawNumber: "0669812345", region: "IT") else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(number.type, PhoneNumberType.FixedLine)
+    }
+
+    func testMaldivesPagerNumber() {
+        guard let number = try? PhoneNumber(rawNumber: "7812345", region: "MV") else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(number.type, PhoneNumberType.Pager)
+    }
+
+    func testZimbabweVoipType() {
+        guard let number = try? PhoneNumber(rawNumber: "8686123456", region: "ZW") else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(number.type, PhoneNumberType.VOIP)
+
+    }
+
+    func testAntiguaPagerNumberType() {
+        guard let number = try? PhoneNumber(rawNumber: "12684061234") else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(number.type, PhoneNumberType.Pager)
+    }
+
+    func testFranceMobileNumberType() {
+        guard let number = try? PhoneNumber(rawNumber: "+33 612-345-678") else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(number.type, PhoneNumberType.Mobile)
     }
 
     func testPerformanceSimple() {

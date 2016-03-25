@@ -90,6 +90,9 @@ public class PhoneNumberKit: NSObject {
                     return region.codeID
                 }
             }
+            if number.leadingZero && parser.checkNumberType("0" + nationalNumber, metadata: region) != .Unknown {
+                return region.codeID
+            }
             if parser.checkNumberType(nationalNumber, metadata: region) != .Unknown {
                 return region.codeID
             }
