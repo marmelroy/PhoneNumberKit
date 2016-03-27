@@ -107,5 +107,5 @@ github "marmelroy/PhoneNumberKit"
 ### Setting up with [CocoaPods](http://cocoapods.org/?q=PhoneNumberKit)
 ```ruby
 source 'https://github.com/CocoaPods/Specs.git'
-pod 'PhoneNumberKit', '~> 0.6'
+pod 'PhoneNumberKit', '~> 0.7'
 ```
