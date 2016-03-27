@@ -113,14 +113,23 @@ class PhoneNumberParser {
     
     /**
     Check number type (e.g +33 612-345-678 to .Mobile).
-    - Parameter nationalNumber: National number string.
-    - Parameter countryCode:  International country code (e.g 44 for the UK).
-    - Returns: Country code is UInt64.
+    - Parameter phoneNumber: The number to check
+    - Returns: The type of the number
     */
-    func checkNumberType(nationalNumber: String, countryCode: UInt64) -> PhoneNumberType {
-        guard let metadata = self.metadata.metadataPerCode[countryCode] else {
+    func checkNumberType(phoneNumber: PhoneNumber) -> PhoneNumberType {
+        guard let region = PhoneNumberKit().regionCodeForNumber(phoneNumber) else {
             return .Unknown
         }
+        guard let metadata = metadata.fetchMetadataForCountry(region) else {
+            return .Unknown
+        }
+        if phoneNumber.leadingZero {
+            let type = checkNumberType("0" + String(phoneNumber.nationalNumber), metadata: metadata)
+            if type != .Unknown {
+                return type
+            }
+        }
+        let nationalNumber = String(phoneNumber.nationalNumber)
         return checkNumberType(nationalNumber, metadata: metadata)
     }
 
@@ -131,19 +140,8 @@ class PhoneNumberParser {
         if (regex.hasValue(generalNumberDesc.nationalNumberPattern) == false || isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc) == false) {
             return .Unknown
         }
-        if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.fixedLine)) {
-            if metadata.fixedLine?.nationalNumberPattern == metadata.mobile?.nationalNumberPattern {
-                return .FixedOrMobile
-            }
-            else if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.mobile)) {
-                return .FixedOrMobile
-            }
-            else {
-                return .FixedLine
-            }
-        }
-        if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.mobile)) {
-            return .Mobile
+        if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.pager)) {
+            return .Pager
         }
         if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.premiumRate)) {
             return .PremiumRate
@@ -160,14 +158,25 @@ class PhoneNumberParser {
         if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.personalNumber)) {
             return .PersonalNumber
         }
-        if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.pager)) {
-            return .Pager
-        }
         if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.uan)) {
             return .UAN
         }
         if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.voicemail)) {
             return .Voicemail
+        }
+        if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.fixedLine)) {
+            if metadata.fixedLine?.nationalNumberPattern == metadata.mobile?.nationalNumberPattern {
+                return .FixedOrMobile
+            }
+            else if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.mobile)) {
+                return .FixedOrMobile
+            }
+            else {
+                return .FixedLine
+            }
+        }
+        if (isNumberMatchingDesc(nationalNumber, numberDesc: metadata.mobile)) {
+            return .Mobile
         }
         return .Unknown
     }

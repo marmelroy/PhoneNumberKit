@@ -27,7 +27,7 @@ public struct PhoneNumber {
     public var type: PhoneNumberType {
         get {
             let parser = PhoneNumberParser()
-            let type: PhoneNumberType = parser.checkNumberType(String(nationalNumber), countryCode: countryCode)
+            let type: PhoneNumberType = parser.checkNumberType(self)
             return type
         }
     }

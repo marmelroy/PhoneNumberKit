@@ -140,7 +140,7 @@ class RegularExpressions {
         guard var pattern = pattern else {
             return false
         }
-        pattern = "^\(pattern)$"
+        pattern = "^(\(pattern))$"
         return matchesExist(pattern, string: string)
     }
     
