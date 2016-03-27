@@ -23,7 +23,8 @@ class PhoneNumberParser {
     - Returns: Normalized phone number string.
     */
     func normalizePhoneNumber(number: String) -> String {
-        return regex.stringByReplacingOccurrences(number, map: PhoneNumberPatterns.allNormalizationMappings, removeNonMatches: true)
+        let normalizationMappings = PhoneNumberPatterns.allNormalizationMappings
+        return regex.stringByReplacingOccurrences(number, map: normalizationMappings)
     }
 
     // MARK: Extractions
@@ -202,7 +203,7 @@ class PhoneNumberParser {
                 if let firstMatch = matchedGroups.first {
                     let digitMatched = remainString.substringWithRange(firstMatch.range) as NSString
                     if digitMatched.length > 0 {
-                        let normalizedGroup =  regex.stringByReplacingOccurrences(digitMatched as String, map: PhoneNumberPatterns.allNormalizationMappings, removeNonMatches: true)
+                        let normalizedGroup =  regex.stringByReplacingOccurrences(digitMatched as String, map: PhoneNumberPatterns.allNormalizationMappings)
                         if normalizedGroup == "0" {
                             return false
                         }

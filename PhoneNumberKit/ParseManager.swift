@@ -54,7 +54,8 @@ class ParseManager {
             countryCode = regionMetadata.countryCode
         }
         // Nomralized number (5)
-        nationalNumber = self.parser.normalizePhoneNumber(nationalNumber)
+        let normalizedNationalNumber = self.parser.normalizePhoneNumber(nationalNumber)
+        nationalNumber = normalizedNationalNumber
         // If country code is not default, grab correct metadata (6)
         if countryCode != regionMetadata.countryCode, let countryMetadata = self.metadata.metadataPerCode[countryCode] {
             regionMetadata = countryMetadata

@@ -29,8 +29,6 @@ public class PartialFormatter {
             return currentMetadata?.codeID ?? defaultRegion
         }
     }
-
-    public private(set) var isValidNumber = false
   
     
     //MARK: Lifecycle
@@ -73,11 +71,6 @@ public class PartialFormatter {
             return rawNumber
         }
         // Determine if number is valid by trying to instantiate a PhoneNumber object with it
-        do {
-            try _ = PhoneNumber(rawNumber: rawNumber)
-            isValidNumber = true
-        } catch {}
-        
         let iddFreeNumber = extractIDD(rawNumber)
         var nationalNumber = parser.normalizePhoneNumber(iddFreeNumber)
         if prefixBeforeNationalNumber.characters.count > 0 {
@@ -118,7 +111,6 @@ public class PartialFormatter {
     //MARK: Formatting Functions
     
     internal func resetVariables() {
-        isValidNumber = false
         currentMetadata = defaultMetadata
         prefixBeforeNationalNumber = String()
         shouldAddSpaceAfterNationalPrefix = false
@@ -224,7 +216,9 @@ public class PartialFormatter {
         if let potentialCountryCode = self.parser.extractPotentialCountryCode(rawNumber, nationalNumber: &numberWithoutCountryCallingCode) where potentialCountryCode != 0 {
             processedNumber = numberWithoutCountryCallingCode
             currentMetadata = metadata.fetchMainCountryMetadataForCode(potentialCountryCode)
-            prefixBeforeNationalNumber.appendContentsOf("\(potentialCountryCode) ")
+            let potentialCountryCodeString = String(potentialCountryCode)
+            prefixBeforeNationalNumber.appendContentsOf(potentialCountryCodeString)
+            prefixBeforeNationalNumber.appendContentsOf(" ")
         }
         return processedNumber
     }

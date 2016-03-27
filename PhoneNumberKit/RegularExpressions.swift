@@ -227,17 +227,13 @@ class RegularExpressions {
         }
     }
     
-    func stringByReplacingOccurrences(string: String, map: [String:String], removeNonMatches: Bool) -> String {
+    func stringByReplacingOccurrences(string: String, map: [String:String]) -> String {
         var targetString = String()
-        let copiedString = string
         for i in 0 ..< string.characters.count {
-            let oneChar = copiedString[copiedString.startIndex.advancedBy(i)]
-            let keyString = String(oneChar)
-            if let mappedValue = map[keyString.uppercaseString] {
+            let oneChar = string[string.startIndex.advancedBy(i)]
+            let keyString = String(oneChar).uppercaseString
+            if let mappedValue = map[keyString] {
                 targetString.appendContentsOf(mappedValue)
-            }
-            else if removeNonMatches == false {
-                targetString.appendContentsOf(keyString as String)
             }
         }
         return targetString

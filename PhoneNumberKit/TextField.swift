@@ -47,7 +47,13 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
     public var isValidNumber: Bool {
         get {
-            return partialFormatter.isValidNumber
+            let rawNumber = self.text ?? String()
+            do {
+                _ = try PhoneNumber(rawNumber: rawNumber)
+                return true
+            } catch {
+                return false
+            }
         }
     }
     
