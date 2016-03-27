@@ -48,16 +48,21 @@ class Metadata {
             return territoryArray
         }
         do {
-            let jsonObjects = try NSJSONSerialization.JSONObjectWithData(jsonData, options: NSJSONReadingOptions.AllowFragments)
-            let metadataDict = jsonObjects["phoneNumberMetadata"] as? NSDictionary
-            let metadataTerritories = metadataDict?["territories"] as? NSDictionary
-            guard let metadataTerritoryArray = metadataTerritories?["territory"] as? NSArray else{
-                return territoryArray
-            }
-            for territory in metadataTerritoryArray {
-                if let territoryDict = territory as? NSDictionary {
-                    let parsedTerritory = MetadataTerritory(jsondDict: territoryDict)
-                    territoryArray.append(parsedTerritory)
+            if let jsonObjects = try NSJSONSerialization.JSONObjectWithData(jsonData, options: NSJSONReadingOptions.AllowFragments) as? NSDictionary {
+                if let metadataDict = jsonObjects["phoneNumberMetadata"] as? NSDictionary {
+                    if let metadataTerritories = metadataDict["territories"] as? NSDictionary {
+                        if let metadataTerritoryArray = metadataTerritories["territory"] as? NSArray {
+                            metadataTerritoryArray.forEach({
+                                if let territoryDict = $0 as? NSDictionary {
+                                    let parsedTerritory = MetadataTerritory(jsondDict: territoryDict)
+                                    territoryArray.append(parsedTerritory)
+                                }
+                            })
+                        }
+                        else {
+                            return territoryArray
+                        }
+                    }
                 }
             }
             return territoryArray
