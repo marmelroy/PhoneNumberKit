@@ -59,6 +59,8 @@ public class PartialFormatter {
      */
     public init(defaultRegion: String, withPrefix: Bool = true) {
         self.defaultRegion = defaultRegion
+        self.defaultMetadata = metadata.fetchMetadataForCountry(defaultRegion)
+        self.currentMetadata = defaultMetadata
         self.withPrefix = withPrefix
     }
     
@@ -244,9 +246,7 @@ public class PartialFormatter {
                     tempPossibleFormats.append(format)
                     if let leadingDigitPattern = format.leadingDigitsPatterns?.last {
                         if (regex.stringPositionByRegex(leadingDigitPattern, string: String(rawNumber)) == 0) {
-//                            if (regex.matchesEntirely(format.pattern, string: String(rawNumber))) {
-                                possibleFormats.append(format)
-//                            }
+                            possibleFormats.append(format)
                         }
                     }
                     else {
