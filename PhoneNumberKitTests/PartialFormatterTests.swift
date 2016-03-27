@@ -16,7 +16,7 @@ class PartialFormatterTests: XCTestCase {
     
     // +33689555555
     func testFrenchNumberFromFrenchRegion()  {
-        let partialFormatter = PartialFormatter(region: "FR")
+        let partialFormatter = PartialFormatter(defaultRegion: "FR")
         var testNumber = "+"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+")
         testNumber = "+3"
@@ -44,7 +44,7 @@ class PartialFormatterTests: XCTestCase {
     }
     
     func testFrenchNumberIDDFromFrenchRegion()  {
-        let partialFormatter = PartialFormatter(region: "FR")
+        let partialFormatter = PartialFormatter(defaultRegion: "FR")
         var testNumber = "0"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "0")
         testNumber = "00"
@@ -75,7 +75,7 @@ class PartialFormatterTests: XCTestCase {
 
     
     func testFrenchNumberFromAmericanRegion()  {
-        let partialFormatter = PartialFormatter(region: "US")
+        let partialFormatter = PartialFormatter(defaultRegion: "US")
         var testNumber = "+"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+")
         testNumber = "+3"
@@ -103,7 +103,7 @@ class PartialFormatterTests: XCTestCase {
     }
     
     func testFrenchNumberIDDFromAmericanRegion()  {
-        let partialFormatter = PartialFormatter(region: "US")
+        let partialFormatter = PartialFormatter(defaultRegion: "US")
         var testNumber = "0"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "0")
         testNumber = "01"
@@ -136,14 +136,14 @@ class PartialFormatterTests: XCTestCase {
 
     
     func testInvalidNumberNotANumber() {
-        let partialFormatter = PartialFormatter(region: "US")
+        let partialFormatter = PartialFormatter(defaultRegion: "US")
         let testNumber = "ae4c08c6-be33-40ef-a417-e5166e307b5e"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber),  "ae4c08c6-be33-40ef-a417-e5166e307b5e")
     }
     
     // +390549555555
     func testItalianLeadingZeroFromUS()  {
-        let partialFormatter = PartialFormatter(region: "US")
+        let partialFormatter = PartialFormatter(defaultRegion: "US")
         var testNumber = "+"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+")
         testNumber = "+3"
@@ -174,7 +174,7 @@ class PartialFormatterTests: XCTestCase {
     }
     
     func testFrenchNumberLocal()  {
-        let partialFormatter = PartialFormatter(region: "FR")
+        let partialFormatter = PartialFormatter(defaultRegion: "FR")
         var testNumber = "0"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "0")
         testNumber = "06"
@@ -198,7 +198,7 @@ class PartialFormatterTests: XCTestCase {
     }
 
     func testUSTollFreeNumber() {
-        let partialFormatter = PartialFormatter(region: "US")
+        let partialFormatter = PartialFormatter(defaultRegion: "US")
         var testNumber = "8"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "8")
         testNumber = "80"
@@ -223,7 +223,7 @@ class PartialFormatterTests: XCTestCase {
     
     // 07739555555
     func testUKMobileNumber() {
-        let partialFormatter = PartialFormatter(region: "GB")
+        let partialFormatter = PartialFormatter(defaultRegion: "GB")
         var testNumber = "0"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "0")
         testNumber = "07"
@@ -250,19 +250,19 @@ class PartialFormatterTests: XCTestCase {
     
     // MARK: region prediction
     func testMinimalFrenchNumber() {
-        let partialFormatter = PartialFormatter(region: "US")
+        let partialFormatter = PartialFormatter(defaultRegion: "US")
         partialFormatter.formatPartial("+33")
         XCTAssertEqual(partialFormatter.currentRegion, "FR")
     }
     
     func testMinimalUSNumberFromFrance() {
-        let partialFormatter = PartialFormatter(region: "FR")
+        let partialFormatter = PartialFormatter(defaultRegion: "FR")
         partialFormatter.formatPartial("+1")
         XCTAssertEqual(partialFormatter.currentRegion, "US")
     }
     
     func testRegionResetsWithEachCallToFormatPartial() {
-        let partialFormatter = PartialFormatter(region: "DE")
+        let partialFormatter = PartialFormatter(defaultRegion: "DE")
         partialFormatter.formatPartial("+1 212 555 1212")
         XCTAssertEqual(partialFormatter.currentRegion, "US")
         partialFormatter.formatPartial("invalid raw number")
