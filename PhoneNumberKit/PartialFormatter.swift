@@ -15,12 +15,19 @@ public class PartialFormatter {
     let parser = PhoneNumberParser()
     let regex = RegularExpressions.sharedInstance
     
-    let defaultRegion: String
-    let defaultMetadata: MetadataTerritory?
-
+    var defaultRegion: String {
+        didSet {
+            defaultMetadata = metadata.fetchMetadataForCountry(defaultRegion)
+            currentMetadata = defaultMetadata
+        }
+    }
+    
+    var defaultMetadata: MetadataTerritory?
     var currentMetadata: MetadataTerritory?
     var prefixBeforeNationalNumber =  String()
     var shouldAddSpaceAfterNationalPrefix = false
+    
+    var withPrefix = true
     
     //MARK: Status
 
@@ -39,8 +46,8 @@ public class PartialFormatter {
     - returns: PartialFormatter object
     */
     public convenience init() {
-        let region = PhoneNumberKit().defaultRegionCode()
-        self.init(region: region)
+        let defaultRegion = PhoneNumberKit().defaultRegionCode()
+        self.init(defaultRegion: defaultRegion)
     }
     
     /**
@@ -50,10 +57,9 @@ public class PartialFormatter {
      
      - returns: PartialFormatter object
      */
-    public init(region: String) {
-        defaultRegion = region
-        defaultMetadata = metadata.fetchMetadataForCountry(defaultRegion)
-        currentMetadata = defaultMetadata
+    public init(defaultRegion: String, withPrefix: Bool = true) {
+        self.defaultRegion = defaultRegion
+        self.withPrefix = withPrefix
     }
     
     /**
@@ -217,6 +223,11 @@ public class PartialFormatter {
             processedNumber = numberWithoutCountryCallingCode
             currentMetadata = metadata.fetchMainCountryMetadataForCode(potentialCountryCode)
             let potentialCountryCodeString = String(potentialCountryCode)
+            prefixBeforeNationalNumber.appendContentsOf(potentialCountryCodeString)
+            prefixBeforeNationalNumber.appendContentsOf(" ")
+        }
+        else if withPrefix == false && prefixBeforeNationalNumber.isEmpty {
+            let potentialCountryCodeString = String(currentMetadata?.countryCode)
             prefixBeforeNationalNumber.appendContentsOf(potentialCountryCodeString)
             prefixBeforeNationalNumber.appendContentsOf(" ")
         }

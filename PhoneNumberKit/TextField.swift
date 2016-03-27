@@ -13,11 +13,24 @@ import UIKit
 public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     
     /// Override region to set a custom region. Automatically uses the default region code.
-    public var region = PhoneNumberKit().defaultRegionCode() {
+    public var defaultRegion = PhoneNumberKit().defaultRegionCode() {
         didSet {
-            partialFormatter = PartialFormatter(region: region)
+            partialFormatter.defaultRegion = defaultRegion
         }
     }
+    
+    public var withPrefix: Bool = true {
+        didSet {
+            partialFormatter.withPrefix = withPrefix
+            if withPrefix == false {
+                self.keyboardType = UIKeyboardType.NumberPad
+            }
+            else {
+                self.keyboardType = UIKeyboardType.PhonePad
+            }
+        }
+    }
+
     
     var partialFormatter = PartialFormatter()
     
