@@ -106,12 +106,26 @@ class PhoneNumberKitTests: XCTestCase {
         }
     }
 
-    // Invalid CN number, GitHub pr by dulaccc
+    // Invalid IT number, GitHub pr by dulaccc
     func testInvalidITNumbers() {
         do {
             // libphonenumber reports this number as invalid
             // and it's true, this is a French mobile number combined with the IT region
             let phoneNumber = try PhoneNumber(rawNumber: "+390762613915")
+            print(phoneNumber.toE164())
+            XCTFail()
+        }
+        catch {
+            XCTAssert(true)
+        }
+    }
+
+    // Invalid ES number, GitHub pr by dulaccc
+    func testInvalidESNumbers() {
+        do {
+            // libphonenumber reports this number as invalid
+            // and it's true, this is a French mobile number combined with the ES region
+            let phoneNumber = try PhoneNumber(rawNumber: "+34312431110")
             print(phoneNumber.toE164())
             XCTFail()
         }
