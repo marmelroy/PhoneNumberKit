@@ -78,6 +78,20 @@ class PhoneNumberKitTests: XCTestCase {
         }
     }
 
+    // Invalid DZ number, GitHub pr by dulaccc
+    func testInvalidDZNumbers() {
+        do {
+            // libphonenumber reports this number as invalid
+            // and it's true, this is a French mobile number combined with the DZ region
+            let phoneNumber = try PhoneNumber(rawNumber: "+21373344376")
+            print(phoneNumber.toE164())
+            XCTFail()
+        }
+        catch {
+            XCTAssert(true)
+        }
+    }
+
     // Invalid CN number, GitHub pr by dulaccc
     func testInvalidCNNumbers() {
         do {
