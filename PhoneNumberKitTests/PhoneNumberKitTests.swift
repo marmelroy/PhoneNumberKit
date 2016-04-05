@@ -50,6 +50,19 @@ class PhoneNumberKitTests: XCTestCase {
         }
     }
 
+    // Invalid UK number, GitHub pr by dulaccc
+    func testInvalidGBNumbers() {
+        do {
+            // libphonenumber reports this number as invalid
+            // and it's true, this is a French mobile number combined with the GB region
+            let phoneNumber = try PhoneNumber(rawNumber: "+44629996885")
+            print(phoneNumber.toE164())
+            XCTFail()
+        }
+        catch {
+            XCTAssert(true)
+        }
+    }
 
     // Italian number with a leading zero
     func testItalianLeadingZero() {
