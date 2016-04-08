@@ -17,11 +17,19 @@ public class PartialFormatter {
     
     var defaultRegion: String {
         didSet {
-            defaultMetadata = metadata.fetchMetadataForCountry(defaultRegion)
-            currentMetadata = defaultMetadata
+            updateMetadataForDefaultRegion()
         }
     }
-    
+
+    func updateMetadataForDefaultRegion() {
+        if let regionMetadata = metadata.fetchMetadataForCountry(defaultRegion) {
+            defaultMetadata = metadata.fetchMainCountryMetadataForCode(regionMetadata.countryCode)
+        } else {
+            defaultMetadata = nil
+        }
+        currentMetadata = defaultMetadata
+    }
+
     var defaultMetadata: MetadataTerritory?
     var currentMetadata: MetadataTerritory?
     var prefixBeforeNationalNumber =  String()
@@ -59,8 +67,7 @@ public class PartialFormatter {
      */
     public init(defaultRegion: String, withPrefix: Bool = true) {
         self.defaultRegion = defaultRegion
-        self.defaultMetadata = metadata.fetchMetadataForCountry(defaultRegion)
-        self.currentMetadata = defaultMetadata
+        updateMetadataForDefaultRegion()
         self.withPrefix = withPrefix
     }
     

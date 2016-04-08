@@ -73,7 +73,32 @@ class PartialFormatterTests: XCTestCase {
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "00 33 6 89 55 55 55")
     }
 
-    
+    // 268 464 1234
+    // Test for number that is not the country code's main country
+    func testAntiguaNumber() {
+        let partialFormatter = PartialFormatter(defaultRegion: "AG")
+        var number = "2"
+        XCTAssertEqual(partialFormatter.formatPartial(number), "2")
+        number = "26"
+        XCTAssertEqual(partialFormatter.formatPartial(number), "26")
+        number = "268"
+        XCTAssertEqual(partialFormatter.formatPartial(number), "268")
+        number = "2684"
+        XCTAssertEqual(partialFormatter.formatPartial(number), "268-4")
+        number = "26846"
+        XCTAssertEqual(partialFormatter.formatPartial(number), "268-46")
+        number = "268464"
+        XCTAssertEqual(partialFormatter.formatPartial(number), "268-464")
+        number = "2684641"
+        XCTAssertEqual(partialFormatter.formatPartial(number), "268-4641")
+        number = "26846412"
+        XCTAssertEqual(partialFormatter.formatPartial(number), "(268) 464-12")
+        number = "268464123"
+        XCTAssertEqual(partialFormatter.formatPartial(number), "(268) 464-123")
+        number = "2684641234"
+        XCTAssertEqual(partialFormatter.formatPartial(number), "(268) 464-1234")
+    }
+
     func testFrenchNumberFromAmericanRegion()  {
         let partialFormatter = PartialFormatter(defaultRegion: "US")
         var testNumber = "+"
