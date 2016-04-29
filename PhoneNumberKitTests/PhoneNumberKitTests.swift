@@ -57,10 +57,10 @@ class PhoneNumberKitTests: XCTestCase {
             // and it's true, this is a French mobile number combined with the GB region
             let phoneNumber = try PhoneNumber(rawNumber: "+44629996885")
             print(phoneNumber.toE164())
-            XCTFail()
+            (phoneNumber.isValidNumber == true) ? XCTFail() : XCTAssert(true)
         }
         catch {
-            XCTAssert(true)
+    
         }
     }
 
@@ -71,7 +71,7 @@ class PhoneNumberKitTests: XCTestCase {
             // and it's true, this is a French mobile number combined with the BE region
             let phoneNumber = try PhoneNumber(rawNumber: "+32910853865")
             print(phoneNumber.toE164())
-            XCTFail()
+            (phoneNumber.isValidNumber == true) ? XCTFail() : XCTAssert(true)
         }
         catch {
             XCTAssert(true)
@@ -99,7 +99,7 @@ class PhoneNumberKitTests: XCTestCase {
             // and it's true, this is a French mobile number combined with the CN region
             let phoneNumber = try PhoneNumber(rawNumber: "+861500376135")
             print(phoneNumber.toE164())
-            XCTFail()
+            (phoneNumber.isValidNumber == true) ? XCTFail() : XCTAssert(true)
         }
         catch {
             XCTAssert(true)
@@ -113,7 +113,7 @@ class PhoneNumberKitTests: XCTestCase {
             // and it's true, this is a French mobile number combined with the IT region
             let phoneNumber = try PhoneNumber(rawNumber: "+390762613915")
             print(phoneNumber.toE164())
-            XCTFail()
+            (phoneNumber.isValidNumber == true) ? XCTFail() : XCTAssert(true)
         }
         catch {
             XCTAssert(true)
