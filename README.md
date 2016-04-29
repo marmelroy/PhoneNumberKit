@@ -85,6 +85,7 @@ phoneNumber.nationalNumber
 phoneNumber.numberExtension
 phoneNumber.rawNumber
 phoneNumber.type // e.g Mobile or Fixed
+phoneNumber.isValidNumber // Checks if number has a known type
 ```
 
 ### Setting up with Carthage
@@ -107,5 +108,5 @@ github "marmelroy/PhoneNumberKit"
 ### Setting up with [CocoaPods](http://cocoapods.org/?q=PhoneNumberKit)
 ```ruby
 source 'https://github.com/CocoaPods/Specs.git'
-pod 'PhoneNumberKit', '~> 0.7'
+pod 'PhoneNumberKit', '~> 0.8'
 ```
