@@ -31,6 +31,11 @@ public struct PhoneNumber {
             return type
         }
     }
+    public var isValidNumber: Bool {
+        get {
+            return self.type != .Unknown
+        }
+    }
 }
 
 public extension PhoneNumber {
