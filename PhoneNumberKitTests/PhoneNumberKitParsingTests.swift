@@ -241,7 +241,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
     func testRegexMatchesEntirely() {
         let pattern = "[2-9]\\d{8}|860\\d{9}"
         let number = "860123456789"
-        let regex = RegularExpressions()
+        let regex = RegularExpressions.sharedInstance
         XCTAssert(regex.matchesEntirely(pattern, string: number))
         XCTAssertFalse(regex.matchesEntirely("8", string: number))
     }
@@ -318,5 +318,23 @@ class PhoneNumberKitParsingTests: XCTestCase {
         print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
         XCTAssertTrue(timeInterval < 5)
     }
+    
+    func testMultipleMutated() {
+        let numberOfParses = 500
+        let startTime = NSDate()
+        var endTime = NSDate()
+        var numberArray: [String] = []
+        for _ in 0 ..< numberOfParses {
+            numberArray.append("+5491187654321")
+        }
+        let phoneNumbers = ParseManager().parseMultiple(numberArray, region: "AR") { 
+            numberArray.removeAtIndex(100)
+        }
+        XCTAssertTrue(phoneNumbers.count == numberOfParses)
+        endTime = NSDate()
+        let timeInterval = endTime.timeIntervalSinceDate(startTime)
+        print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
+    }
+
 
 }

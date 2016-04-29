@@ -84,7 +84,8 @@ class ParseManager {
     - Parameter region: ISO 639 compliant region code.
     - Returns: An array of valid PhoneNumber objects.
     */
-    func parseMultiple(rawNumbers: [String], region: String) -> [PhoneNumber] {
+    func parseMultiple(rawNumbers: [String], region: String, testCallback: (()->())? = nil) -> [PhoneNumber] {
+        let rawNumbersCopy = rawNumbers
         self.multiParseArray = SynchronizedArray<PhoneNumber>()
         let queue = NSOperationQueue()
         var operationArray: [ParseOperation<PhoneNumber>] = []
@@ -94,7 +95,7 @@ class ParseManager {
         }
         completionOperation.whenFinished { asyncOp in
         }
-        for rawNumber in rawNumbers {
+        for (index, rawNumber) in rawNumbersCopy.enumerate() {
             let parseTask = parseOperation(rawNumber, region:region)
             parseTask.whenFinished { operation in
                 if let phoneNumber = operation.output.value {
@@ -103,6 +104,9 @@ class ParseManager {
             }
             operationArray.append(parseTask)
             completionOperation.addDependency(parseTask)
+            if index == rawNumbers.count/2 {
+                testCallback?()
+            }
         }
         queue.addOperations(operationArray, waitUntilFinished: false)
         queue.addOperations([completionOperation], waitUntilFinished: true)
