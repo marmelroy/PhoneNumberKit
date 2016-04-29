@@ -50,6 +50,89 @@ class PhoneNumberKitTests: XCTestCase {
         }
     }
 
+    // Invalid UK number, GitHub pr by dulaccc
+    func testInvalidGBNumbers() {
+        do {
+            // libphonenumber reports this number as invalid
+            // and it's true, this is a French mobile number combined with the GB region
+            let phoneNumber = try PhoneNumber(rawNumber: "+44629996885")
+            print(phoneNumber.toE164())
+            XCTFail()
+        }
+        catch {
+            XCTAssert(true)
+        }
+    }
+
+    // Invalid BE number, GitHub pr by dulaccc
+    func testInvalidBENumbers() {
+        do {
+            // libphonenumber reports this number as invalid
+            // and it's true, this is a French mobile number combined with the BE region
+            let phoneNumber = try PhoneNumber(rawNumber: "+32910853865")
+            print(phoneNumber.toE164())
+            XCTFail()
+        }
+        catch {
+            XCTAssert(true)
+        }
+    }
+
+    // Invalid DZ number, GitHub pr by dulaccc
+    func testInvalidDZNumbers() {
+        do {
+            // libphonenumber reports this number as invalid
+            // and it's true, this is a French mobile number combined with the DZ region
+            let phoneNumber = try PhoneNumber(rawNumber: "+21373344376")
+            print(phoneNumber.toE164())
+            XCTFail()
+        }
+        catch {
+            XCTAssert(true)
+        }
+    }
+
+    // Invalid CN number, GitHub pr by dulaccc
+    func testInvalidCNNumbers() {
+        do {
+            // libphonenumber reports this number as invalid
+            // and it's true, this is a French mobile number combined with the CN region
+            let phoneNumber = try PhoneNumber(rawNumber: "+861500376135")
+            print(phoneNumber.toE164())
+            XCTFail()
+        }
+        catch {
+            XCTAssert(true)
+        }
+    }
+
+    // Invalid IT number, GitHub pr by dulaccc
+    func testInvalidITNumbers() {
+        do {
+            // libphonenumber reports this number as invalid
+            // and it's true, this is a French mobile number combined with the IT region
+            let phoneNumber = try PhoneNumber(rawNumber: "+390762613915")
+            print(phoneNumber.toE164())
+            XCTFail()
+        }
+        catch {
+            XCTAssert(true)
+        }
+    }
+
+    // Invalid ES number, GitHub pr by dulaccc
+    func testInvalidESNumbers() {
+        do {
+            // libphonenumber reports this number as invalid
+            // and it's true, this is a French mobile number combined with the ES region
+            let phoneNumber = try PhoneNumber(rawNumber: "+34312431110")
+            print(phoneNumber.toE164())
+            XCTFail()
+        }
+        catch {
+            XCTAssert(true)
+        }
+    }
 
     // Italian number with a leading zero
     func testItalianLeadingZero() {
