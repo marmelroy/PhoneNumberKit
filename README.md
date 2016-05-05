@@ -52,7 +52,7 @@ let phoneNumbers = PhoneNumberKit().parseMultiple(rawNumberArray)
 let phoneNumbersCustomDefaultRegion = PhoneNumberKit().parseMultiple(rawNumberArray, region: "DE")
 ```
 
-To use the AsYouTypeFormatter, just replace your UITextField with a PhoneNumberTextField (if you are using interface builder make sure the module field is pointing ay PhoneNumberKit).
+To use the AsYouTypeFormatter, just replace your UITextField with a PhoneNumberTextField (if you are using Interface Builder make sure the module field is set to PhoneNumberKit).
 
 PhoneNumberTextField automatically formats phone numbers and gives the user full editing capabilities. If you want to customize you can use the PartialFormatter directly. The default region code is automatically computed but can be overridden if needed.  
 
