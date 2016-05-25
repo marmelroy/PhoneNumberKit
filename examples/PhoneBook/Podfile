@@ -1,5 +1,14 @@
-source 'https://github.com/CocoaPods/Specs.git'
-platform :ios, "8.0"
-use_frameworks!
+platform :ios, '8.0'
 
-pod 'PhoneNumberKit', :path => '../..'
+target 'Sample' do
+  use_frameworks!
+
+  # Pods for Sample
+  pod 'PhoneNumberKit', :path => '../..'
+
+  target 'SampleTests' do
+    inherit! :search_paths
+    # Pods for testing
+  end
+
+end
