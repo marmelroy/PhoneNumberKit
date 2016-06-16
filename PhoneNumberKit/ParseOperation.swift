@@ -11,16 +11,15 @@ import Foundation
 /**
 Custom NSOperation for phone number parsing that supports throwing closures.
 */
-class ParseOperation<OutputType>: NSOperation {
+class ParseOperation<OutputType>: Operation {
     typealias OperationClosure = (parseOp: ParseOperation<OutputType>) -> Void
     typealias OperationThrowingClosure = (parseOp: ParseOperation<OutputType>) throws -> Void
-    override final var executing: Bool { return state == .Executing }
-    override final var finished: Bool { return state == .Finished }
+    override final var isExecuting: Bool { return state == .executing }
+    override final var isFinished: Bool { return state == .finished }
     private var completionHandler: OperationClosure?
     private var implementationHandler: OperationThrowingClosure?
-    private var dispatchOnceToken: dispatch_once_t = 0
-    private(set) var output: ParseOperationValue<OutputType> = .None(PhoneNumberError.GeneralError)
-    private var state = ParseOperationState.Initial {
+    private(set) var output: ParseOperationValue<OutputType> = .none(PhoneNumberError.generalError)
+    private var state = ParseOperationState.initial {
         willSet {
             if newValue != state {
                 willChangeValueForState(newValue)
@@ -41,11 +40,11 @@ class ParseOperation<OutputType>: NSOperation {
     Start operation, perform implementation or finish with errors.
     */
     override func start() {
-        if !cancelled {
+        if !isCancelled {
             main()
         }
         else {
-            finish(with: .None(.GeneralError))
+            finish(with: .none(.generalError))
         }
     }
     
@@ -60,11 +59,11 @@ class ParseOperation<OutputType>: NSOperation {
                     try implementationHandler(parseOp: self)
                 }
                 catch {
-                    finish(with: .GeneralError)
+                    finish(with: .generalError)
                 }
             }
             else {
-                finish(with: .GeneralError)
+                finish(with: .generalError)
             }
         }
         autoreleasepool {
@@ -78,7 +77,7 @@ extension ParseOperation {
     Provide implementation handler for operation
     - Parameter implementationHandler: Potentially throwing implementation closure.
     */
-    func onStart(implementationHandler: OperationThrowingClosure) {
+    func onStart(_ implementationHandler: OperationThrowingClosure) {
         self.implementationHandler = implementationHandler
     }
     
@@ -86,7 +85,7 @@ extension ParseOperation {
     Provide completion handler for operation
     - Parameter completionHandler: Completion closure.
     */
-    func whenFinished(whenFinishedQueue completionHandlerQueue: NSOperationQueue = NSOperationQueue.mainQueue(), completionHandler: OperationClosure) {
+    func whenFinished(whenFinishedQueue completionHandlerQueue: OperationQueue = OperationQueue.main(), completionHandler: OperationClosure) {
         guard self.completionHandler == nil else { return }
         self.completionHandler = completionHandler
     }
@@ -95,18 +94,18 @@ extension ParseOperation {
     Send a did change value for key notification
     - Parameter state: ParseOperationState.
     */
-    func didChangeValueForState(state: ParseOperationState) {
+    func didChangeValueForState(_ state: ParseOperationState) {
         guard let key = state.key else { return }
-        didChangeValueForKey(key)
+        didChangeValue(forKey: key)
     }
     
     /**
     Send a will change value for key notification
     - Parameter state: ParseOperationState.
     */
-    func willChangeValueForState(state: ParseOperationState) {
+    func willChangeValueForState(_ state: ParseOperationState) {
         guard let key = state.key else { return }
-        willChangeValueForKey(key)
+        willChangeValue(forKey: key)
     }
     
     /**
@@ -114,7 +113,7 @@ extension ParseOperation {
     - Parameter value: Output of valid type.
     */
     final func finish(with value: OutputType) {
-        finish(with: .Some(value))
+        finish(with: .some(value))
     }
     
     /**
@@ -122,7 +121,7 @@ extension ParseOperation {
     - Parameter parseOperationValueError: Parsing error.
     */
     final func finish(with parseOperationValueError: PhoneNumberError) {
-        finish(with: .None(parseOperationValueError))
+        finish(with: .none(parseOperationValueError))
     }
     
     /**
@@ -130,14 +129,14 @@ extension ParseOperation {
     - Parameter parseOperationValue: Output type or error.
     */
     func finish(with parseOperationValue: ParseOperationValue<OutputType>) {
-        dispatch_once(&dispatchOnceToken) {
-            self.output = parseOperationValue
-            guard let completionHandler = self.completionHandler else { return }
-            self.completionHandler = nil
-            self.implementationHandler = nil
-            completionHandler(parseOp: self)
-            self.state = .Finished
-        }
+		guard self.state != .finished else { return }
+		
+		self.output = parseOperationValue
+		guard let completionHandler = self.completionHandler else { return }
+		self.completionHandler = nil
+		self.implementationHandler = nil
+		completionHandler(parseOp: self)
+		self.state = .finished
     }
 }
 
@@ -149,8 +148,8 @@ ParseOperationValue enumeration, can contain a valuetype or an error.
 - ProvidedInputValueType: Alias for any operationvalue.
 */
 enum ParseOperationValue<ValueType>: ParseOperationValueProvider {
-    case None(PhoneNumberError)
-    case Some(ValueType)
+    case none(PhoneNumberError)
+    case some(ValueType)
     typealias ProvidedInputValueType = ValueType
 }
 
@@ -160,9 +159,9 @@ extension ParseOperationValue {
     */
     func getValue() throws -> ValueType {
         switch self {
-        case .None:
-            throw PhoneNumberError.GeneralError
-        case .Some(let value):
+        case .none:
+            throw PhoneNumberError.generalError
+        case .some(let value):
             return value
         }
     }
@@ -172,9 +171,9 @@ extension ParseOperationValue {
     */
     var value: ValueType? {
         switch self {
-        case .None:
+        case .none:
             return nil
-        case .Some(let value):
+        case .some(let value):
             return value
         }
     }
@@ -184,9 +183,9 @@ extension ParseOperationValue {
     */
     var noneError: PhoneNumberError? {
         switch self {
-        case .None(let error):
+        case .none(let error):
             return error
-        case .Some:
+        case .some:
             return nil
         }
     }
@@ -203,16 +202,16 @@ public protocol ParseOperationValueProvider {
 Operation state enum.
 */
 enum ParseOperationState {
-    case Initial
-    case Executing
-    case Finished
+    case initial
+    case executing
+    case finished
     var key: String? {
         switch self {
-        case .Executing:
+        case .executing:
             return "isExecuting"
-        case .Finished:
+        case .finished:
             return "isFinished"
-        case .Initial:
+        case .initial:
             return nil
         }
     }

@@ -43,7 +43,7 @@ class PhoneNumberKitTests: XCTestCase {
         do {
             let phoneNumber = try PhoneNumber(rawNumber: "+16307792428", region: "US")
             print(phoneNumber.toE164())
-            XCTAssertEqual(phoneNumber.type, PhoneNumberType.FixedOrMobile)
+            XCTAssertEqual(phoneNumber.type, PhoneNumberType.fixedOrMobile)
         }
         catch {
             XCTFail()
@@ -174,7 +174,7 @@ class PhoneNumberKitTests: XCTestCase {
             XCTAssertEqual(phoneNumber.countryCode, 33)
             XCTAssertEqual(phoneNumber.nationalNumber, 689555555)
             XCTAssertEqual(phoneNumber.leadingZero, false)
-            XCTAssertEqual(phoneNumber.type, PhoneNumberType.Mobile)
+            XCTAssertEqual(phoneNumber.type, PhoneNumberType.mobile)
         }
         catch {
             XCTFail()
@@ -304,7 +304,7 @@ class PhoneNumberKitTests: XCTestCase {
             phoneNumber.toE164()
             XCTFail()
         }
-        catch PhoneNumberError.NotANumber {
+        catch PhoneNumberError.notANumber {
             XCTAssert(true)
         }
         catch {

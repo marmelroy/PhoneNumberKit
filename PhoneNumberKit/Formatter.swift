@@ -18,7 +18,7 @@ class Formatter {
      - Parameter phoneNumber: Phone number object.
      - Returns: Modified national number ready for display.
      */
-    func formatPhoneNumber(phoneNumber: PhoneNumber, formatType: PhoneNumberFormat) -> String {
+    func formatPhoneNumber(_ phoneNumber: PhoneNumber, formatType: PhoneNumberFormat) -> String {
         let metadata = Metadata.sharedInstance
         var formattedNationalNumber = phoneNumber.adjustedNationalNumber()
         if let regionMetadata = metadata.metadataPerCode[phoneNumber.countryCode] {
@@ -36,7 +36,7 @@ class Formatter {
      - Parameter numberExtension: Number extension string.
      - Returns: Modified number extension with either a preferred extension prefix or the default one.
      */
-    func formatExtension(numberExtension: String?, regionMetadata: MetadataTerritory) -> String? {
+    func formatExtension(_ numberExtension: String?, regionMetadata: MetadataTerritory) -> String? {
         if let extns = numberExtension {
             if let preferredExtnPrefix = regionMetadata.preferredExtnPrefix {
                 return "\(preferredExtnPrefix)\(extns)"
@@ -53,7 +53,7 @@ class Formatter {
      - Parameter nationalNumber: National number string.
      - Returns: Modified nationalNumber for display.
      */
-    func formatNationalNumber(nationalNumber: String, regionMetadata: MetadataTerritory, formatType: PhoneNumberFormat) -> String {
+    func formatNationalNumber(_ nationalNumber: String, regionMetadata: MetadataTerritory, formatType: PhoneNumberFormat) -> String {
         let formats = regionMetadata.numberFormats
         var selectedFormat: MetadataPhoneNumberFormat?
         for format in formats {
@@ -73,7 +73,7 @@ class Formatter {
             }
         }
         if let formatPattern = selectedFormat {
-            guard let numberFormatRule = (formatType == PhoneNumberFormat.International && formatPattern.intlFormat != nil) ? formatPattern.intlFormat : formatPattern.format, let pattern = formatPattern.pattern else {
+            guard let numberFormatRule = (formatType == PhoneNumberFormat.international && formatPattern.intlFormat != nil) ? formatPattern.intlFormat : formatPattern.format, let pattern = formatPattern.pattern else {
                 return nationalNumber
             }
             var formattedNationalNumber = String()
@@ -82,7 +82,7 @@ class Formatter {
                 prefixFormattingRule = regex.replaceStringByRegex(PhoneNumberPatterns.npPattern, string: nationalPrefixFormattingRule, template: nationalPrefix)
                 prefixFormattingRule = regex.replaceStringByRegex(PhoneNumberPatterns.fgPattern, string: prefixFormattingRule, template:"\\$1")
             }
-            if formatType == PhoneNumberFormat.National && regex.hasValue(prefixFormattingRule){
+            if formatType == PhoneNumberFormat.national && regex.hasValue(prefixFormattingRule){
                 let replacePattern = regex.replaceFirstStringByRegex(PhoneNumberPatterns.firstGroupPattern, string: numberFormatRule, templateString: prefixFormattingRule)
                 formattedNationalNumber = self.regex.replaceStringByRegex(pattern, string: nationalNumber, template: replacePattern)
             }
@@ -106,7 +106,7 @@ public extension PhoneNumber {
     Formats a phone number to E164 format (e.g. +33689123456)
     - Returns: A string representing the phone number in E164 format.
     */
-    public func toE164(prefix: Bool = true) -> String {
+    public func toE164(_ prefix: Bool = true) -> String {
         let formattedNationalNumber = adjustedNationalNumber()
         if prefix == false {
             return formattedNationalNumber
@@ -118,9 +118,9 @@ public extension PhoneNumber {
      Formats a phone number to International format (e.g. +33 6 89 12 34 56)
      - Returns: A string representing the phone number in International format.
      */
-    public func toInternational(prefix: Bool = true) -> String {
+    public func toInternational(_ prefix: Bool = true) -> String {
         let formatter = Formatter()
-        let formattedNationalNumber = formatter.formatPhoneNumber(self, formatType: .International)
+        let formattedNationalNumber = formatter.formatPhoneNumber(self, formatType: .international)
         if prefix == false {
             return formattedNationalNumber
         }
@@ -133,7 +133,7 @@ public extension PhoneNumber {
      */
     public func toNational() -> String {
         let formatter = Formatter()
-        let formattedNationalNumber = formatter.formatPhoneNumber(self, formatType: .National)
+        let formattedNationalNumber = formatter.formatPhoneNumber(self, formatType: .national)
         let formattedNumber = formattedNationalNumber
         return formattedNumber
     }
