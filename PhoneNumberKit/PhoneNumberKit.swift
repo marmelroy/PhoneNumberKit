@@ -7,8 +7,10 @@
 //
 
 import Foundation
+#if os(iOS)
 import CoreTelephony
-
+#endif
+    
 public class PhoneNumberKit: NSObject {
     
     let metadata = Metadata.sharedInstance
@@ -116,16 +118,16 @@ public class PhoneNumberKit: NSObject {
     - Returns: A computed value for the user's current region - based on the iPhone's carrier and if not available, the device region.
     */
     public func defaultRegionCode() -> String {
+#if os(iOS)
         let networkInfo = CTTelephonyNetworkInfo()
         let carrier = networkInfo.subscriberCellularProvider
         if let isoCountryCode = carrier?.isoCountryCode {
             return isoCountryCode.uppercaseString
         }
-        else {
-            let currentLocale = NSLocale.currentLocale()
-            if let countryCode = currentLocale.objectForKey(NSLocaleCountryCode) as? String {
-                return countryCode.uppercaseString
-            }
+#endif
+        let currentLocale = NSLocale.currentLocale()
+        if let countryCode = currentLocale.objectForKey(NSLocaleCountryCode) as? String {
+            return countryCode.uppercaseString
         }
         return PhoneNumberConstants.defaultCountry
     }
