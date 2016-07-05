@@ -122,7 +122,7 @@ public class PhoneNumberKit: NSObject {
             return isoCountryCode.uppercased()
         }
         else {
-            let currentLocale = Locale.current()
+            let currentLocale = Locale.current
             if let countryCode = currentLocale.object(forKey: Locale.Key.countryCode) as? String {
                 return countryCode.uppercased()
             }

@@ -85,7 +85,7 @@ extension ParseOperation {
     Provide completion handler for operation
     - Parameter completionHandler: Completion closure.
     */
-    func whenFinished(whenFinishedQueue completionHandlerQueue: OperationQueue = OperationQueue.main(), completionHandler: OperationClosure) {
+    func whenFinished(whenFinishedQueue completionHandlerQueue: OperationQueue = OperationQueue.main, completionHandler: OperationClosure) {
         guard self.completionHandler == nil else { return }
         self.completionHandler = completionHandler
     }
