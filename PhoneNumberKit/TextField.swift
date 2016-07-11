@@ -62,7 +62,7 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         get {
             let rawNumber = self.text ?? String()
             do {
-                let phoneNumber = try PhoneNumber(rawNumber: rawNumber)
+                let phoneNumber = try PhoneNumber(rawNumber: rawNumber, region: currentRegion)
                 return phoneNumber.isValidNumber
             } catch {
                 return false
