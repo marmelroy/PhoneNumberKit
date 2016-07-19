@@ -262,7 +262,7 @@ class PhoneNumberKitTests: XCTestCase {
         let testNumber = "+44 32"
         do {
             let phoneNumber = try PhoneNumber(rawNumber: testNumber)
-            phoneNumber.toE164()
+            _ = phoneNumber.toE164()
             XCTFail()
         }
         catch {
@@ -275,7 +275,7 @@ class PhoneNumberKitTests: XCTestCase {
         let testNumber = "+44 3243894723084732047023472"
         do {
             let phoneNumber = try PhoneNumber(rawNumber: testNumber)
-            phoneNumber.toE164()
+            _ = phoneNumber.toE164()
             XCTFail()
         }
         catch {
@@ -288,7 +288,7 @@ class PhoneNumberKitTests: XCTestCase {
         let testNumber = "ae4c08c6-be33-40ef-a417-e5166e307b5e"
         do {
             let phoneNumber = try PhoneNumber(rawNumber: testNumber)
-            phoneNumber.toE164()
+            _ = phoneNumber.toE164()
             XCTFail()
         }
         catch {
@@ -301,7 +301,7 @@ class PhoneNumberKitTests: XCTestCase {
         let testNumber = "+33(02)689555555"
         do {
             let phoneNumber = try PhoneNumber(rawNumber: testNumber)
-            phoneNumber.toE164()
+            _ = phoneNumber.toE164()
             XCTFail()
         }
         catch PhoneNumberError.notANumber {

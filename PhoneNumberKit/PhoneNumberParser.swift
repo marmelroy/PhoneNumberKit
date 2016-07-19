@@ -46,7 +46,7 @@ class PhoneNumberParser {
             if fullNumber.characters.count <= PhoneNumberConstants.minLengthForNSN {
                 throw PhoneNumberError.tooShort
             }
-            if let potentialCountryCode = extractPotentialCountryCode(fullNumber, nationalNumber: &nationalNumber) where potentialCountryCode != 0 {
+            if let potentialCountryCode = extractPotentialCountryCode(fullNumber, nationalNumber: &nationalNumber), potentialCountryCode != 0 {
                 return potentialCountryCode
             }
             else {
@@ -101,7 +101,7 @@ class PhoneNumberParser {
             let stringRange = NSMakeRange(startPosition, i)
             let subNumber = nsFullNumber.substring(with: stringRange)
             if let potentialCountryCode = UInt64(subNumber)
-                where metadata.metadataPerCode[potentialCountryCode] != nil {
+                , metadata.metadataPerCode[potentialCountryCode] != nil {
                     nationalNumber = nsFullNumber.substring(from: i)
                     return potentialCountryCode
             }
@@ -297,7 +297,7 @@ class PhoneNumberParser {
                 let firstRange = firstMatch.range(at: numOfGroups)
                 let firstMatchStringWithGroup = (firstRange.location != NSNotFound && firstRange.location < number.characters.count) ? number.substringWithNSRange(firstRange):  String()
                 let firstMatchStringWithGroupHasValue = regex.hasValue(firstMatchStringWithGroup)
-                if let transformRule = metadata.nationalPrefixTransformRule where firstMatchStringWithGroupHasValue == true {
+                if let transformRule = metadata.nationalPrefixTransformRule , firstMatchStringWithGroupHasValue == true {
                     transformedNumber = regex.replaceFirstStringByRegex(prefixPattern, string: number, templateString: transformRule)
                 }
                 else {
