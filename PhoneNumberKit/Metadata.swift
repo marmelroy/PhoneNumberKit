@@ -43,12 +43,12 @@ class Metadata {
     */
     func populateItems() -> [MetadataTerritory] {
         var territoryArray: [MetadataTerritory] = [MetadataTerritory]()
-        let frameworkBundle = NSBundle(forClass: PhoneNumberKit.self)
-        guard let jsonPath = frameworkBundle.pathForResource("PhoneNumberMetadata", ofType: "json"), let jsonData = NSData(contentsOfFile: jsonPath) else {
+        let frameworkBundle = Bundle(for: PhoneNumberKit.self)
+        guard let jsonPath = frameworkBundle.pathForResource("PhoneNumberMetadata", ofType: "json"), let jsonData = try? Data(contentsOf: URL(fileURLWithPath: jsonPath)) else {
             return territoryArray
         }
         do {
-            if let jsonObjects = try NSJSONSerialization.JSONObjectWithData(jsonData, options: NSJSONReadingOptions.AllowFragments) as? NSDictionary {
+            if let jsonObjects = try JSONSerialization.jsonObject(with: jsonData, options: JSONSerialization.ReadingOptions.allowFragments) as? NSDictionary {
                 if let metadataDict = jsonObjects["phoneNumberMetadata"] as? NSDictionary {
                     if let metadataTerritories = metadataDict["territories"] as? NSDictionary {
                         if let metadataTerritoryArray = metadataTerritories["territory"] as? NSArray {
@@ -79,7 +79,7 @@ class Metadata {
     - Parameter code: An international country code (e.g 44 for the UK).
     - Returns: An optional array of MetadataTerritory objects.
     */
-    func fetchCountriesForCode(code: UInt64) -> [MetadataTerritory]? {
+    func fetchCountriesForCode(_ code: UInt64) -> [MetadataTerritory]? {
         let results = items.filter { $0.countryCode == code}
         return results
     }
@@ -89,7 +89,7 @@ class Metadata {
     - Parameter code: An international country code (e.g 1 for the US).
     - Returns: A MetadataTerritory object.
     */
-    func fetchMainCountryMetadataForCode(code: UInt64) -> MetadataTerritory? {
+    func fetchMainCountryMetadataForCode(_ code: UInt64) -> MetadataTerritory? {
         let countryResults = items.filter { $0.countryCode == code}
         let mainCountryResults = countryResults.filter { $0.mainCountryForCode == true}
         if let mainCountry = mainCountryResults.first {
@@ -109,8 +109,8 @@ class Metadata {
     - Parameter country: ISO 639 compliant region code (e.g "GB" for the UK).
     - Returns: A MetadataTerritory object.
     */
-    func fetchMetadataForCountry(country: String) -> MetadataTerritory? {
-        let results = items.filter { $0.codeID == country.uppercaseString}
+    func fetchMetadataForCountry(_ country: String) -> MetadataTerritory? {
+        let results = items.filter { $0.codeID == country.uppercased()}
         return results.first
     }
     
