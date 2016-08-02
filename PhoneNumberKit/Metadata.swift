@@ -44,7 +44,7 @@ class Metadata {
     func populateItems() -> [MetadataTerritory] {
         var territoryArray: [MetadataTerritory] = [MetadataTerritory]()
         let frameworkBundle = Bundle(for: PhoneNumberKit.self)
-        guard let jsonPath = frameworkBundle.pathForResource("PhoneNumberMetadata", ofType: "json"), let jsonData = try? Data(contentsOf: URL(fileURLWithPath: jsonPath)) else {
+        guard let jsonPath = frameworkBundle.path(forResource: "PhoneNumberMetadata", ofType: "json"), let jsonData = try? Data(contentsOf: URL(fileURLWithPath: jsonPath)) else {
             return territoryArray
         }
         do {

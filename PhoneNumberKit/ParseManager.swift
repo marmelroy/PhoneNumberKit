@@ -135,7 +135,7 @@ Thread safe Swift array generic that locks on write.
 */
 class SynchronizedArray<T> {
     var array: [T] = []
-    private let accessQueue = DispatchQueue(label: "SynchronizedArrayAccess", attributes: DispatchQueueAttributes.serial)
+    private let accessQueue = DispatchQueue(label: "SynchronizedArrayAccess")
     func append(_ newElement: T) {
         self.accessQueue.async {
             self.array.append(newElement)
