@@ -38,4 +38,12 @@ Pod::Spec.new do |s|
   s.resources = "PhoneNumberKit/Resources/PhoneNumberMetadata.json"
 
   s.frameworks = 'CoreTelephony'
+
+  s.subspec 'UIKit' do |ss|
+    ss.ios.deployment_target = '8.0'
+    ss.tvos.deployment_target = '9.0'
+
+    ss.source_files = 'PhoneNumberKit/UI/'
+  end
+
 end
