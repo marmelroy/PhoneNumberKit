@@ -102,11 +102,11 @@ $ brew install carthage
 To integrate PhoneNumberKit into your Xcode project using Carthage, specify it in your `Cartfile`:
 
 ```ogdl
-github "marmelroy/PhoneNumberKit"
+github "marmelroy/PhoneNumberKit" "swift2.3"
 ```
 
 ### Setting up with [CocoaPods](http://cocoapods.org/?q=PhoneNumberKit)
 ```ruby
 source 'https://github.com/CocoaPods/Specs.git'
-pod 'PhoneNumberKit', '~> 0.8'
+pod 'PhoneNumberKit', :git => 'https://github.com/marmelroy/PhoneNumberKit.git', :branch => 'swift2.3'
 ```
