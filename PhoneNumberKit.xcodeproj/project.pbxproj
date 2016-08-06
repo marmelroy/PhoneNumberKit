@@ -27,6 +27,8 @@
 		34776AA81BE2BF1100400790 /* PhoneNumberKitParsingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34776AA71BE2BF1100400790 /* PhoneNumberKitParsingTests.swift */; };
 		34AA66021BDD160B00467912 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34AA66011BDD160B00467912 /* Constants.swift */; };
 		34AA66041BDD448B00467912 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34AA66031BDD448B00467912 /* CoreTelephony.framework */; };
+		34FD5D2B1D55F7AE00F328F9 /* PhoneNumberKit.h in Headers */ = {isa = PBXBuildFile; fileRef = C6DF6CA71D1B145300259F4B /* PhoneNumberKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		34FD5D2C1D55F7AE00F328F9 /* PhoneNumberKit.h in Headers */ = {isa = PBXBuildFile; fileRef = C6DF6CA71D1B145300259F4B /* PhoneNumberKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C6DF6C541D1B09DD00259F4B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34AA66011BDD160B00467912 /* Constants.swift */; };
 		C6DF6C551D1B09DD00259F4B /* Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3420CF5D1BE8959F00FAE34F /* Formatter.swift */; };
 		C6DF6C561D1B09DD00259F4B /* PartialFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343B850A1C62A25600918E46 /* PartialFormatter.swift */; };
@@ -40,8 +42,6 @@
 		C6DF6C5F1D1B09DD00259F4B /* RegularExpressions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34566C991BC112C500715E6B /* RegularExpressions.swift */; };
 		C6DF6C601D1B09E200259F4B /* PhoneNumberMetadata.json in Resources */ = {isa = PBXBuildFile; fileRef = 3435CC951BBFF66F003F953B /* PhoneNumberMetadata.json */; };
 		C6DF6CA81D1B145300259F4B /* PhoneNumberKit.h in Headers */ = {isa = PBXBuildFile; fileRef = C6DF6CA71D1B145300259F4B /* PhoneNumberKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C6DF6CAC1D1B153700259F4B /* PhoneNumberKit.h in Headers */ = {isa = PBXBuildFile; fileRef = C6DF6CAA1D1B152E00259F4B /* PhoneNumberKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C6DF6CAF1D1B154200259F4B /* PhoneNumberKit.h in Headers */ = {isa = PBXBuildFile; fileRef = C6DF6CAD1D1B153F00259F4B /* PhoneNumberKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C6DF6CB21D1B159A00259F4B /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34AA66011BDD160B00467912 /* Constants.swift */; };
 		C6DF6CB31D1B159A00259F4B /* Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3420CF5D1BE8959F00FAE34F /* Formatter.swift */; };
 		C6DF6CB41D1B159A00259F4B /* PartialFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343B850A1C62A25600918E46 /* PartialFormatter.swift */; };
@@ -106,8 +106,6 @@
 		C6DF6C4B1D1B09CF00259F4B /* PhoneNumberKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PhoneNumberKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6DF6C911D1B120400259F4B /* PhoneNumberKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PhoneNumberKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6DF6CA71D1B145300259F4B /* PhoneNumberKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhoneNumberKit.h; sourceTree = "<group>"; };
-		C6DF6CAA1D1B152E00259F4B /* PhoneNumberKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhoneNumberKit.h; path = macOS/PhoneNumberKit.h; sourceTree = "<group>"; };
-		C6DF6CAD1D1B153F00259F4B /* PhoneNumberKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PhoneNumberKit.h; path = watchOS/PhoneNumberKit.h; sourceTree = "<group>"; };
 		C6DF6CCC1D1B18B000259F4B /* PhoneNumberKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PhoneNumberKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -187,8 +185,6 @@
 			isa = PBXGroup;
 			children = (
 				C6DF6CA71D1B145300259F4B /* PhoneNumberKit.h */,
-				C6DF6CAA1D1B152E00259F4B /* PhoneNumberKit.h */,
-				C6DF6CAD1D1B153F00259F4B /* PhoneNumberKit.h */,
 				342418691BB6E5A000EE70E7 /* Info.plist */,
 				34AA66011BDD160B00467912 /* Constants.swift */,
 				3420CF5D1BE8959F00FAE34F /* Formatter.swift */,
@@ -242,7 +238,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C6DF6CAC1D1B153700259F4B /* PhoneNumberKit.h in Headers */,
+				34FD5D2B1D55F7AE00F328F9 /* PhoneNumberKit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -250,7 +246,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C6DF6CAF1D1B154200259F4B /* PhoneNumberKit.h in Headers */,
+				34FD5D2C1D55F7AE00F328F9 /* PhoneNumberKit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

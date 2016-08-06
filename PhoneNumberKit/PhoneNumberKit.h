@@ -6,7 +6,7 @@
 //  Copyright © 2015 Roy Marmelstein. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+@import Foundation;
 
 //! Project version number for PhoneNumberKit.
 FOUNDATION_EXPORT double PhoneNumberKitVersionNumber;
