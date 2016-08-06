@@ -12,11 +12,11 @@ class RegularExpressions {
     
     static let sharedInstance = RegularExpressions()
     
-    var regularExpresions = [String:RegularExpression]()
+    var regularExpresions = [String : NSRegularExpression]()
 
     var phoneDataDetector: NSDataDetector? = {
         do {
-            let dataDetector = try NSDataDetector(types: TextCheckingResult.CheckingType.phoneNumber.rawValue)
+            let dataDetector = try NSDataDetector(types: NSTextCheckingResult.CheckingType.phoneNumber.rawValue)
             return dataDetector
         }
         catch {
@@ -37,14 +37,14 @@ class RegularExpressions {
 
     // MARK: Regular expression
     
-    func regexWithPattern(_ pattern: String) throws -> RegularExpression {
+    func regexWithPattern(_ pattern: String) throws -> NSRegularExpression {
         if let regex = regularExpresions[pattern] {
             return regex
         }
         else {
             do {
-                let currentPattern: RegularExpression
-                currentPattern =  try RegularExpression(pattern: pattern, options:RegularExpression.Options.caseInsensitive)
+                let currentPattern: NSRegularExpression
+                currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpression.Options.caseInsensitive)
                 regularExpresions[pattern] = currentPattern
                 return currentPattern
             }
@@ -54,7 +54,7 @@ class RegularExpressions {
         }
     }
     
-    func regexMatches(_ pattern: String, string: String) throws -> [TextCheckingResult] {
+    func regexMatches(_ pattern: String, string: String) throws -> [NSTextCheckingResult] {
         do {
             let internalString = string
             let currentPattern =  try regexWithPattern(pattern)
@@ -69,7 +69,7 @@ class RegularExpressions {
         }
     }
     
-    func phoneDataDetectorMatches(_ string: String) throws -> [TextCheckingResult] {
+    func phoneDataDetectorMatches(_ string: String) throws -> [NSTextCheckingResult] {
         let nsString = string as NSString
         let stringRange = NSMakeRange(0, nsString.length)
         guard let matches = phoneDataDetector?.matches(in: string, options: [], range: stringRange) else {

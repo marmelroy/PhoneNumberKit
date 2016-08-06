@@ -207,7 +207,7 @@ class PhoneNumberParser {
                 let matchedString = number.substringWithNSRange(matched.range)
                 let matchEnd = matchedString.characters.count
                 let remainString: NSString = nsString.substring(from: matchEnd)
-                let capturingDigitPatterns = try RegularExpression(pattern: PhoneNumberPatterns.capturingDigitPattern, options:RegularExpression.Options.caseInsensitive)
+                let capturingDigitPatterns = try NSRegularExpression(pattern: PhoneNumberPatterns.capturingDigitPattern, options: NSRegularExpression.Options.caseInsensitive)
                 let matchedGroups = capturingDigitPatterns.matches(in: remainString as String, options: [], range: NSMakeRange(0, remainString.length))
                 if let firstMatch = matchedGroups.first {
                     let digitMatched = remainString.substring(with: firstMatch.range) as NSString
@@ -294,7 +294,7 @@ class PhoneNumberParser {
                 let firstMatchString = number.substringWithNSRange(firstMatch.range)
                 let numOfGroups = firstMatch.numberOfRanges - 1
                 var transformedNumber: String = String()
-                let firstRange = firstMatch.range(at: numOfGroups)
+                let firstRange = firstMatch.rangeAt(numOfGroups)
                 let firstMatchStringWithGroup = (firstRange.location != NSNotFound && firstRange.location < number.characters.count) ? number.substringWithNSRange(firstRange):  String()
                 let firstMatchStringWithGroupHasValue = regex.hasValue(firstMatchStringWithGroup)
                 if let transformRule = metadata.nationalPrefixTransformRule , firstMatchStringWithGroupHasValue == true {

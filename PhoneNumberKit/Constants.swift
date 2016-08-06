@@ -34,7 +34,7 @@ Enumeration for parsing error types
 - TooLong: The string provided is too long to be a valid number
 - TooShort: The string provided is too short to be a valid number
 */
-public enum PhoneNumberError: ErrorProtocol {
+public enum PhoneNumberError: Error {
     case generalError
     case invalidCountryCode
     case notANumber
