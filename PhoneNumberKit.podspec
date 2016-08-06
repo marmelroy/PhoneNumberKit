@@ -27,23 +27,30 @@ Pod::Spec.new do |s|
   s.source           = { :git => "https://github.com/marmelroy/PhoneNumberKit.git", :tag => s.version.to_s }
   s.social_media_url   = "http://twitter.com/marmelroy"
 
+
+  s.requires_arc = true
+
+  s.frameworks = 'CoreTelephony'
+
   s.ios.deployment_target = '8.0'
   s.osx.deployment_target = '10.9'
   s.tvos.deployment_target = '9.0'
   s.watchos.deployment_target = '2.0'
 
-  s.requires_arc = true
+  s.subspec 'PhoneNumberKitCore' do |core|
+    core.ios.deployment_target = '8.0'
+    core.osx.deployment_target = '10.9'
+    core.tvos.deployment_target = '9.0'
+    core.watchos.deployment_target = '2.0'
+    core.source_files = "PhoneNumberKit/*.{swift}"
+    core.resources = "PhoneNumberKit/Resources/PhoneNumberMetadata.json"
+  end
 
-  s.source_files = "PhoneNumberKit"
-  s.resources = "PhoneNumberKit/Resources/PhoneNumberMetadata.json"
-
-  s.frameworks = 'CoreTelephony'
-
-  s.subspec 'UIKit' do |ss|
-    ss.ios.deployment_target = '8.0'
-    ss.tvos.deployment_target = '9.0'
-
-    ss.source_files = 'PhoneNumberKit/UI/'
+  s.subspec 'UIKit' do |ui|
+    ui.dependency 'PhoneNumberKit/PhoneNumberKitCore'
+    ui.ios.deployment_target = '8.0'
+    ui.tvos.deployment_target = '9.0'
+    ui.source_files = 'PhoneNumberKit/UI/'
   end
 
 end
