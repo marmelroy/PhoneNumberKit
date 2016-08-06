@@ -9,7 +9,7 @@
 import Foundation
 
 /// Partial formatter
-public class PartialFormatter {
+public class PartialFormatter : NSObject {
     
     let metadata = Metadata.sharedInstance
     let parser = PhoneNumberParser()
@@ -53,7 +53,7 @@ public class PartialFormatter {
     
     - returns: PartialFormatter object
     */
-    public convenience init() {
+   override public convenience init() {
         let defaultRegion = PhoneNumberKit().defaultRegionCode()
         self.init(defaultRegion: defaultRegion)
     }
@@ -67,8 +67,10 @@ public class PartialFormatter {
      */
     public init(defaultRegion: String, withPrefix: Bool = true) {
         self.defaultRegion = defaultRegion
-        updateMetadataForDefaultRegion()
         self.withPrefix = withPrefix
+        super.init()
+        updateMetadataForDefaultRegion()
+        
     }
     
     /**
