@@ -22,9 +22,9 @@ class ParseManager {
     - Parameter rawNumber: String to be parsed to phone number struct.
     - Parameter region: ISO 639 compliant region code.
     */
-    func parsePhoneNumber(rawNumber: String, region: String) throws -> PhoneNumber {
+    func parsePhoneNumber(_ rawNumber: String, region: String) throws -> PhoneNumber {
         // Make sure region is in uppercase so that it matches metadata (1)
-        let region = region.uppercaseString
+        let region = region.uppercased()
         // Extract number (2)
         var nationalNumber = rawNumber
         let matches = try self.regex.phoneDataDetectorMatches(rawNumber)
@@ -35,7 +35,7 @@ class ParseManager {
         let numberExtension = self.parser.stripExtension(&nationalNumber)
         // Country code parse (4)
         guard var regionMetadata =  self.metadata.metadataPerCountry[region] else {
-            throw PhoneNumberError.InvalidCountryCode
+            throw PhoneNumberError.invalidCountryCode
         }
         var countryCode: UInt64 = 0
         do {
@@ -47,7 +47,7 @@ class ParseManager {
                 countryCode = try self.parser.extractCountryCode(plusRemovedNumberString, nationalNumber: &nationalNumber, metadata: regionMetadata)
             }
             catch {
-                throw PhoneNumberError.InvalidCountryCode
+                throw PhoneNumberError.invalidCountryCode
             }
         }
         if countryCode == 0 {
@@ -64,13 +64,13 @@ class ParseManager {
         self.parser.stripNationalPrefix(&nationalNumber, metadata: regionMetadata)
         
         // Test number against general number description for correct metadata (8)
-        if let generalNumberDesc = regionMetadata.generalDesc where (self.regex.hasValue(generalNumberDesc.nationalNumberPattern) == false || self.parser.isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc) == false) {
-            throw PhoneNumberError.NotANumber
+        if let generalNumberDesc = regionMetadata.generalDesc, (self.regex.hasValue(generalNumberDesc.nationalNumberPattern) == false || self.parser.isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc) == false) {
+            throw PhoneNumberError.notANumber
         }
         // Finalize remaining parameters and create phone number object (9)
         let leadingZero = nationalNumber.hasPrefix("0")
         guard let finalNationalNumber = UInt64(nationalNumber) else{
-            throw PhoneNumberError.NotANumber
+            throw PhoneNumberError.notANumber
         }
         let phoneNumber = PhoneNumber(countryCode: countryCode, leadingZero: leadingZero, nationalNumber: finalNationalNumber, numberExtension: numberExtension, rawNumber: rawNumber)
         return phoneNumber
@@ -84,10 +84,10 @@ class ParseManager {
     - Parameter region: ISO 639 compliant region code.
     - Returns: An array of valid PhoneNumber objects.
     */
-    func parseMultiple(rawNumbers: [String], region: String, testCallback: (()->())? = nil) -> [PhoneNumber] {
+    func parseMultiple(_ rawNumbers: [String], region: String, testCallback: (()->())? = nil) -> [PhoneNumber] {
         let rawNumbersCopy = rawNumbers
         self.multiParseArray = SynchronizedArray<PhoneNumber>()
-        let queue = NSOperationQueue()
+        let queue = OperationQueue()
         var operationArray: [ParseOperation<PhoneNumber>] = []
         let completionOperation = ParseOperation<Bool>()
         completionOperation.onStart { asyncOp in
@@ -95,7 +95,7 @@ class ParseManager {
         }
         completionOperation.whenFinished { asyncOp in
         }
-        for (index, rawNumber) in rawNumbersCopy.enumerate() {
+        for (index, rawNumber) in rawNumbersCopy.enumerated() {
             let parseTask = parseOperation(rawNumber, region:region)
             parseTask.whenFinished { operation in
                 if let phoneNumber = operation.output.value {
@@ -120,7 +120,7 @@ class ParseManager {
      - Parameter region: ISO 639 compliant region code.
      - Returns: Parse operation with an implementation handler and no completion handler.
      */
-    func parseOperation(rawNumber: String, region: String) -> ParseOperation<PhoneNumber> {
+    func parseOperation(_ rawNumber: String, region: String) -> ParseOperation<PhoneNumber> {
         let operation = ParseOperation<PhoneNumber>()
         operation.onStart { asyncOp in
             let phoneNumber = try self.parsePhoneNumber(rawNumber, region: region)
@@ -135,9 +135,9 @@ Thread safe Swift array generic that locks on write.
 */
 class SynchronizedArray<T> {
     var array: [T] = []
-    private let accessQueue = dispatch_queue_create("SynchronizedArrayAccess", DISPATCH_QUEUE_SERIAL)
-    func append(newElement: T) {
-        dispatch_async(self.accessQueue) {
+    private let accessQueue = DispatchQueue(label: "SynchronizedArrayAccess")
+    func append(_ newElement: T) {
+        self.accessQueue.async {
             self.array.append(newElement)
         }
     }

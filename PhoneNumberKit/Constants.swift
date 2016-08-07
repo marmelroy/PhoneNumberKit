@@ -10,16 +10,16 @@ import Foundation
 
 // MARK: Private Enums
 enum PhoneNumberCountryCodeSource {
-    case NumberWithPlusSign
-    case NumberWithIDD
-    case NumberWithoutPlusSign
-    case DefaultCountry
+    case numberWithPlusSign
+    case numberWithIDD
+    case numberWithoutPlusSign
+    case defaultCountry
 }
 
 enum PhoneNumberFormat {
-    case E164
-    case International
-    case National
+    case e164
+    case international
+    case national
 }
 
 
@@ -34,20 +34,20 @@ Enumeration for parsing error types
 - TooLong: The string provided is too long to be a valid number
 - TooShort: The string provided is too short to be a valid number
 */
-public enum PhoneNumberError: ErrorType {
-    case GeneralError
-    case InvalidCountryCode
-    case NotANumber
-    case TooLong
-    case TooShort
+public enum PhoneNumberError: Error {
+    case generalError
+    case invalidCountryCode
+    case notANumber
+    case tooLong
+    case tooShort
     
     public var description: String {
         switch self {
-        case .GeneralError: return NSLocalizedString("An error occured whilst validating the phone number.", comment: "")
-        case .InvalidCountryCode: return NSLocalizedString("The country code is invalid.", comment: "")
-        case .NotANumber: return NSLocalizedString("The number provided is invalid.", comment: "")
-        case .TooLong: return NSLocalizedString("The number provided is too long.", comment: "")
-        case .TooShort: return NSLocalizedString("The number provided is too short.", comment: "")
+        case .generalError: return NSLocalizedString("An error occured whilst validating the phone number.", comment: "")
+        case .invalidCountryCode: return NSLocalizedString("The country code is invalid.", comment: "")
+        case .notANumber: return NSLocalizedString("The number provided is invalid.", comment: "")
+        case .tooLong: return NSLocalizedString("The number provided is too long.", comment: "")
+        case .tooShort: return NSLocalizedString("The number provided is too short.", comment: "")
         }
     }
 }
@@ -68,18 +68,18 @@ public enum PhoneNumberError: ErrorType {
  - Unknown: Unknown number type
  */
 public enum PhoneNumberType {
-    case FixedLine
-    case Mobile
-    case FixedOrMobile
-    case Pager
-    case PersonalNumber
-    case PremiumRate
-    case SharedCost
-    case TollFree
-    case Voicemail
-    case VOIP
-    case UAN
-    case Unknown
+    case fixedLine
+    case mobile
+    case fixedOrMobile
+    case pager
+    case personalNumber
+    case premiumRate
+    case sharedCost
+    case tollFree
+    case voicemail
+    case voip
+    case uan
+    case unknown
 }
 
 // MARK: Constants
