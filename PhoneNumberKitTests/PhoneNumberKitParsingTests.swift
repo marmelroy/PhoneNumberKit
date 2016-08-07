@@ -205,15 +205,15 @@ class PhoneNumberKitParsingTests: XCTestCase {
             let codeID = metadata.codeID
             let metadataWithTypes: [(MetadataPhoneNumberDesc?, PhoneNumberType?)] = [
                 (metadata.generalDesc, nil),
-                (metadata.fixedLine, .FixedLine),
-                (metadata.mobile, .Mobile),
-                (metadata.tollFree, .TollFree),
-                (metadata.premiumRate, .PremiumRate),
-                (metadata.sharedCost, .SharedCost),
-                (metadata.voip, .VOIP),
-                (metadata.voicemail, .Voicemail),
-                (metadata.pager, .Pager),
-                (metadata.uan, .UAN),
+                (metadata.fixedLine, .fixedLine),
+                (metadata.mobile, .mobile),
+                (metadata.tollFree, .tollFree),
+                (metadata.premiumRate, .premiumRate),
+                (metadata.sharedCost, .sharedCost),
+                (metadata.voip, .voip),
+                (metadata.voicemail, .voicemail),
+                (metadata.pager, .pager),
+                (metadata.uan, .uan),
                 (metadata.emergency, nil),
             ]
             metadataWithTypes.forEach { record in
@@ -223,8 +223,8 @@ class PhoneNumberKitParsingTests: XCTestCase {
                             let phoneNumber = try PhoneNumber(rawNumber: exampleNumber, region: codeID)
                             XCTAssertNotNil(phoneNumber)
                             if let type = record.1 {
-                                if phoneNumber.type == .FixedOrMobile {
-                                    XCTAssert(type == .FixedLine || type == .Mobile)
+                                if phoneNumber.type == .fixedOrMobile {
+                                    XCTAssert(type == .fixedLine || type == .mobile)
                                 } else {
                                     XCTAssertEqual(phoneNumber.type, type, "Expected type \(type) for number \(phoneNumber)")
                                 }
@@ -251,7 +251,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTFail()
             return
         }
-        XCTAssertEqual(number.type, PhoneNumberType.TollFree)
+        XCTAssertEqual(number.type, PhoneNumberType.tollFree)
     }
 
     func testBelizeTollFreeType() {
@@ -259,7 +259,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTFail()
             return
         }
-        XCTAssertEqual(number.type, PhoneNumberType.TollFree)
+        XCTAssertEqual(number.type, PhoneNumberType.tollFree)
     }
 
     func testItalyFixedLineType() {
@@ -267,7 +267,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTFail()
             return
         }
-        XCTAssertEqual(number.type, PhoneNumberType.FixedLine)
+        XCTAssertEqual(number.type, PhoneNumberType.fixedLine)
     }
 
     func testMaldivesPagerNumber() {
@@ -275,7 +275,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTFail()
             return
         }
-        XCTAssertEqual(number.type, PhoneNumberType.Pager)
+        XCTAssertEqual(number.type, PhoneNumberType.pager)
     }
 
     func testZimbabweVoipType() {
@@ -283,7 +283,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTFail()
             return
         }
-        XCTAssertEqual(number.type, PhoneNumberType.VOIP)
+        XCTAssertEqual(number.type, PhoneNumberType.voip)
 
     }
 
@@ -292,7 +292,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTFail()
             return
         }
-        XCTAssertEqual(number.type, PhoneNumberType.Pager)
+        XCTAssertEqual(number.type, PhoneNumberType.pager)
     }
 
     func testFranceMobileNumberType() {
@@ -300,39 +300,39 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTFail()
             return
         }
-        XCTAssertEqual(number.type, PhoneNumberType.Mobile)
+        XCTAssertEqual(number.type, PhoneNumberType.mobile)
     }
 
     func testPerformanceSimple() {
         let numberOfParses = 1000
-        let startTime = NSDate()
-        var endTime = NSDate()
+        let startTime = Date()
+        var endTime = Date()
         var numberArray: [String] = []
         for _ in 0 ..< numberOfParses {
             numberArray.append("+5491187654321")
         }
         let phoneNumbers = PhoneNumberKit().parseMultiple(numberArray, region: "AR")
         XCTAssertTrue(phoneNumbers.count == numberOfParses)
-        endTime = NSDate()
-        let timeInterval = endTime.timeIntervalSinceDate(startTime)
+        endTime = Date()
+        let timeInterval = endTime.timeIntervalSince(startTime)
         print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
         XCTAssertTrue(timeInterval < 5)
     }
     
     func testMultipleMutated() {
         let numberOfParses = 500
-        let startTime = NSDate()
-        var endTime = NSDate()
+        let startTime = Date()
+        var endTime = Date()
         var numberArray: [String] = []
         for _ in 0 ..< numberOfParses {
             numberArray.append("+5491187654321")
         }
         let phoneNumbers = ParseManager().parseMultiple(numberArray, region: "AR") { 
-            numberArray.removeAtIndex(100)
+            numberArray.remove(at: 100)
         }
         XCTAssertTrue(phoneNumbers.count == numberOfParses)
-        endTime = NSDate()
-        let timeInterval = endTime.timeIntervalSinceDate(startTime)
+        endTime = Date()
+        let timeInterval = endTime.timeIntervalSince(startTime)
         print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
     }
 

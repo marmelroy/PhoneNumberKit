@@ -12,11 +12,11 @@ class RegularExpressions {
     
     static let sharedInstance = RegularExpressions()
     
-    var regularExpresions = [String:NSRegularExpression]()
+    var regularExpresions = [String : NSRegularExpression]()
 
     var phoneDataDetector: NSDataDetector? = {
         do {
-            let dataDetector = try NSDataDetector(types: NSTextCheckingType.PhoneNumber.rawValue)
+            let dataDetector = try NSDataDetector(types: NSTextCheckingResult.CheckingType.phoneNumber.rawValue)
             return dataDetector
         }
         catch {
@@ -24,10 +24,10 @@ class RegularExpressions {
         }
     }()
     
-    var spaceCharacterSet: NSCharacterSet = {
-        let characterSet = NSMutableCharacterSet(charactersInString: "\u{00a0}")
-        characterSet.formUnionWithCharacterSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-        return characterSet
+    var spaceCharacterSet: CharacterSet = {
+        let characterSet = NSMutableCharacterSet(charactersIn: "\u{00a0}")
+        characterSet.formUnion(with: CharacterSet.whitespacesAndNewlines)
+        return characterSet as CharacterSet
     }()
     
     deinit {
@@ -37,43 +37,43 @@ class RegularExpressions {
 
     // MARK: Regular expression
     
-    func regexWithPattern(pattern: String) throws -> NSRegularExpression {
+    func regexWithPattern(_ pattern: String) throws -> NSRegularExpression {
         if let regex = regularExpresions[pattern] {
             return regex
         }
         else {
             do {
                 let currentPattern: NSRegularExpression
-                currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpressionOptions.CaseInsensitive)
+                currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpression.Options.caseInsensitive)
                 regularExpresions[pattern] = currentPattern
                 return currentPattern
             }
             catch {
-                throw PhoneNumberError.GeneralError
+                throw PhoneNumberError.generalError
             }
         }
     }
     
-    func regexMatches(pattern: String, string: String) throws -> [NSTextCheckingResult] {
+    func regexMatches(_ pattern: String, string: String) throws -> [NSTextCheckingResult] {
         do {
             let internalString = string
             let currentPattern =  try regexWithPattern(pattern)
             // NSRegularExpression accepts Swift strings but works with NSString under the hood. Safer to bridge to NSString for taking range.
             let nsString = internalString as NSString
             let stringRange = NSMakeRange(0, nsString.length)
-            let matches = currentPattern.matchesInString(internalString, options: [], range: stringRange)
+            let matches = currentPattern.matches(in: internalString, options: [], range: stringRange)
             return matches
         }
         catch {
-            throw PhoneNumberError.GeneralError
+            throw PhoneNumberError.generalError
         }
     }
     
-    func phoneDataDetectorMatches(string: String) throws -> [NSTextCheckingResult] {
+    func phoneDataDetectorMatches(_ string: String) throws -> [NSTextCheckingResult] {
         let nsString = string as NSString
         let stringRange = NSMakeRange(0, nsString.length)
-        guard let matches = phoneDataDetector?.matchesInString(string, options: [], range: stringRange) else {
-            throw PhoneNumberError.GeneralError
+        guard let matches = phoneDataDetector?.matches(in: string, options: [], range: stringRange) else {
+            throw PhoneNumberError.generalError
         }
         if matches.isEmpty == false {
             return matches
@@ -84,14 +84,14 @@ class RegularExpressions {
                 return fallBackMatches
             }
             else {
-                throw PhoneNumberError.NotANumber
+                throw PhoneNumberError.notANumber
             }
         }
     }
     
     // MARK: Match helpers
     
-    func matchesAtStart(pattern: String, string: String) -> Bool {
+    func matchesAtStart(_ pattern: String, string: String) -> Bool {
         do {
             let matches = try regexMatches(pattern, string: string)
             for match in matches {
@@ -105,7 +105,7 @@ class RegularExpressions {
         return false
     }
     
-    func stringPositionByRegex(pattern: String, string: String) -> Int {
+    func stringPositionByRegex(_ pattern: String, string: String) -> Int {
         do {
             let matches = try regexMatches(pattern, string: string)
             if let match = matches.first {
@@ -117,7 +117,7 @@ class RegularExpressions {
         }
     }
     
-    func matchesExist(pattern: String?, string: String) -> Bool {
+    func matchesExist(_ pattern: String?, string: String) -> Bool {
         guard let pattern = pattern else {
             return false
         }
@@ -131,7 +131,7 @@ class RegularExpressions {
     }
 
     
-    func matchesEntirely(pattern: String?, string: String) -> Bool {
+    func matchesEntirely(_ pattern: String?, string: String) -> Bool {
         guard var pattern = pattern else {
             return false
         }
@@ -139,7 +139,7 @@ class RegularExpressions {
         return matchesExist(pattern, string: string)
     }
     
-    func matchedStringByRegex(pattern: String, string: String) throws -> [String] {
+    func matchedStringByRegex(_ pattern: String, string: String) throws -> [String] {
         do {
             let matches = try regexMatches(pattern, string: string)
             var matchedStrings = [String]()
@@ -156,24 +156,24 @@ class RegularExpressions {
     
     // MARK: String and replace
     
-    func replaceStringByRegex(pattern: String, string: String) -> String {
+    func replaceStringByRegex(_ pattern: String, string: String) -> String {
         do {
             var replacementResult = string
             let regex =  try regexWithPattern(pattern)
             // NSRegularExpression accepts Swift strings but works with NSString under the hood. Safer to bridge to NSString for taking range.
             let nsString = string as NSString
             let stringRange = NSMakeRange(0, nsString.length)
-            let matches = regex.matchesInString(string,
+            let matches = regex.matches(in: string,
                 options: [], range: stringRange)
             if matches.count == 1 {
-                let range = regex.rangeOfFirstMatchInString(string, options: [], range: stringRange)
+                let range = regex.rangeOfFirstMatch(in: string, options: [], range: stringRange)
                 if range.location != NSNotFound {
-                    replacementResult = regex.stringByReplacingMatchesInString(string, options: [], range: range, withTemplate: "")
+                    replacementResult = regex.stringByReplacingMatches(in: string, options: [], range: range, withTemplate: "")
                 }
                 return replacementResult
             }
             else if matches.count > 1 {
-                replacementResult = regex.stringByReplacingMatchesInString(string, options: [], range: stringRange, withTemplate: "")
+                replacementResult = regex.stringByReplacingMatches(in: string, options: [], range: stringRange, withTemplate: "")
             }
             return replacementResult
         } catch {
@@ -181,24 +181,24 @@ class RegularExpressions {
         }
     }
     
-    func replaceStringByRegex(pattern: String, string: String, template: String) -> String {
+    func replaceStringByRegex(_ pattern: String, string: String, template: String) -> String {
         do {
             var replacementResult = string
             let regex =  try regexWithPattern(pattern)
             // NSRegularExpression accepts Swift strings but works with NSString under the hood. Safer to bridge to NSString for taking range.
             let nsString = string as NSString
             let stringRange = NSMakeRange(0, nsString.length)
-            let matches = regex.matchesInString(string,
+            let matches = regex.matches(in: string,
                 options: [], range: stringRange)
             if matches.count == 1 {
-                let range = regex.rangeOfFirstMatchInString(string, options: [], range: stringRange)
+                let range = regex.rangeOfFirstMatch(in: string, options: [], range: stringRange)
                 if range.location != NSNotFound {
-                    replacementResult = regex.stringByReplacingMatchesInString(string, options: [], range: range, withTemplate: template)
+                    replacementResult = regex.stringByReplacingMatches(in: string, options: [], range: range, withTemplate: template)
                 }
                 return replacementResult
             }
             else if matches.count > 1 {
-                replacementResult = regex.stringByReplacingMatchesInString(string, options: [], range: stringRange, withTemplate: template)
+                replacementResult = regex.stringByReplacingMatches(in: string, options: [], range: stringRange, withTemplate: template)
             }
             return replacementResult
         } catch {
@@ -206,15 +206,15 @@ class RegularExpressions {
         }
     }
     
-    func replaceFirstStringByRegex(pattern: String, string: String, templateString: String) -> String {
+    func replaceFirstStringByRegex(_ pattern: String, string: String, templateString: String) -> String {
         do {
             // NSRegularExpression accepts Swift strings but works with NSString under the hood. Safer to bridge to NSString for taking range.
             var nsString = string as NSString
             let stringRange = NSMakeRange(0, nsString.length)
             let regex = try regexWithPattern(pattern)
-            let range = regex.rangeOfFirstMatchInString(string, options: [], range: stringRange)
+            let range = regex.rangeOfFirstMatch(in: string, options: [], range: stringRange)
             if range.location != NSNotFound {
-                nsString = regex.stringByReplacingMatchesInString(string, options: [], range: range, withTemplate: templateString)
+                nsString = regex.stringByReplacingMatches(in: string, options: [], range: range, withTemplate: templateString)
             }
             return nsString as String
         } catch {
@@ -222,13 +222,13 @@ class RegularExpressions {
         }
     }
     
-    func stringByReplacingOccurrences(string: String, map: [String:String]) -> String {
+    func stringByReplacingOccurrences(_ string: String, map: [String:String]) -> String {
         var targetString = String()
         for i in 0 ..< string.characters.count {
-            let oneChar = string[string.startIndex.advancedBy(i)]
-            let keyString = String(oneChar).uppercaseString
+            let oneChar = string[string.characters.index(string.startIndex, offsetBy: i)]
+            let keyString = String(oneChar).uppercased()
             if let mappedValue = map[keyString] {
-                targetString.appendContentsOf(mappedValue)
+                targetString.append(mappedValue)
             }
         }
         return targetString
@@ -236,9 +236,9 @@ class RegularExpressions {
     
     // MARK: Validations
     
-    func hasValue(value: NSString?) -> Bool {
+    func hasValue(_ value: NSString?) -> Bool {
         if let valueString = value {
-            if valueString.stringByTrimmingCharactersInSet(spaceCharacterSet).characters.count == 0 {
+            if valueString.trimmingCharacters(in: spaceCharacterSet).characters.count == 0 {
                 return false
             }
             return true
@@ -248,7 +248,7 @@ class RegularExpressions {
         }
     }
     
-    func testStringLengthAgainstPattern(pattern: String, string: String) -> Bool {
+    func testStringLengthAgainstPattern(_ pattern: String, string: String) -> Bool {
         if (matchesEntirely(pattern, string: string)) {
             return true
         }
@@ -264,9 +264,9 @@ class RegularExpressions {
 // MARK: Extensions
 
 extension String {
-    func substringWithNSRange(range: NSRange) -> String {
+    func substringWithNSRange(_ range: NSRange) -> String {
         let nsString = self as NSString
-        return nsString.substringWithRange(range)
+        return nsString.substring(with: range)
     }
 }
 

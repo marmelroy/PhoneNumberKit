@@ -43,7 +43,7 @@ class PhoneNumberKitTests: XCTestCase {
         do {
             let phoneNumber = try PhoneNumber(rawNumber: "+16307792428", region: "US")
             print(phoneNumber.toE164())
-            XCTAssertEqual(phoneNumber.type, PhoneNumberType.FixedOrMobile)
+            XCTAssertEqual(phoneNumber.type, PhoneNumberType.fixedOrMobile)
         }
         catch {
             XCTFail()
@@ -174,7 +174,7 @@ class PhoneNumberKitTests: XCTestCase {
             XCTAssertEqual(phoneNumber.countryCode, 33)
             XCTAssertEqual(phoneNumber.nationalNumber, 689555555)
             XCTAssertEqual(phoneNumber.leadingZero, false)
-            XCTAssertEqual(phoneNumber.type, PhoneNumberType.Mobile)
+            XCTAssertEqual(phoneNumber.type, PhoneNumberType.mobile)
         }
         catch {
             XCTFail()
@@ -262,7 +262,7 @@ class PhoneNumberKitTests: XCTestCase {
         let testNumber = "+44 32"
         do {
             let phoneNumber = try PhoneNumber(rawNumber: testNumber)
-            phoneNumber.toE164()
+            _ = phoneNumber.toE164()
             XCTFail()
         }
         catch {
@@ -275,7 +275,7 @@ class PhoneNumberKitTests: XCTestCase {
         let testNumber = "+44 3243894723084732047023472"
         do {
             let phoneNumber = try PhoneNumber(rawNumber: testNumber)
-            phoneNumber.toE164()
+            _ = phoneNumber.toE164()
             XCTFail()
         }
         catch {
@@ -288,7 +288,7 @@ class PhoneNumberKitTests: XCTestCase {
         let testNumber = "ae4c08c6-be33-40ef-a417-e5166e307b5e"
         do {
             let phoneNumber = try PhoneNumber(rawNumber: testNumber)
-            phoneNumber.toE164()
+            _ = phoneNumber.toE164()
             XCTFail()
         }
         catch {
@@ -301,10 +301,10 @@ class PhoneNumberKitTests: XCTestCase {
         let testNumber = "+33(02)689555555"
         do {
             let phoneNumber = try PhoneNumber(rawNumber: testNumber)
-            phoneNumber.toE164()
+            _ = phoneNumber.toE164()
             XCTFail()
         }
-        catch PhoneNumberError.NotANumber {
+        catch PhoneNumberError.notANumber {
             XCTAssert(true)
         }
         catch {

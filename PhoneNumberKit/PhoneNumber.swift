@@ -33,7 +33,7 @@ public struct PhoneNumber {
     }
     public var isValidNumber: Bool {
         get {
-            return self.type != .Unknown
+            return self.type != .unknown
         }
     }
 }
