@@ -62,7 +62,7 @@ class PhoneNumberParser {
                     return 0
                 }
                 stripNationalPrefix(&potentialNationalNumber, metadata: metadata)
-                let potentialNationalNumberStr = String(potentialNationalNumber.copy())
+                let potentialNationalNumberStr = potentialNationalNumber
                 if ((!regex.matchesEntirely(validNumberPattern, string: fullNumber) && regex.matchesEntirely(validNumberPattern, string: potentialNationalNumberStr )) || regex.testStringLengthAgainstPattern(possibleNumberPattern, string: fullNumber as String) == false) {
                     nationalNumber = potentialNationalNumberStr
                     if let countryCode = UInt64(defaultCountryCode) {
@@ -200,15 +200,14 @@ class PhoneNumberParser {
     func parsePrefixAsIdd(_ number: inout String, iddPattern: String) -> Bool {
         if (regex.stringPositionByRegex(iddPattern, string: number) == 0) {
             do {
-                let nsString = number as NSString
                 guard let matched = try regex.regexMatches(iddPattern as String, string: number as String).first else {
                     return false
                 }
-                let matchedString = number.substringWithNSRange(matched.range)
+                let matchedString = number.substring(with: matched.range)
                 let matchEnd = matchedString.characters.count
-                let remainString: NSString = nsString.substring(from: matchEnd)
+                let remainString = (number as NSString).substring(from: matchEnd)
                 let capturingDigitPatterns = try NSRegularExpression(pattern: PhoneNumberPatterns.capturingDigitPattern, options: NSRegularExpression.Options.caseInsensitive)
-                let matchedGroups = capturingDigitPatterns.matches(in: remainString as String, options: [], range: NSMakeRange(0, remainString.length))
+                let matchedGroups = capturingDigitPatterns.matches(in: remainString as String)
                 if let firstMatch = matchedGroups.first {
                     let digitMatched = remainString.substring(with: firstMatch.range) as NSString
                     if digitMatched.length > 0 {
@@ -240,9 +239,9 @@ class PhoneNumberParser {
             let matches = try regex.regexMatches(PhoneNumberPatterns.extnPattern, string: number)
             if let match = matches.first {
                 let adjustedRange = NSMakeRange(match.range.location + 1, match.range.length - 1)
-                let matchString = number.substringWithNSRange(adjustedRange)
+                let matchString = number.substring(with: adjustedRange)
                 let stringRange = NSMakeRange(0, match.range.location)
-                number = number.substringWithNSRange(stringRange)
+                number = number.substring(with: stringRange)
                 return matchString
             }
             return nil
@@ -291,11 +290,11 @@ class PhoneNumberParser {
             let matches = try regex.regexMatches(prefixPattern, string: number)
             if let firstMatch = matches.first {
                 let nationalNumberRule = metadata.generalDesc?.nationalNumberPattern
-                let firstMatchString = number.substringWithNSRange(firstMatch.range)
+                let firstMatchString = number.substring(with: firstMatch.range)
                 let numOfGroups = firstMatch.numberOfRanges - 1
                 var transformedNumber: String = String()
                 let firstRange = firstMatch.rangeAt(numOfGroups)
-                let firstMatchStringWithGroup = (firstRange.location != NSNotFound && firstRange.location < number.characters.count) ? number.substringWithNSRange(firstRange):  String()
+                let firstMatchStringWithGroup = (firstRange.location != NSNotFound && firstRange.location < number.characters.count) ? number.substring(with: firstRange):  String()
                 let firstMatchStringWithGroupHasValue = regex.hasValue(firstMatchStringWithGroup)
                 if let transformRule = metadata.nationalPrefixTransformRule , firstMatchStringWithGroupHasValue == true {
                     transformedNumber = regex.replaceFirstStringByRegex(prefixPattern, string: number, templateString: transformRule)
