@@ -95,7 +95,7 @@ extension MetadataTerritory {
         if let mainCountryForCode = jsondDict.value(forKey: "mainCountryForCode") as? NSString {
             self.mainCountryForCode = mainCountryForCode.boolValue
         }
-        if let availableFormats = jsondDict.value(forKey: "availableFormats")?.value(forKey: "numberFormat") {
+        if let availableFormats = (jsondDict.value(forKey: "availableFormats") as? NSDictionary)?.value(forKey: "numberFormat") {
             if let formatsArray = availableFormats as? NSArray {
                 for format in formatsArray {
                     var processedFormat = MetadataPhoneNumberFormat(jsondDict: format as? NSDictionary)
