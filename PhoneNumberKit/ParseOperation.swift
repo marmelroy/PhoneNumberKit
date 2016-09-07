@@ -77,7 +77,7 @@ extension ParseOperation {
     Provide implementation handler for operation
     - Parameter implementationHandler: Potentially throwing implementation closure.
     */
-    func onStart(_ implementationHandler: OperationThrowingClosure) {
+    func onStart(_ implementationHandler: @escaping OperationThrowingClosure) {
         self.implementationHandler = implementationHandler
     }
     
@@ -85,7 +85,7 @@ extension ParseOperation {
     Provide completion handler for operation
     - Parameter completionHandler: Completion closure.
     */
-    func whenFinished(whenFinishedQueue completionHandlerQueue: OperationQueue = OperationQueue.main, completionHandler: OperationClosure) {
+    func whenFinished(whenFinishedQueue completionHandlerQueue: OperationQueue = OperationQueue.main, completionHandler: @escaping OperationClosure) {
         guard self.completionHandler == nil else { return }
         self.completionHandler = completionHandler
     }
