@@ -52,5 +52,8 @@ Pod::Spec.new do |s|
     ui.tvos.deployment_target = '9.0'
     ui.source_files = 'PhoneNumberKit/UI/'
   end
+  s.pod_target_xcconfig = {
+                 'SWIFT_VERSION' => '3.0'
+               }
 
 end
