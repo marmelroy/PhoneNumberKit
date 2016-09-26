@@ -40,7 +40,8 @@ public enum PhoneNumberError: Error {
     case notANumber
     case tooLong
     case tooShort
-    
+    case deprecated
+
     public var description: String {
         switch self {
         case .generalError: return NSLocalizedString("An error occured whilst validating the phone number.", comment: "")
@@ -48,6 +49,7 @@ public enum PhoneNumberError: Error {
         case .notANumber: return NSLocalizedString("The number provided is invalid.", comment: "")
         case .tooLong: return NSLocalizedString("The number provided is too long.", comment: "")
         case .tooShort: return NSLocalizedString("The number provided is too short.", comment: "")
+        case .deprecated: return NSLocalizedString("This function is deprecated.", comment: "")
         }
     }
 }

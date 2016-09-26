@@ -18,6 +18,10 @@ public class PhoneNumberKit: NSObject {
 
     // MARK: Multiple Parsing
     
+    public func parse(rawNumber: String, region: String? = nil) throws -> PhoneNumber {
+        return try ParseManager().parsePhoneNumber(rawNumber, region: region ?? PhoneNumberKit().defaultRegionCode())
+    }
+    
     /**
     Fastest way to parse an array of phone numbers. Uses default region code.
     - Parameter rawNumbers: An array of raw number strings.

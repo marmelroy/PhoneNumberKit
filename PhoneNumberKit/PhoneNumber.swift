@@ -38,24 +38,28 @@ public struct PhoneNumber {
     }
 }
 
+/// In past versions of PhoneNumebrKit you were able to initialize a PhoneNumber object to parse a String. Please use a PhoneNumberKit object's methods.
 public extension PhoneNumber {
     /**
+    DEPRECATED. 
     Parse a string into a phone number object using default region. Can throw.
     - Parameter rawNumber: String to be parsed to phone number struct.
     */
+    @available(*, unavailable, message: "use PhoneNumberKit instead to produce PhoneNumbers")
     public init(rawNumber: String) throws {
-        let defaultRegion = PhoneNumberKit().defaultRegionCode()
-        try self.init(rawNumber: rawNumber, region: defaultRegion)
+        assertionFailure(PhoneNumberError.deprecated.description)
+        throw PhoneNumberError.deprecated
     }
     
     /**
+    DEPRECATED.
     Parse a string into a phone number object using custom region. Can throw.
     - Parameter rawNumber: String to be parsed to phone number struct.
     - Parameter region: ISO 639 compliant region code.
     */
+    @available(*, unavailable, message: "use PhoneNumberKit instead to produce PhoneNumbers")
     public init(rawNumber: String, region: String) throws {
-        let phoneNumber = try ParseManager().parsePhoneNumber(rawNumber, region: region)
-        self = phoneNumber
+        throw PhoneNumberError.deprecated
     }
 
 }
