@@ -62,7 +62,7 @@ class ParseManager {
         }
         // National Prefix Strip (7)
         self.parser.stripNationalPrefix(&nationalNumber, metadata: regionMetadata)
-        
+		
         // Test number against general number description for correct metadata (8)
         if let generalNumberDesc = regionMetadata.generalDesc, (self.regex.hasValue(generalNumberDesc.nationalNumberPattern) == false || self.parser.isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc) == false) {
             throw PhoneNumberError.notANumber

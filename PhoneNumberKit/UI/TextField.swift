@@ -128,8 +128,8 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         // Look for the next valid number after the cursor, when found return a CursorPosition struct
         for i in cursorEnd ..< textAsNSString.length  {
             let cursorRange = NSMakeRange(i, 1)
-            let candidateNumberAfterCursor: NSString = textAsNSString.substring(with: cursorRange)
-            if (candidateNumberAfterCursor.rangeOfCharacter(from: nonNumericSet).location == NSNotFound) {
+            let candidateNumberAfterCursor = textAsNSString.substring(with: cursorRange)
+            if candidateNumberAfterCursor.rangeOfCharacter(from: nonNumericSet) != nil {
                 for j in cursorRange.location ..< textAsNSString.length  {
                     let candidateCharacter = textAsNSString.substring(with: NSMakeRange(j, 1))
                     if candidateCharacter == candidateNumberAfterCursor {

@@ -12,14 +12,14 @@ import Foundation
 Custom NSOperation for phone number parsing that supports throwing closures.
 */
 class ParseOperation<OutputType>: Operation {
-    typealias OperationClosure = (parseOp: ParseOperation<OutputType>) -> Void
-    typealias OperationThrowingClosure = (parseOp: ParseOperation<OutputType>) throws -> Void
+    typealias OperationClosure = (_ parseOp: ParseOperation<OutputType>) -> Void
+    typealias OperationThrowingClosure = (_ parseOp: ParseOperation<OutputType>) throws -> Void
     override final var isExecuting: Bool { return state == .executing }
     override final var isFinished: Bool { return state == .finished }
-    private var completionHandler: OperationClosure?
-    private var implementationHandler: OperationThrowingClosure?
-    private(set) var output: ParseOperationValue<OutputType> = .none(PhoneNumberError.generalError)
-    private var state = ParseOperationState.initial {
+    fileprivate var completionHandler: OperationClosure?
+    fileprivate var implementationHandler: OperationThrowingClosure?
+    fileprivate(set) var output: ParseOperationValue<OutputType> = .none(PhoneNumberError.generalError)
+    fileprivate var state = ParseOperationState.initial {
         willSet {
             if newValue != state {
                 willChangeValueForState(newValue)
@@ -56,7 +56,7 @@ class ParseOperation<OutputType>: Operation {
             if let implementationHandler = self.implementationHandler {
                 self.implementationHandler = nil
                 do {
-                    try implementationHandler(parseOp: self)
+                    try implementationHandler(self)
                 }
                 catch {
                     finish(with: .generalError)
@@ -77,7 +77,7 @@ extension ParseOperation {
     Provide implementation handler for operation
     - Parameter implementationHandler: Potentially throwing implementation closure.
     */
-    func onStart(_ implementationHandler: OperationThrowingClosure) {
+    func onStart(_ implementationHandler: @escaping OperationThrowingClosure) {
         self.implementationHandler = implementationHandler
     }
     
@@ -85,7 +85,7 @@ extension ParseOperation {
     Provide completion handler for operation
     - Parameter completionHandler: Completion closure.
     */
-    func whenFinished(whenFinishedQueue completionHandlerQueue: OperationQueue = OperationQueue.main, completionHandler: OperationClosure) {
+    func whenFinished(whenFinishedQueue completionHandlerQueue: OperationQueue = OperationQueue.main, completionHandler: @escaping OperationClosure) {
         guard self.completionHandler == nil else { return }
         self.completionHandler = completionHandler
     }
@@ -135,7 +135,7 @@ extension ParseOperation {
 		guard let completionHandler = self.completionHandler else { return }
 		self.completionHandler = nil
 		self.implementationHandler = nil
-		completionHandler(parseOp: self)
+		completionHandler(self)
 		self.state = .finished
     }
 }
