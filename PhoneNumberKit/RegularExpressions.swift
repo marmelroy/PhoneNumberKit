@@ -9,9 +9,7 @@
 import Foundation
 
 class RegularExpressions {
-    
-    static let sharedInstance = RegularExpressions()
-    
+        
     var regularExpresions = [String : NSRegularExpression]()
 
     var phoneDataDetector: NSDataDetector? = {

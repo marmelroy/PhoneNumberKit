@@ -15,15 +15,15 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     let phoneNumberKit = PhoneNumberKit()
     
     /// Override region to set a custom region. Automatically uses the default region code.
-    public var defaultRegion = PhoneNumberKit().defaultRegionCode() {
+    public var defaultRegion = PhoneNumberKit.defaultRegionCode() {
         didSet {
-            partialFormatter.defaultRegion = defaultRegion
+            partialFormatter?.defaultRegion = defaultRegion
         }
     }
     
     public var withPrefix: Bool = true {
         didSet {
-            partialFormatter.withPrefix = withPrefix
+            partialFormatter?.withPrefix = withPrefix
             if withPrefix == false {
                 self.keyboardType = UIKeyboardType.numberPad
             }
@@ -34,7 +34,7 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
 
     
-    var partialFormatter = PartialFormatter()
+    var partialFormatter: PartialFormatter?
     
     let nonNumericSet: CharacterSet = {
         var mutableSet = (CharacterSet.decimalDigits.inverted as NSCharacterSet).mutableCopy() as! NSMutableCharacterSet
@@ -55,22 +55,22 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     
     //MARK: Status
 
-    public var currentRegion: String {
+    public var currentRegion: String? {
         get {
-            return partialFormatter.currentRegion
+            return partialFormatter?.currentRegion
         }
     }
-    public var isValidNumber: Bool {
-        get {
-            let rawNumber = self.text ?? String()
-            do {
-                let phoneNumber = try phoneNumberKit.parse(rawNumber: rawNumber, region: currentRegion)
-                return phoneNumber.isValidNumber
-            } catch {
-                return false
-            }
-        }
-    }
+//    public var isValidNumber: Bool {
+//        get {
+//            let rawNumber = self.text ?? String()
+//            do {
+//                let phoneNumber = try phoneNumberKit.parse(rawNumber: rawNumber, region: currentRegion)
+//                return phoneNumber.isValidNumber
+//            } catch {
+//                return false
+//            }
+//        }
+//    }
     
      //MARK: Lifecycle
     
@@ -100,6 +100,7 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
     
     func setup(){
+        self.partialFormatter = PartialFormatter(regex: phoneNumberKit.regex, metadata: phoneNumberKit.metadata, parser: phoneNumberKit.parser, defaultRegion: PhoneNumberKit.defaultRegionCode(), withPrefix: withPrefix)
         self.autocorrectionType = .no
         self.keyboardType = UIKeyboardType.phonePad
         super.delegate = self
@@ -177,7 +178,6 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         let textAsNSString = text as NSString
         let changedRange = textAsNSString.substring(with: range) as NSString
         let modifiedTextField = textAsNSString.replacingCharacters(in: range, with: string)
-        let formattedNationalNumber = partialFormatter.formatPartial(modifiedTextField as String)
         var selectedTextRange: NSRange?
         
         let nonNumericRange = (changedRange.rangeOfCharacter(from: nonNumericSet).location != NSNotFound)
@@ -186,7 +186,7 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             selectedTextRange = selectionRangeForNumberReplacement(textField, formattedText: modifiedTextField)
             textField.text = modifiedTextField
         }
-        else {
+        else if let formattedNationalNumber = partialFormatter?.formatPartial(modifiedTextField as String) {
             selectedTextRange = selectionRangeForNumberReplacement(textField, formattedText: formattedNationalNumber)
             textField.text = formattedNationalNumber
         }

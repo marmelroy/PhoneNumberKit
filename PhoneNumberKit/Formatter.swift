@@ -10,8 +10,16 @@ import Foundation
 
 class Formatter {
     
+    let regex: RegularExpressions
+    let metadata: Metadata
+    
+    init(regex: RegularExpressions, metadata: Metadata) {
+        self.regex = regex
+        self.metadata = metadata
+    }
+
+    
     // MARK: Formatting functions
-    let regex = RegularExpressions.sharedInstance
     
     /**
      Formats phone numbers for display
@@ -19,7 +27,6 @@ class Formatter {
      - Returns: Modified national number ready for display.
      */
     func formatPhoneNumber(_ phoneNumber: PhoneNumber, formatType: PhoneNumberFormat) -> String {
-        let metadata = Metadata.sharedInstance
         var formattedNationalNumber = phoneNumber.adjustedNationalNumber()
         if let regionMetadata = metadata.metadataPerCode[phoneNumber.countryCode] {
             formattedNationalNumber = formatNationalNumber(formattedNationalNumber, regionMetadata: regionMetadata, formatType: formatType)
@@ -119,7 +126,8 @@ public extension PhoneNumber {
      - Returns: A string representing the phone number in International format.
      */
     public func toInternational(_ prefix: Bool = true) -> String {
-        let formatter = Formatter()
+        let phoneNumberKit = PhoneNumberKit()
+        let formatter = Formatter(regex: phoneNumberKit.regex, metadata: phoneNumberKit.metadata)
         let formattedNationalNumber = formatter.formatPhoneNumber(self, formatType: .international)
         if prefix == false {
             return formattedNationalNumber
@@ -132,7 +140,8 @@ public extension PhoneNumber {
      - Returns: A string representing the phone number in the local national format.
      */
     public func toNational() -> String {
-        let formatter = Formatter()
+        let phoneNumberKit = PhoneNumberKit()
+        let formatter = Formatter(regex: phoneNumberKit.regex, metadata: phoneNumberKit.metadata)
         let formattedNationalNumber = formatter.formatPhoneNumber(self, formatType: .national)
         let formattedNumber = formattedNationalNumber
         return formattedNumber

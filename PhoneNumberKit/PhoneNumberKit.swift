@@ -13,13 +13,21 @@ import CoreTelephony
     
 public class PhoneNumberKit: NSObject {
     
-    let metadata = Metadata.sharedInstance
-    let regex = RegularExpressions.sharedInstance
+    let metadata = Metadata()
+    let regex = RegularExpressions()
+    
+    let parseManager: ParseManager
+    let parser: PhoneNumberParser
+    
+    override init() {
+        self.parser = PhoneNumberParser(regex: regex, metadata: metadata)
+        self.parseManager = ParseManager(regex: regex, metadata: metadata, parser: parser)
+    }
 
     // MARK: Multiple Parsing
     
     public func parse(rawNumber: String, region: String? = nil) throws -> PhoneNumber {
-        return try ParseManager().parsePhoneNumber(rawNumber, region: region ?? PhoneNumberKit().defaultRegionCode())
+        return try parseManager.parsePhoneNumber(rawNumber, region: region ?? PhoneNumberKit.defaultRegionCode())
     }
     
     /**
@@ -28,7 +36,7 @@ public class PhoneNumberKit: NSObject {
     - Returns: An array of valid PhoneNumber objects.
     */
     public func parseMultiple(_ rawNumbers: [String]) -> [PhoneNumber] {
-        return self.parseMultiple(rawNumbers, region: self.defaultRegionCode())
+        return self.parseMultiple(rawNumbers, region: PhoneNumberKit.defaultRegionCode())
     }
     
     /**
@@ -38,7 +46,7 @@ public class PhoneNumberKit: NSObject {
     - Returns: An array of valid PhoneNumber objects.
     */
     public func parseMultiple(_ rawNumbers: [String], region: String) -> [PhoneNumber] {
-        return ParseManager().parseMultiple(rawNumbers, region: region)
+        return parseManager.parseMultiple(rawNumbers, region: region)
     }
 
 
@@ -90,7 +98,6 @@ public class PhoneNumberKit: NSObject {
 
     private func getRegionCodeForNumber(_ number: PhoneNumber, fromRegionList regions: [MetadataTerritory]) -> String? {
         let nationalNumber = String(number.nationalNumber)
-        let parser = PhoneNumberParser()
         for region in regions {
             if let leadingDigits = region.leadingDigits {
                 if regex.matchesAtStart(leadingDigits, string: nationalNumber) {
@@ -121,7 +128,7 @@ public class PhoneNumberKit: NSObject {
     Get a user's default region code,
     - Returns: A computed value for the user's current region - based on the iPhone's carrier and if not available, the device region.
     */
-    public func defaultRegionCode() -> String {
+    public class func defaultRegionCode() -> String {
 #if os(iOS)
         let networkInfo = CTTelephonyNetworkInfo()
         let carrier = networkInfo.subscriberCellularProvider

@@ -10,10 +10,20 @@ import Foundation
 
 /// Partial formatter
 public class PartialFormatter {
-    
-    let metadata = Metadata.sharedInstance
-    let parser = PhoneNumberParser()
-    let regex = RegularExpressions.sharedInstance
+        
+    let regex: RegularExpressions
+    let metadata: Metadata
+    let parser: PhoneNumberParser
+
+    init(regex: RegularExpressions, metadata: Metadata, parser: PhoneNumberParser, defaultRegion: String, withPrefix: Bool = true) {
+        self.regex = regex
+        self.metadata = metadata
+        self.parser = parser
+        self.defaultRegion = defaultRegion
+        updateMetadataForDefaultRegion()
+        self.withPrefix = withPrefix
+    }
+
     
     var defaultRegion: String {
         didSet {
@@ -47,29 +57,6 @@ public class PartialFormatter {
     
     
     //MARK: Lifecycle
-    
-    /**
-     Initialise a partial formatter with the default region
-     
-     - returns: PartialFormatter object
-     */
-    public convenience init() {
-        let defaultRegion = PhoneNumberKit().defaultRegionCode()
-        self.init(defaultRegion: defaultRegion)
-    }
-    
-    /**
-     Inits a partial formatter with a custom region
-     
-     - parameter region: ISO 639 compliant region code.
-     
-     - returns: PartialFormatter object
-     */
-    public init(defaultRegion: String, withPrefix: Bool = true) {
-        self.defaultRegion = defaultRegion
-        updateMetadataForDefaultRegion()
-        self.withPrefix = withPrefix
-    }
     
     /**
      Formats a partial string (for use in TextField)

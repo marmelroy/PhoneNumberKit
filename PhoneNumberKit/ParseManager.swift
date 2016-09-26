@@ -12,9 +12,18 @@ import Foundation
 Manager for parsing flow.
 */
 class ParseManager {
-    let metadata = Metadata.sharedInstance
-    let parser = PhoneNumberParser()
-    let regex = RegularExpressions.sharedInstance
+    let parser: PhoneNumberParser
+    let regex: RegularExpressions
+    let metadata: Metadata
+
+    init(regex: RegularExpressions, metadata: Metadata, parser: PhoneNumberParser) {
+        self.regex = regex
+        self.metadata = metadata
+        self.parser = parser
+    }
+    
+
+    
     private var multiParseArray = SynchronizedArray<PhoneNumber>()
     
     /**

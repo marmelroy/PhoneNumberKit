@@ -10,8 +10,6 @@ import Foundation
 
 class Metadata {
     
-    static let sharedInstance = Metadata()
-    
     var items = [MetadataTerritory]()
     var metadataPerCode = [UInt64: MetadataTerritory]()
     var metadataPerCountry = [String: MetadataTerritory]()
@@ -19,7 +17,7 @@ class Metadata {
     /**
      Private init populates metadata items and the two hashed dictionaries for faster lookup.
      */
-    private init () {
+    public init () {
         items = populateItems()
         for item in items {
             if metadataPerCode[item.countryCode] == nil || item.mainCountryForCode == true {
