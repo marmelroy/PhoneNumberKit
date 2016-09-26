@@ -19,25 +19,19 @@ public class PhoneNumberKit: NSObject {
     let parseManager: ParseManager
     let parser: PhoneNumberParser
     
+    // MARK: Lifecycle
+    
     override init() {
         self.parser = PhoneNumberParser(regex: regex, metadata: metadata)
         self.parseManager = ParseManager(regex: regex, metadata: metadata, parser: parser)
     }
 
-    // MARK: Multiple Parsing
+    // MARK: Parsing
     
-    public func parse(rawNumber: String, region: String? = nil) throws -> PhoneNumber {
-        return try parseManager.parsePhoneNumber(rawNumber, region: region ?? PhoneNumberKit.defaultRegionCode())
+    public func parse(number: String, withRegion region: String = PhoneNumberKit.defaultRegionCode()) throws -> PhoneNumber {
+        return try parseManager.parsePhoneNumber(number, region: region)
     }
     
-    /**
-    Fastest way to parse an array of phone numbers. Uses default region code.
-    - Parameter rawNumbers: An array of raw number strings.
-    - Returns: An array of valid PhoneNumber objects.
-    */
-    public func parseMultiple(_ rawNumbers: [String]) -> [PhoneNumber] {
-        return self.parseMultiple(rawNumbers, region: PhoneNumberKit.defaultRegionCode())
-    }
     
     /**
     Fastest way to parse an array of phone numbers. Uses custom region code.
@@ -45,8 +39,8 @@ public class PhoneNumberKit: NSObject {
     - Parameter region: ISO 639 compliant region code.
     - Returns: An array of valid PhoneNumber objects.
     */
-    public func parseMultiple(_ rawNumbers: [String], region: String) -> [PhoneNumber] {
-        return parseManager.parseMultiple(rawNumbers, region: region)
+    public func parseMultiple(numbers: [String], withRegion region: String = PhoneNumberKit.defaultRegionCode()) -> [PhoneNumber] {
+        return parseManager.parseMultiple(numbers, region: region)
     }
 
 
