@@ -19,11 +19,12 @@ Parsed phone number object
 - Type: Computed phone number type on access. Returns from an enumeration - PNPhoneNumberType.
 */
 public struct PhoneNumber {
+    public let numberString: String
+
     public let countryCode: UInt64
     private(set) public var leadingZero = false
     public let nationalNumber: UInt64
     public let numberExtension: String?
-    public let rawNumber: String
 //    public var type: PhoneNumberType {
 //        get {
 //            let parser = PhoneNumberParser()

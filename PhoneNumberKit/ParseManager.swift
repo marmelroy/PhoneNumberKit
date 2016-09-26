@@ -81,7 +81,7 @@ class ParseManager {
         guard let finalNationalNumber = UInt64(nationalNumber) else{
             throw PhoneNumberError.notANumber
         }
-        let phoneNumber = PhoneNumber(countryCode: countryCode, leadingZero: leadingZero, nationalNumber: finalNationalNumber, numberExtension: numberExtension, rawNumber: rawNumber)
+        let phoneNumber = PhoneNumber(numberString: rawNumber, countryCode: countryCode, leadingZero: leadingZero, nationalNumber: finalNationalNumber, numberExtension: numberExtension)
         return phoneNumber
     }
     

@@ -28,8 +28,8 @@ public class PhoneNumberKit: NSObject {
 
     // MARK: Parsing
     
-    public func parse(number: String, withRegion region: String = PhoneNumberKit.defaultRegionCode()) throws -> PhoneNumber {
-        return try parseManager.parsePhoneNumber(number, region: region)
+    public func parse(numberString: String, withRegion region: String = PhoneNumberKit.defaultRegionCode()) throws -> PhoneNumber {
+        return try parseManager.parsePhoneNumber(numberString, region: region)
     }
     
     
@@ -39,8 +39,8 @@ public class PhoneNumberKit: NSObject {
     - Parameter region: ISO 639 compliant region code.
     - Returns: An array of valid PhoneNumber objects.
     */
-    public func parseMultiple(numbers: [String], withRegion region: String = PhoneNumberKit.defaultRegionCode()) -> [PhoneNumber] {
-        return parseManager.parseMultiple(numbers, region: region)
+    public func parse(numberStrings: [String], withRegion region: String = PhoneNumberKit.defaultRegionCode()) -> [PhoneNumber] {
+        return parseManager.parseMultiple(numberStrings, region: region)
     }
 
 

@@ -31,7 +31,7 @@ class PhoneNumberKitTests: XCTestCase {
     // Invalid american number, GitHub issue #8 by j-pk
     func testInvalidNumberE() {
         do {
-            let phoneNumber = try phoneNumberKit.parse(number: "202 00e 0000", withRegion: "US")
+            let phoneNumber = try phoneNumberKit.parse(numberString: "202 00e 0000", withRegion: "US")
             print(phoneNumber.toE164())
             XCTFail()
         }
@@ -43,7 +43,7 @@ class PhoneNumberKitTests: XCTestCase {
 //    // Invalid american number, GitHub issue #9 by lobodin
 //    func testAmbiguousFixedOrMobileNumber() {
 //        do {
-//            let phoneNumber = try phoneNumberKit.parse(number: "+16307792428", region: "US")
+//            let phoneNumber = try phoneNumberKit.parse(numberString: "+16307792428", region: "US")
 //            print(phoneNumber.toE164())
 //            XCTAssertEqual(phoneNumber.type, PhoneNumberType.fixedOrMobile)
 //        }
@@ -57,7 +57,7 @@ class PhoneNumberKitTests: XCTestCase {
 //        do {
 //            // libphonenumber reports this number as invalid
 //            // and it's true, this is a French mobile number combined with the GB region
-//            let phoneNumber = try phoneNumberKit.parse(number: "+44629996885")
+//            let phoneNumber = try phoneNumberKit.parse(numberString: "+44629996885")
 //            print(phoneNumber.toE164())
 //            (phoneNumber.isValidNumber == true) ? XCTFail() : XCTAssert(true)
 //        }
@@ -71,7 +71,7 @@ class PhoneNumberKitTests: XCTestCase {
 //        do {
 //            // libphonenumber reports this number as invalid
 //            // and it's true, this is a French mobile number combined with the BE region
-//            let phoneNumber = try phoneNumberKit.parse(number: "+32910853865")
+//            let phoneNumber = try phoneNumberKit.parse(numberString: "+32910853865")
 //            print(phoneNumber.toE164())
 //            (phoneNumber.isValidNumber == true) ? XCTFail() : XCTAssert(true)
 //        }
@@ -85,7 +85,7 @@ class PhoneNumberKitTests: XCTestCase {
 //        do {
 //            // libphonenumber reports this number as invalid
 //            // and it's true, this is a French mobile number combined with the DZ region
-//            let phoneNumber = try phoneNumberKit.parse(number: "+21373344376")
+//            let phoneNumber = try phoneNumberKit.parse(numberString: "+21373344376")
 //            print(phoneNumber.toE164())
 //            XCTFail()
 //        }
@@ -99,7 +99,7 @@ class PhoneNumberKitTests: XCTestCase {
 //        do {
 //            // libphonenumber reports this number as invalid
 //            // and it's true, this is a French mobile number combined with the CN region
-//            let phoneNumber = try phoneNumberKit.parse(number: "+861500376135")
+//            let phoneNumber = try phoneNumberKit.parse(numberString: "+861500376135")
 //            print(phoneNumber.toE164())
 //            (phoneNumber.isValidNumber == true) ? XCTFail() : XCTAssert(true)
 //        }
@@ -113,7 +113,7 @@ class PhoneNumberKitTests: XCTestCase {
 //        do {
 //            // libphonenumber reports this number as invalid
 //            // and it's true, this is a French mobile number combined with the IT region
-//            let phoneNumber = try phoneNumberKit.parse(number: "+390762613915")
+//            let phoneNumber = try phoneNumberKit.parse(numberString: "+390762613915")
 //            print(phoneNumber.toE164())
 //            (phoneNumber.isValidNumber == true) ? XCTFail() : XCTAssert(true)
 //        }
@@ -127,7 +127,7 @@ class PhoneNumberKitTests: XCTestCase {
         do {
             // libphonenumber reports this number as invalid
             // and it's true, this is a French mobile number combined with the ES region
-            let phoneNumber = try phoneNumberKit.parse(number: "+34312431110")
+            let phoneNumber = try phoneNumberKit.parse(numberString: "+34312431110")
             print(phoneNumber.toE164())
             XCTFail()
         }
@@ -140,7 +140,7 @@ class PhoneNumberKitTests: XCTestCase {
     func testItalianLeadingZero() {
         let testNumber = "+39 0549555555"
         do {
-            let phoneNumber = try phoneNumberKit.parse(number: testNumber)
+            let phoneNumber = try phoneNumberKit.parse(numberString: testNumber)
 //            XCTAssertEqual(phoneNumber.toInternational(), testNumber)
             XCTAssertEqual(phoneNumber.countryCode, 39)
             XCTAssertEqual(phoneNumber.nationalNumber, 549555555)
@@ -155,7 +155,7 @@ class PhoneNumberKitTests: XCTestCase {
     func testNumberWithExtension() {
         let testNumber = "+33-689-5-5555-5 ext. 84"
         do {
-            let phoneNumber = try phoneNumberKit.parse(number: testNumber)
+            let phoneNumber = try phoneNumberKit.parse(numberString: testNumber)
             XCTAssertEqual(phoneNumber.countryCode, 33)
             XCTAssertEqual(phoneNumber.numberExtension, "84")
             XCTAssertEqual(phoneNumber.nationalNumber, 689555555)
@@ -170,7 +170,7 @@ class PhoneNumberKitTests: XCTestCase {
     func testValidNumberWithPlusNoWhiteSpace() {
         let testNumber = "+33689555555"
         do {
-            let phoneNumber = try phoneNumberKit.parse(number: testNumber)
+            let phoneNumber = try phoneNumberKit.parse(numberString: testNumber)
             XCTAssertEqual(phoneNumber.toE164(), testNumber)
             XCTAssertEqual(phoneNumber.toInternational(false), "6 89 55 55 55")
             XCTAssertEqual(phoneNumber.countryCode, 33)
@@ -187,7 +187,7 @@ class PhoneNumberKitTests: XCTestCase {
     func testValidNumberWithPlusWhiteSpace() {
         let testNumber = "+81 601 55-5-5 5 5"
         do {
-            let phoneNumber = try phoneNumberKit.parse(number: testNumber)
+            let phoneNumber = try phoneNumberKit.parse(numberString: testNumber)
             XCTAssertEqual(phoneNumber.toE164(), "+81601555555")
             XCTAssertEqual(phoneNumber.countryCode, 81)
             XCTAssertEqual(phoneNumber.nationalNumber, 601555555)
@@ -203,7 +203,7 @@ class PhoneNumberKitTests: XCTestCase {
     func testValidNumberWithAmericanIDDNoWhiteSpace() {
         let testNumber = "011447739555555"
         do {
-            let phoneNumber = try phoneNumberKit.parse(number: testNumber)
+            let phoneNumber = try phoneNumberKit.parse(numberString: testNumber)
             XCTAssertEqual(phoneNumber.toE164(), "+447739555555")
             XCTAssertEqual(phoneNumber.countryCode, 44)
             XCTAssertEqual(phoneNumber.nationalNumber, 7739555555)
@@ -218,7 +218,7 @@ class PhoneNumberKitTests: XCTestCase {
     func testValidNumberWithAmericanIDDWhiteSpace() {
         let testNumber = "01155 11 9 6 555 55 55"
         do {
-            let phoneNumber = try phoneNumberKit.parse(number: testNumber)
+            let phoneNumber = try phoneNumberKit.parse(numberString: testNumber)
             XCTAssertEqual(phoneNumber.toE164(), "+5511965555555")
             XCTAssertEqual(phoneNumber.countryCode, 55)
             XCTAssertEqual(phoneNumber.nationalNumber, 11965555555)
@@ -233,7 +233,7 @@ class PhoneNumberKitTests: XCTestCase {
     func testValidLocalNumberWithNoPrefixNoWhiteSpace() {
         let testNumber = "2015555555"
         do {
-            let phoneNumber = try phoneNumberKit.parse(number: testNumber)
+            let phoneNumber = try phoneNumberKit.parse(numberString: testNumber)
             XCTAssertEqual(phoneNumber.toE164(), "+12015555555")
             XCTAssertEqual(phoneNumber.countryCode, 1)
             XCTAssertEqual(phoneNumber.nationalNumber, 2015555555)
@@ -248,7 +248,7 @@ class PhoneNumberKitTests: XCTestCase {
     func testValidLocalNumberWithNoPrefixWhiteSpace() {
         let testNumber = "500-2-55-555-5"
         do {
-            let phoneNumber = try phoneNumberKit.parse(number: testNumber)
+            let phoneNumber = try phoneNumberKit.parse(numberString: testNumber)
             XCTAssertEqual(phoneNumber.toE164(), "+15002555555")
             XCTAssertEqual(phoneNumber.countryCode, 1)
             XCTAssertEqual(phoneNumber.nationalNumber, 5002555555)
@@ -263,7 +263,7 @@ class PhoneNumberKitTests: XCTestCase {
     func testInvalidNumberTooShort() {
         let testNumber = "+44 32"
         do {
-            let phoneNumber = try phoneNumberKit.parse(number: testNumber)
+            let phoneNumber = try phoneNumberKit.parse(numberString: testNumber)
             _ = phoneNumber.toE164()
             XCTFail()
         }
@@ -276,7 +276,7 @@ class PhoneNumberKitTests: XCTestCase {
     func testInvalidNumberTooLong() {
         let testNumber = "+44 3243894723084732047023472"
         do {
-            let phoneNumber = try phoneNumberKit.parse(number: testNumber)
+            let phoneNumber = try phoneNumberKit.parse(numberString: testNumber)
             _ = phoneNumber.toE164()
             XCTFail()
         }
@@ -289,7 +289,7 @@ class PhoneNumberKitTests: XCTestCase {
     func testInvalidNumberNotANumber() {
         let testNumber = "ae4c08c6-be33-40ef-a417-e5166e307b5e"
         do {
-            let phoneNumber = try phoneNumberKit.parse(number: testNumber)
+            let phoneNumber = try phoneNumberKit.parse(numberString: testNumber)
             _ = phoneNumber.toE164()
             XCTFail()
         }
@@ -302,7 +302,7 @@ class PhoneNumberKitTests: XCTestCase {
     func testInvalidNumberNotANumberInvalidFormat() {
         let testNumber = "+33(02)689555555"
         do {
-            let phoneNumber = try phoneNumberKit.parse(number: testNumber)
+            let phoneNumber = try phoneNumberKit.parse(numberString: testNumber)
             _ = phoneNumber.toE164()
             XCTFail()
         }
@@ -347,7 +347,7 @@ class PhoneNumberKitTests: XCTestCase {
 
     //  Test region code for number function
     func testGetRegionCode() {
-        guard let phoneNumber = try? phoneNumberKit.parse(number: "+39 3123456789") else {
+        guard let phoneNumber = try? phoneNumberKit.parse(numberString: "+39 3123456789") else {
             XCTFail()
             return
         }
@@ -356,7 +356,7 @@ class PhoneNumberKitTests: XCTestCase {
 
     //  Test region code for number in a region that uses leading digits
     func testGetRegionCodeLeadingDigits() {
-        guard let phoneNumber = try? phoneNumberKit.parse(number: "876-123-4567") else {
+        guard let phoneNumber = try? phoneNumberKit.parse(numberString: "876-123-4567") else {
             XCTFail()
             return
         }
