@@ -34,9 +34,8 @@ public class PhoneNumberKit: NSObject {
         return try parseManager.parsePhoneNumber(numberString, region: region)
     }
     
-    
     /**
-    Fastest way to parse an array of phone numbers. Uses custom region code.
+    Fastest way to parse an array of phone numbers.
     - Parameter rawNumbers: An array of raw number strings.
     - Parameter region: ISO 639 compliant region code.
     - Returns: An array of valid PhoneNumber objects.
@@ -62,8 +61,8 @@ public class PhoneNumberKit: NSObject {
     - Parameter code: An international country code (e.g 44 for the UK).
     - Returns: An optional array of ISO 639 compliant region codes.
     */
-    public func countriesForCode(_ code: UInt64) -> [String]? {
-        let results = metadataManager.fetchCountriesForCode(code)?.map{$0.codeID}
+    public func countries(forCountryCode countryCode: UInt64) -> [String]? {
+        let results = metadataManager.fetchCountriesForCode(countryCode)?.map{$0.codeID}
         return results
     }
     
@@ -72,8 +71,8 @@ public class PhoneNumberKit: NSObject {
     - Parameter code: An international country code (e.g 1 for the US).
     - Returns: A ISO 639 compliant region code string.
     */
-    public func mainCountryForCode(_ code: UInt64) -> String? {
-        let country = metadataManager.fetchMainCountryMetadataForCode(code)
+    public func mainCountry(forCountryCode countryCode: UInt64) -> String? {
+        let country = metadataManager.fetchMainCountryMetadataForCode(countryCode)
         return country?.codeID
     }
 
@@ -82,14 +81,14 @@ public class PhoneNumberKit: NSObject {
     - Parameter number: The phone number
     - Returns: Region code, eg "US", or nil if the region cannot be determined
     */
-    public func regionCodeForNumber(_ number: PhoneNumber) -> String? {
-        let countryCode = number.countryCode
+    public func regionCode(forPhoneNumber phoneNumber: PhoneNumber) -> String? {
+        let countryCode = phoneNumber.countryCode
         let regions = metadataManager.items.filter { $0.countryCode == countryCode }
         if regions.count == 1 {
             return regions[0].codeID
         }
 
-        return getRegionCodeForNumber(number, fromRegionList: regions)
+        return getRegionCodeForNumber(phoneNumber, fromRegionList: regions)
     }
 
     private func getRegionCodeForNumber(_ number: PhoneNumber, fromRegionList regions: [MetadataTerritory]) -> String? {
@@ -115,7 +114,7 @@ public class PhoneNumberKit: NSObject {
     - Parameter country: ISO 639 compliant region code.
     - Returns: An international country code (e.g. 33 for France).
     */
-    public func codeForCountry(_ country: String) -> UInt64? {
+    public func countryCode(forCountry country: String) -> UInt64? {
         let results = metadataManager.fetchMetadataForCountry(country)?.countryCode
         return results
     }

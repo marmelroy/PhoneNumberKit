@@ -24,7 +24,7 @@ class PhoneNumberKitTests: XCTestCase {
     }
     
     func testMetadataMainCountryFetch() {
-        let countryMetadata = phoneNumberKit.metadata.fetchMainCountryMetadataForCode(1)
+        let countryMetadata = phoneNumberKit.metadataManager.fetchMainCountryMetadataForCode(1)
         XCTAssertEqual(countryMetadata?.codeID, "US")
     }
     
@@ -324,25 +324,25 @@ class PhoneNumberKitTests: XCTestCase {
     //  Test code for country function -  valid country
     func testCodeForCountryValid() {
         let phoneNumberKit = PhoneNumberKit()
-        XCTAssertEqual(phoneNumberKit.codeForCountry("FR"), 33)
+        XCTAssertEqual(phoneNumberKit.countryCode(forCountry: "FR"), 33)
     }
     
     //  Test code for country function - invalid country
     func testCodeForCountryInvalid() {
         let phoneNumberKit = PhoneNumberKit()
-        XCTAssertEqual(phoneNumberKit.codeForCountry("FOOBAR"), nil)
+        XCTAssertEqual(phoneNumberKit.countryCode(forCountry: "FOOBAR"), nil)
     }
     
     //  Test countries for code function
     func testCountriesForCodeValid() {
         let phoneNumberKit = PhoneNumberKit()
-        XCTAssertEqual(phoneNumberKit.countriesForCode(1)?.count, 25)
+        XCTAssertEqual(phoneNumberKit.countries(forCountryCode: 1)?.count, 25)
     }
 
     //  Test countries for code function
     func testCountriesForCodeInvalid() {
         let phoneNumberKit = PhoneNumberKit()
-        XCTAssertEqual(phoneNumberKit.countriesForCode(424242)?.count, 0)
+        XCTAssertEqual(phoneNumberKit.countries(forCountryCode: 424242)?.count, 0)
     }
 
     //  Test region code for number function
@@ -351,7 +351,7 @@ class PhoneNumberKitTests: XCTestCase {
             XCTFail()
             return
         }
-        XCTAssertEqual(PhoneNumberKit().regionCodeForNumber(phoneNumber), "IT")
+        XCTAssertEqual(PhoneNumberKit().regionCode(forPhoneNumber: phoneNumber), "IT")
     }
 
     //  Test region code for number in a region that uses leading digits
@@ -360,7 +360,7 @@ class PhoneNumberKitTests: XCTestCase {
             XCTFail()
             return
         }
-        XCTAssertEqual(PhoneNumberKit().regionCodeForNumber(phoneNumber), "JM")
+        XCTAssertEqual(PhoneNumberKit().regionCode(forPhoneNumber: phoneNumber), "JM")
     }
 
 }
