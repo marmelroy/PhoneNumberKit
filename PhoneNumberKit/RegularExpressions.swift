@@ -10,8 +10,23 @@ import Foundation
 
 class RegularExpressions {
         
-    var regularExpresions = [String : NSRegularExpression]()
+    var _regularExpresions = [String : NSRegularExpression]()
+    
+    var regularExpresions: [String : NSRegularExpression] {
+        var regularExpresionsCopy: [String : NSRegularExpression]!
+        concurrentRegexQueue.sync {
+            regularExpresionsCopy = self._regularExpresions
+        }
+        return regularExpresionsCopy
+    }
+    private let concurrentRegexQueue = DispatchQueue(label: "com.phonenumberkit.regexqueue", qos: .default, attributes: .concurrent)
 
+    func addRegularExpression(regex: NSRegularExpression, pattern: String) {
+        concurrentRegexQueue.async(flags: .barrier) {
+            self._regularExpresions[pattern] = regex
+        }
+    }
+    
     var phoneDataDetector: NSDataDetector? = {
         do {
             let dataDetector = try NSDataDetector(types: NSTextCheckingResult.CheckingType.phoneNumber.rawValue)
@@ -29,7 +44,7 @@ class RegularExpressions {
     }()
     
     deinit {
-        regularExpresions.removeAll()
+        _regularExpresions.removeAll()
         phoneDataDetector = nil
     }
 
@@ -43,7 +58,7 @@ class RegularExpressions {
             do {
                 let currentPattern: NSRegularExpression
                 currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpression.Options.caseInsensitive)
-                regularExpresions[pattern] = currentPattern
+                self.addRegularExpression(regex: currentPattern, pattern: pattern)
                 return currentPattern
             }
             catch {
