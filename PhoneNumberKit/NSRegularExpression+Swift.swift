@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 extension String {
 	func nsRange(from range: Range<String.Index>) -> NSRange {
 		let utf16view = self.utf16

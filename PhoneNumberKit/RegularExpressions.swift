@@ -9,21 +9,23 @@
 import Foundation
 
 class RegularExpressions {
-        
-    var _regularExpresions = [String : NSRegularExpression]()
     
-    var regularExpresions: [String : NSRegularExpression] {
-        var regularExpresionsCopy: [String : NSRegularExpression]!
+    // MARK: Regular expression pool
+        
+    var _regularExpresionPool = [String : NSRegularExpression]()
+    
+    var regularExpresionPool: [String : NSRegularExpression] {
+        var regularExpresionPoolCopy: [String : NSRegularExpression]!
         concurrentRegexQueue.sync {
-            regularExpresionsCopy = self._regularExpresions
+            regularExpresionPoolCopy = self._regularExpresionPool
         }
-        return regularExpresionsCopy
+        return regularExpresionPoolCopy
     }
     private let concurrentRegexQueue = DispatchQueue(label: "com.phonenumberkit.regexqueue", qos: .default, attributes: .concurrent)
 
-    func addRegularExpression(regex: NSRegularExpression, pattern: String) {
+    func addRegularExpressionToPool(regex: NSRegularExpression, pattern: String) {
         concurrentRegexQueue.async(flags: .barrier) {
-            self._regularExpresions[pattern] = regex
+            self._regularExpresionPool[pattern] = regex
         }
     }
     
@@ -44,22 +46,22 @@ class RegularExpressions {
     }()
     
     deinit {
-        _regularExpresions.removeAll()
+        _regularExpresionPool.removeAll()
         phoneDataDetector = nil
     }
 
     // MARK: Regular expression
     
     func regexWithPattern(_ pattern: String) throws -> NSRegularExpression {
-        if let regex = regularExpresions[pattern] {
+        if let regex = regularExpresionPool[pattern] {
             return regex
         }
         else {
             do {
-                let currentPattern: NSRegularExpression
-                currentPattern =  try NSRegularExpression(pattern: pattern, options:NSRegularExpression.Options.caseInsensitive)
-                self.addRegularExpression(regex: currentPattern, pattern: pattern)
-                return currentPattern
+                let regularExpression: NSRegularExpression
+                regularExpression =  try NSRegularExpression(pattern: pattern, options:NSRegularExpression.Options.caseInsensitive)
+                self.addRegularExpressionToPool(regex: regularExpression, pattern: pattern)
+                return regularExpression
             }
             catch {
                 throw PhoneNumberError.generalError

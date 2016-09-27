@@ -86,55 +86,55 @@ public enum PhoneNumberType {
 
 // MARK: Constants
 
-public struct PhoneNumberConstants {
-  public static let defaultCountry = "US"
-  public static let defaultExtnPrefix = " ext. "
-  public static let longPhoneNumber = "999999999999999"
-  public static let minLengthForNSN = 2
-  public static let maxInputStringLength = 250
-  public static let maxLengthCountryCode = 3
-  public static let maxLengthForNSN = 16
-  public static let nonBreakingSpace = "\u{00a0}"
-  public static let plusChars = "+＋"
-  public static let validDigitsString = "0-9０-９٠-٩۰-۹"
-  public static let digitPlaceholder = "\u{2008}"
-  public static let separatorBeforeNationalNumber = " "
+struct PhoneNumberConstants {
+  static let defaultCountry = "US"
+  static let defaultExtnPrefix = " ext. "
+  static let longPhoneNumber = "999999999999999"
+  static let minLengthForNSN = 2
+  static let maxInputStringLength = 250
+  static let maxLengthCountryCode = 3
+  static let maxLengthForNSN = 16
+  static let nonBreakingSpace = "\u{00a0}"
+  static let plusChars = "+＋"
+  static let validDigitsString = "0-9０-９٠-٩۰-۹"
+  static let digitPlaceholder = "\u{2008}"
+  static let separatorBeforeNationalNumber = " "
 }
 
-public struct PhoneNumberPatterns {
+struct PhoneNumberPatterns {
   // MARK: Patterns
   
-  public static let firstGroupPattern = "(\\$\\d)"
-  public static let fgPattern = "\\$FG"
-  public static let npPattern = "\\$NP"
+  static let firstGroupPattern = "(\\$\\d)"
+  static let fgPattern = "\\$FG"
+  static let npPattern = "\\$NP"
 
-  public static let allNormalizationMappings = ["0":"0", "1":"1", "2":"2", "3":"3", "4":"4", "5":"5", "6":"6", "7":"7", "8":"8", "9":"9"]
+  static let allNormalizationMappings = ["0":"0", "1":"1", "2":"2", "3":"3", "4":"4", "5":"5", "6":"6", "7":"7", "8":"8", "9":"9"]
 
-  public static let capturingDigitPattern = "([0-9０-９٠-٩۰-۹])"
+  static let capturingDigitPattern = "([0-9０-９٠-٩۰-۹])"
 
-  public static let extnPattern = "\\;(.*)"
+  static let extnPattern = "\\;(.*)"
 
-  public static let iddPattern = "^(?:\\+|%@)"
+  static let iddPattern = "^(?:\\+|%@)"
 
-  public static let formatPattern = "^(?:%@)$"
+  static let formatPattern = "^(?:%@)$"
 
-  public static let characterClassPattern = "\\[([^\\[\\]])*\\]"
+  static let characterClassPattern = "\\[([^\\[\\]])*\\]"
 
-  public static let standaloneDigitPattern = "\\d(?=[^,}][^,}])"
+  static let standaloneDigitPattern = "\\d(?=[^,}][^,}])"
 
-  public static let nationalPrefixParsingPattern = "^(?:%@)"
+  static let nationalPrefixParsingPattern = "^(?:%@)"
 
-  public static let prefixSeparatorPattern = "[- ]"
+  static let prefixSeparatorPattern = "[- ]"
 
-  public static let eligibleAsYouTypePattern = "^[-x‐-―−ー－-／ ­​⁠　()（）［］.\\[\\]/~⁓∼～]*(\\$\\d[-x‐-―−ー－-／ ­​⁠　()（）［］.\\[\\]/~⁓∼～]*)+$"
+  static let eligibleAsYouTypePattern = "^[-x‐-―−ー－-／ ­​⁠　()（）［］.\\[\\]/~⁓∼～]*(\\$\\d[-x‐-―−ー－-／ ­​⁠　()（）［］.\\[\\]/~⁓∼～]*)+$"
 
-  public static let leadingPlusCharsPattern = "^[+＋]+"
+  static let leadingPlusCharsPattern = "^[+＋]+"
 
-  public static let secondNumberStartPattern = "[\\\\\\/] *x"
+  static let secondNumberStartPattern = "[\\\\\\/] *x"
 
-  public static let unwantedEndPattern = "[^0-9０-９٠-٩۰-۹A-Za-z#]+$"
+  static let unwantedEndPattern = "[^0-9０-９٠-٩۰-۹A-Za-z#]+$"
 
-  public static let validStartPattern = "[+＋0-9０-９٠-٩۰-۹]"
+  static let validStartPattern = "[+＋0-9０-９٠-٩۰-۹]"
 
-  public static let validPhoneNumberPattern = "^[0-9０-９٠-٩۰-۹]{2}$|^[+＋]*(?:[-x\u{2010}-\u{2015}\u{2212}\u{30FC}\u{FF0D}-\u{FF0F} \u{00A0}\u{00AD}\u{200B}\u{2060}\u{3000}()\u{FF08}\u{FF09}\u{FF3B}\u{FF3D}.\\[\\]/~\u{2053}\u{223C}\u{FF5E}*]*[0-9\u{FF10}-\u{FF19}\u{0660}-\u{0669}\u{06F0}-\u{06F9}]){3,}[-x\u{2010}-\u{2015}\u{2212}\u{30FC}\u{FF0D}-\u{FF0F} \u{00A0}\u{00AD}\u{200B}\u{2060}\u{3000}()\u{FF08}\u{FF09}\u{FF3B}\u{FF3D}.\\[\\]/~\u{2053}\u{223C}\u{FF5E}*A-Za-z0-9\u{FF10}-\u{FF19}\u{0660}-\u{0669}\u{06F0}-\u{06F9}]*(?:(?:;ext=([0-9０-９٠-٩۰-۹]{1,7})|[  \\t,]*(?:e?xt(?:ensi(?:ó?|ó))?n?|ｅ?ｘｔｎ?|[,xｘX#＃~～]|int|anexo|ｉｎｔ)[:\\.．]?[  \\t,-]*([0-9０-９٠-٩۰-۹]{1,7})#?|[- ]+([0-9０-９٠-٩۰-۹]{1,5})#)?$)?$"
+  static let validPhoneNumberPattern = "^[0-9０-９٠-٩۰-۹]{2}$|^[+＋]*(?:[-x\u{2010}-\u{2015}\u{2212}\u{30FC}\u{FF0D}-\u{FF0F} \u{00A0}\u{00AD}\u{200B}\u{2060}\u{3000}()\u{FF08}\u{FF09}\u{FF3B}\u{FF3D}.\\[\\]/~\u{2053}\u{223C}\u{FF5E}*]*[0-9\u{FF10}-\u{FF19}\u{0660}-\u{0669}\u{06F0}-\u{06F9}]){3,}[-x\u{2010}-\u{2015}\u{2212}\u{30FC}\u{FF0D}-\u{FF0F} \u{00A0}\u{00AD}\u{200B}\u{2060}\u{3000}()\u{FF08}\u{FF09}\u{FF3B}\u{FF3D}.\\[\\]/~\u{2053}\u{223C}\u{FF5E}*A-Za-z0-9\u{FF10}-\u{FF19}\u{0660}-\u{0669}\u{06F0}-\u{06F9}]*(?:(?:;ext=([0-9０-９٠-٩۰-۹]{1,7})|[  \\t,]*(?:e?xt(?:ensi(?:ó?|ó))?n?|ｅ?ｘｔｎ?|[,xｘX#＃~～]|int|anexo|ｉｎｔ)[:\\.．]?[  \\t,-]*([0-9０-９٠-٩۰-۹]{1,7})#?|[- ]+([0-9０-９٠-٩۰-۹]{1,5})#)?$)?$"
 }
