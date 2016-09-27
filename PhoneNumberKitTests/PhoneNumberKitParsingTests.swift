@@ -202,7 +202,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
     }
     
     func testAllExampleNumbers() {
-        let metaDataArray = PhoneNumberKit().metadataManager.items.filter{$0.codeID.characters.count == 2}
+        let metaDataArray = PhoneNumberKit().metadataManager.territories.filter{$0.codeID.characters.count == 2}
         for metadata in metaDataArray {
             let codeID = metadata.codeID
             let metadataWithTypes: [(MetadataPhoneNumberDesc?, PhoneNumberType?)] = [

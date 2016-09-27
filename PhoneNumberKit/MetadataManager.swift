@@ -10,27 +10,27 @@ import Foundation
 
 class MetadataManager {
     
-    var items = [MetadataTerritory]()
-    var metadataPerCode = [UInt64: MetadataTerritory]()
-    var metadataPerCountry = [String: MetadataTerritory]()
+    var territories = [MetadataTerritory]()
+    var territoriesByCode = [UInt64: MetadataTerritory]()
+    var territoriesByCountry = [String: MetadataTerritory]()
     
     /**
-     Private init populates metadata items and the two hashed dictionaries for faster lookup.
+     Private init populates metadata territories and the two hashed dictionaries for faster lookup.
      */
     public init () {
-        items = populateItems()
-        for item in items {
-            if metadataPerCode[item.countryCode] == nil || item.mainCountryForCode == true {
-                metadataPerCode[item.countryCode] = item
+        territories = populateTerritories()
+        for item in territories {
+            if territoriesByCode[item.countryCode] == nil || item.mainCountryForCode == true {
+                territoriesByCode[item.countryCode] = item
             }
-            metadataPerCountry[item.codeID] = item
+            territoriesByCountry[item.codeID] = item
         }
     }
     
     deinit {
-        items.removeAll()
-        metadataPerCode.removeAll()
-        metadataPerCountry.removeAll()
+        territories.removeAll()
+        territoriesByCode.removeAll()
+        territoriesByCountry.removeAll()
     }
     
     // MARK: Metadata population
@@ -39,8 +39,8 @@ class MetadataManager {
     Populates the metadata from the included json file resource.
     - Returns: An array of MetadataTerritory objects.
     */
-    func populateItems() -> [MetadataTerritory] {
-        var territoryArray: [MetadataTerritory] = [MetadataTerritory]()
+    func populateTerritories() -> [MetadataTerritory] {
+        var territoryArray = [MetadataTerritory]()
         let frameworkBundle = Bundle(for: PhoneNumberKit.self)
         guard let jsonPath = frameworkBundle.path(forResource: "PhoneNumberMetadata", ofType: "json"), let jsonData = try? Data(contentsOf: URL(fileURLWithPath: jsonPath)) else {
             return territoryArray
@@ -77,9 +77,20 @@ class MetadataManager {
     - Parameter code: An international country code (e.g 44 for the UK).
     - Returns: An optional array of MetadataTerritory objects.
     */
-    func fetchCountriesForCode(_ code: UInt64) -> [MetadataTerritory]? {
-        let results = items.filter { $0.countryCode == code}
+    func filterTerritories(byCode code: UInt64) -> [MetadataTerritory]? {
+        let results = territories.filter { $0.countryCode == code}
         return results
+    }
+    
+    
+    /**
+     Get the MetadataTerritory objects for an ISO 639 compliant region code.
+     - Parameter country: ISO 639 compliant region code (e.g "GB" for the UK).
+     - Returns: A MetadataTerritory object.
+     */
+    func filterTerritories(byCountry country: String) -> MetadataTerritory? {
+        let results = territories.filter { $0.codeID == country.uppercased()}
+        return results.first
     }
     
     /**
@@ -87,8 +98,8 @@ class MetadataManager {
     - Parameter code: An international country code (e.g 1 for the US).
     - Returns: A MetadataTerritory object.
     */
-    func fetchMainCountryMetadataForCode(_ code: UInt64) -> MetadataTerritory? {
-        let countryResults = items.filter { $0.countryCode == code}
+    func mainTerritory(forCode code: UInt64) -> MetadataTerritory? {
+        let countryResults = territories.filter { $0.countryCode == code}
         let mainCountryResults = countryResults.filter { $0.mainCountryForCode == true}
         if let mainCountry = mainCountryResults.first {
             return mainCountry
@@ -101,15 +112,5 @@ class MetadataManager {
         }
     }
     
-
-    /**
-    Get the MetadataTerritory objects for an ISO 639 compliant region code.
-    - Parameter country: ISO 639 compliant region code (e.g "GB" for the UK).
-    - Returns: A MetadataTerritory object.
-    */
-    func fetchMetadataForCountry(_ country: String) -> MetadataTerritory? {
-        let results = items.filter { $0.codeID == country.uppercased()}
-        return results.first
-    }
     
 }

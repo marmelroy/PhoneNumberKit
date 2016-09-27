@@ -28,7 +28,7 @@ class Formatter {
      */
     func formatPhoneNumber(_ phoneNumber: PhoneNumber, formatType: PhoneNumberFormat) -> String {
         var formattedNationalNumber = phoneNumber.adjustedNationalNumber()
-        if let regionMetadata = metadata.metadataPerCode[phoneNumber.countryCode] {
+        if let regionMetadata = metadata.territoriesByCode[phoneNumber.countryCode] {
             formattedNationalNumber = formatNationalNumber(formattedNationalNumber, regionMetadata: regionMetadata, formatType: formatType)
             if let formattedExtension = formatExtension(phoneNumber.numberExtension, regionMetadata: regionMetadata) {
                 formattedNationalNumber = formattedNationalNumber + formattedExtension

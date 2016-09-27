@@ -106,7 +106,7 @@ class PhoneNumberParser {
             let stringRange = NSMakeRange(startPosition, i)
             let subNumber = nsFullNumber.substring(with: stringRange)
             if let potentialCountryCode = UInt64(subNumber)
-                , metadata.metadataPerCode[potentialCountryCode] != nil {
+                , metadata.territoriesByCode[potentialCountryCode] != nil {
                     nationalNumber = nsFullNumber.substring(from: i)
                     return potentialCountryCode
             }
@@ -125,7 +125,7 @@ class PhoneNumberParser {
         guard let region = PhoneNumberKit().regionCode(forPhoneNumber: phoneNumber) else {
             return .unknown
         }
-        guard let metadata = metadata.fetchMetadataForCountry(region) else {
+        guard let metadata = metadata.filterTerritories(byCountry: region) else {
             return .unknown
         }
         if phoneNumber.leadingZero {

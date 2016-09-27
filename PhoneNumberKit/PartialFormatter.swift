@@ -32,8 +32,8 @@ public class PartialFormatter {
     }
     
     func updateMetadataForDefaultRegion() {
-        if let regionMetadata = metadata.fetchMetadataForCountry(defaultRegion) {
-            defaultMetadata = metadata.fetchMainCountryMetadataForCode(regionMetadata.countryCode)
+        if let regionMetadata = metadata.filterTerritories(byCountry: defaultRegion) {
+            defaultMetadata = metadata.mainTerritory(forCode: regionMetadata.countryCode)
         } else {
             defaultMetadata = nil
         }
@@ -218,7 +218,7 @@ public class PartialFormatter {
         }
         if let potentialCountryCode = self.parser.extractPotentialCountryCode(rawNumber, nationalNumber: &numberWithoutCountryCallingCode), potentialCountryCode != 0 {
             processedNumber = numberWithoutCountryCallingCode
-            currentMetadata = metadata.fetchMainCountryMetadataForCode(potentialCountryCode)
+            currentMetadata = metadata.mainTerritory(forCode: potentialCountryCode)
             let potentialCountryCodeString = String(potentialCountryCode)
             prefixBeforeNationalNumber.append(potentialCountryCodeString)
             prefixBeforeNationalNumber.append(" ")

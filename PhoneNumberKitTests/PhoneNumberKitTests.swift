@@ -24,7 +24,7 @@ class PhoneNumberKitTests: XCTestCase {
     }
     
     func testMetadataMainCountryFetch() {
-        let countryMetadata = phoneNumberKit.metadataManager.fetchMainCountryMetadataForCode(1)
+        let countryMetadata = phoneNumberKit.metadataManager.mainTerritory(forCode: 1)
         XCTAssertEqual(countryMetadata?.codeID, "US")
     }
     

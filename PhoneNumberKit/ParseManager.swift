@@ -43,7 +43,7 @@ class ParseManager {
         // Strip and extract extension (3)
         let numberExtension = self.parser.stripExtension(&nationalNumber)
         // Country code parse (4)
-        guard var regionMetadata =  self.metadata.metadataPerCountry[region] else {
+        guard var regionMetadata =  self.metadata.territoriesByCountry[region] else {
             throw PhoneNumberError.invalidCountryCode
         }
         var countryCode: UInt64 = 0
@@ -66,7 +66,7 @@ class ParseManager {
         let normalizedNationalNumber = self.parser.normalizePhoneNumber(nationalNumber)
         nationalNumber = normalizedNationalNumber
         // If country code is not default, grab correct metadata (6)
-        if countryCode != regionMetadata.countryCode, let countryMetadata = self.metadata.metadataPerCode[countryCode] {
+        if countryCode != regionMetadata.countryCode, let countryMetadata = self.metadata.territoriesByCode[countryCode] {
             regionMetadata = countryMetadata
         }
         // National Prefix Strip (7)
