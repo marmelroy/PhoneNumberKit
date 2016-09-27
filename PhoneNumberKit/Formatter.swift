@@ -127,7 +127,7 @@ public extension PhoneNumber {
      */
     public func toInternational(_ prefix: Bool = true) -> String {
         let phoneNumberKit = PhoneNumberKit()
-        let formatter = Formatter(regex: phoneNumberKit.regex, metadata: phoneNumberKit.metadata)
+        let formatter = Formatter(regex: phoneNumberKit.regexManager, metadata: phoneNumberKit.metadataManager)
         let formattedNationalNumber = formatter.formatPhoneNumber(self, formatType: .international)
         if prefix == false {
             return formattedNationalNumber
@@ -141,7 +141,7 @@ public extension PhoneNumber {
      */
     public func toNational() -> String {
         let phoneNumberKit = PhoneNumberKit()
-        let formatter = Formatter(regex: phoneNumberKit.regex, metadata: phoneNumberKit.metadata)
+        let formatter = Formatter(regex: phoneNumberKit.regexManager, metadata: phoneNumberKit.metadataManager)
         let formattedNationalNumber = formatter.formatPhoneNumber(self, formatType: .national)
         let formattedNumber = formattedNationalNumber
         return formattedNumber

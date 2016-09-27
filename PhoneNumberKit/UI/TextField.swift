@@ -100,7 +100,7 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
     
     func setup(){
-        self.partialFormatter = PartialFormatter(regex: phoneNumberKit.regex, metadata: phoneNumberKit.metadata, parser: phoneNumberKit.parser, defaultRegion: PhoneNumberKit.defaultRegionCode(), withPrefix: withPrefix)
+        self.partialFormatter = PartialFormatter(regex: phoneNumberKit.regexManager, metadata: phoneNumberKit.metadataManager, parser: phoneNumberKit.parser, defaultRegion: PhoneNumberKit.defaultRegionCode(), withPrefix: withPrefix)
         self.autocorrectionType = .no
         self.keyboardType = UIKeyboardType.phonePad
         super.delegate = self
