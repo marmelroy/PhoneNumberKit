@@ -11,9 +11,9 @@ import Foundation
 class Formatter {
     
     let regex: RegularExpressions
-    let metadata: Metadata
+    let metadata: MetadataManager
     
-    init(regex: RegularExpressions, metadata: Metadata) {
+    init(regex: RegularExpressions, metadata: MetadataManager) {
         self.regex = regex
         self.metadata = metadata
     }

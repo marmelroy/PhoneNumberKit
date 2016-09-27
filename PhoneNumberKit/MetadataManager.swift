@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Metadata {
+class MetadataManager {
     
     var items = [MetadataTerritory]()
     var metadataPerCode = [UInt64: MetadataTerritory]()

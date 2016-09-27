@@ -12,10 +12,10 @@ import Foundation
 public class PartialFormatter {
         
     let regex: RegularExpressions
-    let metadata: Metadata
+    let metadata: MetadataManager
     let parser: PhoneNumberParser
 
-    init(regex: RegularExpressions, metadata: Metadata, parser: PhoneNumberParser, defaultRegion: String, withPrefix: Bool = true) {
+    init(regex: RegularExpressions, metadata: MetadataManager, parser: PhoneNumberParser, defaultRegion: String, withPrefix: Bool = true) {
         self.regex = regex
         self.metadata = metadata
         self.parser = parser

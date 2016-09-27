@@ -12,10 +12,10 @@ import Foundation
 Parser. Contains parsing functions. 
 */
 class PhoneNumberParser {
-    let metadata: Metadata
+    let metadata: MetadataManager
     let regex: RegularExpressions
     
-    init(regex: RegularExpressions, metadata: Metadata) {
+    init(regex: RegularExpressions, metadata: MetadataManager) {
         self.regex = regex
         self.metadata = metadata
     }
