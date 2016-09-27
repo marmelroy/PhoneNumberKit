@@ -13,9 +13,9 @@ Parser. Contains parsing functions.
 */
 class PhoneNumberParser {
     let metadata: MetadataManager
-    let regex: RegularExpressions
+    let regex: RegexManager
     
-    init(regex: RegularExpressions, metadata: MetadataManager) {
+    init(regex: RegexManager, metadata: MetadataManager) {
         self.regex = regex
         self.metadata = metadata
     }

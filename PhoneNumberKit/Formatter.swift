@@ -10,10 +10,10 @@ import Foundation
 
 class Formatter {
     
-    let regex: RegularExpressions
+    let regex: RegexManager
     let metadata: MetadataManager
     
-    init(regex: RegularExpressions, metadata: MetadataManager) {
+    init(regex: RegexManager, metadata: MetadataManager) {
         self.regex = regex
         self.metadata = metadata
     }

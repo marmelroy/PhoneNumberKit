@@ -1,5 +1,5 @@
 //
-//  RegularExpressions.swift
+//  RegexManager.swift
 //  PhoneNumberKit
 //
 //  Created by Roy Marmelstein on 04/10/2015.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-class RegularExpressions {
+class RegexManager {
     
     // MARK: Regular expression pool
         

@@ -14,7 +14,7 @@ import CoreTelephony
 public class PhoneNumberKit: NSObject {
     
     let metadata = MetadataManager()
-    let regex = RegularExpressions()
+    let regex = RegexManager()
     
     let parseManager: ParseManager
     let parser: PhoneNumberParser

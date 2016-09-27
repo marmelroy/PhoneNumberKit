@@ -13,10 +13,10 @@ Manager for parsing flow.
 */
 class ParseManager {
     let parser: PhoneNumberParser
-    let regex: RegularExpressions
+    let regex: RegexManager
     let metadata: MetadataManager
 
-    init(regex: RegularExpressions, metadata: MetadataManager, parser: PhoneNumberParser) {
+    init(regex: RegexManager, metadata: MetadataManager, parser: PhoneNumberParser) {
         self.regex = regex
         self.metadata = metadata
         self.parser = parser

@@ -243,7 +243,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
     func testRegexMatchesEntirely() {
         let pattern = "[2-9]\\d{8}|860\\d{9}"
         let number = "860123456789"
-        let regex = RegularExpressions()
+        let regex = RegexManager()
         XCTAssert(regex.matchesEntirely(pattern, string: number))
         XCTAssertFalse(regex.matchesEntirely("8", string: number))
     }
