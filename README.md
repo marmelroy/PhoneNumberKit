@@ -52,6 +52,22 @@ let phoneNumbers = phoneNumberKit.parse(rawNumberArray)
 let phoneNumbersCustomDefaultRegion = phoneNumberKit.parse(rawNumberArray, withRegion: "DE")
 ```
 
+PhoneNumber objects are immutable Swift structs with the following properties:
+```swift
+phoneNumber.countryCode
+phoneNumber.nationalNumber
+phoneNumber.numberExtension
+phoneNumber.rawNumber
+phoneNumber.type // e.g Mobile or Fixed
+```
+
+Formatting a PhoneNumber object into a string is also very easy
+```swift
+phoneNumberKit.format(phoneNumber, toFormat: .e164) // +61236618300
+phoneNumberKit.format(phoneNumber, toFormat: .international) // +61 2 3661 8300
+phoneNumberKit.format(phoneNumber, toFormat: .national) // (02) 3661 8300
+```
+
 To use the AsYouTypeFormatter, just replace your UITextField with a PhoneNumberTextField (if you are using Interface Builder make sure the module field is set to PhoneNumberKit).
 
 PhoneNumberTextField automatically formats phone numbers and gives the user full editing capabilities. If you want to customize you can use the PartialFormatter directly. The default region code is automatically computed but can be overridden if needed.  
@@ -68,22 +84,6 @@ You can also query countries for a dialing code or the dailing code for a given 
 ```swift
 phoneNumberKit.countriesForCode(33)
 phoneNumberKit.codeForCountry("FR")
-```
-
-Formatting a parsed phone number to a string is also very easy
-```swift
-phoneNumberKit.format(phoneNumber, toFormat: .e164) // +61236618300
-phoneNumberKit.format(phoneNumber, toFormat: .international) // +61 2 3661 8300
-phoneNumberKit.format(phoneNumber, toFormat: .national) // (02) 3661 8300
-```
-
-You can access the following properties of a PhoneNumber object
-```swift
-phoneNumber.countryCode
-phoneNumber.nationalNumber
-phoneNumber.numberExtension
-phoneNumber.rawNumber
-phoneNumber.type // e.g Mobile or Fixed
 ```
 
 ### Setting up with Carthage
