@@ -152,7 +152,7 @@ class ParseManager {
         guard let region = self.getRegionCodeForNumber(nationalNumber: phoneNumber.nationalNumber, countryCode: phoneNumber.countryCode, leadingZero: phoneNumber.leadingZero) else {
             return .unknown
         }
-        guard let metadata = metadataManager?.filterTerritories(byCountry: region) else {
+        guard let metadata = metadataManager?.territoriesByCountry[region] else {
             return .unknown
         }
         return parser.checkNumberType(String(phoneNumber.nationalNumber), metadata: metadata, leadingZero: phoneNumber.leadingZero)

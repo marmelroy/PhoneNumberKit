@@ -55,7 +55,7 @@ public class PhoneNumberKit: NSObject {
     /// - parameter prefix:      whether or not to include the prefix.
     ///
     /// - returns: Formatted representation of the PhoneNumber.
-    public func format(_ phoneNumber: PhoneNumber, toFormat formatType:PhoneNumberFormat, withPrefix prefix: Bool = true) -> String {
+    public func format(_ phoneNumber: PhoneNumber, toType formatType:PhoneNumberFormat, withPrefix prefix: Bool = true) -> String {
         let formatter = Formatter(phoneNumberKit: self)
         if formatType == .e164 {
             let formattedNationalNumber = phoneNumber.adjustedNationalNumber()
