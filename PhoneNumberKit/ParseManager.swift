@@ -81,7 +81,12 @@ class ParseManager {
         guard let finalNationalNumber = UInt64(nationalNumber) else{
             throw PhoneNumberError.notANumber
         }
-        let phoneNumber = PhoneNumber(numberString: numberString, countryCode: countryCode, leadingZero: leadingZero, nationalNumber: finalNationalNumber, numberExtension: numberExtension)
+        
+        let type = parser.checkNumberType(String(nationalNumber), metadata: regionMetadata, leadingZero: leadingZero)
+        if type == .unknown {
+            throw PhoneNumberError.unknownType
+        }
+        let phoneNumber = PhoneNumber(numberString: numberString, countryCode: countryCode, leadingZero: leadingZero, nationalNumber: finalNationalNumber, numberExtension: numberExtension, type: type)
         return phoneNumber
     }
     
@@ -138,7 +143,7 @@ class ParseManager {
     }
     
     func checkNumberType(_ phoneNumber: PhoneNumber) -> PhoneNumberType {
-        guard let region = self.getRegionCodeForNumber(number: phoneNumber) else {
+        guard let region = self.getRegionCodeForNumber(nationalNumber: phoneNumber.nationalNumber, countryCode: phoneNumber.countryCode, leadingZero: phoneNumber.leadingZero) else {
             return .unknown
         }
         guard let metadata = metadataManager?.filterTerritories(byCountry: region) else {
@@ -147,26 +152,25 @@ class ParseManager {
         return parser.checkNumberType(String(phoneNumber.nationalNumber), metadata: metadata, leadingZero: phoneNumber.leadingZero)
     }
     
-    func getRegionCodeForNumber(number: PhoneNumber) -> String? {
+    func getRegionCodeForNumber(nationalNumber: UInt64, countryCode: UInt64, leadingZero: Bool) -> String? {
         guard let regexManager = regexManager, let metadataManager = metadataManager else { return nil }
 
-        let countryCode = number.countryCode
         let regions = metadataManager.territories.filter { $0.countryCode == countryCode }
         if regions.count == 1 {
             return regions[0].codeID
         }
 
-        let nationalNumber = String(number.nationalNumber)
+        let nationalNumberString = String(nationalNumber)
         for region in regions {
             if let leadingDigits = region.leadingDigits {
-                if regexManager.matchesAtStart(leadingDigits, string: nationalNumber) {
+                if regexManager.matchesAtStart(leadingDigits, string: nationalNumberString) {
                     return region.codeID
                 }
             }
-            if number.leadingZero && parser.checkNumberType("0" + nationalNumber, metadata: region) != .unknown {
+            if leadingZero && parser.checkNumberType("0" + nationalNumberString, metadata: region) != .unknown {
                 return region.codeID
             }
-            if parser.checkNumberType(nationalNumber, metadata: region) != .unknown {
+            if parser.checkNumberType(nationalNumberString, metadata: region) != .unknown {
                 return region.codeID
             }
         }

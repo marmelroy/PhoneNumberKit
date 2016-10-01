@@ -31,6 +31,7 @@ public enum PhoneNumberError: Error {
     case generalError
     case invalidCountryCode
     case notANumber
+    case unknownType
     case tooLong
     case tooShort
     case deprecated
@@ -40,6 +41,7 @@ public enum PhoneNumberError: Error {
         case .generalError: return NSLocalizedString("An error occured whilst validating the phone number.", comment: "")
         case .invalidCountryCode: return NSLocalizedString("The country code is invalid.", comment: "")
         case .notANumber: return NSLocalizedString("The number provided is invalid.", comment: "")
+        case .unknownType: return NSLocalizedString("Phone number type is unknown.", comment: "")
         case .tooLong: return NSLocalizedString("The number provided is too long.", comment: "")
         case .tooShort: return NSLocalizedString("The number provided is too short.", comment: "")
         case .deprecated: return NSLocalizedString("This function is deprecated.", comment: "")

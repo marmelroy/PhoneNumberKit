@@ -45,7 +45,7 @@ class PhoneNumberKitTests: XCTestCase {
         do {
             let phoneNumber = try phoneNumberKit.parse("+16307792428", withRegion: "US")
             print(phoneNumberKit.format(phoneNumber, toFormat: .e164))
-            let type = phoneNumberKit.getType(of: phoneNumber)
+            let type = phoneNumber.type
             XCTAssertEqual(type, PhoneNumberType.fixedOrMobile)
         }
         catch {
@@ -60,10 +60,10 @@ class PhoneNumberKitTests: XCTestCase {
             // and it's true, this is a French mobile number combined with the GB region
             let phoneNumber = try phoneNumberKit.parse("+44629996885")
             print(phoneNumberKit.format(phoneNumber, toFormat: .e164))
-            (phoneNumberKit.validate(phoneNumber) == true) ? XCTFail() : XCTAssert(true)
+            XCTFail()
         }
         catch {
-    
+            XCTAssert(true)
         }
     }
 
@@ -74,7 +74,7 @@ class PhoneNumberKitTests: XCTestCase {
             // and it's true, this is a French mobile number combined with the BE region
             let phoneNumber = try phoneNumberKit.parse("+32910853865")
             print(phoneNumberKit.format(phoneNumber, toFormat: .e164))
-            (phoneNumberKit.validate(phoneNumber) == true) ? XCTFail() : XCTAssert(true)
+            XCTFail()
         }
         catch {
             XCTAssert(true)
@@ -102,7 +102,7 @@ class PhoneNumberKitTests: XCTestCase {
             // and it's true, this is a French mobile number combined with the CN region
             let phoneNumber = try phoneNumberKit.parse("+861500376135")
             print(phoneNumberKit.format(phoneNumber, toFormat: .e164))
-            (phoneNumberKit.validate(phoneNumber) == true) ? XCTFail() : XCTAssert(true)
+            XCTFail()
         }
         catch {
             XCTAssert(true)
@@ -116,7 +116,7 @@ class PhoneNumberKitTests: XCTestCase {
             // and it's true, this is a French mobile number combined with the IT region
             let phoneNumber = try phoneNumberKit.parse("+390762613915")
             print(phoneNumberKit.format(phoneNumber, toFormat: .e164))
-            (phoneNumberKit.validate(phoneNumber) == true) ? XCTFail() : XCTAssert(true)
+            XCTFail()
         }
         catch {
             XCTAssert(true)

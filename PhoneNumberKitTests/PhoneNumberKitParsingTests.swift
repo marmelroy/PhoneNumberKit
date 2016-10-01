@@ -225,11 +225,10 @@ class PhoneNumberKitParsingTests: XCTestCase {
                             let phoneNumber = try phoneNumberKit.parse(exampleNumber, withRegion: codeID)
                             XCTAssertNotNil(phoneNumber)
                             if let type = record.1 {
-                                let phoneNumberType = phoneNumberKit.getType(of: phoneNumber)
-                                if phoneNumberType == .fixedOrMobile {
+                                if phoneNumber.type == .fixedOrMobile {
                                     XCTAssert(type == .fixedLine || type == .mobile)
                                 } else {
-                                    XCTAssertEqual(phoneNumberType, type, "Expected type \(type) for number \(phoneNumber)")
+                                    XCTAssertEqual(phoneNumber.type, type, "Expected type \(type) for number \(phoneNumber)")
                                 }
                             }
                         } catch (let e) {
@@ -254,7 +253,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTFail()
             return
         }
-        XCTAssertEqual(phoneNumberKit.getType(of: number), PhoneNumberType.tollFree)
+        XCTAssertEqual(number.type, PhoneNumberType.tollFree)
     }
 
     func testBelizeTollFreeType() {
@@ -262,7 +261,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTFail()
             return
         }
-        XCTAssertEqual(phoneNumberKit.getType(of: number), PhoneNumberType.tollFree)
+        XCTAssertEqual(number.type, PhoneNumberType.tollFree)
     }
 
     func testItalyFixedLineType() {
@@ -270,7 +269,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTFail()
             return
         }
-        XCTAssertEqual(phoneNumberKit.getType(of: number), PhoneNumberType.fixedLine)
+        XCTAssertEqual(number.type, PhoneNumberType.fixedLine)
     }
 
     func testMaldivesPagerNumber() {
@@ -278,7 +277,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTFail()
             return
         }
-        XCTAssertEqual(phoneNumberKit.getType(of: number), PhoneNumberType.pager)
+        XCTAssertEqual(number.type, PhoneNumberType.pager)
     }
 
     func testZimbabweVoipType() {
@@ -286,7 +285,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTFail()
             return
         }
-        XCTAssertEqual(phoneNumberKit.getType(of: number), PhoneNumberType.voip)
+        XCTAssertEqual(number.type, PhoneNumberType.voip)
 
     }
 
@@ -295,7 +294,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTFail()
             return
         }
-        XCTAssertEqual(phoneNumberKit.getType(of: number), PhoneNumberType.pager)
+        XCTAssertEqual(number.type, PhoneNumberType.pager)
     }
 
     func testFranceMobileNumberType() {
@@ -303,7 +302,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTFail()
             return
         }
-        XCTAssertEqual(phoneNumberKit.getType(of: number), PhoneNumberType.mobile)
+        XCTAssertEqual(number.type, PhoneNumberType.mobile)
     }
 //
     func testPerformanceSimple() {

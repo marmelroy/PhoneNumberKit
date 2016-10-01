@@ -66,44 +66,6 @@ public class PhoneNumberKit: NSObject {
             }
         }
     }
-    
-    // MARK: Validation
-    
-    /// Performs a strong validation on a PhoneNumber object by checking if it is of a known type.
-    ///
-    /// - parameter phoneNumber: PhoneNumber object
-    ///
-    /// - returns: whether or not the number is valid
-    public func validate(_ phoneNumber: PhoneNumber) -> Bool {
-        let type = parseManager.checkNumberType(phoneNumber)
-        return (type != .unknown)
-    }
-    
-    
-    /// Determine the type of a given phone number.
-    ///
-    /// - parameter phoneNumber: PhoneNumber object
-    ///
-    /// - returns: PhoneNumberType enum.
-    public func getType(of phoneNumber: PhoneNumber) -> PhoneNumberType {
-        let type = parseManager.checkNumberType(phoneNumber)
-        return type
-    }
-    
-    /// Determine the region code of a given phone number.
-    ///
-    /// - parameter phoneNumber: PhoneNumber object
-    ///
-    /// - returns: Region code, eg "US", or nil if the region cannot be determined.
-    public func getRegionCode(of phoneNumber: PhoneNumber) -> String? {
-        let countryCode = phoneNumber.countryCode
-        let regions = metadataManager.territories.filter { $0.countryCode == countryCode }
-        if regions.count == 1 {
-            return regions[0].codeID
-        }
-        return parseManager.getRegionCodeForNumber(number: phoneNumber)
-    }
-
     // MARK: Country and region code
     
     /**
@@ -145,6 +107,24 @@ public class PhoneNumberKit: NSObject {
         let results = metadataManager.filterTerritories(byCountry: country)?.countryCode
         return results
     }
+    
+    
+    
+    /// Determine the region code of a given phone number.
+    ///
+    /// - parameter phoneNumber: PhoneNumber object
+    ///
+    /// - returns: Region code, eg "US", or nil if the region cannot be determined.
+    public func getRegionCode(of phoneNumber: PhoneNumber) -> String? {
+        let countryCode = phoneNumber.countryCode
+        let regions = metadataManager.territories.filter { $0.countryCode == countryCode }
+        if regions.count == 1 {
+            return regions[0].codeID
+        }
+        return parseManager.getRegionCodeForNumber(nationalNumber: phoneNumber.nationalNumber, countryCode: phoneNumber.countryCode, leadingZero: phoneNumber.leadingZero)
+    }
+    
+
     
     // MARK: Class functions
     

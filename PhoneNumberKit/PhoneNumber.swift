@@ -20,11 +20,11 @@ Parsed phone number object
 */
 public struct PhoneNumber {
     public let numberString: String
-
     public let countryCode: UInt64
     public let leadingZero: Bool
     public let nationalNumber: UInt64
     public let numberExtension: String?
+    public let type: PhoneNumberType
 }
 
 /// In past versions of PhoneNumebrKit you were able to initialize a PhoneNumber object to parse a String. Please use a PhoneNumberKit object's methods.
