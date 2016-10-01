@@ -44,6 +44,18 @@ public class PhoneNumberKit: NSObject {
         return parseManager.parseMultiple(numberStrings, region: region)
     }
 
+    
+    public func validate(phoneNumber: PhoneNumber) -> Bool {
+        let type = self.parser.checkNumberType(phoneNumber)
+        return (type != .unknown)
+    }
+    
+    public func type(forPhoneNumber phoneNumber: PhoneNumber) -> PhoneNumberType {
+        let type = self.parser.checkNumberType(phoneNumber)
+        return type
+    }
+
+
 
     // MARK: Country and region code
     

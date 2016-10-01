@@ -15,6 +15,16 @@ public class PartialFormatter {
     let metadata: MetadataManager
     let parser: PhoneNumberParser
 
+    init(phoneNumberKit: PhoneNumberKit, defaultRegion: String, withPrefix: Bool = true) {
+        self.regex = phoneNumberKit.regexManager
+        self.metadata = phoneNumberKit.metadataManager
+        self.parser = phoneNumberKit.parser
+        self.defaultRegion = defaultRegion
+        updateMetadataForDefaultRegion()
+        self.withPrefix = withPrefix
+    }
+
+    
     init(regex: RegexManager, metadata: MetadataManager, parser: PhoneNumberParser, defaultRegion: String, withPrefix: Bool = true) {
         self.regex = regex
         self.metadata = metadata

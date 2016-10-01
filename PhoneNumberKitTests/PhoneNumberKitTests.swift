@@ -40,87 +40,88 @@ class PhoneNumberKitTests: XCTestCase {
         }
     }
     
-//    // Invalid american number, GitHub issue #9 by lobodin
-//    func testAmbiguousFixedOrMobileNumber() {
-//        do {
-//            let phoneNumber = try phoneNumberKit.parse(numberString: "+16307792428", region: "US")
-//            print(phoneNumber.toE164())
-//            XCTAssertEqual(phoneNumber.type, PhoneNumberType.fixedOrMobile)
-//        }
-//        catch {
-//            XCTFail()
-//        }
-//    }
-//
-//    // Invalid UK number, GitHub pr by dulaccc
-//    func testInvalidGBNumbers() {
-//        do {
-//            // libphonenumber reports this number as invalid
-//            // and it's true, this is a French mobile number combined with the GB region
-//            let phoneNumber = try phoneNumberKit.parse(numberString: "+44629996885")
-//            print(phoneNumber.toE164())
-//            (phoneNumber.isValidNumber == true) ? XCTFail() : XCTAssert(true)
-//        }
-//        catch {
-//    
-//        }
-//    }
-//
-//    // Invalid BE number, GitHub pr by dulaccc
-//    func testInvalidBENumbers() {
-//        do {
-//            // libphonenumber reports this number as invalid
-//            // and it's true, this is a French mobile number combined with the BE region
-//            let phoneNumber = try phoneNumberKit.parse(numberString: "+32910853865")
-//            print(phoneNumber.toE164())
-//            (phoneNumber.isValidNumber == true) ? XCTFail() : XCTAssert(true)
-//        }
-//        catch {
-//            XCTAssert(true)
-//        }
-//    }
-//
-//    // Invalid DZ number, GitHub pr by dulaccc
-//    func testInvalidDZNumbers() {
-//        do {
-//            // libphonenumber reports this number as invalid
-//            // and it's true, this is a French mobile number combined with the DZ region
-//            let phoneNumber = try phoneNumberKit.parse(numberString: "+21373344376")
-//            print(phoneNumber.toE164())
-//            XCTFail()
-//        }
-//        catch {
-//            XCTAssert(true)
-//        }
-//    }
-//
-//    // Invalid CN number, GitHub pr by dulaccc
-//    func testInvalidCNNumbers() {
-//        do {
-//            // libphonenumber reports this number as invalid
-//            // and it's true, this is a French mobile number combined with the CN region
-//            let phoneNumber = try phoneNumberKit.parse(numberString: "+861500376135")
-//            print(phoneNumber.toE164())
-//            (phoneNumber.isValidNumber == true) ? XCTFail() : XCTAssert(true)
-//        }
-//        catch {
-//            XCTAssert(true)
-//        }
-//    }
-//
-//    // Invalid IT number, GitHub pr by dulaccc
-//    func testInvalidITNumbers() {
-//        do {
-//            // libphonenumber reports this number as invalid
-//            // and it's true, this is a French mobile number combined with the IT region
-//            let phoneNumber = try phoneNumberKit.parse(numberString: "+390762613915")
-//            print(phoneNumber.toE164())
-//            (phoneNumber.isValidNumber == true) ? XCTFail() : XCTAssert(true)
-//        }
-//        catch {
-//            XCTAssert(true)
-//        }
-//    }
+    // Invalid american number, GitHub issue #9 by lobodin
+    func testAmbiguousFixedOrMobileNumber() {
+        do {
+            let phoneNumber = try phoneNumberKit.parse(numberString: "+16307792428", withRegion: "US")
+            print(phoneNumber.toE164())
+            let type = phoneNumberKit.type(forPhoneNumber: phoneNumber)
+            XCTAssertEqual(type, PhoneNumberType.fixedOrMobile)
+        }
+        catch {
+            XCTFail()
+        }
+    }
+
+    // Invalid UK number, GitHub pr by dulaccc
+    func testInvalidGBNumbers() {
+        do {
+            // libphonenumber reports this number as invalid
+            // and it's true, this is a French mobile number combined with the GB region
+            let phoneNumber = try phoneNumberKit.parse(numberString: "+44629996885")
+            print(phoneNumber.toE164())
+            (phoneNumberKit.validate(phoneNumber: phoneNumber) == true) ? XCTFail() : XCTAssert(true)
+        }
+        catch {
+    
+        }
+    }
+
+    // Invalid BE number, GitHub pr by dulaccc
+    func testInvalidBENumbers() {
+        do {
+            // libphonenumber reports this number as invalid
+            // and it's true, this is a French mobile number combined with the BE region
+            let phoneNumber = try phoneNumberKit.parse(numberString: "+32910853865")
+            print(phoneNumber.toE164())
+            (phoneNumberKit.validate(phoneNumber: phoneNumber) == true) ? XCTFail() : XCTAssert(true)
+        }
+        catch {
+            XCTAssert(true)
+        }
+    }
+
+    // Invalid DZ number, GitHub pr by dulaccc
+    func testInvalidDZNumbers() {
+        do {
+            // libphonenumber reports this number as invalid
+            // and it's true, this is a French mobile number combined with the DZ region
+            let phoneNumber = try phoneNumberKit.parse(numberString: "+21373344376")
+            print(phoneNumber.toE164())
+            XCTFail()
+        }
+        catch {
+            XCTAssert(true)
+        }
+    }
+
+    // Invalid CN number, GitHub pr by dulaccc
+    func testInvalidCNNumbers() {
+        do {
+            // libphonenumber reports this number as invalid
+            // and it's true, this is a French mobile number combined with the CN region
+            let phoneNumber = try phoneNumberKit.parse(numberString: "+861500376135")
+            print(phoneNumber.toE164())
+            (phoneNumberKit.validate(phoneNumber: phoneNumber) == true) ? XCTFail() : XCTAssert(true)
+        }
+        catch {
+            XCTAssert(true)
+        }
+    }
+
+    // Invalid IT number, GitHub pr by dulaccc
+    func testInvalidITNumbers() {
+        do {
+            // libphonenumber reports this number as invalid
+            // and it's true, this is a French mobile number combined with the IT region
+            let phoneNumber = try phoneNumberKit.parse(numberString: "+390762613915")
+            print(phoneNumber.toE164())
+            (phoneNumberKit.validate(phoneNumber: phoneNumber) == true) ? XCTFail() : XCTAssert(true)
+        }
+        catch {
+            XCTAssert(true)
+        }
+    }
 
     // Invalid ES number, GitHub pr by dulaccc
     func testInvalidESNumbers() {

@@ -22,21 +22,9 @@ public struct PhoneNumber {
     public let numberString: String
 
     public let countryCode: UInt64
-    private(set) public var leadingZero = false
+    public let leadingZero: Bool
     public let nationalNumber: UInt64
     public let numberExtension: String?
-//    public var type: PhoneNumberType {
-//        get {
-//            let parser = PhoneNumberParser()
-//            let type: PhoneNumberType = parser.checkNumberType(self)
-//            return type
-//        }
-//    }
-//    public var isValidNumber: Bool {
-//        get {
-//            return self.type != .unknown
-//        }
-//    }
 }
 
 /// In past versions of PhoneNumebrKit you were able to initialize a PhoneNumber object to parse a String. Please use a PhoneNumberKit object's methods.
