@@ -17,15 +17,11 @@ public class PhoneNumberKit: NSObject {
     let metadataManager = MetadataManager()
     let parseManager: ParseManager
     let regexManager = RegexManager()
-
-    // Parsers
-    let parser: PhoneNumberParser
     
     // MARK: Lifecycle
     
     override init() {
-        self.parser = PhoneNumberParser(regex: regexManager, metadata: metadataManager)
-        self.parseManager = ParseManager(metadataManager: metadataManager, parser: parser, regexManager: regexManager)
+        self.parseManager = ParseManager(metadataManager: metadataManager, regexManager: regexManager)
     }
 
     // MARK: Parsing
@@ -52,7 +48,7 @@ public class PhoneNumberKit: NSObject {
     
     // MARK: Formatting
     
-    public func format(phoneNumber: PhoneNumber, to formatType:PhoneNumberFormat, with prefix: Bool = true) -> String {
+    public func format(_ phoneNumber: PhoneNumber, toFormat formatType:PhoneNumberFormat, withPrefix prefix: Bool = true) -> String {
         let formatter = Formatter(phoneNumberKit: self)
         if formatType == .e164 {
             let formattedNationalNumber = phoneNumber.adjustedNationalNumber()
@@ -78,22 +74,35 @@ public class PhoneNumberKit: NSObject {
     /// - parameter phoneNumber: PhoneNumber object
     ///
     /// - returns: whether or not the number is valid
-    public func isValid(phoneNumber: PhoneNumber) -> Bool {
-        let type = self.parser.checkNumberType(phoneNumber)
+    public func validate(_ phoneNumber: PhoneNumber) -> Bool {
+        let type = parseManager.checkNumberType(phoneNumber)
         return (type != .unknown)
     }
     
     
     /// Determine the type of a given phone number.
     ///
-    /// - parameter phoneNumber: PhoneNumber object.
+    /// - parameter phoneNumber: PhoneNumber object
     ///
     /// - returns: PhoneNumberType enum.
     public func getType(of phoneNumber: PhoneNumber) -> PhoneNumberType {
-        let type = self.parser.checkNumberType(phoneNumber)
+        let type = parseManager.checkNumberType(phoneNumber)
         return type
     }
-
+    
+    /// Determine the region code of a given phone number.
+    ///
+    /// - parameter phoneNumber: PhoneNumber object
+    ///
+    /// - returns: Region code, eg "US", or nil if the region cannot be determined.
+    public func getRegionCode(of phoneNumber: PhoneNumber) -> String? {
+        let countryCode = phoneNumber.countryCode
+        let regions = metadataManager.territories.filter { $0.countryCode == countryCode }
+        if regions.count == 1 {
+            return regions[0].codeID
+        }
+        return parseManager.getRegionCodeForNumber(number: phoneNumber)
+    }
 
     // MARK: Country and region code
     
@@ -111,7 +120,7 @@ public class PhoneNumberKit: NSObject {
     - Parameter countryCode: An international country code (e.g 44 for the UK).
     - Returns: An optional array of ISO 639 compliant region codes.
     */
-    public func countries(with countryCode: UInt64) -> [String]? {
+    public func countries(withCode countryCode: UInt64) -> [String]? {
         let results = metadataManager.filterTerritories(byCode: countryCode)?.map{$0.codeID}
         return results
     }
@@ -121,24 +130,9 @@ public class PhoneNumberKit: NSObject {
     - Parameter countryCode: An international country code (e.g 1 for the US).
     - Returns: A ISO 639 compliant region code string.
     */
-    public func mainCountry(for countryCode: UInt64) -> String? {
+    public func mainCountry(forCode countryCode: UInt64) -> String? {
         let country = metadataManager.mainTerritory(forCode: countryCode)
         return country?.codeID
-    }
-
-    /**
-    Get the region code for the given phone number
-    - Parameter phoneNumber: The phone number
-    - Returns: Region code, eg "US", or nil if the region cannot be determined
-    */
-    public func regionCode(for phoneNumber: PhoneNumber) -> String? {
-        let countryCode = phoneNumber.countryCode
-        let regions = metadataManager.territories.filter { $0.countryCode == countryCode }
-        if regions.count == 1 {
-            return regions[0].codeID
-        }
-
-        return parseManager.getRegionCodeForNumber(number: phoneNumber, fromRegionList: regions)
     }
 
     
@@ -151,6 +145,8 @@ public class PhoneNumberKit: NSObject {
         let results = metadataManager.filterTerritories(byCountry: country)?.countryCode
         return results
     }
+    
+    // MARK: Class functions
     
     /**
     Get a user's default region code,

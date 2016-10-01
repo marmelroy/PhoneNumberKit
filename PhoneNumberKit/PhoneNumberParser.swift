@@ -116,29 +116,14 @@ class PhoneNumberParser {
     
     // MARK: Validations
     
-    /**
-    Check number type (e.g +33 612-345-678 to .Mobile).
-    - Parameter phoneNumber: The number to check
-    - Returns: The type of the number
-    */
-    func checkNumberType(_ phoneNumber: PhoneNumber) -> PhoneNumberType {
-        guard let region = PhoneNumberKit().regionCode(for: phoneNumber) else {
-            return .unknown
-        }
-        guard let metadata = metadata.filterTerritories(byCountry: region) else {
-            return .unknown
-        }
-        if phoneNumber.leadingZero {
-            let type = checkNumberType("0" + String(phoneNumber.nationalNumber), metadata: metadata)
+    func checkNumberType(_ nationalNumber: String, metadata: MetadataTerritory, leadingZero: Bool = false) -> PhoneNumberType {
+        if leadingZero {
+            let type = checkNumberType("0" + String(nationalNumber), metadata: metadata)
             if type != .unknown {
                 return type
             }
         }
-        let nationalNumber = String(phoneNumber.nationalNumber)
-        return checkNumberType(nationalNumber, metadata: metadata)
-    }
 
-    func checkNumberType(_ nationalNumber: String, metadata: MetadataTerritory) -> PhoneNumberType {
         guard let generalNumberDesc = metadata.generalDesc else {
             return .unknown
         }

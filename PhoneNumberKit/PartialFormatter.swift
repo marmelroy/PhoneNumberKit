@@ -18,7 +18,7 @@ public class PartialFormatter {
     init(phoneNumberKit: PhoneNumberKit, defaultRegion: String, withPrefix: Bool = true) {
         self.regex = phoneNumberKit.regexManager
         self.metadata = phoneNumberKit.metadataManager
-        self.parser = phoneNumberKit.parser
+        self.parser = phoneNumberKit.parseManager.parser
         self.defaultRegion = defaultRegion
         updateMetadataForDefaultRegion()
         self.withPrefix = withPrefix

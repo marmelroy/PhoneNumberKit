@@ -14,12 +14,12 @@ Manager for parsing flow.
 class ParseManager {
     
     weak var metadataManager: MetadataManager?
-    weak var parser: PhoneNumberParser?
+    let parser: PhoneNumberParser
     weak var regexManager: RegexManager?
 
-    init(metadataManager: MetadataManager, parser: PhoneNumberParser, regexManager: RegexManager) {
+    init(metadataManager: MetadataManager, regexManager: RegexManager) {
         self.metadataManager = metadataManager
-        self.parser = parser
+        self.parser = PhoneNumberParser(regex: regexManager, metadata: metadataManager)
         self.regexManager = regexManager
     }
     
@@ -31,7 +31,7 @@ class ParseManager {
     - Parameter region: ISO 639 compliant region code.
     */
     func parsePhoneNumber(_ numberString: String, withRegion region: String) throws -> PhoneNumber {
-        guard let metadataManager = metadataManager, let parser = parser, let regexManager = regexManager else { throw PhoneNumberError.generalError }
+        guard let metadataManager = metadataManager, let regexManager = regexManager else { throw PhoneNumberError.generalError }
         // Make sure region is in uppercase so that it matches metadata (1)
         let region = region.uppercased()
         // Extract number (2)
@@ -137,8 +137,25 @@ class ParseManager {
         return operation
     }
     
-    func getRegionCodeForNumber(number: PhoneNumber, fromRegionList regions: [MetadataTerritory]) -> String? {
-        guard let parser = parser, let regexManager = regexManager else { return nil }
+    func checkNumberType(_ phoneNumber: PhoneNumber) -> PhoneNumberType {
+        guard let region = self.getRegionCodeForNumber(number: phoneNumber) else {
+            return .unknown
+        }
+        guard let metadata = metadataManager?.filterTerritories(byCountry: region) else {
+            return .unknown
+        }
+        return parser.checkNumberType(String(phoneNumber.nationalNumber), metadata: metadata, leadingZero: phoneNumber.leadingZero)
+    }
+    
+    func getRegionCodeForNumber(number: PhoneNumber) -> String? {
+        guard let regexManager = regexManager, let metadataManager = metadataManager else { return nil }
+
+        let countryCode = number.countryCode
+        let regions = metadataManager.territories.filter { $0.countryCode == countryCode }
+        if regions.count == 1 {
+            return regions[0].codeID
+        }
+
         let nationalNumber = String(number.nationalNumber)
         for region in regions {
             if let leadingDigits = region.leadingDigits {
