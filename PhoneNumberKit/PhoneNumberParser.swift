@@ -122,7 +122,7 @@ class PhoneNumberParser {
     - Returns: The type of the number
     */
     func checkNumberType(_ phoneNumber: PhoneNumber) -> PhoneNumberType {
-        guard let region = PhoneNumberKit().regionCode(forPhoneNumber: phoneNumber) else {
+        guard let region = PhoneNumberKit().regionCode(for: phoneNumber) else {
             return .unknown
         }
         guard let metadata = metadata.filterTerritories(byCountry: region) else {

@@ -45,7 +45,7 @@ class PhoneNumberKitTests: XCTestCase {
         do {
             let phoneNumber = try phoneNumberKit.parse(numberString: "+16307792428", withRegion: "US")
             print(phoneNumber.toE164())
-            let type = phoneNumberKit.type(forPhoneNumber: phoneNumber)
+            let type = phoneNumberKit.getType(of: phoneNumber)
             XCTAssertEqual(type, PhoneNumberType.fixedOrMobile)
         }
         catch {
@@ -60,7 +60,7 @@ class PhoneNumberKitTests: XCTestCase {
             // and it's true, this is a French mobile number combined with the GB region
             let phoneNumber = try phoneNumberKit.parse(numberString: "+44629996885")
             print(phoneNumber.toE164())
-            (phoneNumberKit.validate(phoneNumber: phoneNumber) == true) ? XCTFail() : XCTAssert(true)
+            (phoneNumberKit.isValid(phoneNumber: phoneNumber) == true) ? XCTFail() : XCTAssert(true)
         }
         catch {
     
@@ -74,7 +74,7 @@ class PhoneNumberKitTests: XCTestCase {
             // and it's true, this is a French mobile number combined with the BE region
             let phoneNumber = try phoneNumberKit.parse(numberString: "+32910853865")
             print(phoneNumber.toE164())
-            (phoneNumberKit.validate(phoneNumber: phoneNumber) == true) ? XCTFail() : XCTAssert(true)
+            (phoneNumberKit.isValid(phoneNumber: phoneNumber) == true) ? XCTFail() : XCTAssert(true)
         }
         catch {
             XCTAssert(true)
@@ -102,7 +102,7 @@ class PhoneNumberKitTests: XCTestCase {
             // and it's true, this is a French mobile number combined with the CN region
             let phoneNumber = try phoneNumberKit.parse(numberString: "+861500376135")
             print(phoneNumber.toE164())
-            (phoneNumberKit.validate(phoneNumber: phoneNumber) == true) ? XCTFail() : XCTAssert(true)
+            (phoneNumberKit.isValid(phoneNumber: phoneNumber) == true) ? XCTFail() : XCTAssert(true)
         }
         catch {
             XCTAssert(true)
@@ -116,7 +116,7 @@ class PhoneNumberKitTests: XCTestCase {
             // and it's true, this is a French mobile number combined with the IT region
             let phoneNumber = try phoneNumberKit.parse(numberString: "+390762613915")
             print(phoneNumber.toE164())
-            (phoneNumberKit.validate(phoneNumber: phoneNumber) == true) ? XCTFail() : XCTAssert(true)
+            (phoneNumberKit.isValid(phoneNumber: phoneNumber) == true) ? XCTFail() : XCTAssert(true)
         }
         catch {
             XCTAssert(true)
@@ -325,25 +325,25 @@ class PhoneNumberKitTests: XCTestCase {
     //  Test code for country function -  valid country
     func testCodeForCountryValid() {
         let phoneNumberKit = PhoneNumberKit()
-        XCTAssertEqual(phoneNumberKit.countryCode(forCountry: "FR"), 33)
+        XCTAssertEqual(phoneNumberKit.countryCode(for: "FR"), 33)
     }
     
     //  Test code for country function - invalid country
     func testCodeForCountryInvalid() {
         let phoneNumberKit = PhoneNumberKit()
-        XCTAssertEqual(phoneNumberKit.countryCode(forCountry: "FOOBAR"), nil)
+        XCTAssertEqual(phoneNumberKit.countryCode(for: "FOOBAR"), nil)
     }
     
     //  Test countries for code function
     func testCountriesForCodeValid() {
         let phoneNumberKit = PhoneNumberKit()
-        XCTAssertEqual(phoneNumberKit.countries(forCountryCode: 1)?.count, 25)
+        XCTAssertEqual(phoneNumberKit.countries(with: 1)?.count, 25)
     }
 
     //  Test countries for code function
     func testCountriesForCodeInvalid() {
         let phoneNumberKit = PhoneNumberKit()
-        XCTAssertEqual(phoneNumberKit.countries(forCountryCode: 424242)?.count, 0)
+        XCTAssertEqual(phoneNumberKit.countries(with: 424242)?.count, 0)
     }
 
     //  Test region code for number function
@@ -352,7 +352,7 @@ class PhoneNumberKitTests: XCTestCase {
             XCTFail()
             return
         }
-        XCTAssertEqual(PhoneNumberKit().regionCode(forPhoneNumber: phoneNumber), "IT")
+        XCTAssertEqual(PhoneNumberKit().regionCode(for: phoneNumber), "IT")
     }
 
     //  Test region code for number in a region that uses leading digits
@@ -361,7 +361,7 @@ class PhoneNumberKitTests: XCTestCase {
             XCTFail()
             return
         }
-        XCTAssertEqual(PhoneNumberKit().regionCode(forPhoneNumber: phoneNumber), "JM")
+        XCTAssertEqual(PhoneNumberKit().regionCode(for: phoneNumber), "JM")
     }
 
 }
