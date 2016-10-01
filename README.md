@@ -82,8 +82,8 @@ PartialFormatter().formatPartial("+336895555") // +33 6 89 55 55
 
 You can also query countries for a dialing code or the dailing code for a given country
 ```swift
-phoneNumberKit.countriesForCode(33)
-phoneNumberKit.codeForCountry("FR")
+phoneNumberKit.countries(withCode: 33)
+phoneNumberKit.countryCode(for: "FR")
 ```
 
 ### Setting up with Carthage
