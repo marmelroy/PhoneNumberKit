@@ -14,6 +14,11 @@ public class PartialFormatter {
     weak var metadataManager: MetadataManager?
     weak var parser: PhoneNumberParser?
     weak var regexManager: RegexManager?
+    
+    convenience init() {
+        let phoneNumberKit = PhoneNumberKit()
+        self.init(phoneNumberKit: phoneNumberKit, defaultRegion: PhoneNumberKit.defaultRegionCode())
+    }
 
     convenience init(phoneNumberKit: PhoneNumberKit, defaultRegion: String, withPrefix: Bool = true) {
         self.init(regexManager: phoneNumberKit.regexManager, metadataManager: phoneNumberKit.metadataManager, parser: phoneNumberKit.parseManager.parser, defaultRegion: defaultRegion, withPrefix: withPrefix)
