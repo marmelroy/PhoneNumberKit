@@ -65,6 +65,7 @@ class ParseManager {
         // Nomralized number (5)
         let normalizedNationalNumber = parser.normalizePhoneNumber(nationalNumber)
         nationalNumber = normalizedNationalNumber
+        
         // If country code is not default, grab correct metadata (6)
         if countryCode != regionMetadata.countryCode, let countryMetadata = metadataManager.territoriesByCode[countryCode] {
             regionMetadata = countryMetadata
@@ -82,9 +83,14 @@ class ParseManager {
             throw PhoneNumberError.notANumber
         }
         
+        // Check if the number if og a known type
+        if let regionCode = getRegionCodeForNumber(nationalNumber: finalNationalNumber, countryCode: countryCode, leadingZero: leadingZero), let foundMetadata = metadataManager.territoriesByCountry[regionCode] {
+            regionMetadata = foundMetadata
+        }
+    
         let type = parser.checkNumberType(String(nationalNumber), metadata: regionMetadata, leadingZero: leadingZero)
         if type == .unknown {
-            throw PhoneNumberError.unknownType
+        throw PhoneNumberError.unknownType
         }
         let phoneNumber = PhoneNumber(numberString: numberString, countryCode: countryCode, leadingZero: leadingZero, nationalNumber: finalNationalNumber, numberExtension: numberExtension, type: type)
         return phoneNumber

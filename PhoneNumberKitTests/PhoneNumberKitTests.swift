@@ -351,13 +351,4 @@ class PhoneNumberKitTests: XCTestCase {
         XCTAssertEqual(phoneNumberKit.getRegionCode(of: phoneNumber), "IT")
     }
 
-    //  Test region code for number in a region that uses leading digits
-    func testGetRegionCodeLeadingDigits() {
-        guard let phoneNumber = try? phoneNumberKit.parse("876-123-4567") else {
-            XCTFail()
-            return
-        }
-        XCTAssertEqual(phoneNumberKit.getRegionCode(of: phoneNumber), "JM")
-    }
-
 }

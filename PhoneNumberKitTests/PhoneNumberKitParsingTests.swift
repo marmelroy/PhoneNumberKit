@@ -290,7 +290,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
     }
 
     func testAntiguaPagerNumberType() {
-        guard let number = try? phoneNumberKit.parse("12684061234") else {
+        guard let number = try? phoneNumberKit.parse("12684061234", withRegion: "US") else {
             XCTFail()
             return
         }

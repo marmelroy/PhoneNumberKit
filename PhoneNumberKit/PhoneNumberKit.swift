@@ -120,11 +120,6 @@ public class PhoneNumberKit: NSObject {
     ///
     /// - returns: Region code, eg "US", or nil if the region cannot be determined.
     public func getRegionCode(of phoneNumber: PhoneNumber) -> String? {
-        let countryCode = phoneNumber.countryCode
-        let regions = metadataManager.territories.filter { $0.countryCode == countryCode }
-        if regions.count == 1 {
-            return regions[0].codeID
-        }
         return parseManager.getRegionCodeForNumber(nationalNumber: phoneNumber.nationalNumber, countryCode: phoneNumber.countryCode, leadingZero: phoneNumber.leadingZero)
     }
     
