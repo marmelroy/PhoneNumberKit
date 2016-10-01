@@ -16,13 +16,6 @@ enum PhoneNumberCountryCodeSource {
     case defaultCountry
 }
 
-enum PhoneNumberFormat {
-    case e164
-    case international
-    case national
-}
-
-
 // MARK: Public Enums
 
 /**
@@ -53,6 +46,13 @@ public enum PhoneNumberError: Error {
         }
     }
 }
+
+public enum PhoneNumberFormat {
+    case e164 // +33689123456
+    case international // +33 6 89 12 34 56
+    case national // 06 89 12 34 56
+}
+
 
 /**
  Phone number type enumeration

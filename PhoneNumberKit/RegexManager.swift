@@ -21,6 +21,7 @@ class RegexManager {
         }
         return regularExpresionPoolCopy
     }
+    
     private let concurrentRegexQueue = DispatchQueue(label: "com.phonenumberkit.regexqueue", qos: .default, attributes: .concurrent)
 
     func addRegularExpressionToPool(regex: NSRegularExpression, pattern: String) {

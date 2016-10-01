@@ -37,7 +37,7 @@ public class PhoneNumberKit: NSObject {
     ///
     /// - returns: PhoneNumber object.
     public func parse(numberString: String, withRegion region: String = PhoneNumberKit.defaultRegionCode()) throws -> PhoneNumber {
-        return try parseManager.parsePhoneNumber(numberString, region: region)
+        return try parseManager.parsePhoneNumber(numberString: numberString, region: region)
     }
     
     /// Parse function for an array of number strings. Optimised for performance. Parse failures are ignored in the resulting array
@@ -47,9 +47,31 @@ public class PhoneNumberKit: NSObject {
     ///
     /// - returns: array of PhoneNumber objects.
     public func parse(numberStrings: [String], withRegion region: String = PhoneNumberKit.defaultRegionCode()) -> [PhoneNumber] {
-        return parseManager.parseMultiple(numberStrings, region: region)
+        return parseManager.parseMultiple(numberStrings: numberStrings, region: region)
     }
-
+    
+    // MARK: Formatting
+    
+    public func format(phoneNumber: PhoneNumber, to formatType:PhoneNumberFormat, with prefix: Bool = true) -> String {
+        let formatter = Formatter(phoneNumberKit: self)
+        if formatType == .e164 {
+            let formattedNationalNumber = phoneNumber.adjustedNationalNumber()
+            if prefix == false {
+                return formattedNationalNumber
+            }
+            return "+\(phoneNumber.countryCode)\(formattedNationalNumber)"
+        } else {
+            let regionMetadata = metadataManager.territoriesByCode[phoneNumber.countryCode]
+            let formattedNationalNumber = formatter.format(phoneNumber: phoneNumber, formatType: formatType, regionMetadata: regionMetadata)
+            if formatType == .international && prefix == true {
+                return "+\(phoneNumber.countryCode) \(formattedNationalNumber)"
+            } else {
+                return formattedNationalNumber
+            }
+        }
+    }
+    
+    // MARK: Validation
     
     /// Performs a strong validation on a PhoneNumber object by checking if it is of a known type.
     ///

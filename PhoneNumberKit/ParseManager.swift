@@ -27,16 +27,16 @@ class ParseManager {
     
     /**
     Parse a string into a phone number object with a custom region. Can throw.
-    - Parameter rawNumber: String to be parsed to phone number struct.
+    - Parameter numberString: String to be parsed to phone number struct.
     - Parameter region: ISO 639 compliant region code.
     */
-    func parsePhoneNumber(_ rawNumber: String, region: String) throws -> PhoneNumber {
+    func parsePhoneNumber(numberString: String, region: String) throws -> PhoneNumber {
         guard let metadataManager = metadataManager, let parser = parser, let regexManager = regexManager else { throw PhoneNumberError.generalError }
         // Make sure region is in uppercase so that it matches metadata (1)
         let region = region.uppercased()
         // Extract number (2)
-        var nationalNumber = rawNumber
-        let matches = try regexManager.phoneDataDetectorMatches(rawNumber)
+        var nationalNumber = numberString
+        let matches = try regexManager.phoneDataDetectorMatches(numberString)
         if let phoneNumber = matches.first?.phoneNumber {
             nationalNumber = phoneNumber
         }
@@ -81,7 +81,7 @@ class ParseManager {
         guard let finalNationalNumber = UInt64(nationalNumber) else{
             throw PhoneNumberError.notANumber
         }
-        let phoneNumber = PhoneNumber(numberString: rawNumber, countryCode: countryCode, leadingZero: leadingZero, nationalNumber: finalNationalNumber, numberExtension: numberExtension)
+        let phoneNumber = PhoneNumber(numberString: numberString, countryCode: countryCode, leadingZero: leadingZero, nationalNumber: finalNationalNumber, numberExtension: numberExtension)
         return phoneNumber
     }
     
@@ -89,12 +89,11 @@ class ParseManager {
     
     /**
     Fastest way to parse an array of phone numbers. Uses custom region code.
-    - Parameter rawNumbers: An array of raw number strings.
+    - Parameter numberStrings: An array of raw number strings.
     - Parameter region: ISO 639 compliant region code.
     - Returns: An array of valid PhoneNumber objects.
     */
-    func parseMultiple(_ rawNumbers: [String], region: String, testCallback: (()->())? = nil) -> [PhoneNumber] {
-        let rawNumbersCopy = rawNumbers
+    func parseMultiple(numberStrings: [String], region: String, testCallback: (()->())? = nil) -> [PhoneNumber] {
         self.multiParseArray = SynchronizedArray<PhoneNumber>()
         let queue = OperationQueue()
         var operationArray: [ParseOperation<PhoneNumber>] = []
@@ -104,8 +103,8 @@ class ParseManager {
         }
         completionOperation.whenFinished { asyncOp in
         }
-        for (index, rawNumber) in rawNumbersCopy.enumerated() {
-            let parseTask = parseOperation(rawNumber, region:region)
+        for (index, numberString) in numberStrings.enumerated() {
+            let parseTask = parseOperation(numberString: numberString, region:region)
             parseTask.whenFinished { operation in
                 if let phoneNumber = operation.output.value {
                     self.multiParseArray.append(phoneNumber)
@@ -113,7 +112,7 @@ class ParseManager {
             }
             operationArray.append(parseTask)
             completionOperation.addDependency(parseTask)
-            if index == rawNumbers.count/2 {
+            if index == numberStrings.count/2 {
                 testCallback?()
             }
         }
@@ -129,10 +128,10 @@ class ParseManager {
      - Parameter region: ISO 639 compliant region code.
      - Returns: Parse operation with an implementation handler and no completion handler.
      */
-    func parseOperation(_ rawNumber: String, region: String) -> ParseOperation<PhoneNumber> {
+    func parseOperation(numberString: String, region: String) -> ParseOperation<PhoneNumber> {
         let operation = ParseOperation<PhoneNumber>()
         operation.onStart { asyncOp in
-            let phoneNumber = try self.parsePhoneNumber(rawNumber, region: region)
+            let phoneNumber = try self.parsePhoneNumber(numberString: numberString, region: region)
             asyncOp.finish(with: phoneNumber)
         }
         return operation

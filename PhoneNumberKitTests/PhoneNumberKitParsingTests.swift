@@ -37,27 +37,27 @@ class PhoneNumberKitParsingTests: XCTestCase {
         do {
             let phoneNumber1 = try phoneNumberKit.parse(numberString: "650 253 0000", withRegion: "US")
             XCTAssertNotNil(phoneNumber1)
-            let phoneNumberInternationalFormat1 = phoneNumber1.toInternational()
+            let phoneNumberInternationalFormat1 = phoneNumberKit.format(phoneNumber: phoneNumber1, to: .international)
             XCTAssertTrue(phoneNumberInternationalFormat1 == "+1 650-253-0000")
-            let phoneNumberNationalFormat1 = phoneNumber1.toNational()
+            let phoneNumberNationalFormat1 = phoneNumberKit.format(phoneNumber: phoneNumber1, to: .national)
             XCTAssertTrue(phoneNumberNationalFormat1 == "(650) 253-0000")
-            let phoneNumberE164Format1 = phoneNumber1.toE164()
+            let phoneNumberE164Format1 = phoneNumberKit.format(phoneNumber: phoneNumber1, to: .e164)
             XCTAssertTrue(phoneNumberE164Format1 == "+16502530000")
             let phoneNumber2 = try phoneNumberKit.parse(numberString: "800 253 0000")
             XCTAssertNotNil(phoneNumber2)
-            let phoneNumberInternationalFormat2 = phoneNumber2.toInternational()
+            let phoneNumberInternationalFormat2 = phoneNumberKit.format(phoneNumber: phoneNumber2, to: .international)
             XCTAssertTrue(phoneNumberInternationalFormat2 == "+1 800-253-0000")
-            let phoneNumberNationalFormat2 = phoneNumber2.toNational()
+            let phoneNumberNationalFormat2 = phoneNumberKit.format(phoneNumber: phoneNumber2, to: .national)
             XCTAssertTrue(phoneNumberNationalFormat2 == "(800) 253-0000")
-            let phoneNumberE164Format2 = phoneNumber2.toE164()
+            let phoneNumberE164Format2 = phoneNumberKit.format(phoneNumber: phoneNumber2, to: .e164)
             XCTAssertTrue(phoneNumberE164Format2 == "+18002530000")
             let phoneNumber3 = try phoneNumberKit.parse(numberString: "900 253 0000")
             XCTAssertNotNil(phoneNumber3)
-            let phoneNumberInternationalFormat3 = phoneNumber3.toInternational()
+            let phoneNumberInternationalFormat3 = phoneNumberKit.format(phoneNumber: phoneNumber3, to: .international)
             XCTAssertTrue(phoneNumberInternationalFormat3 == "+1 900-253-0000")
-            let phoneNumberNationalFormat3 = phoneNumber3.toNational()
+            let phoneNumberNationalFormat3 = phoneNumberKit.format(phoneNumber: phoneNumber3, to: .national)
             XCTAssertTrue(phoneNumberNationalFormat3 == "(900) 253-0000")
-            let phoneNumberE164Format3 = phoneNumber3.toE164()
+            let phoneNumberE164Format3 = phoneNumberKit.format(phoneNumber: phoneNumber3, to: .e164)
             XCTAssertTrue(phoneNumberE164Format3 == "+19002530000")
         }
         catch {
@@ -69,11 +69,11 @@ class PhoneNumberKitParsingTests: XCTestCase {
         do {
             let phoneNumber1 = try phoneNumberKit.parse(numberString: "242 365 1234", withRegion: "BS")
             XCTAssertNotNil(phoneNumber1)
-            let phoneNumberInternationalFormat1 = phoneNumber1.toInternational()
+            let phoneNumberInternationalFormat1 = phoneNumberKit.format(phoneNumber: phoneNumber1, to: .international)
             XCTAssertTrue(phoneNumberInternationalFormat1 == "+1 242-365-1234")
-            let phoneNumberNationalFormat1 = phoneNumber1.toNational()
+            let phoneNumberNationalFormat1 = phoneNumberKit.format(phoneNumber: phoneNumber1, to: .national)
             XCTAssertTrue(phoneNumberNationalFormat1 == "(242) 365-1234")
-            let phoneNumberE164Format1 = phoneNumber1.toE164()
+            let phoneNumberE164Format1 = phoneNumberKit.format(phoneNumber: phoneNumber1, to: .e164)
             XCTAssertTrue(phoneNumberE164Format1 == "+12423651234")
         }
         catch {
@@ -85,19 +85,19 @@ class PhoneNumberKitParsingTests: XCTestCase {
         do {
             let phoneNumber1 = try phoneNumberKit.parse(numberString: "(020) 7031 3000", withRegion: "GB")
             XCTAssertNotNil(phoneNumber1)
-            let phoneNumberInternationalFormat1 = phoneNumber1.toInternational()
+            let phoneNumberInternationalFormat1 = phoneNumberKit.format(phoneNumber: phoneNumber1, to: .international)
             XCTAssertTrue(phoneNumberInternationalFormat1 == "+44 20 7031 3000")
-            let phoneNumberNationalFormat1 = phoneNumber1.toNational()
+            let phoneNumberNationalFormat1 = phoneNumberKit.format(phoneNumber: phoneNumber1, to: .national)
             XCTAssertTrue(phoneNumberNationalFormat1 == "020 7031 3000")
-            let phoneNumberE164Format1 = phoneNumber1.toE164()
+            let phoneNumberE164Format1 = phoneNumberKit.format(phoneNumber: phoneNumber1, to: .e164)
             XCTAssertTrue(phoneNumberE164Format1 == "+442070313000")
             let phoneNumber2 = try phoneNumberKit.parse(numberString: "(07912) 345 678", withRegion: "GB")
             XCTAssertNotNil(phoneNumber2)
-            let phoneNumberInternationalFormat2 = phoneNumber2.toInternational()
+            let phoneNumberInternationalFormat2 = phoneNumberKit.format(phoneNumber: phoneNumber2, to: .international)
             XCTAssertTrue(phoneNumberInternationalFormat2 == "+44 7912 345678")
-            let phoneNumberNationalFormat2 = phoneNumber2.toNational()
+            let phoneNumberNationalFormat2 = phoneNumberKit.format(phoneNumber: phoneNumber2, to: .national)
             XCTAssertTrue(phoneNumberNationalFormat2 == "07912 345678")
-            let phoneNumberE164Format2 = phoneNumber2.toE164()
+            let phoneNumberE164Format2 = phoneNumberKit.format(phoneNumber: phoneNumber2, to: .e164)
             XCTAssertTrue(phoneNumberE164Format2 == "+447912345678")
         }
         catch {
@@ -109,27 +109,27 @@ class PhoneNumberKitParsingTests: XCTestCase {
         do {
             let phoneNumber1 = try phoneNumberKit.parse(numberString: "0291 12345678", withRegion: "DE")
             XCTAssertNotNil(phoneNumber1)
-            let phoneNumberInternationalFormat1 = phoneNumber1.toInternational()
+            let phoneNumberInternationalFormat1 = phoneNumberKit.format(phoneNumber: phoneNumber1, to: .international)
             XCTAssertTrue(phoneNumberInternationalFormat1 == "+49 291 12345678")
-            let phoneNumberNationalFormat1 = phoneNumber1.toNational()
+            let phoneNumberNationalFormat1 = phoneNumberKit.format(phoneNumber: phoneNumber1, to: .national)
             XCTAssertTrue(phoneNumberNationalFormat1 == "0291 12345678")
-            let phoneNumberE164Format1 = phoneNumber1.toE164()
+            let phoneNumberE164Format1 = phoneNumberKit.format(phoneNumber: phoneNumber1, to: .e164)
             XCTAssertTrue(phoneNumberE164Format1 == "+4929112345678")
             let phoneNumber2 = try phoneNumberKit.parse(numberString: "04134 1234", withRegion: "DE")
             XCTAssertNotNil(phoneNumber2)
-            let phoneNumberInternationalFormat2 = phoneNumber2.toInternational()
+            let phoneNumberInternationalFormat2 = phoneNumberKit.format(phoneNumber: phoneNumber2, to: .international)
             XCTAssertTrue(phoneNumberInternationalFormat2 == "+49 4134 1234")
-            let phoneNumberNationalFormat2 = phoneNumber2.toNational()
+            let phoneNumberNationalFormat2 = phoneNumberKit.format(phoneNumber: phoneNumber2, to: .national)
             XCTAssertTrue(phoneNumberNationalFormat2 == "04134 1234")
-            let phoneNumberE164Format2 = phoneNumber2.toE164()
+            let phoneNumberE164Format2 = phoneNumberKit.format(phoneNumber: phoneNumber2, to: .e164)
             XCTAssertTrue(phoneNumberE164Format2 == "+4941341234")
             let phoneNumber3 = try phoneNumberKit.parse(numberString: "+49 8021 2345", withRegion: "DE")
             XCTAssertNotNil(phoneNumber3)
-            let phoneNumberInternationalFormat3 = phoneNumber3.toInternational()
+            let phoneNumberInternationalFormat3 = phoneNumberKit.format(phoneNumber: phoneNumber3, to: .international)
             XCTAssertTrue(phoneNumberInternationalFormat3 == "+49 8021 2345")
-            let phoneNumberNationalFormat3 = phoneNumber3.toNational()
+            let phoneNumberNationalFormat3 = phoneNumberKit.format(phoneNumber: phoneNumber3, to: .national)
             XCTAssertTrue(phoneNumberNationalFormat3 == "08021 2345")
-            let phoneNumberE164Format3 = phoneNumber3.toE164()
+            let phoneNumberE164Format3 = phoneNumberKit.format(phoneNumber: phoneNumber3, to: .e164)
             XCTAssertTrue(phoneNumberE164Format3 == "+4980212345")
         }
         catch {
@@ -141,11 +141,11 @@ class PhoneNumberKitParsingTests: XCTestCase {
         do {
             let phoneNumber1 = try phoneNumberKit.parse(numberString: "02 3661 8300", withRegion: "IT")
             XCTAssertNotNil(phoneNumber1)
-            let phoneNumberInternationalFormat1 = phoneNumber1.toInternational()
+            let phoneNumberInternationalFormat1 = phoneNumberKit.format(phoneNumber: phoneNumber1, to: .international)
             XCTAssertTrue(phoneNumberInternationalFormat1 == "+39 02 3661 8300")
-            let phoneNumberNationalFormat1 = phoneNumber1.toNational()
+            let phoneNumberNationalFormat1 = phoneNumberKit.format(phoneNumber: phoneNumber1, to: .national)
             XCTAssertTrue(phoneNumberNationalFormat1 == "02 3661 8300")
-            let phoneNumberE164Format1 = phoneNumber1.toE164()
+            let phoneNumberE164Format1 = phoneNumberKit.format(phoneNumber: phoneNumber1, to: .e164)
             XCTAssertTrue(phoneNumberE164Format1 == "+390236618300")
         }
         catch {
@@ -157,19 +157,19 @@ class PhoneNumberKitParsingTests: XCTestCase {
         do {
             let phoneNumber1 = try phoneNumberKit.parse(numberString: "02 3661 8300", withRegion: "AU")
             XCTAssertNotNil(phoneNumber1)
-            let phoneNumberInternationalFormat1 = phoneNumber1.toInternational()
+            let phoneNumberInternationalFormat1 = phoneNumberKit.format(phoneNumber: phoneNumber1, to: .international)
             XCTAssertTrue(phoneNumberInternationalFormat1 == "+61 2 3661 8300")
-            let phoneNumberNationalFormat1 = phoneNumber1.toNational()
+            let phoneNumberNationalFormat1 = phoneNumberKit.format(phoneNumber: phoneNumber1, to: .national)
             XCTAssertTrue(phoneNumberNationalFormat1 == "(02) 3661 8300")
-            let phoneNumberE164Format1 = phoneNumber1.toE164()
+            let phoneNumberE164Format1 = phoneNumberKit.format(phoneNumber: phoneNumber1, to: .e164)
             XCTAssertTrue(phoneNumberE164Format1 == "+61236618300")
             let phoneNumber2 = try phoneNumberKit.parse(numberString: "+61 1800 123 456", withRegion: "AU")
             XCTAssertNotNil(phoneNumber2)
-            let phoneNumberInternationalFormat2 = phoneNumber2.toInternational()
+            let phoneNumberInternationalFormat2 = phoneNumberKit.format(phoneNumber: phoneNumber2, to: .international)
             XCTAssertTrue(phoneNumberInternationalFormat2 == "+61 1800 123 456")
-            let phoneNumberNationalFormat2 = phoneNumber2.toNational()
+            let phoneNumberNationalFormat2 = phoneNumberKit.format(phoneNumber: phoneNumber2, to: .national)
             XCTAssertTrue(phoneNumberNationalFormat2 == "1800 123 456")
-            let phoneNumberE164Format2 = phoneNumber2.toE164()
+            let phoneNumberE164Format2 = phoneNumberKit.format(phoneNumber: phoneNumber2, to: .e164)
             XCTAssertTrue(phoneNumberE164Format2 == "+611800123456")
         }
         catch {
@@ -181,19 +181,19 @@ class PhoneNumberKitParsingTests: XCTestCase {
         do {
             let phoneNumber1 = try phoneNumberKit.parse(numberString: "011 8765-4321", withRegion: "AR")
             XCTAssertNotNil(phoneNumber1)
-            let phoneNumberInternationalFormat1 = phoneNumber1.toInternational()
+            let phoneNumberInternationalFormat1 = phoneNumberKit.format(phoneNumber: phoneNumber1, to: .international)
             XCTAssertTrue(phoneNumberInternationalFormat1 == "+54 11 8765-4321")
-            let phoneNumberNationalFormat1 = phoneNumber1.toNational()
+            let phoneNumberNationalFormat1 = phoneNumberKit.format(phoneNumber: phoneNumber1, to: .national)
             XCTAssertTrue(phoneNumberNationalFormat1 == "011 8765-4321")
-            let phoneNumberE164Format1 = phoneNumber1.toE164()
+            let phoneNumberE164Format1 = phoneNumberKit.format(phoneNumber: phoneNumber1, to: .e164)
             XCTAssertTrue(phoneNumberE164Format1 == "+541187654321")
             let phoneNumber2 = try phoneNumberKit.parse(numberString: "011 15 8765-4321", withRegion: "AR")
             XCTAssertNotNil(phoneNumber2)
-            let phoneNumberInternationalFormat2 = phoneNumber2.toInternational()
+            let phoneNumberInternationalFormat2 = phoneNumberKit.format(phoneNumber: phoneNumber2, to: .international)
             XCTAssertTrue(phoneNumberInternationalFormat2 == "+54 9 11 8765-4321")
-            let phoneNumberNationalFormat2 = phoneNumber2.toNational()
+            let phoneNumberNationalFormat2 = phoneNumberKit.format(phoneNumber: phoneNumber2, to: .national)
             XCTAssertTrue(phoneNumberNationalFormat2 == "011 15-8765-4321")
-            let phoneNumberE164Format2 = phoneNumber2.toE164()
+            let phoneNumberE164Format2 = phoneNumberKit.format(phoneNumber: phoneNumber2, to: .e164)
             XCTAssertTrue(phoneNumberE164Format2 == "+5491187654321")
         }
         catch {
@@ -224,13 +224,14 @@ class PhoneNumberKitParsingTests: XCTestCase {
                         do {
                             let phoneNumber = try phoneNumberKit.parse(numberString: exampleNumber, withRegion: codeID)
                             XCTAssertNotNil(phoneNumber)
-//                            if let type = record.1 {
-//                                if phoneNumber.type == .fixedOrMobile {
-//                                    XCTAssert(type == .fixedLine || type == .mobile)
-//                                } else {
-//                                    XCTAssertEqual(phoneNumber.type, type, "Expected type \(type) for number \(phoneNumber)")
-//                                }
-//                            }
+                            if let type = record.1 {
+                                let phoneNumberType = phoneNumberKit.getType(of: phoneNumber)
+                                if phoneNumberType == .fixedOrMobile {
+                                    XCTAssert(type == .fixedLine || type == .mobile)
+                                } else {
+                                    XCTAssertEqual(phoneNumberType, type, "Expected type \(type) for number \(phoneNumber)")
+                                }
+                            }
                         } catch (let e) {
                             XCTFail("Failed to create PhoneNumber for \(exampleNumber): \(e)")
                         }
@@ -248,62 +249,62 @@ class PhoneNumberKitParsingTests: XCTestCase {
         XCTAssertFalse(regex.matchesEntirely("8", string: number))
     }
 
-//    func testUSTollFreeNumberType() {
-//        guard let number = try? phoneNumberKit.parse(numberString: "8002345678") else {
-//            XCTFail()
-//            return
-//        }
-//        XCTAssertEqual(number.type, PhoneNumberType.tollFree)
-//    }
-//
-//    func testBelizeTollFreeType() {
-//        guard let number = try? phoneNumberKit.parse(numberString: "08001234123", withRegion: "BZ") else {
-//            XCTFail()
-//            return
-//        }
-//        XCTAssertEqual(number.type, PhoneNumberType.tollFree)
-//    }
-//
-//    func testItalyFixedLineType() {
-//        guard let number = try? phoneNumberKit.parse(numberString: "0669812345", withRegion: "IT") else {
-//            XCTFail()
-//            return
-//        }
-//        XCTAssertEqual(number.type, PhoneNumberType.fixedLine)
-//    }
-//
-//    func testMaldivesPagerNumber() {
-//        guard let number = try? phoneNumberKit.parse(numberString: "7812345", withRegion: "MV") else {
-//            XCTFail()
-//            return
-//        }
-//        XCTAssertEqual(number.type, PhoneNumberType.pager)
-//    }
-//
-//    func testZimbabweVoipType() {
-//        guard let number = try? phoneNumberKit.parse(numberString: "8686123456", withRegion: "ZW") else {
-//            XCTFail()
-//            return
-//        }
-//        XCTAssertEqual(number.type, PhoneNumberType.voip)
-//
-//    }
-//
-//    func testAntiguaPagerNumberType() {
-//        guard let number = try? phoneNumberKit.parse(numberString: "12684061234") else {
-//            XCTFail()
-//            return
-//        }
-//        XCTAssertEqual(number.type, PhoneNumberType.pager)
-//    }
-//
-//    func testFranceMobileNumberType() {
-//        guard let number = try? phoneNumberKit.parse(numberString: "+33 612-345-678") else {
-//            XCTFail()
-//            return
-//        }
-//        XCTAssertEqual(number.type, PhoneNumberType.mobile)
-//    }
+    func testUSTollFreeNumberType() {
+        guard let number = try? phoneNumberKit.parse(numberString: "8002345678") else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(phoneNumberKit.getType(of: number), PhoneNumberType.tollFree)
+    }
+
+    func testBelizeTollFreeType() {
+        guard let number = try? phoneNumberKit.parse(numberString: "08001234123", withRegion: "BZ") else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(phoneNumberKit.getType(of: number), PhoneNumberType.tollFree)
+    }
+
+    func testItalyFixedLineType() {
+        guard let number = try? phoneNumberKit.parse(numberString: "0669812345", withRegion: "IT") else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(phoneNumberKit.getType(of: number), PhoneNumberType.fixedLine)
+    }
+
+    func testMaldivesPagerNumber() {
+        guard let number = try? phoneNumberKit.parse(numberString: "7812345", withRegion: "MV") else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(phoneNumberKit.getType(of: number), PhoneNumberType.pager)
+    }
+
+    func testZimbabweVoipType() {
+        guard let number = try? phoneNumberKit.parse(numberString: "8686123456", withRegion: "ZW") else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(phoneNumberKit.getType(of: number), PhoneNumberType.voip)
+
+    }
+
+    func testAntiguaPagerNumberType() {
+        guard let number = try? phoneNumberKit.parse(numberString: "12684061234") else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(phoneNumberKit.getType(of: number), PhoneNumberType.pager)
+    }
+
+    func testFranceMobileNumberType() {
+        guard let number = try? phoneNumberKit.parse(numberString: "+33 612-345-678") else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(phoneNumberKit.getType(of: number), PhoneNumberType.mobile)
+    }
 //
     func testPerformanceSimple() {
         let numberOfParses = 1000
@@ -329,7 +330,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
         for _ in 0 ..< numberOfParses {
             numberArray.append("+5491187654321")
         }
-        let phoneNumbers = phoneNumberKit.parseManager.parseMultiple(numberArray, region: "AR") {
+        let phoneNumbers = phoneNumberKit.parseManager.parseMultiple(numberStrings: numberArray, region: "AR") {
             numberArray.remove(at: 100)
         }
         XCTAssertTrue(phoneNumbers.count == numberOfParses)
