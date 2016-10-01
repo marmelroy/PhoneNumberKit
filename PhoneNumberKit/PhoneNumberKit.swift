@@ -36,8 +36,8 @@ public class PhoneNumberKit: NSObject {
     /// - parameter region:       ISO 639 compliant region code.
     ///
     /// - returns: PhoneNumber object.
-    public func parse(numberString: String, withRegion region: String = PhoneNumberKit.defaultRegionCode()) throws -> PhoneNumber {
-        return try parseManager.parsePhoneNumber(numberString: numberString, region: region)
+    public func parse(_ numberString: String, withRegion region: String = PhoneNumberKit.defaultRegionCode()) throws -> PhoneNumber {
+        return try parseManager.parsePhoneNumber(numberString, withRegion: region)
     }
     
     /// Parse function for an array of number strings. Optimised for performance. Parse failures are ignored in the resulting array
@@ -46,8 +46,8 @@ public class PhoneNumberKit: NSObject {
     /// - parameter region:        ISO 639 compliant region code.
     ///
     /// - returns: array of PhoneNumber objects.
-    public func parse(numberStrings: [String], withRegion region: String = PhoneNumberKit.defaultRegionCode()) -> [PhoneNumber] {
-        return parseManager.parseMultiple(numberStrings: numberStrings, region: region)
+    public func parse(_ numberStrings: [String], withRegion region: String = PhoneNumberKit.defaultRegionCode()) -> [PhoneNumber] {
+        return parseManager.parseMultiple(numberStrings, withRegion: region)
     }
     
     // MARK: Formatting
