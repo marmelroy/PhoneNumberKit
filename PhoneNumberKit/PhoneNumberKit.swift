@@ -30,31 +30,47 @@ public class PhoneNumberKit: NSObject {
 
     // MARK: Parsing
     
+    /// Parse function for a number string, used to create PhoneNumber objects.
+    ///
+    /// - parameter numberString: the raw number string.
+    /// - parameter region:       ISO 639 compliant region code.
+    ///
+    /// - returns: PhoneNumber object.
     public func parse(numberString: String, withRegion region: String = PhoneNumberKit.defaultRegionCode()) throws -> PhoneNumber {
         return try parseManager.parsePhoneNumber(numberString, region: region)
     }
     
-    /**
-    Fastest way to parse an array of phone numbers.
-    - Parameter rawNumbers: An array of raw number strings.
-    - Parameter region: ISO 639 compliant region code.
-    - Returns: An array of valid PhoneNumber objects.
-    */
+    /// Parse function for an array of number strings. Optimised for performance. Parse failures are ignored in the resulting array
+    ///
+    /// - parameter numberStrings: array of raw number strings.
+    /// - parameter region:        ISO 639 compliant region code.
+    ///
+    /// - returns: array of PhoneNumber objects.
     public func parse(numberStrings: [String], withRegion region: String = PhoneNumberKit.defaultRegionCode()) -> [PhoneNumber] {
         return parseManager.parseMultiple(numberStrings, region: region)
     }
 
     
-    public func validate(phoneNumber: PhoneNumber) -> Bool {
+    /// Performs a strong validation on a PhoneNumber object by checking if it is of a known type.
+    ///
+    /// - parameter phoneNumber: PhoneNumber object
+    ///
+    /// - returns: whether or not the number is valid
+    public func isValid(phoneNumber: PhoneNumber) -> Bool {
         let type = self.parser.checkNumberType(phoneNumber)
         return (type != .unknown)
     }
     
-    public func type(forPhoneNumber phoneNumber: PhoneNumber) -> PhoneNumberType {
+    
+    /// Determine the type of a given phone number.
+    ///
+    /// - parameter phoneNumber: PhoneNumber object.
+    ///
+    /// - returns: PhoneNumberType enum.
+    public func getType(of phoneNumber: PhoneNumber) -> PhoneNumberType {
         let type = self.parser.checkNumberType(phoneNumber)
         return type
     }
-
 
 
     // MARK: Country and region code
@@ -70,7 +86,7 @@ public class PhoneNumberKit: NSObject {
     
     /**
     Get an array of ISO 639 compliant region codes corresponding to a given country code.
-    - Parameter code: An international country code (e.g 44 for the UK).
+    - Parameter countryCode: An international country code (e.g 44 for the UK).
     - Returns: An optional array of ISO 639 compliant region codes.
     */
     public func countries(forCountryCode countryCode: UInt64) -> [String]? {
@@ -80,7 +96,7 @@ public class PhoneNumberKit: NSObject {
     
     /**
     Get an main ISO 639 compliant region code for a given country code.
-    - Parameter code: An international country code (e.g 1 for the US).
+    - Parameter countryCode: An international country code (e.g 1 for the US).
     - Returns: A ISO 639 compliant region code string.
     */
     public func mainCountry(forCountryCode countryCode: UInt64) -> String? {
@@ -90,7 +106,7 @@ public class PhoneNumberKit: NSObject {
 
     /**
     Get the region code for the given phone number
-    - Parameter number: The phone number
+    - Parameter phoneNumber: The phone number
     - Returns: Region code, eg "US", or nil if the region cannot be determined
     */
     public func regionCode(forPhoneNumber phoneNumber: PhoneNumber) -> String? {
