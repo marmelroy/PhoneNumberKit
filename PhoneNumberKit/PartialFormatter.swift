@@ -140,8 +140,8 @@ public class PartialFormatter {
     internal func isNanpaNumberWithNationalPrefix(_ rawNumber: String) -> Bool {
         guard currentMetadata?.countryCode == 1 && rawNumber.characters.count > 1 else { return false }
         
-        let firstCharacter = rawNumber.characters.first
-        let secondCharacter = rawNumber.characters[rawNumber.characters.index(rawNumber.characters.startIndex, offsetBy: 1)]
+        let firstCharacter: String = String(describing: rawNumber.characters.first)
+        let secondCharacter: String = String(describing: rawNumber.characters[rawNumber.characters.index(rawNumber.characters.startIndex, offsetBy: 1)])
         return (firstCharacter == "1" && secondCharacter != "0" && secondCharacter != "1")
     }
     
