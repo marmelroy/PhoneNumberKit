@@ -20,7 +20,7 @@ public class PhoneNumberKit: NSObject {
     
     // MARK: Lifecycle
     
-    override init() {
+    public override init() {
         self.parseManager = ParseManager(metadataManager: metadataManager, regexManager: regexManager)
     }
 
