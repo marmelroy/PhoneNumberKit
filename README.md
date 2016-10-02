@@ -29,13 +29,15 @@ Import PhoneNumberKit at the top of the Swift file that will interact with a pho
 import PhoneNumberKit
 ```
 
-All of your interactions with PhoneNumberKit happen through a PhoneNumberKit object. The first step you should take is to allocate one. It's up to you to control it's lifecycle and you should dispose of it when you are done interacting with phone numbers.
+All of your interactions with PhoneNumberKit happen through a PhoneNumberKit object. The first step you should take is to allocate one.
+
+It's up to you to control its lifecycle, you should reuse it as necessary and dispose of it when you are done.
 
 ```swift
 let phoneNumberKit = PhoneNumberKit()
 ```
 
-To parse a string, initialize a PhoneNumber object and supply the string as the rawNumber. The region code is automatically computed but can be overridden if needed. A PhoneNumber object will not be created if the number is invalid or if an error occured in the parsing and the function will throw.
+To parse a string, initialize a PhoneNumber object and supply the string as the rawNumber. The region code is automatically computed but can be overridden if needed. A PhoneNumber object will not be created if the number is invalid or if an error occurred in the parsing and the function will throw.
 ```swift
 do {
     let phoneNumber = try phoneNumberKit.parse("+33 6 89 017383")
@@ -46,7 +48,7 @@ catch {
 }
 ```
 
-If you need to parse and validate a large amount of numbers at once, PhoneNumberKit has a special, lightning fast array parsing functon. The default region code is automatically computed but can be overridden if needed. Invalid numbers are ignored in the resulting array.
+If you need to parse and validate a large amount of numbers at once, PhoneNumberKit has a special, lightning fast array parsing function. The default region code is automatically computed but can be overridden if needed. Invalid numbers are ignored in the resulting array.
 ```swift
 let rawNumberArray = ["0291 12345678", "+49 291 12345678", "04134 1234", "09123 12345"]
 let phoneNumbers = phoneNumberKit.parse(rawNumberArray)
@@ -81,7 +83,7 @@ let textField = PhoneNumberTextField()
 PartialFormatter().formatPartial("+336895555") // +33 6 89 55 55
 ```
 
-You can also query countries for a dialing code or the dailing code for a given country
+You can also query countries for a dialing code or the dialing code for a given country
 ```swift
 phoneNumberKit.countries(withCode: 33)
 phoneNumberKit.countryCode(for: "FR")
