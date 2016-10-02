@@ -30,7 +30,7 @@ class ParseManager {
     - Parameter numberString: String to be parsed to phone number struct.
     - Parameter region: ISO 639 compliant region code.
     */
-    func parsePhoneNumber(_ numberString: String, withRegion region: String) throws -> PhoneNumber {
+    func parse(_ numberString: String, withRegion region: String) throws -> PhoneNumber {
         guard let metadataManager = metadataManager, let regexManager = regexManager else { throw PhoneNumberError.generalError }
         // Make sure region is in uppercase so that it matches metadata (1)
         let region = region.uppercased()
@@ -84,7 +84,7 @@ class ParseManager {
         }
         
         // Check if the number if og a known type
-        if let regionCode = getRegionCodeForNumber(nationalNumber: finalNationalNumber, countryCode: countryCode, leadingZero: leadingZero), let foundMetadata = metadataManager.territoriesByCountry[regionCode] {
+        if let regionCode = getRegionCode(of: finalNationalNumber, countryCode: countryCode, leadingZero: leadingZero), let foundMetadata = metadataManager.territoriesByCountry[regionCode] {
             regionMetadata = foundMetadata
         }
     
@@ -116,9 +116,9 @@ class ParseManager {
         }
         for (index, numberString) in numberStrings.enumerated() {
             let parseTask = parseOperation(numberString, withRegion:region)
-            parseTask.whenFinished { operation in
+            parseTask.whenFinished { [weak self] operation in
                 if let phoneNumber = operation.output.value {
-                    self.multiParseArray.append(phoneNumber)
+                    self?.multiParseArray.append(phoneNumber)
                 }
             }
             operationArray.append(parseTask)
@@ -142,14 +142,14 @@ class ParseManager {
     func parseOperation(_ numberString: String, withRegion region: String) -> ParseOperation<PhoneNumber> {
         let operation = ParseOperation<PhoneNumber>()
         operation.onStart { asyncOp in
-            let phoneNumber = try self.parsePhoneNumber(numberString, withRegion: region)
+            let phoneNumber = try self.parse(numberString, withRegion: region)
             asyncOp.finish(with: phoneNumber)
         }
         return operation
     }
     
     func checkNumberType(_ phoneNumber: PhoneNumber) -> PhoneNumberType {
-        guard let region = self.getRegionCodeForNumber(nationalNumber: phoneNumber.nationalNumber, countryCode: phoneNumber.countryCode, leadingZero: phoneNumber.leadingZero) else {
+        guard let region = self.getRegionCode(of: phoneNumber.nationalNumber, countryCode: phoneNumber.countryCode, leadingZero: phoneNumber.leadingZero) else {
             return .unknown
         }
         guard let metadata = metadataManager?.territoriesByCountry[region] else {
@@ -158,7 +158,7 @@ class ParseManager {
         return parser.checkNumberType(String(phoneNumber.nationalNumber), metadata: metadata, leadingZero: phoneNumber.leadingZero)
     }
     
-    func getRegionCodeForNumber(nationalNumber: UInt64, countryCode: UInt64, leadingZero: Bool) -> String? {
+    func getRegionCode(of nationalNumber: UInt64, countryCode: UInt64, leadingZero: Bool) -> String? {
         guard let regexManager = regexManager, let metadataManager = metadataManager else { return nil }
 
         let regions = metadataManager.territories.filter { $0.countryCode == countryCode }

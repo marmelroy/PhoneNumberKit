@@ -33,7 +33,7 @@ public class PhoneNumberKit: NSObject {
     ///
     /// - returns: PhoneNumber object.
     public func parse(_ numberString: String, withRegion region: String = PhoneNumberKit.defaultRegionCode()) throws -> PhoneNumber {
-        return try parseManager.parsePhoneNumber(numberString, withRegion: region)
+        return try parseManager.parse(numberString, withRegion: region)
     }
     
     /// Parses an array of number strings. Optimised for performance. Invalid numbers are ignored in the resulting array
@@ -120,7 +120,7 @@ public class PhoneNumberKit: NSObject {
     ///
     /// - returns: Region code, eg "US", or nil if the region cannot be determined.
     public func getRegionCode(of phoneNumber: PhoneNumber) -> String? {
-        return parseManager.getRegionCodeForNumber(nationalNumber: phoneNumber.nationalNumber, countryCode: phoneNumber.countryCode, leadingZero: phoneNumber.leadingZero)
+        return parseManager.getRegionCode(of: phoneNumber.nationalNumber, countryCode: phoneNumber.countryCode, leadingZero: phoneNumber.leadingZero)
     }
     
     // MARK: Class functions
