@@ -14,9 +14,12 @@ import PhoneNumberKit
 /// Testing partial formatter. Goal is to replicate formatting behaviour of Apple's dialer.
 class PartialFormatterTests: XCTestCase {
     
+    let phoneNumberKit = PhoneNumberKit()
+
+    
     // +33689555555
     func testFrenchNumberFromFrenchRegion()  {
-        let partialFormatter = PartialFormatter(defaultRegion: "FR")
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "FR")
         var testNumber = "+"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+")
         testNumber = "+3"
@@ -44,7 +47,7 @@ class PartialFormatterTests: XCTestCase {
     }
     
     func testFrenchNumberIDDFromFrenchRegion()  {
-        let partialFormatter = PartialFormatter(defaultRegion: "FR")
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "FR")
         var testNumber = "0"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "0")
         testNumber = "00"
@@ -76,7 +79,7 @@ class PartialFormatterTests: XCTestCase {
     // 268 464 1234
     // Test for number that is not the country code's main country
     func testAntiguaNumber() {
-        let partialFormatter = PartialFormatter(defaultRegion: "AG")
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "AG")
         var number = "2"
         XCTAssertEqual(partialFormatter.formatPartial(number), "2")
         number = "26"
@@ -100,7 +103,7 @@ class PartialFormatterTests: XCTestCase {
     }
 
     func testFrenchNumberFromAmericanRegion()  {
-        let partialFormatter = PartialFormatter(defaultRegion: "US")
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "US")
         var testNumber = "+"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+")
         testNumber = "+3"
@@ -128,7 +131,7 @@ class PartialFormatterTests: XCTestCase {
     }
     
     func testFrenchNumberIDDFromAmericanRegion()  {
-        let partialFormatter = PartialFormatter(defaultRegion: "US")
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "US")
         var testNumber = "0"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "0")
         testNumber = "01"
@@ -161,14 +164,14 @@ class PartialFormatterTests: XCTestCase {
 
     
     func testInvalidNumberNotANumber() {
-        let partialFormatter = PartialFormatter(defaultRegion: "US")
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "US")
         let testNumber = "ae4c08c6-be33-40ef-a417-e5166e307b5e"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber),  "ae4c08c6-be33-40ef-a417-e5166e307b5e")
     }
     
     // +390549555555
     func testItalianLeadingZeroFromUS()  {
-        let partialFormatter = PartialFormatter(defaultRegion: "US")
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "US")
         var testNumber = "+"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+")
         testNumber = "+3"
@@ -199,7 +202,7 @@ class PartialFormatterTests: XCTestCase {
     }
     
     func testFrenchNumberLocal()  {
-        let partialFormatter = PartialFormatter(defaultRegion: "FR")
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "FR")
         var testNumber = "0"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "0")
         testNumber = "06"
@@ -223,7 +226,7 @@ class PartialFormatterTests: XCTestCase {
     }
 
     func testUSTollFreeNumber() {
-        let partialFormatter = PartialFormatter(defaultRegion: "US")
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "US")
         var testNumber = "8"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "8")
         testNumber = "80"
@@ -248,7 +251,7 @@ class PartialFormatterTests: XCTestCase {
     
     // 07739555555
     func testUKMobileNumber() {
-        let partialFormatter = PartialFormatter(defaultRegion: "GB")
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "GB")
         var testNumber = "0"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "0")
         testNumber = "07"
@@ -275,22 +278,22 @@ class PartialFormatterTests: XCTestCase {
     
     // MARK: region prediction
     func testMinimalFrenchNumber() {
-        let partialFormatter = PartialFormatter(defaultRegion: "US")
-        partialFormatter.formatPartial("+33")
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "US")
+        _ = partialFormatter.formatPartial("+33")
         XCTAssertEqual(partialFormatter.currentRegion, "FR")
     }
     
     func testMinimalUSNumberFromFrance() {
-        let partialFormatter = PartialFormatter(defaultRegion: "FR")
-        partialFormatter.formatPartial("+1")
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "FR")
+        _ = partialFormatter.formatPartial("+1")
         XCTAssertEqual(partialFormatter.currentRegion, "US")
     }
     
     func testRegionResetsWithEachCallToFormatPartial() {
-        let partialFormatter = PartialFormatter(defaultRegion: "DE")
-        partialFormatter.formatPartial("+1 212 555 1212")
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "DE")
+        _ = partialFormatter.formatPartial("+1 212 555 1212")
         XCTAssertEqual(partialFormatter.currentRegion, "US")
-        partialFormatter.formatPartial("invalid raw number")
+        _ = partialFormatter.formatPartial("invalid raw number")
         XCTAssertEqual(partialFormatter.currentRegion, "DE")
     }
 }

@@ -12,8 +12,6 @@ import ContactsUI
 import PhoneNumberKit
 
 class ViewController: UIViewController, CNContactPickerDelegate {
-
-    let phoneNumberKit = PhoneNumberKit()
     
     @IBOutlet weak var textField: PhoneNumberTextField!
     
