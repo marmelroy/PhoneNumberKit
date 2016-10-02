@@ -7,7 +7,7 @@
 Swift 3.0 framework for parsing, formatting and validating international phone numbers.
 Inspired by Google's libphonenumber.
 
-[Migrating from PhoneNumberKit 0.x? See the migration guide.](https://github.com/marmelroy/PhoneNumberKit/Documentation/OXMIGRATIONGUIDE.md)  
+[Migrating from PhoneNumberKit 0.x? See the migration guide.](https://github.com/marmelroy/PhoneNumberKit/blob/master/Documentation/OXMIGRATIONGUIDE.md)  
 ## Features
 
               |  Features
