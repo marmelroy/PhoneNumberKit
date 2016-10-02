@@ -33,13 +33,13 @@ Pod::Spec.new do |s|
   s.frameworks = 'CoreTelephony'
 
   s.ios.deployment_target = '8.0'
-  s.osx.deployment_target = '10.9'
+  s.osx.deployment_target = '10.10'
   s.tvos.deployment_target = '9.0'
   s.watchos.deployment_target = '2.0'
 
   s.subspec 'PhoneNumberKitCore' do |core|
     core.ios.deployment_target = '8.0'
-    core.osx.deployment_target = '10.9'
+    core.osx.deployment_target = '10.10'
     core.tvos.deployment_target = '9.0'
     core.watchos.deployment_target = '2.0'
     core.source_files = "PhoneNumberKit/*.{swift}"
