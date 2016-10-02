@@ -31,3 +31,8 @@ DerivedData
 # Carthage/Checkouts
 
 Carthage/Build
+PhoneNumberKit/Resources/.DS_Store
+examples/PhoneBook/.DS_Store
+examples/AsYouType/.DS_Store
+examples/.DS_Store
+.DS_Store
