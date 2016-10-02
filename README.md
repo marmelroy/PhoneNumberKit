@@ -63,9 +63,9 @@ phoneNumber.type // e.g Mobile or Fixed
 
 Formatting a PhoneNumber object into a string is also very easy
 ```swift
-phoneNumberKit.format(phoneNumber, toFormat: .e164) // +61236618300
-phoneNumberKit.format(phoneNumber, toFormat: .international) // +61 2 3661 8300
-phoneNumberKit.format(phoneNumber, toFormat: .national) // (02) 3661 8300
+phoneNumberKit.format(phoneNumber, toType: .e164) // +61236618300
+phoneNumberKit.format(phoneNumber, toType: .international) // +61 2 3661 8300
+phoneNumberKit.format(phoneNumber, toType: .national) // (02) 3661 8300
 ```
 
 To use the AsYouTypeFormatter, just replace your UITextField with a PhoneNumberTextField (if you are using Interface Builder make sure the module field is set to PhoneNumberKit).
