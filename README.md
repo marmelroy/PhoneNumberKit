@@ -7,6 +7,7 @@
 Swift 3.0 framework for parsing, formatting and validating international phone numbers.
 Inspired by Google's libphonenumber.
 
+[Migrating from PhoneNumberKit 0.x? See the migration guide.](https://github.com/marmelroy/PhoneNumberKit/Documentation/OXMIGRATIONGUIDE.md)  
 ## Features
 
               |  Features
@@ -28,13 +29,13 @@ Import PhoneNumberKit at the top of the Swift file that will interact with a pho
 import PhoneNumberKit
 ```
 
-All of your interactions with PhoneNumberKit happen through a PhoneNumberKit object. The first step you should take is to allocate one. It's up to you to control it's lifecycle and you should dispose of it when you are done interacting with phone numbers. 
+All of your interactions with PhoneNumberKit happen through a PhoneNumberKit object. The first step you should take is to allocate one. It's up to you to control it's lifecycle and you should dispose of it when you are done interacting with phone numbers.
 
 ```swift
 let phoneNumberKit = PhoneNumberKit()
 ```
 
-To parse a string, initialize a PhoneNumber object and supply the string as the rawNumber. The region code is automatically computed but can be overridden if needed. A PhoneNumber object will not be created if the number is invalid or if an error occured in the parsing and the function will throw. 
+To parse a string, initialize a PhoneNumber object and supply the string as the rawNumber. The region code is automatically computed but can be overridden if needed. A PhoneNumber object will not be created if the number is invalid or if an error occured in the parsing and the function will throw.
 ```swift
 do {
     let phoneNumber = try phoneNumberKit.parse("+33 6 89 017383")
