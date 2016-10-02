@@ -17,13 +17,13 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     /// Override region to set a custom region. Automatically uses the default region code.
     public var defaultRegion = PhoneNumberKit.defaultRegionCode() {
         didSet {
-            partialFormatter?.defaultRegion = defaultRegion
+            partialFormatter.defaultRegion = defaultRegion
         }
     }
     
     public var withPrefix: Bool = true {
         didSet {
-            partialFormatter?.withPrefix = withPrefix
+            partialFormatter.withPrefix = withPrefix
             if withPrefix == false {
                 self.keyboardType = UIKeyboardType.numberPad
             }
@@ -32,14 +32,14 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             }
         }
     }
-
     
-    var partialFormatter: PartialFormatter?
     
-    let nonNumericSet: CharacterSet = {
-        var mutableSet = (CharacterSet.decimalDigits.inverted as NSCharacterSet).mutableCopy() as! NSMutableCharacterSet
-        mutableSet.removeCharacters(in: PhoneNumberConstants.plusChars)
-        return mutableSet as CharacterSet
+    let partialFormatter: PartialFormatter
+    
+    let nonNumericSet: NSCharacterSet = {
+        var mutableSet = NSMutableCharacterSet.decimalDigit().inverted
+        mutableSet.remove(charactersIn: PhoneNumberConstants.plusChars)
+        return mutableSet as NSCharacterSet
     }()
     
     weak private var _delegate: UITextFieldDelegate?
@@ -54,40 +54,41 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
     
     //MARK: Status
-
-    public var currentRegion: String? {
+    
+    public var currentRegion: String {
         get {
-            return partialFormatter?.currentRegion
+            return partialFormatter.currentRegion
         }
     }
-//    public var isValidNumber: Bool {
-//        get {
-//            let rawNumber = self.text ?? String()
-//            do {
-//                let phoneNumber = try phoneNumberKit.parse(rawNumber: rawNumber, region: currentRegion)
-//                return phoneNumber.isValidNumber
-//            } catch {
-//                return false
-//            }
-//        }
-//    }
+    public var isValidNumber: Bool {
+        get {
+            let rawNumber = self.text ?? String()
+            do {
+                let _ = try phoneNumberKit.parse(rawNumber, withRegion: currentRegion)
+                return true
+            } catch {
+                return false
+            }
+        }
+    }
     
-     //MARK: Lifecycle
+    //MARK: Lifecycle
     
     /**
-    Init with frame
-    
-    - parameter frame: UITextfield F
-    
-    - returns: UITextfield
-    */
+     Init with frame
+     
+     - parameter frame: UITextfield F
+     
+     - returns: UITextfield
+     */
     override public init(frame:CGRect)
     {
+        self.partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: defaultRegion, withPrefix: withPrefix)
         super.init(frame:frame)
         self.setup()
     }
     
-     /**
+    /**
      Init with coder
      
      - parameter aDecoder: decoder
@@ -95,23 +96,23 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
      - returns: UITextfield
      */
     required public init(coder aDecoder: NSCoder) {
+        self.partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: defaultRegion, withPrefix: withPrefix)
         super.init(coder: aDecoder)!
         self.setup()
     }
     
     func setup(){
-        self.partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: PhoneNumberKit.defaultRegionCode(), withPrefix: withPrefix)
         self.autocorrectionType = .no
         self.keyboardType = UIKeyboardType.phonePad
         super.delegate = self
     }
-
+    
     
     // MARK: Phone number formatting
     
     /**
-    *  To keep the cursor position, we find the character immediately after the cursor and count the number of times it repeats in the remaining string as this will remain constant in every kind of editing.
-    */
+     *  To keep the cursor position, we find the character immediately after the cursor and count the number of times it repeats in the remaining string as this will remain constant in every kind of editing.
+     */
     
     internal struct CursorPosition {
         let numberAfterCursor: String
@@ -129,11 +130,11 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         // Look for the next valid number after the cursor, when found return a CursorPosition struct
         for i in cursorEnd ..< textAsNSString.length  {
             let cursorRange = NSMakeRange(i, 1)
-            let candidateNumberAfterCursor = textAsNSString.substring(with: cursorRange)
-            if candidateNumberAfterCursor.rangeOfCharacter(from: nonNumericSet) != nil {
+            let candidateNumberAfterCursor: NSString = textAsNSString.substring(with: cursorRange) as NSString
+            if (candidateNumberAfterCursor.rangeOfCharacter(from: nonNumericSet as CharacterSet).location == NSNotFound) {
                 for j in cursorRange.location ..< textAsNSString.length  {
                     let candidateCharacter = textAsNSString.substring(with: NSMakeRange(j, 1))
-                    if candidateCharacter == candidateNumberAfterCursor {
+                    if candidateCharacter == candidateNumberAfterCursor as String {
                         repetitionCountFromEnd += 1
                     }
                 }
@@ -144,7 +145,7 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
     
     // Finds position of previous cursor in new formatted text
-    internal func selectionRangeForNumberReplacement(_ textField: UITextField, formattedText: String) -> NSRange? {
+    internal func selectionRangeForNumberReplacement(textField: UITextField, formattedText: String) -> NSRange? {
         let textAsNSString = formattedText as NSString
         var countFromEnd = 0
         guard let cursorPosition = extractCursorPosition() else {
@@ -161,7 +162,7 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
                 }
             }
         }
-
+        
         return nil
     }
     
@@ -169,25 +170,26 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         guard let text = text else {
             return false
         }
-
+        
         // allow delegate to intervene
-        guard _delegate?.textField?(textField, shouldChangeCharactersIn: range, replacementString: string) ?? true else {
+        guard _delegate?.textField!(textField, shouldChangeCharactersIn: range, replacementString: string) ?? true else {
             return false
         }
-
+        
         let textAsNSString = text as NSString
         let changedRange = textAsNSString.substring(with: range) as NSString
         let modifiedTextField = textAsNSString.replacingCharacters(in: range, with: string)
+        let formattedNationalNumber = partialFormatter.formatPartial(modifiedTextField as String)
         var selectedTextRange: NSRange?
         
-        let nonNumericRange = (changedRange.rangeOfCharacter(from: nonNumericSet).location != NSNotFound)
+        let nonNumericRange = (changedRange.rangeOfCharacter(from: nonNumericSet as CharacterSet).location != NSNotFound)
         if (range.length == 1 && string.isEmpty && nonNumericRange)
         {
-            selectedTextRange = selectionRangeForNumberReplacement(textField, formattedText: modifiedTextField)
+            selectedTextRange = selectionRangeForNumberReplacement(textField: textField, formattedText: modifiedTextField)
             textField.text = modifiedTextField
         }
-        else if let formattedNationalNumber = partialFormatter?.formatPartial(modifiedTextField as String) {
-            selectedTextRange = selectionRangeForNumberReplacement(textField, formattedText: formattedNationalNumber)
+        else {
+            selectedTextRange = selectionRangeForNumberReplacement(textField: textField, formattedText: formattedNationalNumber)
             textField.text = formattedNationalNumber
         }
         sendActions(for: .editingChanged)
@@ -195,7 +197,7 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             let selectionRange = textField.textRange(from: selectionRangePosition, to: selectionRangePosition)
             textField.selectedTextRange = selectionRange
         }
-
+        
         return false
     }
     
