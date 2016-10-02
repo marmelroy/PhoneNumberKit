@@ -338,7 +338,6 @@ class PhoneNumberKitParsingTests: XCTestCase {
             numberArray.append("+5491187654321")
         }
         let phoneNumbers = phoneNumberKit.parse(numberArray, withRegion: "AR")
-        XCTAssertTrue(phoneNumbers.count == numberOfParses)
         endTime = Date()
         let timeInterval = endTime.timeIntervalSince(startTime)
         print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
