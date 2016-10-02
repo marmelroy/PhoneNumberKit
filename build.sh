@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # **** Update me when new Xcode versions are released! ****
-PLATFORM="platform=iOS Simulator,OS=9.3,name=iPhone 6s"
+PLATFORM="platform=iOS Simulator,OS=10.0,name=iPhone 7"
 SDK="iphonesimulator"
 
 
@@ -19,7 +19,7 @@ MODE="$1"
 
 if [ "$MODE" = "build" ]; then
     echo "Building PhoneNumberKit."
-    xctool \
+    xcodebuild \
         -project PhoneNumberKit.xcodeproj \
         -scheme PhoneNumberKit \
         -sdk "$SDK" \
@@ -35,7 +35,7 @@ if [ "$MODE" = "examples" ]; then
     for example in examples/*/; do
         echo "Building $example."
         pod install --project-directory=$example
-        xctool \
+        xcodebuild \
             -workspace "${example}Sample.xcworkspace" \
             -scheme Sample \
             -sdk "$SDK" \
