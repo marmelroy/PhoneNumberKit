@@ -33,6 +33,30 @@ class PhoneNumberKitParsingTests: XCTestCase {
         }
     }
     
+    func testUSNumberNoPrefix() {
+        do {
+            let phoneNumber1 = try phoneNumberKit.parse("650 253 0000", withRegion: "US")
+            XCTAssertNotNil(phoneNumber1)
+            let phoneNumberInternationalFormat1 = phoneNumberKit.format(phoneNumber1, toType: .international, withPrefix: false)
+            XCTAssertTrue(phoneNumberInternationalFormat1 == "650-253-0000")
+            let phoneNumberNationalFormat1 = phoneNumberKit.format(phoneNumber1, toType: .national, withPrefix: false)
+            XCTAssertTrue(phoneNumberNationalFormat1 == "(650) 253-0000")
+            let phoneNumberE164Format1 = phoneNumberKit.format(phoneNumber1, toType: .e164, withPrefix: false)
+            XCTAssertTrue(phoneNumberE164Format1 == "6502530000")
+            let phoneNumber2 = try phoneNumberKit.parse("800 253 0000")
+            XCTAssertNotNil(phoneNumber2)
+            let phoneNumberInternationalFormat2 = phoneNumberKit.format(phoneNumber2, toType: .international, withPrefix: false)
+            XCTAssertTrue(phoneNumberInternationalFormat2 == "800-253-0000")
+            let phoneNumberNationalFormat2 = phoneNumberKit.format(phoneNumber2, toType: .national, withPrefix: false)
+            XCTAssertTrue(phoneNumberNationalFormat2 == "(800) 253-0000")
+            let phoneNumberE164Format2 = phoneNumberKit.format(phoneNumber2, toType: .e164, withPrefix: false)
+            XCTAssertTrue(phoneNumberE164Format2 == "8002530000")
+        }
+        catch {
+            XCTFail()
+        }
+    }
+    
     func testUSNumber() {
         do {
             let phoneNumber1 = try phoneNumberKit.parse("650 253 0000", withRegion: "US")

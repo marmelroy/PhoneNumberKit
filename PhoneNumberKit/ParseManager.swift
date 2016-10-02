@@ -36,8 +36,8 @@ class ParseManager {
         let region = region.uppercased()
         // Extract number (2)
         var nationalNumber = numberString
-        let matches = try regexManager.phoneDataDetectorMatches(numberString)
-        if let phoneNumber = matches.first?.phoneNumber {
+        let match = try regexManager.phoneDataDetectorMatch(numberString)
+        if let phoneNumber = match.phoneNumber {
             nationalNumber = phoneNumber
         }
         // Strip and extract extension (3)
@@ -51,13 +51,8 @@ class ParseManager {
             countryCode = try parser.extractCountryCode(nationalNumber, nationalNumber: &nationalNumber, metadata: regionMetadata)
         }
         catch {
-            do {
-                let plusRemovedNumberString = regexManager.replaceStringByRegex(PhoneNumberPatterns.leadingPlusCharsPattern, string: nationalNumber as String)
-                countryCode = try parser.extractCountryCode(plusRemovedNumberString, nationalNumber: &nationalNumber, metadata: regionMetadata)
-            }
-            catch {
-                throw PhoneNumberError.invalidCountryCode
-            }
+            let plusRemovedNumberString = regexManager.replaceStringByRegex(PhoneNumberPatterns.leadingPlusCharsPattern, string: nationalNumber as String)
+            countryCode = try parser.extractCountryCode(plusRemovedNumberString, nationalNumber: &nationalNumber, metadata: regionMetadata)
         }
         if countryCode == 0 {
             countryCode = regionMetadata.countryCode
@@ -83,11 +78,10 @@ class ParseManager {
             throw PhoneNumberError.notANumber
         }
         
-        // Check if the number if og a known type
+        // Check if the number if of a known type
         if let regionCode = getRegionCode(of: finalNationalNumber, countryCode: countryCode, leadingZero: leadingZero), let foundMetadata = metadataManager.territoriesByCountry[regionCode] {
             regionMetadata = foundMetadata
         }
-    
         let type = parser.checkNumberType(String(nationalNumber), metadata: regionMetadata, leadingZero: leadingZero)
         if type == .unknown {
         throw PhoneNumberError.unknownType
@@ -147,17 +141,7 @@ class ParseManager {
         }
         return operation
     }
-    
-    func checkNumberType(_ phoneNumber: PhoneNumber) -> PhoneNumberType {
-        guard let region = self.getRegionCode(of: phoneNumber.nationalNumber, countryCode: phoneNumber.countryCode, leadingZero: phoneNumber.leadingZero) else {
-            return .unknown
-        }
-        guard let metadata = metadataManager?.territoriesByCountry[region] else {
-            return .unknown
-        }
-        return parser.checkNumberType(String(phoneNumber.nationalNumber), metadata: metadata, leadingZero: phoneNumber.leadingZero)
-    }
-    
+        
     func getRegionCode(of nationalNumber: UInt64, countryCode: UInt64, leadingZero: Bool) -> String? {
         guard let regexManager = regexManager, let metadataManager = metadataManager else { return nil }
 

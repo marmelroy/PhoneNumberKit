@@ -82,17 +82,17 @@ class RegexManager {
         }
     }
     
-    func phoneDataDetectorMatches(_ string: String) throws -> [NSTextCheckingResult] {
+    func phoneDataDetectorMatch(_ string: String) throws -> NSTextCheckingResult {
         guard let matches = phoneDataDetector?.matches(in: string) else {
             throw PhoneNumberError.generalError
         }
-        if matches.isEmpty == false {
-            return matches
+        if let firstMatch = matches.first {
+            return firstMatch
         }
         else {
             let fallBackMatches = try regexMatches(PhoneNumberPatterns.validPhoneNumberPattern, string: string)
-            if fallBackMatches.isEmpty == false {
-                return fallBackMatches
+            if let firstMatch = fallBackMatches.first {
+                return firstMatch
             }
             else {
                 throw PhoneNumberError.notANumber

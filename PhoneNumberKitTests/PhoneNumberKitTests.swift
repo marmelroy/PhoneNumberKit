@@ -28,6 +28,14 @@ class PhoneNumberKitTests: XCTestCase {
         XCTAssertEqual(countryMetadata?.codeID, "US")
     }
     
+    func testMetadataMainCountryFunction() {
+        let countryName = phoneNumberKit.mainCountry(forCode: 1)!
+        XCTAssertEqual(countryName, "US")
+        let invalidCountry = phoneNumberKit.mainCountry(forCode: 992322)
+        XCTAssertNil(invalidCountry)
+    }
+
+    
     // Invalid american number, GitHub issue #8 by j-pk
     func testInvalidNumberE() {
         do {
