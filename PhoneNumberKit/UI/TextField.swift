@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 /// Custom text field that formats phone numbers
-public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
+open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     
     let phoneNumberKit = PhoneNumberKit()
     
@@ -44,7 +44,7 @@ public class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     
     weak private var _delegate: UITextFieldDelegate?
     
-    override public var delegate: UITextFieldDelegate? {
+    override open var delegate: UITextFieldDelegate? {
         get {
             return _delegate
         }
