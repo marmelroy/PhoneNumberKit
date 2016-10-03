@@ -15,12 +15,12 @@ public class PartialFormatter {
     weak var parser: PhoneNumberParser?
     weak var regexManager: RegexManager?
     
-    convenience init() {
+    public convenience init() {
         let phoneNumberKit = PhoneNumberKit()
         self.init(phoneNumberKit: phoneNumberKit, defaultRegion: PhoneNumberKit.defaultRegionCode())
     }
 
-    convenience init(phoneNumberKit: PhoneNumberKit, defaultRegion: String, withPrefix: Bool = true) {
+    public convenience init(phoneNumberKit: PhoneNumberKit, defaultRegion: String, withPrefix: Bool = true) {
         self.init(regexManager: phoneNumberKit.regexManager, metadataManager: phoneNumberKit.metadataManager, parser: phoneNumberKit.parseManager.parser, defaultRegion: defaultRegion, withPrefix: withPrefix)
     }
     
@@ -34,7 +34,7 @@ public class PartialFormatter {
     }
 
     
-    var defaultRegion: String {
+    public var defaultRegion: String {
         didSet {
             updateMetadataForDefaultRegion()
         }
