@@ -6,7 +6,7 @@ Unfortunately, this means a few breaking changes.
 
 ## The PhoneNumberKit object
 
-To create a simple API, the main object in PhoneNumberKit 0.x was the PhoneNumber object. Number strings were parsed using it's initializer, formatting was done via functions declared in an extension.
+To create a simple API, the main object in PhoneNumberKit 0.x was the PhoneNumber object. Number strings were parsed using its initializer, formatting was done via functions declared in an extension.
 
 The main object of PhoneNumberKit 1.0 is a PhoneNumberKit object. This allows for more granular management of PhoneNumberKit's lifecycle and for immutable PhoneNumber value types.
 
