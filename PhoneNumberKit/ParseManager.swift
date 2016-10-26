@@ -30,7 +30,7 @@ class ParseManager {
     - Parameter numberString: String to be parsed to phone number struct.
     - Parameter region: ISO 639 compliant region code.
     */
-    func parse(_ numberString: String, withRegion region: String) throws -> PhoneNumber {
+    func parse(_ numberString: String, withRegion region: String,_ ignoreType:Bool = false) throws -> PhoneNumber {
         guard let metadataManager = metadataManager, let regexManager = regexManager else { throw PhoneNumberError.generalError }
         // Make sure region is in uppercase so that it matches metadata (1)
         let region = region.uppercased()
@@ -83,8 +83,8 @@ class ParseManager {
             regionMetadata = foundMetadata
         }
         let type = parser.checkNumberType(String(nationalNumber), metadata: regionMetadata, leadingZero: leadingZero)
-        if type == .unknown {
-        throw PhoneNumberError.unknownType
+        if type == .unknown && !ignoreType {
+            throw PhoneNumberError.unknownType
         }
         let phoneNumber = PhoneNumber(numberString: numberString, countryCode: countryCode, leadingZero: leadingZero, nationalNumber: finalNationalNumber, numberExtension: numberExtension, type: type)
         return phoneNumber

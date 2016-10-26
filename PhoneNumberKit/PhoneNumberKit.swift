@@ -36,6 +36,17 @@ public class PhoneNumberKit: NSObject {
         return try parseManager.parse(numberString, withRegion: region)
     }
     
+    /// Parses a number string, used to create PhoneNumber objects. Throws.
+    ///
+    /// - parameter numberString: the raw number string.
+    /// - parameter ignoreType:   Don't do any number type checking
+    /// - parameter region:       ISO 639 compliant region code.
+    ///
+    /// - returns: PhoneNumber object.
+    public func parse(_ numberString: String, ignoreType:Bool, withRegion region: String = PhoneNumberKit.defaultRegionCode()) throws -> PhoneNumber {
+        return try parseManager.parse(numberString, withRegion: region, ignoreType)
+    }
+    
     /// Parses an array of number strings. Optimised for performance. Invalid numbers are ignored in the resulting array
     ///
     /// - parameter numberStrings: array of raw number strings.
