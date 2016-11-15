@@ -11,20 +11,22 @@ import Foundation
 /// Partial formatter
 public class PartialFormatter {
     
+    private let phoneNumberKit: PhoneNumberKit
+
     weak var metadataManager: MetadataManager?
     weak var parser: PhoneNumberParser?
     weak var regexManager: RegexManager?
     
     public convenience init() {
-        let phoneNumberKit = PhoneNumberKit()
-        self.init(phoneNumberKit: phoneNumberKit, defaultRegion: PhoneNumberKit.defaultRegionCode())
+        self.init(defaultRegion: PhoneNumberKit.defaultRegionCode())
     }
 
-    public convenience init(phoneNumberKit: PhoneNumberKit, defaultRegion: String, withPrefix: Bool = true) {
-        self.init(regexManager: phoneNumberKit.regexManager, metadataManager: phoneNumberKit.metadataManager, parser: phoneNumberKit.parseManager.parser, defaultRegion: defaultRegion, withPrefix: withPrefix)
+    public convenience init(phoneNumberKit: PhoneNumberKit = PhoneNumberKit(), defaultRegion: String, withPrefix: Bool = true) {
+        self.init(phoneNumberKit: phoneNumberKit, regexManager: phoneNumberKit.regexManager, metadataManager: phoneNumberKit.metadataManager, parser: phoneNumberKit.parseManager.parser, defaultRegion: defaultRegion, withPrefix: withPrefix)
     }
     
-    init(regexManager: RegexManager, metadataManager: MetadataManager, parser: PhoneNumberParser, defaultRegion: String, withPrefix: Bool = true) {
+    init(phoneNumberKit: PhoneNumberKit, regexManager: RegexManager, metadataManager: MetadataManager, parser: PhoneNumberParser, defaultRegion: String, withPrefix: Bool = true) {
+        self.phoneNumberKit = phoneNumberKit
         self.regexManager = regexManager
         self.metadataManager = metadataManager
         self.parser = parser

@@ -296,5 +296,13 @@ class PartialFormatterTests: XCTestCase {
         _ = partialFormatter.formatPartial("invalid raw number")
         XCTAssertEqual(partialFormatter.currentRegion, "DE")
     }
+
+    // MARK: convenience initializer
+    func testConvenienceInitializerAllowsFormatting() {
+        let partialFormatter = PartialFormatter()
+
+        let testNumber = "8675309"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "867-5309")
+    }
 }
 
