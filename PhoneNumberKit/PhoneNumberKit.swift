@@ -51,11 +51,10 @@ public class PhoneNumberKit: NSObject {
     ///
     /// - parameter numberStrings:               array of raw number strings.
     /// - parameter region:                      ISO 639 compliant region code.
-    /// - Parameter maxConcurrentOperationCount: the max concurrent operation count for the operation queue.
     ///
     /// - returns: array of PhoneNumber objects.
-    public func parse(_ numberStrings: [String], withRegion region: String = PhoneNumberKit.defaultRegionCode(), maxConcurrentOperationCount: Int = 3) -> [PhoneNumber] {
-        return parseManager.parseMultiple(numberStrings, withRegion: region, maxConcurrentOperationCount: maxConcurrentOperationCount)
+    public func parse(_ numberStrings: [String], withRegion region: String = PhoneNumberKit.defaultRegionCode()) -> [PhoneNumber] {
+        return parseManager.parseMultiple(numberStrings, withRegion: region)
     }
     
     // MARK: Formatting

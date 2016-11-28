@@ -96,13 +96,12 @@ class ParseManager {
     Fastest way to parse an array of phone numbers. Uses custom region code.
     - Parameter numberStrings: An array of raw number strings.
     - Parameter region: ISO 639 compliant region code.
-    - Parameter maxConcurrentOperationCount: The max concurrent operation count for the operation queue.
     - Returns: An array of valid PhoneNumber objects.
     */
-    func parseMultiple(_ numberStrings: [String], withRegion region: String, testCallback: (()->())? = nil, maxConcurrentOperationCount: Int) -> [PhoneNumber] {
+    func parseMultiple(_ numberStrings: [String], withRegion region: String, testCallback: (()->())? = nil) -> [PhoneNumber] {
         self.multiParseArray = SynchronizedArray<PhoneNumber>()
         let queue = OperationQueue()
-        queue.maxConcurrentOperationCount = maxConcurrentOperationCount
+        queue.maxConcurrentOperationCount = PhoneNumberConstants.maxConcurrentOperationCount
         var operationArray: [ParseOperation<PhoneNumber>] = []
         let completionOperation = ParseOperation<Bool>()
         completionOperation.onStart { asyncOp in

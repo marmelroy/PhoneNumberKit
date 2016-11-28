@@ -328,7 +328,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
         }
         XCTAssertEqual(number.type, PhoneNumberType.mobile)
     }
-//
+
     func testPerformanceSimple() {
         let numberOfParses = 1000
         let startTime = Date()
@@ -337,7 +337,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
         for _ in 0 ..< numberOfParses {
             numberArray.append("+5491187654321")
         }
-        let phoneNumbers = phoneNumberKit.parse(numberArray, withRegion: "AR")
+        _ = phoneNumberKit.parse(numberArray, withRegion: "AR")
         endTime = Date()
         let timeInterval = endTime.timeIntervalSince(startTime)
         print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
