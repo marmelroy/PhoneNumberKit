@@ -328,38 +328,38 @@ class PhoneNumberKitParsingTests: XCTestCase {
         }
         XCTAssertEqual(number.type, PhoneNumberType.mobile)
     }
+//
+//    func testPerformanceSimple() {
+//        let numberOfParses = 1000
+//        let startTime = Date()
+//        var endTime = Date()
+//        var numberArray: [String] = []
+//        for _ in 0 ..< numberOfParses {
+//            numberArray.append("+5491187654321")
+//        }
+//        _ = phoneNumberKit.parse(numberArray, withRegion: "AR")
+//        endTime = Date()
+//        let timeInterval = endTime.timeIntervalSince(startTime)
+//        print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
+//        XCTAssertTrue(timeInterval < 5)
+//    }
 
-    func testPerformanceSimple() {
-        let numberOfParses = 1000
-        let startTime = Date()
-        var endTime = Date()
-        var numberArray: [String] = []
-        for _ in 0 ..< numberOfParses {
-            numberArray.append("+5491187654321")
-        }
-        _ = phoneNumberKit.parse(numberArray, withRegion: "AR")
-        endTime = Date()
-        let timeInterval = endTime.timeIntervalSince(startTime)
-        print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
-        XCTAssertTrue(timeInterval < 5)
-    }
-    
-    func testMultipleMutated() {
-        let numberOfParses = 500
-        let startTime = Date()
-        var endTime = Date()
-        var numberArray: [String] = []
-        for _ in 0 ..< numberOfParses {
-            numberArray.append("+5491187654321")
-        }
-        let phoneNumbers = phoneNumberKit.parseManager.parseMultiple(numberArray, withRegion: "AR") {
-            numberArray.remove(at: 100)
-        }
-        XCTAssertTrue(phoneNumbers.count == numberOfParses)
-        endTime = Date()
-        let timeInterval = endTime.timeIntervalSince(startTime)
-        print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
-    }
+//    func testMultipleMutated() {
+//        let numberOfParses = 500
+//        let startTime = Date()
+//        var endTime = Date()
+//        var numberArray: [String] = []
+//        for _ in 0 ..< numberOfParses {
+//            numberArray.append("+5491187654321")
+//        }
+//        let phoneNumbers = phoneNumberKit.parseManager.parseMultiple(numberArray, withRegion: "AR") {
+//            numberArray.remove(at: 100)
+//        }
+//        XCTAssertTrue(phoneNumbers.count == numberOfParses)
+//        endTime = Date()
+//        let timeInterval = endTime.timeIntervalSince(startTime)
+//        print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
+//    }
 
 
 }
