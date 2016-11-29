@@ -125,12 +125,12 @@ public class PhoneNumberKit: NSObject {
         return results
     }
     
-    /// Get leading digits for compliant region code
+    /// Get leading digits for an ISO 639 compliant region code.
     ///
     /// - parameter country: ISO 639 compliant region code.
     ///
     /// - returns: leading digits (e.g. 876 for Jamaica).
-    public func getLeadingDigits(for country: String) -> String? {
+    public func leadingDigits(for country: String) -> String? {
         let leadingDigits = metadataManager.filterTerritories(byCountry: country)?.leadingDigits
         return leadingDigits
     }
