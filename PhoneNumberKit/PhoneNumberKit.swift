@@ -66,7 +66,7 @@ public class PhoneNumberKit: NSObject {
             }
             return "+\(phoneNumber.countryCode)\(formattedNationalNumber)"
         } else {
-            let regionMetadata = metadataManager.territoriesByCode[phoneNumber.countryCode]
+            let regionMetadata = metadataManager.mainTerritoryByCode[phoneNumber.countryCode]
             let formattedNationalNumber = formatter.format(phoneNumber: phoneNumber, formatType: formatType, regionMetadata: regionMetadata)
             if formatType == .international && prefix == true {
                 return "+\(phoneNumber.countryCode) \(formattedNationalNumber)"

@@ -62,7 +62,7 @@ class ParseManager {
         nationalNumber = normalizedNationalNumber
         
         // If country code is not default, grab correct metadata (6)
-        if countryCode != regionMetadata.countryCode, let countryMetadata = metadataManager.territoriesByCode[countryCode] {
+        if countryCode != regionMetadata.countryCode, let countryMetadata = metadataManager.mainTerritoryByCode[countryCode] {
             regionMetadata = countryMetadata
         }
         // National Prefix Strip (7)
@@ -78,12 +78,12 @@ class ParseManager {
             throw PhoneNumberError.notANumber
         }
         
-        // Check if the number if of a known type
-        if let regionCode = getRegionCode(of: finalNationalNumber, countryCode: countryCode, leadingZero: leadingZero), let foundMetadata = metadataManager.territoriesByCountry[regionCode] {
-            regionMetadata = foundMetadata
-        }
         var type: PhoneNumberType = .unknown
         if ignoreType == false {
+            // Check if the number if of a known type
+            if let regionCode = getRegionCode(of: finalNationalNumber, countryCode: countryCode, leadingZero: leadingZero), let foundMetadata = metadataManager.territoriesByCountry[regionCode] {
+                regionMetadata = foundMetadata
+            }
             type = parser.checkNumberType(String(nationalNumber), metadata: regionMetadata, leadingZero: leadingZero)
             if type == .unknown {
                 throw PhoneNumberError.unknownType
@@ -147,9 +147,8 @@ class ParseManager {
     }
         
     func getRegionCode(of nationalNumber: UInt64, countryCode: UInt64, leadingZero: Bool) -> String? {
-        guard let regexManager = regexManager, let metadataManager = metadataManager else { return nil }
+        guard let regexManager = regexManager, let metadataManager = metadataManager, let regions = metadataManager.territoriesByCode[countryCode] else { return nil }
 
-        let regions = metadataManager.territories.filter { $0.countryCode == countryCode }
         if regions.count == 1 {
             return regions[0].codeID
         }

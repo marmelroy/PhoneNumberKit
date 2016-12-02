@@ -11,9 +11,9 @@ import Foundation
 internal class MetadataManager {
     
     var territories = [MetadataTerritory]()
-    var territoriesByCode = [UInt64: MetadataTerritory]()
+    var territoriesByCode = [UInt64: [MetadataTerritory]]()
+    var mainTerritoryByCode = [UInt64: MetadataTerritory]()
     var territoriesByCountry = [String: MetadataTerritory]()
-    
     
     // MARK: Lifecycle
 
@@ -23,8 +23,11 @@ internal class MetadataManager {
     public init () {
         territories = populateTerritories()
         for item in territories {
-            if territoriesByCode[item.countryCode] == nil || item.mainCountryForCode == true {
-                territoriesByCode[item.countryCode] = item
+            var currentTerritories: [MetadataTerritory] = territoriesByCode[item.countryCode] ?? [MetadataTerritory]()
+            currentTerritories.append(item)
+            territoriesByCode[item.countryCode] = currentTerritories
+            if mainTerritoryByCode[item.countryCode] == nil || item.mainCountryForCode == true {
+                mainTerritoryByCode[item.countryCode] = item
             }
             territoriesByCountry[item.codeID] = item
         }
@@ -65,8 +68,7 @@ internal class MetadataManager {
     ///
     /// - returns: optional array of MetadataTerritory objects.
     internal func filterTerritories(byCode code: UInt64) -> [MetadataTerritory]? {
-        let results = territories.filter { $0.countryCode == code}
-        return results
+        return territoriesByCode[code]
     }
     
     /// Get the MetadataTerritory objects for an ISO 639 compliant region code.
@@ -75,8 +77,7 @@ internal class MetadataManager {
     ///
     /// - returns: A MetadataTerritory object.
     internal func filterTerritories(byCountry country: String) -> MetadataTerritory? {
-        let results = territories.filter { $0.codeID == country.uppercased()}
-        return results.first
+        return territoriesByCountry[country.uppercased()]
     }
     
     /// Get the main MetadataTerritory objects for a given country code.
@@ -85,17 +86,7 @@ internal class MetadataManager {
     ///
     /// - returns: A MetadataTerritory object.
     internal func mainTerritory(forCode code: UInt64) -> MetadataTerritory? {
-        let countryResults = territories.filter { $0.countryCode == code}
-        let mainCountryResults = countryResults.filter { $0.mainCountryForCode == true}
-        if let mainCountry = mainCountryResults.first {
-            return mainCountry
-        }
-        else if let firstCountry = countryResults.first {
-            return firstCountry
-        }
-        else {
-            return nil
-        }
+        return mainTerritoryByCode[code]
     }
     
     
