@@ -30,31 +30,22 @@ public class PhoneNumberKit: NSObject {
     ///
     /// - parameter numberString: the raw number string.
     /// - parameter region:       ISO 639 compliant region code.
+    /// - parameter ignoreType:   Avoids number type checking for faster performance.
     ///
     /// - returns: PhoneNumber object.
-    public func parse(_ numberString: String, withRegion region: String = PhoneNumberKit.defaultRegionCode()) throws -> PhoneNumber {
-        return try parseManager.parse(numberString, withRegion: region)
+    public func parse(_ numberString: String, withRegion region: String = PhoneNumberKit.defaultRegionCode(), ignoreType: Bool = false) throws -> PhoneNumber {
+        return try parseManager.parse(numberString, withRegion: region, ignoreType: ignoreType)
     }
-    
-    /// Parses a number string, used to create PhoneNumber objects. Throws.
-    ///
-    /// - parameter numberString: the raw number string.
-    /// - parameter ignoreType:   Don't do any number type checking
-    /// - parameter region:       ISO 639 compliant region code.
-    ///
-    /// - returns: PhoneNumber object.
-    public func parse(_ numberString: String, ignoreType:Bool, withRegion region: String = PhoneNumberKit.defaultRegionCode()) throws -> PhoneNumber {
-        return try parseManager.parse(numberString, withRegion: region, ignoreType)
-    }
-    
+        
     /// Parses an array of number strings. Optimised for performance. Invalid numbers are ignored in the resulting array
     ///
     /// - parameter numberStrings:               array of raw number strings.
     /// - parameter region:                      ISO 639 compliant region code.
+    /// - parameter ignoreType:   Avoids number type checking for faster performance.
     ///
     /// - returns: array of PhoneNumber objects.
-    public func parse(_ numberStrings: [String], withRegion region: String = PhoneNumberKit.defaultRegionCode()) -> [PhoneNumber] {
-        return parseManager.parseMultiple(numberStrings, withRegion: region)
+    public func parse(_ numberStrings: [String], withRegion region: String = PhoneNumberKit.defaultRegionCode(), ignoreType: Bool = false) -> [PhoneNumber] {
+        return parseManager.parseMultiple(numberStrings, withRegion: region, ignoreType: ignoreType)
     }
     
     // MARK: Formatting

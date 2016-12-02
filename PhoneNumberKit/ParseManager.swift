@@ -30,7 +30,7 @@ class ParseManager {
     - Parameter numberString: String to be parsed to phone number struct.
     - Parameter region: ISO 639 compliant region code.
     */
-    func parse(_ numberString: String, withRegion region: String,_ ignoreType:Bool = false) throws -> PhoneNumber {
+    func parse(_ numberString: String, withRegion region: String, ignoreType: Bool) throws -> PhoneNumber {
         guard let metadataManager = metadataManager, let regexManager = regexManager else { throw PhoneNumberError.generalError }
         // Make sure region is in uppercase so that it matches metadata (1)
         let region = region.uppercased()
@@ -82,9 +82,12 @@ class ParseManager {
         if let regionCode = getRegionCode(of: finalNationalNumber, countryCode: countryCode, leadingZero: leadingZero), let foundMetadata = metadataManager.territoriesByCountry[regionCode] {
             regionMetadata = foundMetadata
         }
-        let type = parser.checkNumberType(String(nationalNumber), metadata: regionMetadata, leadingZero: leadingZero)
-        if type == .unknown && !ignoreType {
-            throw PhoneNumberError.unknownType
+        var type: PhoneNumberType = .unknown
+        if ignoreType == false {
+            type = parser.checkNumberType(String(nationalNumber), metadata: regionMetadata, leadingZero: leadingZero)
+            if type == .unknown {
+                throw PhoneNumberError.unknownType
+            }
         }
         let phoneNumber = PhoneNumber(numberString: numberString, countryCode: countryCode, leadingZero: leadingZero, nationalNumber: finalNationalNumber, numberExtension: numberExtension, type: type)
         return phoneNumber
@@ -98,7 +101,7 @@ class ParseManager {
     - Parameter region: ISO 639 compliant region code.
     - Returns: An array of valid PhoneNumber objects.
     */
-    func parseMultiple(_ numberStrings: [String], withRegion region: String, testCallback: (()->())? = nil) -> [PhoneNumber] {
+    func parseMultiple(_ numberStrings: [String], withRegion region: String, ignoreType: Bool, testCallback: (()->())? = nil) -> [PhoneNumber] {
         self.multiParseArray = SynchronizedArray<PhoneNumber>()
         let queue = OperationQueue()
         queue.maxConcurrentOperationCount = PhoneNumberConstants.maxConcurrentOperationCount
@@ -110,7 +113,7 @@ class ParseManager {
         completionOperation.whenFinished { asyncOp in
         }
         for (index, numberString) in numberStrings.enumerated() {
-            let parseTask = parseOperation(numberString, withRegion:region)
+            let parseTask = parseOperation(numberString, withRegion:region, ignoreType: ignoreType)
             parseTask.whenFinished { [weak self] operation in
                 if let phoneNumber = operation.output.value {
                     self?.multiParseArray.append(phoneNumber)
@@ -134,10 +137,10 @@ class ParseManager {
      - Parameter region: ISO 639 compliant region code.
      - Returns: Parse operation with an implementation handler and no completion handler.
      */
-    func parseOperation(_ numberString: String, withRegion region: String) -> ParseOperation<PhoneNumber> {
+    func parseOperation(_ numberString: String, withRegion region: String, ignoreType: Bool) -> ParseOperation<PhoneNumber> {
         let operation = ParseOperation<PhoneNumber>()
         operation.onStart { asyncOp in
-            let phoneNumber = try self.parse(numberString, withRegion: region)
+            let phoneNumber = try self.parse(numberString, withRegion: region, ignoreType: ignoreType)
             asyncOp.finish(with: phoneNumber)
         }
         return operation
