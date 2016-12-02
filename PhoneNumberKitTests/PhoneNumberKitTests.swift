@@ -347,7 +347,7 @@ class PhoneNumberKitTests: XCTestCase {
     //  Test countries for code function
     func testCountriesForCodeInvalid() {
         let phoneNumberKit = PhoneNumberKit()
-        XCTAssertEqual(phoneNumberKit.countries(withCode: 424242)?.count, 0)
+        XCTAssertEqual(phoneNumberKit.countries(withCode: 424242)?.count, nil)
     }
 
     //  Test region code for number function
