@@ -103,49 +103,28 @@ class ParseManager {
     */
     func parseMultiple(_ numberStrings: [String], withRegion region: String, ignoreType: Bool, testCallback: (()->())? = nil) -> [PhoneNumber] {
         self.multiParseArray = SynchronizedArray<PhoneNumber>()
-        let queue = OperationQueue()
-        queue.maxConcurrentOperationCount = PhoneNumberConstants.maxConcurrentOperationCount
-        var operationArray: [ParseOperation<PhoneNumber>] = []
-        let completionOperation = ParseOperation<Bool>()
-        completionOperation.onStart { asyncOp in
-            asyncOp.finish(with: true)
-        }
-        completionOperation.whenFinished { asyncOp in
-        }
+        let group = DispatchGroup()
+        let queue = DispatchQueue(label: "com.phonenumberkit.multipleparse", qos: .default)
         for (index, numberString) in numberStrings.enumerated() {
-            let parseTask = parseOperation(numberString, withRegion:region, ignoreType: ignoreType)
-            parseTask.whenFinished { [weak self] operation in
-                if let phoneNumber = operation.output.value {
-                    self?.multiParseArray.append(phoneNumber)
-                }
-            }
-            operationArray.append(parseTask)
-            completionOperation.addDependency(parseTask)
+            group.enter()
+            queue.async(group: group, execute: {
+                [weak self] in
+                do {
+                    if let phoneNumebr = try self?.parse(numberString, withRegion: region, ignoreType: ignoreType) {
+                        self?.multiParseArray.append(phoneNumebr)
+                    }
+                } catch {}
+                group.leave()
+            })
             if index == numberStrings.count/2 {
                 testCallback?()
             }
         }
-        queue.addOperations(operationArray, waitUntilFinished: false)
-        queue.addOperations([completionOperation], waitUntilFinished: true)
+        group.wait()
         let localMultiParseArray = self.multiParseArray
         return localMultiParseArray.array
     }
-    
-    /**
-     Single parsing task, used as an element of parseMultiple.
-     - Parameter rawNumbers: An array of raw number strings.
-     - Parameter region: ISO 639 compliant region code.
-     - Returns: Parse operation with an implementation handler and no completion handler.
-     */
-    func parseOperation(_ numberString: String, withRegion region: String, ignoreType: Bool) -> ParseOperation<PhoneNumber> {
-        let operation = ParseOperation<PhoneNumber>()
-        operation.onStart { asyncOp in
-            let phoneNumber = try self.parse(numberString, withRegion: region, ignoreType: ignoreType)
-            asyncOp.finish(with: phoneNumber)
-        }
-        return operation
-    }
-        
+            
     func getRegionCode(of nationalNumber: UInt64, countryCode: UInt64, leadingZero: Bool) -> String? {
         guard let regexManager = regexManager, let metadataManager = metadataManager, let regions = metadataManager.territoriesByCode[countryCode] else { return nil }
 
