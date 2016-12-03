@@ -37,7 +37,7 @@ It's up to you to control its lifecycle, you should reuse it as necessary and di
 let phoneNumberKit = PhoneNumberKit()
 ```
 
-To parse a string, use the parse function. The region code is automatically computed but can be overridden if needed. PhoneNumebrKit automatically does a hard type validation to ensure that the object created is valid. This can be quite costly performance-wise and can be turned off if needed.
+To parse a string, use the parse function. The region code is automatically computed but can be overridden if needed. PhoneNumberKit automatically does a hard type validation to ensure that the object created is valid, this can be quite costly performance-wise and can be turned off if needed.
 ```swift
 do {
     let phoneNumber = try phoneNumberKit.parse("+33 6 89 017383")
@@ -48,7 +48,7 @@ catch {
 }
 ```
 
-If you need to parse and validate a large amount of numbers at once, PhoneNumberKit has a special, lightning fast array parsing function. The default region code is automatically computed but can be overridden if needed. Here you can also ignore type validations if performance is key. Invalid numbers are ignored in the resulting array.
+If you need to parse and validate a large amount of numbers at once, PhoneNumberKit has a special, lightning fast array parsing function. The default region code is automatically computed but can be overridden if needed. Here you can also ignore hard type validation if it is not necessary. Invalid numbers are ignored in the resulting array.
 ```swift
 let rawNumberArray = ["0291 12345678", "+49 291 12345678", "04134 1234", "09123 12345"]
 let phoneNumbers = phoneNumberKit.parse(rawNumberArray)
