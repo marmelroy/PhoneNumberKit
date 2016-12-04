@@ -22,13 +22,12 @@ class ParseManager {
         self.parser = PhoneNumberParser(regex: regexManager, metadata: metadataManager)
         self.regexManager = regexManager
     }
-    
-    private var multiParseArray = SynchronizedArray<PhoneNumber>()
-    
+
     /**
     Parse a string into a phone number object with a custom region. Can throw.
     - Parameter numberString: String to be parsed to phone number struct.
     - Parameter region: ISO 639 compliant region code.
+    - parameter ignoreType:   Avoids number type checking for faster performance.
     */
     func parse(_ numberString: String, withRegion region: String, ignoreType: Bool) throws -> PhoneNumber {
         guard let metadataManager = metadataManager, let regexManager = regexManager else { throw PhoneNumberError.generalError }
@@ -77,10 +76,10 @@ class ParseManager {
         guard let finalNationalNumber = UInt64(nationalNumber) else{
             throw PhoneNumberError.notANumber
         }
-        
+
+        // Check if the number if of a known type (10)
         var type: PhoneNumberType = .unknown
         if ignoreType == false {
-            // Check if the number if of a known type
             if let regionCode = getRegionCode(of: finalNationalNumber, countryCode: countryCode, leadingZero: leadingZero), let foundMetadata = metadataManager.territoriesByCountry[regionCode] {
                 regionMetadata = foundMetadata
             }
@@ -89,6 +88,7 @@ class ParseManager {
                 throw PhoneNumberError.unknownType
             }
         }
+
         let phoneNumber = PhoneNumber(numberString: numberString, countryCode: countryCode, leadingZero: leadingZero, nationalNumber: finalNationalNumber, numberExtension: numberExtension, type: type)
         return phoneNumber
     }
@@ -99,10 +99,11 @@ class ParseManager {
     Fastest way to parse an array of phone numbers. Uses custom region code.
     - Parameter numberStrings: An array of raw number strings.
     - Parameter region: ISO 639 compliant region code.
+    - parameter ignoreType:   Avoids number type checking for faster performance.
     - Returns: An array of valid PhoneNumber objects.
     */
     func parseMultiple(_ numberStrings: [String], withRegion region: String, ignoreType: Bool, testCallback: (()->())? = nil) -> [PhoneNumber] {
-        self.multiParseArray = SynchronizedArray<PhoneNumber>()
+        var multiParseArray = [PhoneNumber]()
         let group = DispatchGroup()
         let queue = DispatchQueue(label: "com.phonenumberkit.multipleparse", qos: .default)
         for (index, numberString) in numberStrings.enumerated() {
@@ -111,7 +112,7 @@ class ParseManager {
                 [weak self] in
                 do {
                     if let phoneNumebr = try self?.parse(numberString, withRegion: region, ignoreType: ignoreType) {
-                        self?.multiParseArray.append(phoneNumebr)
+                        multiParseArray.append(phoneNumebr)
                     }
                 } catch {}
                 group.leave()
@@ -121,8 +122,7 @@ class ParseManager {
             }
         }
         group.wait()
-        let localMultiParseArray = self.multiParseArray
-        return localMultiParseArray.array
+        return multiParseArray
     }
             
     func getRegionCode(of nationalNumber: UInt64, countryCode: UInt64, leadingZero: Bool) -> String? {
@@ -149,17 +149,4 @@ class ParseManager {
         return nil
     }
 
-}
-
-/**
-Thread safe Swift array generic that locks on write.
-*/
-class SynchronizedArray<T> {
-    var array: [T] = []
-    private let accessQueue = DispatchQueue(label: "SynchronizedArrayAccess")
-    func append(_ newElement: T) {
-        self.accessQueue.async {
-            self.array.append(newElement)
-        }
-    }
 }

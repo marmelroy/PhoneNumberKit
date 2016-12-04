@@ -11,25 +11,9 @@ import Foundation
 class RegexManager {
     
     // MARK: Regular expression pool
-        
-    var _regularExpresionPool = [String : NSRegularExpression]()
-    
-    var regularExpresionPool: [String : NSRegularExpression] {
-        var regularExpresionPoolCopy: [String : NSRegularExpression]!
-        concurrentRegexQueue.sync {
-            regularExpresionPoolCopy = self._regularExpresionPool
-        }
-        return regularExpresionPoolCopy
-    }
-    
-    private let concurrentRegexQueue = DispatchQueue(label: "com.phonenumberkit.regexqueue", qos: .default, attributes: .concurrent)
 
-    func addRegularExpressionToPool(regex: NSRegularExpression, pattern: String) {
-        concurrentRegexQueue.async(flags: .barrier) {
-            self._regularExpresionPool[pattern] = regex
-        }
-    }
-    
+    var regularExpresionPool = [String : NSRegularExpression]()
+
     var phoneDataDetector: NSDataDetector? = {
         do {
             let dataDetector = try NSDataDetector(types: NSTextCheckingResult.CheckingType.phoneNumber.rawValue)
@@ -47,7 +31,7 @@ class RegexManager {
     }()
     
     deinit {
-        _regularExpresionPool.removeAll()
+        regularExpresionPool.removeAll()
         phoneDataDetector = nil
     }
 
@@ -61,7 +45,7 @@ class RegexManager {
             do {
                 let regularExpression: NSRegularExpression
                 regularExpression =  try NSRegularExpression(pattern: pattern, options:NSRegularExpression.Options.caseInsensitive)
-                self.addRegularExpressionToPool(regex: regularExpression, pattern: pattern)
+                regularExpresionPool[pattern] = regularExpression
                 return regularExpression
             }
             catch {
