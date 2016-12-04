@@ -25,11 +25,11 @@ class PhoneNumberKitParsingTests: XCTestCase {
     
     func testFailingNumber() {
         do {
-            let phoneNumber1 = try phoneNumberKit.parse("+5491187654321 ABC123", withRegion: "AR")
-            XCTAssertNotNil(phoneNumber1)
+            _ = try phoneNumberKit.parse("+5491187654321 ABC123", withRegion: "AR")
+            XCTFail()
         }
         catch {
-            XCTFail()
+            XCTAssertTrue(true)
         }
     }
     

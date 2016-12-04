@@ -175,6 +175,22 @@ class PhoneNumberKitTests: XCTestCase {
         }
     }
 
+    // American number with short extension
+    func testAlternativeNumberWithExtension() {
+        let testNumber = "2129316760 x28"
+        do {
+            let phoneNumber = try phoneNumberKit.parse(testNumber, withRegion: "US", ignoreType: false)
+            XCTAssertEqual(phoneNumber.countryCode, 1)
+            XCTAssertEqual(phoneNumber.numberExtension, "28")
+            XCTAssertEqual(phoneNumber.nationalNumber, 2129316760)
+            XCTAssertEqual(phoneNumber.leadingZero, false)
+        }
+        catch {
+            XCTFail()
+        }
+    }
+
+
     // French number with a plus
     func testValidNumberWithPlusNoWhiteSpace() {
         let testNumber = "+33689555555"

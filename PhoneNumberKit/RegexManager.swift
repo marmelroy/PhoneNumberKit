@@ -14,16 +14,6 @@ class RegexManager {
 
     var regularExpresionPool = [String : NSRegularExpression]()
 
-    var phoneDataDetector: NSDataDetector? = {
-        do {
-            let dataDetector = try NSDataDetector(types: NSTextCheckingResult.CheckingType.phoneNumber.rawValue)
-            return dataDetector
-        }
-        catch {
-            return nil
-        }
-    }()
-    
     var spaceCharacterSet: CharacterSet = {
         let characterSet = NSMutableCharacterSet(charactersIn: "\u{00a0}")
         characterSet.formUnion(with: CharacterSet.whitespacesAndNewlines)
@@ -32,7 +22,6 @@ class RegexManager {
     
     deinit {
         regularExpresionPool.removeAll()
-        phoneDataDetector = nil
     }
 
     // MARK: Regular expression
@@ -67,23 +56,15 @@ class RegexManager {
     }
     
     func phoneDataDetectorMatch(_ string: String) throws -> NSTextCheckingResult {
-        guard let matches = phoneDataDetector?.matches(in: string) else {
-            throw PhoneNumberError.generalError
-        }
-        if let firstMatch = matches.first {
+        let fallBackMatches = try regexMatches(PhoneNumberPatterns.validPhoneNumberPattern, string: string)
+        if let firstMatch = fallBackMatches.first {
             return firstMatch
         }
         else {
-            let fallBackMatches = try regexMatches(PhoneNumberPatterns.validPhoneNumberPattern, string: string)
-            if let firstMatch = fallBackMatches.first {
-                return firstMatch
-            }
-            else {
-                throw PhoneNumberError.notANumber
-            }
+            throw PhoneNumberError.notANumber
         }
     }
-    
+
     // MARK: Match helpers
     
     func matchesAtStart(_ pattern: String, string: String) -> Bool {

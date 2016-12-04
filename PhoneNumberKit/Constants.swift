@@ -114,7 +114,7 @@ struct PhoneNumberPatterns {
 
   static let capturingDigitPattern = "([0-9０-９٠-٩۰-۹])"
 
-  static let extnPattern = "\\;(.*)"
+  static let extnPattern = "(?:;ext=([0-9０-９٠-٩۰-۹]{1,7})|[  \\t,]*(?:e?xt(?:ensi(?:ó?|ó))?n?|ｅ?ｘｔｎ?|[,xｘX#＃~～]|int|anexo|ｉｎｔ)[:\\.．]?[  \\t,-]*([0-9０-９٠-٩۰-۹]{1,7})#?|[- ]+([0-9０-９٠-٩۰-۹]{1,5})#)$"
 
   static let iddPattern = "^(?:\\+|%@)"
 

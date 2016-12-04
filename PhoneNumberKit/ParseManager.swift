@@ -36,11 +36,14 @@ class ParseManager {
         // Extract number (2)
         var nationalNumber = numberString
         let match = try regexManager.phoneDataDetectorMatch(numberString)
-        if let phoneNumber = match.phoneNumber {
-            nationalNumber = phoneNumber
-        }
+        let matchedNumber = nationalNumber.substring(with: match.range)
+        nationalNumber = matchedNumber
+
         // Strip and extract extension (3)
-        let numberExtension = parser.stripExtension(&nationalNumber)
+        var numberExtension: String?
+        if let rawExtension = parser.stripExtension(&nationalNumber) {
+            numberExtension = parser.normalizePhoneNumber(rawExtension)
+        }
         // Country code parse (4)
         guard var regionMetadata =  metadataManager.territoriesByCountry[region] else {
             throw PhoneNumberError.invalidCountryCode
