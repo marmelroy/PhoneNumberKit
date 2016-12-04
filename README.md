@@ -1,4 +1,4 @@
-![PhoneNumberKit](https://cloud.githubusercontent.com/assets/889949/20864304/6e391c22-b9eb-11e6-90d3-d4df9d01a496.png)
+![PhoneNumberKit](https://cloud.githubusercontent.com/assets/889949/20864386/a1307950-b9ef-11e6-8a58-e9c5103738e7.png)
 [![Platform](https://img.shields.io/cocoapods/p/PhoneNumberKit.svg?maxAge=2592000)](http://cocoapods.org/?q=PhoneNumberKit)
 [![Build Status](https://travis-ci.org/marmelroy/PhoneNumberKit.svg?branch=master)](https://travis-ci.org/marmelroy/PhoneNumberKit) [![Version](http://img.shields.io/cocoapods/v/PhoneNumberKit.svg)](http://cocoapods.org/?q=PhoneNumberKit)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
