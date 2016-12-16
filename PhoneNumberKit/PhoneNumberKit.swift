@@ -149,9 +149,8 @@ public class PhoneNumberKit: NSObject {
         }
 #endif
         let currentLocale = Locale.current
-        if #available(iOS 10.0, *) {
-            let countryCode = currentLocale.regionCode
-            return countryCode?.uppercased() ?? ""
+        if #available(iOS 10.0, *), let countryCode = currentLocale.regionCode {
+            return countryCode.uppercased()
         } else {
 			if let countryCode = (currentLocale as NSLocale).object(forKey: .countryCode) as? String {
                 return countryCode.uppercased()
