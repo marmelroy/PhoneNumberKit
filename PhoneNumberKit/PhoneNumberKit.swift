@@ -58,7 +58,6 @@ public class PhoneNumberKit: NSObject {
     ///
     /// - returns: Formatted representation of the PhoneNumber.
     public func format(_ phoneNumber: PhoneNumber, toType formatType:PhoneNumberFormat, withPrefix prefix: Bool = true) -> String {
-        let formatter = Formatter(phoneNumberKit: self)
         if formatType == .e164 {
             let formattedNationalNumber = phoneNumber.adjustedNationalNumber()
             if prefix == false {
@@ -66,6 +65,7 @@ public class PhoneNumberKit: NSObject {
             }
             return "+\(phoneNumber.countryCode)\(formattedNationalNumber)"
         } else {
+            let formatter = Formatter(phoneNumberKit: self)
             let regionMetadata = metadataManager.mainTerritoryByCode[phoneNumber.countryCode]
             let formattedNationalNumber = formatter.format(phoneNumber: phoneNumber, formatType: formatType, regionMetadata: regionMetadata)
             if formatType == .international && prefix == true {
