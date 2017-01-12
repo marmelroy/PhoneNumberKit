@@ -27,6 +27,40 @@ public struct PhoneNumber {
     public let type: PhoneNumberType
 }
 
+extension PhoneNumber : Equatable {
+
+    public static func ==(lhs: PhoneNumber, rhs: PhoneNumber) -> Bool {
+        return (lhs.countryCode == rhs.countryCode)
+            && (lhs.leadingZero == rhs.leadingZero)
+            && (lhs.nationalNumber == rhs.nationalNumber)
+            && (lhs.numberExtension == rhs.numberExtension)
+    }
+
+}
+
+extension PhoneNumber : Hashable {
+
+    public var hashValue: Int {
+        var hashValue = 0
+
+        hashValue ^= Int(truncatingBitPattern: countryCode)
+        hashValue ^= Int(truncatingBitPattern: nationalNumber)
+
+        if MemoryLayout<Int>.size != MemoryLayout<Int64>.size {
+            // On 32-bit arch, `nationalNumber` doesn't fit `Int`, and to calculate hash,
+            // we need to shift the most significant bits.
+            hashValue ^= Int(truncatingBitPattern: nationalNumber >> 32)
+        }
+
+        if let numberExtension = numberExtension {
+            hashValue ^= numberExtension.hashValue
+        }
+
+        return hashValue
+    }
+
+}
+
 /// In past versions of PhoneNumebrKit you were able to initialize a PhoneNumber object to parse a String. Please use a PhoneNumberKit object's methods.
 public extension PhoneNumber {
     /**
