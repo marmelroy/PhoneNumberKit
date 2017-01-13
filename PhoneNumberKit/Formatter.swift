@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Formatter {
+final class Formatter {
     
     weak var regexManager: RegexManager?
     

@@ -8,7 +8,7 @@
 
 import Foundation
 
-class RegexManager {
+final class RegexManager {
     
     // MARK: Regular expression pool
 
