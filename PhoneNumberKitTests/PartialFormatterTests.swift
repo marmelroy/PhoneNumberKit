@@ -299,7 +299,7 @@ class PartialFormatterTests: XCTestCase {
 
     // MARK: convenience initializer
     func testConvenienceInitializerAllowsFormatting() {
-        let partialFormatter = PartialFormatter()
+        let partialFormatter = PartialFormatter(defaultRegion: "US")
 
         let testNumber = "8675309"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "867-5309")
