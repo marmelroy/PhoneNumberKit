@@ -41,22 +41,7 @@ extension PhoneNumber : Equatable {
 extension PhoneNumber : Hashable {
 
     public var hashValue: Int {
-        var hashValue = 0
-
-        hashValue ^= Int(truncatingBitPattern: countryCode)
-        hashValue ^= Int(truncatingBitPattern: nationalNumber)
-
-        if MemoryLayout<Int>.size != MemoryLayout<Int64>.size {
-            // On 32-bit arch, `nationalNumber` doesn't fit `Int`, and to calculate hash,
-            // we need to shift the most significant bits.
-            hashValue ^= Int(truncatingBitPattern: nationalNumber >> 32)
-        }
-
-        if let numberExtension = numberExtension {
-            hashValue ^= numberExtension.hashValue
-        }
-
-        return hashValue
+        return countryCode.hashValue ^ nationalNumber.hashValue ^ leadingZero.hashValue ^ (numberExtension?.hashValue ?? 0)
     }
 
 }
