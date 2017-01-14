@@ -43,7 +43,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTAssertTrue(phoneNumberNationalFormat1 == "(650) 253-0000")
             let phoneNumberE164Format1 = phoneNumberKit.format(phoneNumber1, toType: .e164, withPrefix: false)
             XCTAssertTrue(phoneNumberE164Format1 == "6502530000")
-            let phoneNumber2 = try phoneNumberKit.parse("800 253 0000")
+            let phoneNumber2 = try phoneNumberKit.parse("800 253 0000", withRegion: "US")
             XCTAssertNotNil(phoneNumber2)
             let phoneNumberInternationalFormat2 = phoneNumberKit.format(phoneNumber2, toType: .international, withPrefix: false)
             XCTAssertTrue(phoneNumberInternationalFormat2 == "800-253-0000")
@@ -67,7 +67,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTAssertTrue(phoneNumberNationalFormat1 == "(650) 253-0000")
             let phoneNumberE164Format1 = phoneNumberKit.format(phoneNumber1, toType: .e164)
             XCTAssertTrue(phoneNumberE164Format1 == "+16502530000")
-            let phoneNumber2 = try phoneNumberKit.parse("800 253 0000")
+            let phoneNumber2 = try phoneNumberKit.parse("800 253 0000", withRegion: "US")
             XCTAssertNotNil(phoneNumber2)
             let phoneNumberInternationalFormat2 = phoneNumberKit.format(phoneNumber2, toType: .international)
             XCTAssertTrue(phoneNumberInternationalFormat2 == "+1 800-253-0000")
@@ -75,7 +75,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTAssertTrue(phoneNumberNationalFormat2 == "(800) 253-0000")
             let phoneNumberE164Format2 = phoneNumberKit.format(phoneNumber2, toType: .e164)
             XCTAssertTrue(phoneNumberE164Format2 == "+18002530000")
-            let phoneNumber3 = try phoneNumberKit.parse("900 253 0000")
+            let phoneNumber3 = try phoneNumberKit.parse("900 253 0000", withRegion: "US")
             XCTAssertNotNil(phoneNumber3)
             let phoneNumberInternationalFormat3 = phoneNumberKit.format(phoneNumber3, toType: .international)
             XCTAssertTrue(phoneNumberInternationalFormat3 == "+1 900-253-0000")
@@ -273,7 +273,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
     }
 
     func testUSTollFreeNumberType() {
-        guard let number = try? phoneNumberKit.parse("8002345678") else {
+        guard let number = try? phoneNumberKit.parse("8002345678", withRegion: "US") else {
             XCTFail()
             return
         }
