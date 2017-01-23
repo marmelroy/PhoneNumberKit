@@ -30,7 +30,8 @@ Pod::Spec.new do |s|
 
   s.requires_arc = true
 
-  s.frameworks = 'CoreTelephony'
+  s.ios.frameworks = 'CoreTelephony'
+  s.osx.frameworks = 'CoreTelephony'
 
   s.ios.deployment_target = '8.0'
   s.osx.deployment_target = '10.10'
