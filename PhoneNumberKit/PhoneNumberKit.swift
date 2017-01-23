@@ -28,11 +28,11 @@ public final class PhoneNumberKit: NSObject {
     
     /// Parses a number string, used to create PhoneNumber objects. Throws.
     ///
-    /// - parameter numberString: the raw number string.
-    /// - parameter region:       ISO 639 compliant region code.
-    /// - parameter ignoreType:   Avoids number type checking for faster performance.
-    ///
-    /// - returns: PhoneNumber object.
+    /// - Parameters:
+    ///   - numberString: the raw number string.
+    ///   - region: ISO 639 compliant region code.
+    ///   - ignoreType: Avoids number type checking for faster performance.
+    /// - Returns: PhoneNumber object.
     public func parse(_ numberString: String, withRegion region: String = PhoneNumberKit.defaultRegionCode(), ignoreType: Bool = false) throws -> PhoneNumber {
         return try parseManager.parse(numberString, withRegion: region, ignoreType: ignoreType)
     }

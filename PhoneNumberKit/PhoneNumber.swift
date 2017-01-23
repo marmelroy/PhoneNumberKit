@@ -11,12 +11,12 @@ import Foundation
 /**
 Parsed phone number object
  
-- CountryCode: Country dialing code as an unsigned. Int.
-- LeadingZero: Some countries (e.g. Italy) require leading zeros. Bool.
-- NationalNumber: National number as an unsigned. Int.
-- NumberExtension: Extension if available. String. Optional
-- RawNumber: String used to generate phone number struct
-- Type: Computed phone number type on access. Returns from an enumeration - PNPhoneNumberType.
+- numberString: String used to generate phone number struct
+- countryCode: Country dialing code as an unsigned. Int.
+- leadingZero: Some countries (e.g. Italy) require leading zeros. Bool.
+- nationalNumber: National number as an unsigned. Int.
+- numberExtension: Extension if available. String. Optional
+- type: Computed phone number type on access. Returns from an enumeration - PNPhoneNumberType.
 */
 public struct PhoneNumber {
     public let numberString: String

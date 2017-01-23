@@ -127,7 +127,15 @@ final class ParseManager {
         group.wait()
         return multiParseArray
     }
-            
+
+
+    /// Get correct ISO 639 compliant region code for a number.
+    ///
+    /// - Parameters:
+    ///   - nationalNumber: national number.
+    ///   - countryCode: country code.
+    ///   - leadingZero: whether or not the number has a leading zero.
+    /// - Returns: ISO 639 compliant region code.
     func getRegionCode(of nationalNumber: UInt64, countryCode: UInt64, leadingZero: Bool) -> String? {
         guard let regexManager = regexManager, let metadataManager = metadataManager, let regions = metadataManager.territoriesByCode[countryCode] else { return nil }
 
