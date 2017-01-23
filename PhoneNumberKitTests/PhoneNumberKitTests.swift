@@ -228,7 +228,7 @@ class PhoneNumberKitTests: XCTestCase {
     func testValidNumberWithAmericanIDDNoWhiteSpace() {
         let testNumber = "011447739555555"
         do {
-            let phoneNumber = try phoneNumberKit.parse(testNumber)
+            let phoneNumber = try phoneNumberKit.parse(testNumber, withRegion: "US")
             XCTAssertEqual(phoneNumberKit.format(phoneNumber, toType: .e164), "+447739555555")
             XCTAssertEqual(phoneNumber.countryCode, 44)
             XCTAssertEqual(phoneNumber.nationalNumber, 7739555555)
@@ -243,7 +243,7 @@ class PhoneNumberKitTests: XCTestCase {
     func testValidNumberWithAmericanIDDWhiteSpace() {
         let testNumber = "01155 11 9 6 555 55 55"
         do {
-            let phoneNumber = try phoneNumberKit.parse(testNumber)
+            let phoneNumber = try phoneNumberKit.parse(testNumber, withRegion: "US")
             XCTAssertEqual(phoneNumberKit.format(phoneNumber, toType: .e164), "+5511965555555")
             XCTAssertEqual(phoneNumber.countryCode, 55)
             XCTAssertEqual(phoneNumber.nationalNumber, 11965555555)
@@ -258,7 +258,7 @@ class PhoneNumberKitTests: XCTestCase {
     func testValidLocalNumberWithNoPrefixNoWhiteSpace() {
         let testNumber = "2015555555"
         do {
-            let phoneNumber = try phoneNumberKit.parse(testNumber)
+            let phoneNumber = try phoneNumberKit.parse(testNumber, withRegion: "US")
             XCTAssertEqual(phoneNumberKit.format(phoneNumber, toType: .e164), "+12015555555")
             XCTAssertEqual(phoneNumber.countryCode, 1)
             XCTAssertEqual(phoneNumber.nationalNumber, 2015555555)
@@ -273,7 +273,7 @@ class PhoneNumberKitTests: XCTestCase {
     func testValidLocalNumberWithNoPrefixWhiteSpace() {
         let testNumber = "500-2-55-555-5"
         do {
-            let phoneNumber = try phoneNumberKit.parse(testNumber)
+            let phoneNumber = try phoneNumberKit.parse(testNumber, withRegion: "US")
             XCTAssertEqual(phoneNumberKit.format(phoneNumber, toType: .e164), "+15002555555")
             XCTAssertEqual(phoneNumber.countryCode, 1)
             XCTAssertEqual(phoneNumber.nationalNumber, 5002555555)
