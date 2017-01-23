@@ -57,10 +57,10 @@ let phoneNumbersCustomDefaultRegion = phoneNumberKit.parse(rawNumberArray, withR
 
 PhoneNumber objects are immutable Swift structs with the following properties:
 ```swift
+phoneNumber.numberString
 phoneNumber.countryCode
 phoneNumber.nationalNumber
 phoneNumber.numberExtension
-phoneNumber.rawNumber
 phoneNumber.type // e.g Mobile or Fixed
 ```
 
