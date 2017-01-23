@@ -11,7 +11,7 @@ import Foundation
 /**
 Manager for parsing flow.
 */
-class ParseManager {
+final class ParseManager {
     
     weak var metadataManager: MetadataManager?
     let parser: PhoneNumberParser

@@ -55,7 +55,7 @@ public extension PhoneNumber {
     */
     @available(*, unavailable, message: "use PhoneNumberKit instead to produce PhoneNumbers")
     public init(rawNumber: String) throws {
-        assertionFailure(PhoneNumberError.deprecated.description)
+        assertionFailure(PhoneNumberError.deprecated.localizedDescription)
         throw PhoneNumberError.deprecated
     }
     

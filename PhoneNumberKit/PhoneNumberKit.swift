@@ -11,7 +11,7 @@ import Foundation
 import CoreTelephony
 #endif
     
-public class PhoneNumberKit: NSObject {
+public final class PhoneNumberKit: NSObject {
     
     // Manager objects
     let metadataManager = MetadataManager()

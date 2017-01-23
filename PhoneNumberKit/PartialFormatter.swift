@@ -9,7 +9,7 @@
 import Foundation
 
 /// Partial formatter
-public class PartialFormatter {
+public final class PartialFormatter {
     
     private let phoneNumberKit: PhoneNumberKit
 
