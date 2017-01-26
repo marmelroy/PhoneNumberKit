@@ -11,7 +11,7 @@ import Foundation
 /**
 Parser. Contains parsing functions. 
 */
-class PhoneNumberParser {
+final class PhoneNumberParser {
     let metadata: MetadataManager
     let regex: RegexManager
     

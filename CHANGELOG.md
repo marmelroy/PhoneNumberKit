@@ -1,8 +1,66 @@
 # Change Log
 
-## [Unreleased](https://github.com/marmelroy/PhoneNumberKit/tree/HEAD)
+## [1.1.1](https://github.com/marmelroy/PhoneNumberKit/tree/1.1.1) (2016-12-12)
+[Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/1.1.0...1.1.1)
 
-[Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/0.8.5...HEAD)
+**Closed issues:**
+
+- Examples don't work. [\#93](https://github.com/marmelroy/PhoneNumberKit/issues/93)
+- \[HELP NEEDED\] How do I preset values for PhoneNumberTextField? [\#88](https://github.com/marmelroy/PhoneNumberKit/issues/88)
+- make it as extension [\#78](https://github.com/marmelroy/PhoneNumberKit/issues/78)
+
+## [1.1.0](https://github.com/marmelroy/PhoneNumberKit/tree/1.1.0) (2016-12-04)
+[Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/1.0.5...1.1.0)
+
+**Fixed bugs:**
+
+- PhoneNumberKit still parses type with ignoreType set to true [\#92](https://github.com/marmelroy/PhoneNumberKit/issues/92)
+
+**Closed issues:**
+
+- More faster [\#79](https://github.com/marmelroy/PhoneNumberKit/issues/79)
+
+## [1.0.5](https://github.com/marmelroy/PhoneNumberKit/tree/1.0.5) (2016-12-03)
+[Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/1.0.4...1.0.5)
+
+## [1.0.4](https://github.com/marmelroy/PhoneNumberKit/tree/1.0.4) (2016-12-02)
+[Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/1.0.3...1.0.4)
+
+**Closed issues:**
+
+- I need to format a "test" phone number to E164 but parse\(\) throws [\#77](https://github.com/marmelroy/PhoneNumberKit/issues/77)
+- \[Swift 3\] Subclass PhoneNumberTextField [\#76](https://github.com/marmelroy/PhoneNumberKit/issues/76)
+
+## [1.0.3](https://github.com/marmelroy/PhoneNumberKit/tree/1.0.3) (2016-11-29)
+[Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/1.0.2...1.0.3)
+
+**Closed issues:**
+
+- How to get leadingDigits? [\#90](https://github.com/marmelroy/PhoneNumberKit/issues/90)
+- Does not compile with Xcode 8.1 [\#89](https://github.com/marmelroy/PhoneNumberKit/issues/89)
+- Customize Phone Region [\#86](https://github.com/marmelroy/PhoneNumberKit/issues/86)
+
+## [1.0.2](https://github.com/marmelroy/PhoneNumberKit/tree/1.0.2) (2016-11-28)
+[Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/1.0.1...1.0.2)
+
+**Closed issues:**
+
+- swift 3 build errors [\#85](https://github.com/marmelroy/PhoneNumberKit/issues/85)
+- Do we have getCountryCodeForRegion Function [\#84](https://github.com/marmelroy/PhoneNumberKit/issues/84)
+- Unrecognized selector crash in PhoneNumberTextField [\#82](https://github.com/marmelroy/PhoneNumberKit/issues/82)
+- Change PhoneNumberTextField access to open to allow overriding [\#73](https://github.com/marmelroy/PhoneNumberKit/issues/73)
+- PartialFormatter has wrong access level to its initializers [\#72](https://github.com/marmelroy/PhoneNumberKit/issues/72)
+- PhoneNumber name collisions [\#50](https://github.com/marmelroy/PhoneNumberKit/issues/50)
+
+## [1.0.1](https://github.com/marmelroy/PhoneNumberKit/tree/1.0.1) (2016-10-03)
+[Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/1.0.0...1.0.1)
+
+**Closed issues:**
+
+- toInternational\(\) method can be static  [\#69](https://github.com/marmelroy/PhoneNumberKit/issues/69)
+
+## [1.0.0](https://github.com/marmelroy/PhoneNumberKit/tree/1.0.0) (2016-10-02)
+[Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/0.8.5...1.0.0)
 
 **Closed issues:**
 
@@ -13,10 +71,6 @@
 - Missing country [\#61](https://github.com/marmelroy/PhoneNumberKit/issues/61)
 - Not working in Simulator [\#59](https://github.com/marmelroy/PhoneNumberKit/issues/59)
 
-**Merged pull requests:**
-
-- Update to Xcode 8 GM [\#63](https://github.com/marmelroy/PhoneNumberKit/pull/63) ([davbeck](https://github.com/davbeck))
-
 ## [0.8.5](https://github.com/marmelroy/PhoneNumberKit/tree/0.8.5) (2016-08-06)
 [Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/0.8.4...0.8.5)
 
@@ -25,7 +79,6 @@
 - Maximum Characters for PhoneNumberTextField [\#58](https://github.com/marmelroy/PhoneNumberKit/issues/58)
 - Number phone template from region  [\#57](https://github.com/marmelroy/PhoneNumberKit/issues/57)
 - Detecting wrong country code from phone number [\#54](https://github.com/marmelroy/PhoneNumberKit/issues/54)
-- Add framework archive to release [\#15](https://github.com/marmelroy/PhoneNumberKit/issues/15)
 
 ## [0.8.4](https://github.com/marmelroy/PhoneNumberKit/tree/0.8.4) (2016-06-01)
 [Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/0.8.3...0.8.4)
@@ -33,13 +86,7 @@
 **Closed issues:**
 
 - Incompatible with pod "BlocksKit" [\#49](https://github.com/marmelroy/PhoneNumberKit/issues/49)
-- Detection of UK Numbers doesn't work in 99% of real world use cases [\#47](https://github.com/marmelroy/PhoneNumberKit/issues/47)
-- Expected Declaration error [\#46](https://github.com/marmelroy/PhoneNumberKit/issues/46)
 - Do not submit apps with GCC-style coverage [\#45](https://github.com/marmelroy/PhoneNumberKit/issues/45)
-
-**Merged pull requests:**
-
-- Fix sample projects [\#48](https://github.com/marmelroy/PhoneNumberKit/pull/48) ([egrim](https://github.com/egrim))
 
 ## [0.8.3](https://github.com/marmelroy/PhoneNumberKit/tree/0.8.3) (2016-05-05)
 [Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/0.8.2...0.8.3)
@@ -61,13 +108,8 @@
 
 **Closed issues:**
 
-- dependency problem? [\#44](https://github.com/marmelroy/PhoneNumberKit/issues/44)
 - Allow to separate a PhoneNumber's country prefix from the rest [\#32](https://github.com/marmelroy/PhoneNumberKit/issues/32)
 - Can't dissociate a possible phone number from a valid phone number [\#30](https://github.com/marmelroy/PhoneNumberKit/issues/30)
-
-**Merged pull requests:**
-
-- Fix wrong region code uses [\#41](https://github.com/marmelroy/PhoneNumberKit/pull/41) ([dulaccc](https://github.com/dulaccc))
 
 ## [0.7](https://github.com/marmelroy/PhoneNumberKit/tree/0.7) (2016-03-27)
 [Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/0.6.4...0.7)
@@ -76,11 +118,6 @@
 
 - ParseOperationValueProvider - expected declaration error [\#39](https://github.com/marmelroy/PhoneNumberKit/issues/39)
 - 0.6.4 is not compiling anymore [\#37](https://github.com/marmelroy/PhoneNumberKit/issues/37)
-- Determination of PhoneNumber.type is incorrect [\#34](https://github.com/marmelroy/PhoneNumberKit/issues/34)
-
-**Merged pull requests:**
-
-- Fixes for PhoneNumber type determination [\#40](https://github.com/marmelroy/PhoneNumberKit/pull/40) ([fikus](https://github.com/fikus))
 
 ## [0.6.4](https://github.com/marmelroy/PhoneNumberKit/tree/0.6.4) (2016-03-23)
 [Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/0.6.3...0.6.4)
@@ -92,21 +129,12 @@
 ## [0.6.3](https://github.com/marmelroy/PhoneNumberKit/tree/0.6.3) (2016-03-17)
 [Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/0.6.2...0.6.3)
 
-**Closed issues:**
-
-- Cannot modify PhoneNumberTextField delegate. [\#26](https://github.com/marmelroy/PhoneNumberKit/issues/26)
-
-**Merged pull requests:**
-
-- Make Constants public for easier subclassing [\#31](https://github.com/marmelroy/PhoneNumberKit/pull/31) ([danielrhodes](https://github.com/danielrhodes))
-
 ## [0.6.2](https://github.com/marmelroy/PhoneNumberKit/tree/0.6.2) (2016-02-21)
 [Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/0.6.1...0.6.2)
 
 **Closed issues:**
 
 - Image not found error [\#25](https://github.com/marmelroy/PhoneNumberKit/issues/25)
-- Install manually [\#24](https://github.com/marmelroy/PhoneNumberKit/issues/24)
 
 ## [0.6.1](https://github.com/marmelroy/PhoneNumberKit/tree/0.6.1) (2016-02-12)
 [Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/0.6...0.6.1)
@@ -114,7 +142,6 @@
 **Closed issues:**
 
 - Trying to Create a Pull Request [\#21](https://github.com/marmelroy/PhoneNumberKit/issues/21)
-- Better formatting and a version of AsYouTypeFormatter [\#2](https://github.com/marmelroy/PhoneNumberKit/issues/2)
 
 ## [0.6](https://github.com/marmelroy/PhoneNumberKit/tree/0.6) (2016-02-11)
 [Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/0.3...0.6)
@@ -126,22 +153,12 @@
 
 - Make PartialFormatter public [\#17](https://github.com/marmelroy/PhoneNumberKit/issues/17)
 - Memory leak [\#16](https://github.com/marmelroy/PhoneNumberKit/issues/16)
-- Cocoapod install error [\#12](https://github.com/marmelroy/PhoneNumberKit/issues/12)
-- Conflict with GooglePlacesAutocomplete [\#11](https://github.com/marmelroy/PhoneNumberKit/issues/11)
 
 ## [0.2](https://github.com/marmelroy/PhoneNumberKit/tree/0.2) (2015-12-13)
 [Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/0.1.7...0.2)
 
-**Closed issues:**
-
-- Add a FixedLineOrMobile type [\#9](https://github.com/marmelroy/PhoneNumberKit/issues/9)
-
 ## [0.1.7](https://github.com/marmelroy/PhoneNumberKit/tree/0.1.7) (2015-11-21)
 [Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/0.1.6...0.1.7)
-
-**Closed issues:**
-
-- PNK fails to identify an improper number  [\#8](https://github.com/marmelroy/PhoneNumberKit/issues/8)
 
 ## [0.1.6](https://github.com/marmelroy/PhoneNumberKit/tree/0.1.6) (2015-11-06)
 [Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/0.1.5...0.1.6)
@@ -151,10 +168,6 @@
 
 ## [0.1.4](https://github.com/marmelroy/PhoneNumberKit/tree/0.1.4) (2015-11-02)
 [Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/0.1.3...0.1.4)
-
-**Closed issues:**
-
-- fatal error: unexpectedly found nil while unwrapping an Optional value [\#5](https://github.com/marmelroy/PhoneNumberKit/issues/5)
 
 ## [0.1.3](https://github.com/marmelroy/PhoneNumberKit/tree/0.1.3) (2015-11-01)
 [Full Changelog](https://github.com/marmelroy/PhoneNumberKit/compare/0.1.2...0.1.3)

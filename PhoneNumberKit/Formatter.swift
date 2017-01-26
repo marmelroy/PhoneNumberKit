@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Formatter {
+final class Formatter {
     
     weak var regexManager: RegexManager?
     
@@ -23,11 +23,13 @@ class Formatter {
     
     // MARK: Formatting functions
     
-    /**
-     Formats phone numbers for display
-     - Parameter phoneNumber: Phone number object.
-     - Returns: Modified national number ready for display.
-     */
+    /// Formats phone numbers for display
+    ///
+    /// - Parameters:
+    ///   - phoneNumber: Phone number object.
+    ///   - formatType: Format type.
+    ///   - regionMetadata: Region meta data.
+    /// - Returns: Formatted Modified national number ready for display.
     func format(phoneNumber: PhoneNumber, formatType: PhoneNumberFormat, regionMetadata: MetadataTerritory?) -> String {
         var formattedNationalNumber = phoneNumber.adjustedNationalNumber()
         if let regionMetadata = regionMetadata {
@@ -39,12 +41,12 @@ class Formatter {
         return formattedNationalNumber
     }
 
-    
-    /**
-     Formats extension for display
-     - Parameter numberExtension: Number extension string.
-     - Returns: Modified number extension with either a preferred extension prefix or the default one.
-     */
+    /// Formats extension for display
+    ///
+    /// - Parameters:
+    ///   - numberExtension: Number extension string.
+    ///   - regionMetadata: Region meta data.
+    /// - Returns: Modified number extension with either a preferred extension prefix or the default one.
     func formatExtension(_ numberExtension: String?, regionMetadata: MetadataTerritory) -> String? {
         if let extns = numberExtension {
             if let preferredExtnPrefix = regionMetadata.preferredExtnPrefix {
@@ -57,11 +59,13 @@ class Formatter {
         return nil
     }
     
-    /**
-     Formats national number for display
-     - Parameter nationalNumber: National number string.
-     - Returns: Modified nationalNumber for display.
-     */
+    /// Formats national number for display
+    ///
+    /// - Parameters:
+    ///   - nationalNumber: National number string.
+    ///   - regionMetadata: Region meta data.
+    ///   - formatType: Format type.
+    /// - Returns: Modified nationalNumber for display.
     func formatNationalNumber(_ nationalNumber: String, regionMetadata: MetadataTerritory, formatType: PhoneNumberFormat) -> String {
         guard let regexManager = regexManager else { return nationalNumber }
         let formats = regionMetadata.numberFormats

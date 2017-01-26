@@ -25,11 +25,11 @@ class PhoneNumberKitParsingTests: XCTestCase {
     
     func testFailingNumber() {
         do {
-            let phoneNumber1 = try phoneNumberKit.parse("+5491187654321 ABC123", withRegion: "AR")
-            XCTAssertNotNil(phoneNumber1)
+            _ = try phoneNumberKit.parse("+5491187654321 ABC123", withRegion: "AR")
+            XCTFail()
         }
         catch {
-            XCTFail()
+            XCTAssertTrue(true)
         }
     }
     
@@ -43,7 +43,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTAssertTrue(phoneNumberNationalFormat1 == "(650) 253-0000")
             let phoneNumberE164Format1 = phoneNumberKit.format(phoneNumber1, toType: .e164, withPrefix: false)
             XCTAssertTrue(phoneNumberE164Format1 == "6502530000")
-            let phoneNumber2 = try phoneNumberKit.parse("800 253 0000")
+            let phoneNumber2 = try phoneNumberKit.parse("800 253 0000", withRegion: "US")
             XCTAssertNotNil(phoneNumber2)
             let phoneNumberInternationalFormat2 = phoneNumberKit.format(phoneNumber2, toType: .international, withPrefix: false)
             XCTAssertTrue(phoneNumberInternationalFormat2 == "800-253-0000")
@@ -67,7 +67,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTAssertTrue(phoneNumberNationalFormat1 == "(650) 253-0000")
             let phoneNumberE164Format1 = phoneNumberKit.format(phoneNumber1, toType: .e164)
             XCTAssertTrue(phoneNumberE164Format1 == "+16502530000")
-            let phoneNumber2 = try phoneNumberKit.parse("800 253 0000")
+            let phoneNumber2 = try phoneNumberKit.parse("800 253 0000", withRegion: "US")
             XCTAssertNotNil(phoneNumber2)
             let phoneNumberInternationalFormat2 = phoneNumberKit.format(phoneNumber2, toType: .international)
             XCTAssertTrue(phoneNumberInternationalFormat2 == "+1 800-253-0000")
@@ -75,7 +75,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTAssertTrue(phoneNumberNationalFormat2 == "(800) 253-0000")
             let phoneNumberE164Format2 = phoneNumberKit.format(phoneNumber2, toType: .e164)
             XCTAssertTrue(phoneNumberE164Format2 == "+18002530000")
-            let phoneNumber3 = try phoneNumberKit.parse("900 253 0000")
+            let phoneNumber3 = try phoneNumberKit.parse("900 253 0000", withRegion: "US")
             XCTAssertNotNil(phoneNumber3)
             let phoneNumberInternationalFormat3 = phoneNumberKit.format(phoneNumber3, toType: .international)
             XCTAssertTrue(phoneNumberInternationalFormat3 == "+1 900-253-0000")
@@ -273,7 +273,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
     }
 
     func testUSTollFreeNumberType() {
-        guard let number = try? phoneNumberKit.parse("8002345678") else {
+        guard let number = try? phoneNumberKit.parse("8002345678", withRegion: "US") else {
             XCTFail()
             return
         }
@@ -328,7 +328,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
         }
         XCTAssertEqual(number.type, PhoneNumberType.mobile)
     }
-//
+
     func testPerformanceSimple() {
         let numberOfParses = 1000
         let startTime = Date()
@@ -337,13 +337,13 @@ class PhoneNumberKitParsingTests: XCTestCase {
         for _ in 0 ..< numberOfParses {
             numberArray.append("+5491187654321")
         }
-        let phoneNumbers = phoneNumberKit.parse(numberArray, withRegion: "AR")
+        _ = phoneNumberKit.parse(numberArray, withRegion: "AR", ignoreType: true)
         endTime = Date()
         let timeInterval = endTime.timeIntervalSince(startTime)
         print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
         XCTAssertTrue(timeInterval < 5)
     }
-    
+
     func testMultipleMutated() {
         let numberOfParses = 500
         let startTime = Date()
@@ -352,7 +352,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
         for _ in 0 ..< numberOfParses {
             numberArray.append("+5491187654321")
         }
-        let phoneNumbers = phoneNumberKit.parseManager.parseMultiple(numberArray, withRegion: "AR") {
+        let phoneNumbers = phoneNumberKit.parseManager.parseMultiple(numberArray, withRegion: "AR", ignoreType: true) {
             numberArray.remove(at: 100)
         }
         XCTAssertTrue(phoneNumbers.count == numberOfParses)

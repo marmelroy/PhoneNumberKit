@@ -1,4 +1,4 @@
-![PhoneNumberKit](https://cloud.githubusercontent.com/assets/889949/10723260/5225c86c-7bb9-11e5-883c-9b42aa50ea27.png)
+![PhoneNumberKit](https://cloud.githubusercontent.com/assets/889949/20864386/a1307950-b9ef-11e6-8a58-e9c5103738e7.png)
 [![Platform](https://img.shields.io/cocoapods/p/PhoneNumberKit.svg?maxAge=2592000)](http://cocoapods.org/?q=PhoneNumberKit)
 [![Build Status](https://travis-ci.org/marmelroy/PhoneNumberKit.svg?branch=master)](https://travis-ci.org/marmelroy/PhoneNumberKit) [![Version](http://img.shields.io/cocoapods/v/PhoneNumberKit.svg)](http://cocoapods.org/?q=PhoneNumberKit)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
@@ -37,30 +37,30 @@ It's up to you to control its lifecycle, you should reuse it as necessary and di
 let phoneNumberKit = PhoneNumberKit()
 ```
 
-To parse a string, initialize a PhoneNumber object and supply the string as the rawNumber. The region code is automatically computed but can be overridden if needed. A PhoneNumber object will not be created if the number is invalid or if an error occurred in the parsing and the function will throw.
+To parse a string, use the parse function. The region code is automatically computed but can be overridden if needed. PhoneNumberKit automatically does a hard type validation to ensure that the object created is valid, this can be quite costly performance-wise and can be turned off if needed.
 ```swift
 do {
     let phoneNumber = try phoneNumberKit.parse("+33 6 89 017383")
-    let phoneNumberCustomDefaultRegion = try phoneNumberKit.parse("+44 20 7031 3000", withRegion: "GB")
+    let phoneNumberCustomDefaultRegion = try phoneNumberKit.parse("+44 20 7031 3000", withRegion: "GB", ignoreType: true)
 }
 catch {
     print("Generic parser error")
 }
 ```
 
-If you need to parse and validate a large amount of numbers at once, PhoneNumberKit has a special, lightning fast array parsing function. The default region code is automatically computed but can be overridden if needed. Invalid numbers are ignored in the resulting array.
+If you need to parse and validate a large amount of numbers at once, PhoneNumberKit has a special, lightning fast array parsing function. The default region code is automatically computed but can be overridden if needed. Here you can also ignore hard type validation if it is not necessary. Invalid numbers are ignored in the resulting array.
 ```swift
 let rawNumberArray = ["0291 12345678", "+49 291 12345678", "04134 1234", "09123 12345"]
 let phoneNumbers = phoneNumberKit.parse(rawNumberArray)
-let phoneNumbersCustomDefaultRegion = phoneNumberKit.parse(rawNumberArray, withRegion: "DE")
+let phoneNumbersCustomDefaultRegion = phoneNumberKit.parse(rawNumberArray, withRegion: "DE",  ignoreType: true)
 ```
 
 PhoneNumber objects are immutable Swift structs with the following properties:
 ```swift
+phoneNumber.numberString
 phoneNumber.countryCode
 phoneNumber.nationalNumber
 phoneNumber.numberExtension
-phoneNumber.rawNumber
 phoneNumber.type // e.g Mobile or Fixed
 ```
 
@@ -109,5 +109,5 @@ github "marmelroy/PhoneNumberKit"
 ### Setting up with [CocoaPods](http://cocoapods.org/?q=PhoneNumberKit)
 ```ruby
 source 'https://github.com/CocoaPods/Specs.git'
-pod 'PhoneNumberKit', '~> 1.0'
+pod 'PhoneNumberKit', '~> 1.2'
 ```

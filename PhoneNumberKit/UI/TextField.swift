@@ -172,7 +172,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         }
         
         // allow delegate to intervene
-        guard _delegate?.textField!(textField, shouldChangeCharactersIn: range, replacementString: string) ?? true else {
+        guard _delegate?.textField?(textField, shouldChangeCharactersIn: range, replacementString: string) ?? true else {
             return false
         }
         

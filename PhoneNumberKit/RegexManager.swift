@@ -8,38 +8,12 @@
 
 import Foundation
 
-class RegexManager {
+final class RegexManager {
     
     // MARK: Regular expression pool
-        
-    var _regularExpresionPool = [String : NSRegularExpression]()
-    
-    var regularExpresionPool: [String : NSRegularExpression] {
-        var regularExpresionPoolCopy: [String : NSRegularExpression]!
-        concurrentRegexQueue.sync {
-            regularExpresionPoolCopy = self._regularExpresionPool
-        }
-        return regularExpresionPoolCopy
-    }
-    
-    private let concurrentRegexQueue = DispatchQueue(label: "com.phonenumberkit.regexqueue", qos: .default, attributes: .concurrent)
 
-    func addRegularExpressionToPool(regex: NSRegularExpression, pattern: String) {
-        concurrentRegexQueue.async(flags: .barrier) {
-            self._regularExpresionPool[pattern] = regex
-        }
-    }
-    
-    var phoneDataDetector: NSDataDetector? = {
-        do {
-            let dataDetector = try NSDataDetector(types: NSTextCheckingResult.CheckingType.phoneNumber.rawValue)
-            return dataDetector
-        }
-        catch {
-            return nil
-        }
-    }()
-    
+    var regularExpresionPool = [String : NSRegularExpression]()
+
     var spaceCharacterSet: CharacterSet = {
         let characterSet = NSMutableCharacterSet(charactersIn: "\u{00a0}")
         characterSet.formUnion(with: CharacterSet.whitespacesAndNewlines)
@@ -47,8 +21,7 @@ class RegexManager {
     }()
     
     deinit {
-        _regularExpresionPool.removeAll()
-        phoneDataDetector = nil
+        regularExpresionPool.removeAll()
     }
 
     // MARK: Regular expression
@@ -61,7 +34,7 @@ class RegexManager {
             do {
                 let regularExpression: NSRegularExpression
                 regularExpression =  try NSRegularExpression(pattern: pattern, options:NSRegularExpression.Options.caseInsensitive)
-                self.addRegularExpressionToPool(regex: regularExpression, pattern: pattern)
+                regularExpresionPool[pattern] = regularExpression
                 return regularExpression
             }
             catch {
@@ -83,23 +56,15 @@ class RegexManager {
     }
     
     func phoneDataDetectorMatch(_ string: String) throws -> NSTextCheckingResult {
-        guard let matches = phoneDataDetector?.matches(in: string) else {
-            throw PhoneNumberError.generalError
-        }
-        if let firstMatch = matches.first {
+        let fallBackMatches = try regexMatches(PhoneNumberPatterns.validPhoneNumberPattern, string: string)
+        if let firstMatch = fallBackMatches.first {
             return firstMatch
         }
         else {
-            let fallBackMatches = try regexMatches(PhoneNumberPatterns.validPhoneNumberPattern, string: string)
-            if let firstMatch = fallBackMatches.first {
-                return firstMatch
-            }
-            else {
-                throw PhoneNumberError.notANumber
-            }
+            throw PhoneNumberError.notANumber
         }
     }
-    
+
     // MARK: Match helpers
     
     func matchesAtStart(_ pattern: String, string: String) -> Bool {

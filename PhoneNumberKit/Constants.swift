@@ -26,6 +26,7 @@ Enumeration for parsing error types
 - NotANumber: The string provided is not a number
 - TooLong: The string provided is too long to be a valid number
 - TooShort: The string provided is too short to be a valid number
+- Deprecated: The method used was deprecated
 */
 public enum PhoneNumberError: Error {
     case generalError
@@ -35,8 +36,11 @@ public enum PhoneNumberError: Error {
     case tooLong
     case tooShort
     case deprecated
+}
 
-    public var description: String {
+extension PhoneNumberError: LocalizedError {
+
+    public var errorDescription: String? {
         switch self {
         case .generalError: return NSLocalizedString("An error occured whilst validating the phone number.", comment: "")
         case .invalidCountryCode: return NSLocalizedString("The country code is invalid.", comment: "")
@@ -47,6 +51,7 @@ public enum PhoneNumberError: Error {
         case .deprecated: return NSLocalizedString("This function is deprecated.", comment: "")
         }
     }
+
 }
 
 public enum PhoneNumberFormat {
@@ -58,18 +63,18 @@ public enum PhoneNumberFormat {
 
 /**
  Phone number type enumeration
- - FixedLine: Fixed line numbers
- - Mobile: Mobile numbers
- - FixedOrMobile: Either fixed or mobile numbers if we can't tell conclusively.
- - Pager: Pager numbers
- - PersonalNumber: Personal number numbers
- - PremiumRate: Premium rate numbers
- - SharedCost: Shared cost numbers
- - TollFree: Toll free numbers
- - Voicemail: Voice mail numbers
- - VOIP: Voip numbers
- - UAN: UAN numbers
- - Unknown: Unknown number type
+ - fixedLine: Fixed line numbers
+ - mobile: Mobile numbers
+ - fixedOrMobile: Either fixed or mobile numbers if we can't tell conclusively.
+ - pager: Pager numbers
+ - personalNumber: Personal number numbers
+ - premiumRate: Premium rate numbers
+ - sharedCost: Shared cost numbers
+ - tollFree: Toll free numbers
+ - voicemail: Voice mail numbers
+ - vOIP: Voip numbers
+ - uan: UAN numbers
+ - unknown: Unknown number type
  */
 public enum PhoneNumberType {
     case fixedLine
@@ -114,7 +119,7 @@ struct PhoneNumberPatterns {
 
   static let capturingDigitPattern = "([0-9０-９٠-٩۰-۹])"
 
-  static let extnPattern = "\\;(.*)"
+  static let extnPattern = "(?:;ext=([0-9０-９٠-٩۰-۹]{1,7})|[  \\t,]*(?:e?xt(?:ensi(?:ó?|ó))?n?|ｅ?ｘｔｎ?|[,xｘX#＃~～]|int|anexo|ｉｎｔ)[:\\.．]?[  \\t,-]*([0-9０-９٠-٩۰-۹]{1,7})#?|[- ]+([0-9０-９٠-٩۰-۹]{1,5})#)$"
 
   static let iddPattern = "^(?:\\+|%@)"
 

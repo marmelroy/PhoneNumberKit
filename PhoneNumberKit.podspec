@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "PhoneNumberKit"
-  s.version          = "1.0.1"
+  s.version          = "1.2.2"
   s.summary          = "Swift framework for working with phone numbers"
 
 # This description is used to generate tags and improve search results.
@@ -30,7 +30,8 @@ Pod::Spec.new do |s|
 
   s.requires_arc = true
 
-  s.frameworks = 'CoreTelephony'
+  s.ios.frameworks = 'CoreTelephony'
+  s.osx.frameworks = 'CoreTelephony'
 
   s.ios.deployment_target = '8.0'
   s.osx.deployment_target = '10.10'
