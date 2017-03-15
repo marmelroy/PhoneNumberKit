@@ -13,7 +13,9 @@ import UIKit
 open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     
     let phoneNumberKit = PhoneNumberKit()
-    
+	
+	@IBInspectable var isOnlyDigit:Bool = true
+	
     /// Override region to set a custom region. Automatically uses the default region code.
     public var defaultRegion = PhoneNumberKit.defaultRegionCode() {
         didSet {
@@ -165,7 +167,24 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         
         return nil
     }
-    
+	
+	
+	internal func onlyDigitFilter(on text:String) -> String {
+		let textFiltered = text.characters.filter({ (character) -> Bool in
+			if (character.asciiIntValue >= 48 && character.asciiIntValue <= 57
+				|| character == "+"
+				|| character == ")"
+				|| character == "("
+				|| character == " "
+				|| character == "-"){
+				return true
+			}
+			return false
+		})
+		
+		return String(textFiltered)
+	}
+	
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let text = text else {
             return false
@@ -192,6 +211,11 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             selectedTextRange = selectionRangeForNumberReplacement(textField: textField, formattedText: formattedNationalNumber)
             textField.text = formattedNationalNumber
         }
+		
+		if let textFieldText = textField.text, isOnlyDigit {
+			textField.text = self.onlyDigitFilter(on: textFieldText)
+		}
+		
         sendActions(for: .editingChanged)
         if let selectedTextRange = selectedTextRange, let selectionRangePosition = textField.position(from: beginningOfDocument, offset: selectedTextRange.location) {
             let selectionRange = textField.textRange(from: selectionRangePosition, to: selectionRangePosition)
