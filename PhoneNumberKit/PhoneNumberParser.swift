@@ -11,7 +11,7 @@ import Foundation
 /**
 Parser. Contains parsing functions. 
 */
-final class PhoneNumberParser {
+final public class PhoneNumberParser {
     let metadata: MetadataManager
     let regex: RegexManager
     
@@ -27,7 +27,7 @@ final class PhoneNumberParser {
     - Parameter number: Phone number string.
     - Returns: Normalized phone number string.
     */
-    func normalizePhoneNumber(_ number: String) -> String {
+    public func normalizePhoneNumber(_ number: String) -> String {
         let normalizationMappings = PhoneNumberPatterns.allNormalizationMappings
         return regex.stringByReplacingOccurrences(number, map: normalizationMappings)
     }
