@@ -10,7 +10,7 @@ Inspired by Google's libphonenumber.
 [Migrating from PhoneNumberKit 0.x? See the migration guide.](https://github.com/marmelroy/PhoneNumberKit/blob/master/Documentation/OXMIGRATIONGUIDE.md)  
 ## Features
 
-              |  Features
+| |Features |
 --------------------------|------------------------------------------------------------
 :phone: | Validate, normalize and extract the elements of any phone number string.
 :100: | Simple Swift syntax and a lightweight readable codebase.
