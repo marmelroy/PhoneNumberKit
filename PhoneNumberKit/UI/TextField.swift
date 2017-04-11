@@ -32,6 +32,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             }
         }
     }
+    public var isPartialFormatterEnabled = true
     
     
     let partialFormatter: PartialFormatter
@@ -174,6 +175,9 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         // allow delegate to intervene
         guard _delegate?.textField?(textField, shouldChangeCharactersIn: range, replacementString: string) ?? true else {
             return false
+        }
+        guard isPartialFormatterEnabled else {
+            return true
         }
         
         let textAsNSString = text as NSString
