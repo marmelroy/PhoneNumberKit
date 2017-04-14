@@ -31,7 +31,7 @@ import PhoneNumberKit
 
 All of your interactions with PhoneNumberKit happen through a PhoneNumberKit object. The first step you should take is to allocate one.
 
-It's up to you to control its lifecycle, you should reuse it as necessary and dispose of it when you are done.
+A PhoneNumberKit instance is relatively expensive to allocate (it parses the metadata and keeps it in memory for the object's lifecycle), you should try and make sure PhoneNumberKit is allocated once and deallocated when no longer needed.
 
 ```swift
 let phoneNumberKit = PhoneNumberKit()
