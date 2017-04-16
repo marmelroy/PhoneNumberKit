@@ -14,6 +14,22 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     
     let phoneNumberKit = PhoneNumberKit()
     
+    /// Override setText so number will be automatically formatted when setting text by code
+    override open var text: String? {
+        set {
+            if newValue != nil {
+                let formattedNumber = partialFormatter.formatPartial(newValue! as String)
+                super.text = formattedNumber
+            }
+            else {
+                super.text = newValue
+            }
+        }
+        get {
+            return super.text
+        }
+    }
+    
     /// Override region to set a custom region. Automatically uses the default region code.
     public var defaultRegion = PhoneNumberKit.defaultRegionCode() {
         didSet {
