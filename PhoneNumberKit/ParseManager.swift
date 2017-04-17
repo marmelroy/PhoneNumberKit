@@ -11,10 +11,10 @@ import Foundation
 /**
 Manager for parsing flow.
 */
-final class ParseManager {
+final public class ParseManager {
     
     weak var metadataManager: MetadataManager?
-    let parser: PhoneNumberParser
+    public let parser: PhoneNumberParser
     weak var regexManager: RegexManager?
 
     init(metadataManager: MetadataManager, regexManager: RegexManager) {

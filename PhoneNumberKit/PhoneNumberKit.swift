@@ -15,7 +15,7 @@ public final class PhoneNumberKit: NSObject {
     
     // Manager objects
     let metadataManager = MetadataManager()
-    let parseManager: ParseManager
+    public let parseManager: ParseManager
     let regexManager = RegexManager()
     
     // MARK: Lifecycle
