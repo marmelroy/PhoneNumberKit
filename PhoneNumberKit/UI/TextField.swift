@@ -30,6 +30,11 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         }
     }
     
+    /// allows text to be set without formatting
+    open func setTextUnformatted(newValue:String?) {
+        super.text = newValue
+    }
+    
     /// Override region to set a custom region. Automatically uses the default region code.
     public var defaultRegion = PhoneNumberKit.defaultRegionCode() {
         didSet {
