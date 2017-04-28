@@ -89,6 +89,7 @@ public enum PhoneNumberType {
     case voip
     case uan
     case unknown
+    case notParsed
 }
 
 // MARK: Constants
