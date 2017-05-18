@@ -55,6 +55,11 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
     public var isPartialFormatterEnabled = true
     
+    public var maxDigits: Int? {
+        didSet {
+            partialFormatter.maxDigits = maxDigits
+        }
+    }
     
     let partialFormatter: PartialFormatter
     
