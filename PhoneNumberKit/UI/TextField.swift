@@ -82,15 +82,17 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             return partialFormatter.currentRegion
         }
     }
+    
     public var isValidNumber: Bool {
         get {
+            return nationalNumber != nil
+        }
+    }
+    
+    public var nationalNumber: UInt64? {
+        get {
             let rawNumber = self.text ?? String()
-            do {
-                let _ = try phoneNumberKit.parse(rawNumber, withRegion: currentRegion)
-                return true
-            } catch {
-                return false
-            }
+            return nationalNumber(from: rawNumber)
         }
     }
     
@@ -129,6 +131,14 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         super.delegate = self
     }
     
+    func nationalNumber(from string: String) -> UInt64? {
+        do {
+            let phoneNumber = try phoneNumberKit.parse(string, withRegion: currentRegion)
+            return phoneNumber.nationalNumber
+        } catch {
+            return nil
+        }
+    }
     
     // MARK: Phone number formatting
     
