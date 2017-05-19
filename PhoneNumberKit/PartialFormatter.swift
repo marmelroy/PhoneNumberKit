@@ -63,6 +63,27 @@ public final class PartialFormatter {
         }
     }
     
+    public func nationalNumber(from rawNumber: String) -> String {
+        guard let parser = parser else { return rawNumber }
+        
+        let iddFreeNumber = extractIDD(rawNumber)
+        var nationalNumber = parser.normalizePhoneNumber(iddFreeNumber)
+        if prefixBeforeNationalNumber.characters.count > 0 {
+            nationalNumber = extractCountryCallingCode(nationalNumber)
+        }
+        
+        nationalNumber = extractNationalPrefix(nationalNumber)
+        
+        if let maxDigits = maxDigits {
+            let extra = nationalNumber.characters.count - maxDigits
+            
+            if extra > 0 {
+                nationalNumber = String(nationalNumber.characters.dropLast(extra))
+            }
+        }
+        
+        return nationalNumber
+    }
     
     //MARK: Lifecycle
     
@@ -74,28 +95,14 @@ public final class PartialFormatter {
      - returns: Formatted phone number string.
      */
     public func formatPartial(_ rawNumber: String) -> String {
-        guard let parser = parser else { return rawNumber }
         // Always reset variables with each new raw number
         resetVariables()
-        // Check if number is valid for parsing, if not return raw
+        
         guard isValidRawNumber(rawNumber) else {
             return rawNumber
         }
-        // Determine if number is valid by trying to instantiate a PhoneNumber object with it
-        let iddFreeNumber = extractIDD(rawNumber)
-        var nationalNumber = parser.normalizePhoneNumber(iddFreeNumber)
-        if prefixBeforeNationalNumber.characters.count > 0 {
-            nationalNumber = extractCountryCallingCode(nationalNumber)
-        }
-        nationalNumber = extractNationalPrefix(nationalNumber)
         
-        if let maxDigits = maxDigits {
-            let extra = nationalNumber.characters.count - maxDigits
-            
-            if extra > 0 {
-                nationalNumber = String(nationalNumber.characters.dropLast(extra))
-            }
-        }
+        var nationalNumber = self.nationalNumber(from: rawNumber)
         
         if let formats = availableFormats(nationalNumber) {
             if let formattedNumber = applyFormat(nationalNumber, formats: formats) {
