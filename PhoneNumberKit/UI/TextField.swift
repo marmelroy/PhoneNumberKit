@@ -15,7 +15,28 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     let phoneNumberKit = PhoneNumberKit()
 	
 	@IBInspectable var isOnlyDigit:Bool = true
-	
+    
+    /// Override setText so number will be automatically formatted when setting text by code
+    override open var text: String? {
+        set {
+            if newValue != nil {
+                let formattedNumber = partialFormatter.formatPartial(newValue! as String)
+                super.text = formattedNumber
+            }
+            else {
+                super.text = newValue
+            }
+        }
+        get {
+            return super.text
+        }
+    }
+    
+    /// allows text to be set without formatting
+    open func setTextUnformatted(newValue:String?) {
+        super.text = newValue
+    }
+  
     /// Override region to set a custom region. Automatically uses the default region code.
     public var defaultRegion = PhoneNumberKit.defaultRegionCode() {
         didSet {
@@ -34,6 +55,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             }
         }
     }
+    public var isPartialFormatterEnabled = true
     
     
     let partialFormatter: PartialFormatter
@@ -194,11 +216,20 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         guard _delegate?.textField?(textField, shouldChangeCharactersIn: range, replacementString: string) ?? true else {
             return false
         }
+        guard isPartialFormatterEnabled else {
+            return true
+        }
         
         let textAsNSString = text as NSString
         let changedRange = textAsNSString.substring(with: range) as NSString
         let modifiedTextField = textAsNSString.replacingCharacters(in: range, with: string)
-        let formattedNationalNumber = partialFormatter.formatPartial(modifiedTextField as String)
+        
+        let filteredCharacters = modifiedTextField.characters.filter {
+            return  String($0).rangeOfCharacter(from: (textField as! PhoneNumberTextField).nonNumericSet as CharacterSet) == nil
+        }
+        let rawNumberString = String(filteredCharacters)
+
+        let formattedNationalNumber = partialFormatter.formatPartial(rawNumberString as String)
         var selectedTextRange: NSRange?
         
         let nonNumericRange = (changedRange.rangeOfCharacter(from: nonNumericSet as CharacterSet).location != NSNotFound)
