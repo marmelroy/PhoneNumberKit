@@ -193,7 +193,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         return nil
     }
     
-    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+    open func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         guard let text = text else {
             return false
         }
