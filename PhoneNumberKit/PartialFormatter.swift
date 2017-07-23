@@ -52,7 +52,7 @@ public final class PartialFormatter {
     var currentMetadata: MetadataTerritory?
     var prefixBeforeNationalNumber =  String()
     var shouldAddSpaceAfterNationalPrefix = false
-    
+    var maxDigits: Int?
     var withPrefix = true
     
     //MARK: Status
@@ -88,6 +88,14 @@ public final class PartialFormatter {
             nationalNumber = extractCountryCallingCode(nationalNumber)
         }
         nationalNumber = extractNationalPrefix(nationalNumber)
+        
+        if let maxDigits = maxDigits {
+            let extra = nationalNumber.characters.count - maxDigits
+            
+            if extra > 0 {
+                nationalNumber = String(nationalNumber.characters.dropLast(extra))
+            }
+        }
         
         if let formats = availableFormats(nationalNumber) {
             if let formattedNumber = applyFormat(nationalNumber, formats: formats) {
