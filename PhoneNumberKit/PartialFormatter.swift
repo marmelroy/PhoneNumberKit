@@ -63,6 +63,67 @@ public final class PartialFormatter {
         }
     }
     
+    public enum PhoneNumberType {
+        case emergency
+        case fixedLine
+        case generalDesc
+        case mobile
+        case pager
+        case personalNumber
+        case premiumRate
+        case sharedCost
+        case tollFree
+        case voicemail
+        case voip
+        case uan
+    }
+    
+    /**
+     Gets an example number for the current country. Typically used as a placeholder in text fields.
+     
+     - parameter for: The type of phone number to get (ie mobile, etc).
+     - parameter formatted: If the example number should be formatted according to rules for the current country.
+     
+     - returns: An example number for the current country. (Optional)
+     */
+    public func exampleNumber(for numberType: PhoneNumberType = .mobile, formatted: Bool = true) -> String? {
+        var exampleNumber: String?
+        
+        switch numberType {
+        case .emergency:
+            exampleNumber = currentMetadata?.emergency?.exampleNumber
+        case .fixedLine:
+            exampleNumber = currentMetadata?.fixedLine?.exampleNumber
+        case .generalDesc:
+            exampleNumber = currentMetadata?.generalDesc?.exampleNumber
+        case .mobile:
+            exampleNumber = currentMetadata?.mobile?.exampleNumber
+        case .pager:
+            exampleNumber = currentMetadata?.pager?.exampleNumber
+        case .personalNumber:
+            exampleNumber = currentMetadata?.personalNumber?.exampleNumber
+        case .premiumRate:
+            exampleNumber = currentMetadata?.premiumRate?.exampleNumber
+        case .sharedCost:
+            exampleNumber = currentMetadata?.sharedCost?.exampleNumber
+        case .tollFree:
+            exampleNumber = currentMetadata?.tollFree?.exampleNumber
+        case .voicemail:
+            exampleNumber = currentMetadata?.voicemail?.exampleNumber
+        case .voip:
+            exampleNumber = currentMetadata?.voip?.exampleNumber
+        case .uan:
+            exampleNumber = currentMetadata?.uan?.exampleNumber
+        }
+        
+        //If we got back a number and we want it to be formatted
+        if let numberToFormat = exampleNumber, formatted {
+            return formatPartial(numberToFormat)
+        }
+        
+        return exampleNumber
+    }
+    
     
     //MARK: Lifecycle
     
