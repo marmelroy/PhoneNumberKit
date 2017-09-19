@@ -10,11 +10,12 @@ import Foundation
 
 extension String {
 	func nsRange(from range: Range<String.Index>) -> NSRange {
-		let utf16view = self.utf16
-		let from = range.lowerBound.samePosition(in: utf16view)
-		let to = range.upperBound.samePosition(in: utf16view)
-		return NSMakeRange(utf16view.distance(from: utf16view.startIndex, to: from),
-		                   utf16view.distance(from: from, to: to))
+		guard let from = range.lowerBound.samePosition(in: utf16), let to = range.upperBound.samePosition(in: utf16) else {
+            fatalError("String view index conversion failed")
+        }
+        
+		return NSMakeRange(utf16.distance(from: utf16.startIndex, to: from),
+		                   utf16.distance(from: from, to: to))
 	}
 	
 	func range(from nsRange: NSRange) -> Range<String.Index>? {
