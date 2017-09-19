@@ -121,7 +121,7 @@ public final class PartialFormatter {
             finalNumber.append(nationalNumber)
         }
         if finalNumber.characters.last == PhoneNumberConstants.separatorBeforeNationalNumber.characters.first {
-            finalNumber = finalNumber.substring(to: finalNumber.index(before: finalNumber.endIndex))
+            finalNumber = String(finalNumber[..<finalNumber.index(before: finalNumber.endIndex)])
         }
         
         return finalNumber
@@ -187,8 +187,8 @@ public final class PartialFormatter {
                 if let m = matches?.first {
                     let startCallingCode = m.characters.count
                     let index = rawNumber.characters.index(rawNumber.startIndex, offsetBy: startCallingCode)
-                    processedNumber = rawNumber.substring(from: index)
-                    prefixBeforeNationalNumber = rawNumber.substring(to: index)
+                    processedNumber = String(rawNumber[index...])
+                    prefixBeforeNationalNumber = String(rawNumber[..<index])
                 }
             }
         }
@@ -219,8 +219,8 @@ public final class PartialFormatter {
             }
         }
         let index = rawNumber.characters.index(rawNumber.startIndex, offsetBy: startOfNationalNumber)
-        processedNumber = rawNumber.substring(from: index)
-        prefixBeforeNationalNumber.append(rawNumber.substring(to: index))
+        processedNumber = String(rawNumber[index...])
+        prefixBeforeNationalNumber.append(String(rawNumber[..<index]))
         return processedNumber
     }
     
@@ -374,7 +374,7 @@ public final class PartialFormatter {
         }
         if rebuiltIndex < rawNumber.characters.count {
             let nationalCharacterIndex = rawNumber.characters.index(rawNumber.startIndex, offsetBy: rebuiltIndex)
-            let remainingNationalNumber: String = rawNumber.substring(from: nationalCharacterIndex)
+            let remainingNationalNumber: String = String(rawNumber[nationalCharacterIndex...])
             rebuiltString.append(remainingNationalNumber)
         }
         rebuiltString = rebuiltString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
