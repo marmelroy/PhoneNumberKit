@@ -84,16 +84,16 @@ public final class PartialFormatter {
         // Determine if number is valid by trying to instantiate a PhoneNumber object with it
         let iddFreeNumber = extractIDD(rawNumber)
         var nationalNumber = parser.normalizePhoneNumber(iddFreeNumber)
-        if prefixBeforeNationalNumber.characters.count > 0 {
+        if prefixBeforeNationalNumber.count > 0 {
             nationalNumber = extractCountryCallingCode(nationalNumber)
         }
         nationalNumber = extractNationalPrefix(nationalNumber)
         
         if let maxDigits = maxDigits {
-            let extra = nationalNumber.characters.count - maxDigits
+            let extra = nationalNumber.count - maxDigits
             
             if extra > 0 {
-                nationalNumber = String(nationalNumber.characters.dropLast(extra))
+                nationalNumber = String(nationalNumber.dropLast(extra))
             }
         }
         
@@ -111,16 +111,16 @@ public final class PartialFormatter {
             }
         }
         var finalNumber = String()
-        if prefixBeforeNationalNumber.characters.count > 0 {
+        if prefixBeforeNationalNumber.count > 0 {
             finalNumber.append(prefixBeforeNationalNumber)
         }
-        if shouldAddSpaceAfterNationalPrefix && prefixBeforeNationalNumber.characters.count > 0 && prefixBeforeNationalNumber.characters.last != PhoneNumberConstants.separatorBeforeNationalNumber.characters.first  {
+        if shouldAddSpaceAfterNationalPrefix && prefixBeforeNationalNumber.count > 0 && prefixBeforeNationalNumber.last != PhoneNumberConstants.separatorBeforeNationalNumber.first  {
             finalNumber.append(PhoneNumberConstants.separatorBeforeNationalNumber)
         }
-        if nationalNumber.characters.count > 0 {
+        if nationalNumber.count > 0 {
             finalNumber.append(nationalNumber)
         }
-        if finalNumber.characters.last == PhoneNumberConstants.separatorBeforeNationalNumber.characters.first {
+        if finalNumber.last == PhoneNumberConstants.separatorBeforeNationalNumber.first {
             finalNumber = String(finalNumber[..<finalNumber.index(before: finalNumber.endIndex)])
         }
         
@@ -155,10 +155,10 @@ public final class PartialFormatter {
     }
     
     internal func isNanpaNumberWithNationalPrefix(_ rawNumber: String) -> Bool {
-        guard currentMetadata?.countryCode == 1 && rawNumber.characters.count > 1 else { return false }
+        guard currentMetadata?.countryCode == 1 && rawNumber.count > 1 else { return false }
         
-        let firstCharacter: String = String(describing: rawNumber.characters.first)
-        let secondCharacter: String = String(describing: rawNumber.characters[rawNumber.characters.index(rawNumber.characters.startIndex, offsetBy: 1)])
+        let firstCharacter: String = String(describing: rawNumber.first)
+        let secondCharacter: String = String(describing: rawNumber[rawNumber.index(rawNumber.startIndex, offsetBy: 1)])
         return (firstCharacter == "1" && secondCharacter != "0" && secondCharacter != "1")
     }
     
@@ -168,7 +168,7 @@ public final class PartialFormatter {
         }
         do {
             let validRegex = try regexManager?.regexWithPattern(PhoneNumberPatterns.eligibleAsYouTypePattern)
-            if validRegex?.firstMatch(in: phoneFormat, options: [], range: NSMakeRange(0, phoneFormat.characters.count)) != nil {
+            if validRegex?.firstMatch(in: phoneFormat, options: [], range: NSMakeRange(0, phoneFormat.count)) != nil {
                 return true
             }
         }
@@ -185,8 +185,8 @@ public final class PartialFormatter {
                 let prefixPattern = String(format: PhoneNumberPatterns.iddPattern, arguments: [internationalPrefix])
                 let matches = try regexManager?.matchedStringByRegex(prefixPattern, string: rawNumber)
                 if let m = matches?.first {
-                    let startCallingCode = m.characters.count
-                    let index = rawNumber.characters.index(rawNumber.startIndex, offsetBy: startCallingCode)
+                    let startCallingCode = m.count
+                    let index = rawNumber.index(rawNumber.startIndex, offsetBy: startCallingCode)
                     processedNumber = String(rawNumber[index...])
                     prefixBeforeNationalNumber = String(rawNumber[..<index])
                 }
@@ -210,7 +210,7 @@ public final class PartialFormatter {
                     let nationalPrefixPattern = String(format: PhoneNumberPatterns.nationalPrefixParsingPattern, arguments: [nationalPrefix])
                     let matches = try regexManager?.matchedStringByRegex(nationalPrefixPattern, string: rawNumber)
                     if let m = matches?.first {
-                        startOfNationalNumber = m.characters.count
+                        startOfNationalNumber = m.count
                     }
                 }
             }
@@ -218,7 +218,7 @@ public final class PartialFormatter {
                 return processedNumber
             }
         }
-        let index = rawNumber.characters.index(rawNumber.startIndex, offsetBy: startOfNationalNumber)
+        let index = rawNumber.index(rawNumber.startIndex, offsetBy: startOfNationalNumber)
         processedNumber = String(rawNumber[index...])
         prefixBeforeNationalNumber.append(String(rawNumber[..<index]))
         return processedNumber
@@ -230,7 +230,7 @@ public final class PartialFormatter {
             return rawNumber
         }
         var numberWithoutCountryCallingCode = String()
-        if prefixBeforeNationalNumber.isEmpty == false && prefixBeforeNationalNumber.characters.first != "+" {
+        if prefixBeforeNationalNumber.isEmpty == false && prefixBeforeNationalNumber.first != "+" {
             prefixBeforeNationalNumber.append(PhoneNumberConstants.separatorBeforeNationalNumber)
         }
         if let potentialCountryCode = parser?.extractPotentialCountryCode(rawNumber, nationalNumber: &numberWithoutCountryCallingCode), potentialCountryCode != 0 {
@@ -288,7 +288,7 @@ public final class PartialFormatter {
                     if matches.count > 0 {
                         if let nationalPrefixFormattingRule = format.nationalPrefixFormattingRule {
                             let separatorRegex = try regexManager.regexWithPattern(PhoneNumberPatterns.prefixSeparatorPattern)
-                            let nationalPrefixMatches = separatorRegex.matches(in: nationalPrefixFormattingRule, options: [], range:  NSMakeRange(0, nationalPrefixFormattingRule.characters.count))
+                            let nationalPrefixMatches = separatorRegex.matches(in: nationalPrefixFormattingRule, options: [], range:  NSMakeRange(0, nationalPrefixFormattingRule.count))
                             if nationalPrefixMatches.count > 0 {
                                 shouldAddSpaceAfterNationalPrefix = true
                             }
@@ -324,7 +324,7 @@ public final class PartialFormatter {
             if let tempTemplate = getFormattingTemplate(numberPattern, numberFormat: numberFormat, rawNumber: rawNumber) {
                 if let nationalPrefixFormattingRule = format.nationalPrefixFormattingRule {
                     let separatorRegex = try regexManager.regexWithPattern(PhoneNumberPatterns.prefixSeparatorPattern)
-                    let nationalPrefixMatch = separatorRegex.firstMatch(in: nationalPrefixFormattingRule, options: [], range:  NSMakeRange(0, nationalPrefixFormattingRule.characters.count))
+                    let nationalPrefixMatch = separatorRegex.firstMatch(in: nationalPrefixFormattingRule, options: [], range:  NSMakeRange(0, nationalPrefixFormattingRule.count))
                     if nationalPrefixMatch != nil {
                         shouldAddSpaceAfterNationalPrefix = true
                     }
@@ -341,7 +341,7 @@ public final class PartialFormatter {
         do {
             let matches =  try regexManager.matchedStringByRegex(numberPattern, string: PhoneNumberConstants.longPhoneNumber)
             if let match = matches.first {
-                if match.characters.count < rawNumber.characters.count {
+                if match.count < rawNumber.count {
                     return nil
                 }
                 var template = regexManager.replaceStringByRegex(numberPattern, string: match, template: numberFormat)
@@ -358,22 +358,22 @@ public final class PartialFormatter {
     func applyFormattingTemplate(_ template: String, rawNumber: String) -> String {
         var rebuiltString = String()
         var rebuiltIndex = 0
-        for character in template.characters {
-            if character == PhoneNumberConstants.digitPlaceholder.characters.first {
-                if rebuiltIndex < rawNumber.characters.count {
-                    let nationalCharacterIndex = rawNumber.characters.index(rawNumber.startIndex, offsetBy: rebuiltIndex)
+        for character in template {
+            if character == PhoneNumberConstants.digitPlaceholder.first {
+                if rebuiltIndex < rawNumber.count {
+                    let nationalCharacterIndex = rawNumber.index(rawNumber.startIndex, offsetBy: rebuiltIndex)
                     rebuiltString.append(rawNumber[nationalCharacterIndex])
                     rebuiltIndex += 1
                 }
             }
             else {
-                if rebuiltIndex < rawNumber.characters.count {
+                if rebuiltIndex < rawNumber.count {
                     rebuiltString.append(character)
                 }
             }
         }
-        if rebuiltIndex < rawNumber.characters.count {
-            let nationalCharacterIndex = rawNumber.characters.index(rawNumber.startIndex, offsetBy: rebuiltIndex)
+        if rebuiltIndex < rawNumber.count {
+            let nationalCharacterIndex = rawNumber.index(rawNumber.startIndex, offsetBy: rebuiltIndex)
             let remainingNationalNumber: String = String(rawNumber[nationalCharacterIndex...])
             rebuiltString.append(remainingNationalNumber)
         }
