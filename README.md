@@ -4,7 +4,7 @@
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 # PhoneNumberKit
-Swift 3.0 framework for parsing, formatting and validating international phone numbers.
+Swift 4.0 framework for parsing, formatting and validating international phone numbers.
 Inspired by Google's libphonenumber.
 
 [Migrating from PhoneNumberKit 0.x? See the migration guide.](https://github.com/marmelroy/PhoneNumberKit/blob/master/Documentation/OXMIGRATIONGUIDE.md)  
@@ -109,5 +109,5 @@ github "marmelroy/PhoneNumberKit"
 ### Setting up with [CocoaPods](http://cocoapods.org/?q=PhoneNumberKit)
 ```ruby
 source 'https://github.com/CocoaPods/Specs.git'
-pod 'PhoneNumberKit', '~> 1.3'
+pod 'PhoneNumberKit', '~> 2.0'
 ```
