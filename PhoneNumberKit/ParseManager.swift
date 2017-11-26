@@ -34,7 +34,9 @@ final class ParseManager {
         // Make sure region is in uppercase so that it matches metadata (1)
         let region = region.uppercased()
         // Extract number (2)
+        
         var nationalNumber = numberString
+
         let match = try regexManager.phoneDataDetectorMatch(numberString)
         let matchedNumber = nationalNumber.substring(with: match.range)
         nationalNumber = matchedNumber
