@@ -87,6 +87,14 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             return partialFormatter.currentRegion
         }
     }
+    
+    public var nationalNumber: String {
+        get {
+            let rawNumber = self.text ?? String()
+            return partialFormatter.nationalNumber(from: rawNumber)
+        }
+    }
+    
     public var isValidNumber: Bool {
         get {
             let rawNumber = self.text ?? String()
