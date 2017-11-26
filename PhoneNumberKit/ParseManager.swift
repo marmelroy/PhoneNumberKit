@@ -107,7 +107,7 @@ final class ParseManager {
     - parameter ignoreType:   Avoids number type checking for faster performance.
     - Returns: An array of valid PhoneNumber objects.
     */
-    func parseMultiple(_ numberStrings: [String], withRegion region: String, ignoreType: Bool, testCallback: (()->())? = nil) -> [PhoneNumber] {
+    func parseMultiple(_ numberStrings: [String], withRegion region: String, ignoreType: Bool, shouldReturnFailedEmptyNumbers: Bool = false, testCallback: (()->())? = nil) -> [PhoneNumber] {
         var multiParseArray = [PhoneNumber]()
         let group = DispatchGroup()
         let queue = DispatchQueue(label: "com.phonenumberkit.multipleparse", qos: .default)
@@ -118,8 +118,14 @@ final class ParseManager {
                 do {
                     if let phoneNumebr = try self?.parse(numberString, withRegion: region, ignoreType: ignoreType) {
                         multiParseArray.append(phoneNumebr)
+                    }else if shouldReturnFailedEmptyNumbers{
+                        multiParseArray.append(PhoneNumber.notPhoneNumber())
                     }
-                } catch {}
+                } catch {
+                    if shouldReturnFailedEmptyNumbers{
+                        multiParseArray.append(PhoneNumber.notPhoneNumber())
+                    }
+                }
                 group.leave()
             })
             if index == numberStrings.count/2 {

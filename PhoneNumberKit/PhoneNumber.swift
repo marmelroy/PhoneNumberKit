@@ -46,6 +46,17 @@ extension PhoneNumber : Hashable {
 
 }
 
+extension PhoneNumber{
+    
+    public static func notPhoneNumber() -> PhoneNumber{
+        return PhoneNumber(numberString: "", countryCode: 0, leadingZero: false, nationalNumber: 0, numberExtension: nil, type: .notParsed)
+    }
+    
+    public func notParsed() -> Bool{
+        return type == .notParsed
+    }
+}
+
 /// In past versions of PhoneNumebrKit you were able to initialize a PhoneNumber object to parse a String. Please use a PhoneNumberKit object's methods.
 public extension PhoneNumber {
     /**
