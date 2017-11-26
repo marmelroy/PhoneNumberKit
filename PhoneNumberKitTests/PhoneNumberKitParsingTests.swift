@@ -296,12 +296,12 @@ class PhoneNumberKitParsingTests: XCTestCase {
         XCTAssertEqual(number.type, PhoneNumberType.fixedLine)
     }
 
-    func testMaldivesPagerNumber() {
+    func testMaldivesMobileNumber() {
         guard let number = try? phoneNumberKit.parse("7812345", withRegion: "MV") else {
             XCTFail()
             return
         }
-        XCTAssertEqual(number.type, PhoneNumberType.pager)
+        XCTAssertEqual(number.type, PhoneNumberType.mobile)
     }
 
     func testZimbabweVoipType() {
