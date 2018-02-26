@@ -95,6 +95,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         }
     }
     
+    
     public var isValidNumber: Bool {
         get {
             let rawNumber = self.text ?? String()
@@ -199,6 +200,37 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         }
         
         return nil
+    }
+    
+    //MARK: - Phone number format types
+    
+    internal func formatPhoneNumber(forType: PhoneNumberFormat) -> String {
+        let rawNumber = self.text ?? String()
+        do {
+            let phoneNumber = try phoneNumberKit.parse(rawNumber, withRegion: currentRegion)
+            return phoneNumberKit.format(phoneNumber, toType: .e164)
+        } catch {
+            return ""
+        }
+    }
+    
+    public var e164Formated: String {
+        get {
+            return formatPhoneNumber(forType: .e164)
+        }
+    }
+    
+    public var internationalFormated: String {
+        get {
+            return formatPhoneNumber(forType: .international)
+        }
+    }
+    
+    
+    public var nationalFormated: String {
+        get {
+            return formatPhoneNumber(forType: .national)
+        }
     }
     
     open func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
