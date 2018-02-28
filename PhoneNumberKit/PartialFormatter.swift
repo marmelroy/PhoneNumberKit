@@ -52,8 +52,8 @@ public final class PartialFormatter {
     var currentMetadata: MetadataTerritory?
     var prefixBeforeNationalNumber =  String()
     var shouldAddSpaceAfterNationalPrefix = false
-    var maxDigits: Int?
-    var withPrefix = true
+    public var maxDigits: Int?
+    public var withPrefix = true
     
     //MARK: Status
     

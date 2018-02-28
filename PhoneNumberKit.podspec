@@ -53,7 +53,7 @@ Pod::Spec.new do |s|
     ui.dependency 'PhoneNumberKit/PhoneNumberKitCore'
     ui.ios.deployment_target = '8.0'
     ui.tvos.deployment_target = '9.0'
-    ui.source_files = 'PhoneNumberKit/UI/'
+    ui.source_files = 'PhoneNumberKitUI/*.{swift}'
   end
 
 end
