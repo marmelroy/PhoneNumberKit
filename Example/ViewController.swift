@@ -11,6 +11,7 @@ import PhoneNumberKit
 
 class ViewController: UIViewController, PhoneNumberValidationCodeDataSource, PhoneNumberValidationCodeDelegate {
     
+    @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var validationCodeView: PhoneNumberValidationCode!
     
     override func viewDidLoad() {
@@ -19,6 +20,7 @@ class ViewController: UIViewController, PhoneNumberValidationCodeDataSource, Pho
         validationCodeView.defaultText = "-"
         validationCodeView.delegate = self
         validationCodeView.dataSource = self
+        self.setStatus("started", .gray)
     }
 
     override func didReceiveMemoryWarning() {
@@ -45,11 +47,42 @@ class ViewController: UIViewController, PhoneNumberValidationCodeDataSource, Pho
     
     func validationCode(_ validationCode: PhoneNumberValidationCode, didEnter text: String) {
         print("didEnter:", text)
+        self.setStatus("waiting", .darkGray)
     }
     
     func validationCode(_ validationCode: PhoneNumberValidationCode, didFinish text: String) {
         print("Finish:", text)
+        let alertController = self.createAlert()
+        self.present(alertController, animated: true) {
+            self.loadData { success in
+                if !success {
+                    self.validationCodeView.reset()
+                    self.setStatus("reseted", .red)
+                } else {
+                    self.setStatus("fnished", .green)
+                }
+                alertController.dismiss(animated: true, completion: nil)
+            }
+        }
+    }
+    
+    // MARK: Methods
+    
+    func createAlert() -> UIAlertController {
+        let alert = UIAlertController(title: "", message: "Loading...", preferredStyle: .alert)
+        return alert
+    }
+    
+    func loadData(completion: @escaping (Bool) -> Void) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { // in half a second...
+            completion(self.validationCodeView.text.range(of: "2") != nil)
+        }
     }
 
+    func setStatus(_ text: String, _ color: UIColor) {
+        self.statusLabel.text = text.uppercased()
+        self.statusLabel.textColor = color
+    }
+    
 }
 

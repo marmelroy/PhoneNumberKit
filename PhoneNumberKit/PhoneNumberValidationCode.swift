@@ -56,7 +56,7 @@ public class PhoneNumberValidationCode: UIView, UIKeyInput {
     /// Labels to display current input
     private var labels: [UILabel] = []
     /// Current input
-    private(set) var text: String = "" {
+    public private(set) var text: String = "" {
         didSet {
             self.updateText(with: self.text)
         }
@@ -118,6 +118,13 @@ public class PhoneNumberValidationCode: UIView, UIKeyInput {
         super.layoutSubviews()
         
         self.updateText(with: self.text)
+    }
+    
+    // MARK: Methods
+    
+    /// Reset text
+    public func reset() {
+        self.text = ""
     }
     
     // MARK: Key input
