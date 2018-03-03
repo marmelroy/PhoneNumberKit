@@ -9,16 +9,16 @@
 import UIKit
 import PhoneNumberKit
 
-class ViewController: UIViewController, PhoneNumberValidationCodeDataSource {
+class ViewController: UIViewController, PhoneNumberValidationCodeDataSource, PhoneNumberValidationCodeDelegate {
     
     @IBOutlet weak var validationCodeView: PhoneNumberValidationCode!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print("CONTROLLER", validationCodeView.autoResponder)
-        validationCodeView.autoResponder = false
-//        validationCodeView.dataSource = self
+        validationCodeView.defaultText = "-"
+        validationCodeView.delegate = self
+        validationCodeView.dataSource = self
     }
 
     override func didReceiveMemoryWarning() {
@@ -31,7 +31,19 @@ class ViewController: UIViewController, PhoneNumberValidationCodeDataSource {
     func validationCode(_ validationCode: PhoneNumberValidationCode, labelAtIndex index: UInt) -> UILabel {
         let label = UILabel(frame: CGRect(x: 0, y: 0, width: 20, height: 40))
         label.textAlignment = .center
+        label.backgroundColor = .white
+        label.textColor = .red
         return label
+    }
+    
+    // MARK: PhoneNumber Validation Code Delegate
+    
+    func validationCode(_ validationCode: PhoneNumberValidationCode, didEnter text: String) {
+        print("Enter:", text)
+    }
+    
+    func validationCode(_ validationCode: PhoneNumberValidationCode, didFinish text: String) {
+        print("Finish:", text)
     }
 
 }

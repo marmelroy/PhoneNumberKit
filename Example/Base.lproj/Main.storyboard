@@ -24,12 +24,12 @@
                                 <color key="backgroundColor" red="0.99215686270000003" green="0.36470588240000001" blue="0.38431372549999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="length">
-                                        <integer key="value" value="5"/>
+                                        <integer key="value" value="6"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="labelSpacing">
-                                        <real key="value" value="5"/>
+                                        <real key="value" value="2"/>
                                     </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="boolean" keyPath="autoResponder" value="NO"/>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="autoResponder" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
                         </subviews>

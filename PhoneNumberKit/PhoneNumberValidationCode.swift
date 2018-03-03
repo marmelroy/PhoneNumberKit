@@ -14,6 +14,13 @@ public protocol PhoneNumberValidationCodeDataSource {
     
 }
 
+@objc public protocol PhoneNumberValidationCodeDelegate {
+    
+    @objc optional func validationCode(_ validationCode: PhoneNumberValidationCode, didFinish text: String)
+    @objc optional func validationCode(_ validationCode: PhoneNumberValidationCode, didEnter text: String)
+    
+}
+
 /// Custom view to enter validation code
 public class PhoneNumberValidationCode: UIView, UIKeyInput {
     
@@ -27,6 +34,8 @@ public class PhoneNumberValidationCode: UIView, UIKeyInput {
     public var keyboardType: UIKeyboardType = .numberPad
     /// Data Source to retreive labels
     public var dataSource: PhoneNumberValidationCodeDataSource!
+    /// Delegate to interact with validation code
+    public var delegate: PhoneNumberValidationCodeDelegate?
     /// Default text for label who's input not yet enter
     public var defaultText: Character = "•"
     /// Validation code length.
@@ -54,13 +63,6 @@ public class PhoneNumberValidationCode: UIView, UIKeyInput {
         self.dataSource = self
     }
     
-    override public func awakeFromNib() {
-        super.awakeFromNib()
-        
-        self.translatesAutoresizingMaskIntoConstraints = false
-        self.createLabels()
-    }
-    
     private func createLabels() {
         for i in 0...(self.length - 1) {
             let label = self.insertLabel(atIndex: i)
@@ -75,7 +77,10 @@ public class PhoneNumberValidationCode: UIView, UIKeyInput {
         for (index, lbl) in self.labels.enumerated() {
             let key = "lbl_\(index)"
             views[key] = lbl
-            hVisual += "\(self.labelSpacing)-[\(key)(==lbl_0)]-"
+            if index != 0 {
+                hVisual += "\(self.labelSpacing)-"
+            }
+            hVisual += "[\(key)(==lbl_0)]-"
         }
         hVisual += "|"
         let widthConstraints = NSLayoutConstraint.constraints(withVisualFormat: hVisual, options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views)
@@ -100,6 +105,7 @@ public class PhoneNumberValidationCode: UIView, UIKeyInput {
         if self.autoResponder {
             self.becomeFirstResponder()
         }
+        self.createLabels()
     }
     
     override public func layoutSubviews() {
@@ -113,6 +119,10 @@ public class PhoneNumberValidationCode: UIView, UIKeyInput {
     public func insertText(_ text: String) {
         if self.text.count + text.count <= self.length {
             self.text += text
+            self.delegate?.validationCode?(self, didEnter: text)
+        }
+        if self.text.count == self.length {
+            self.delegate?.validationCode?(self, didFinish: self.text)
         }
     }
     
