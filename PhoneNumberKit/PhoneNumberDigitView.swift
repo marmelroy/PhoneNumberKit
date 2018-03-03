@@ -13,7 +13,7 @@ import UIKit
     /// Set on load
     var defaultText: String { get set }
     
-    /// Called to display digit.
+    /// Called when digit change. Nil if empty.
     func display(_ digit: String?)
 
 }

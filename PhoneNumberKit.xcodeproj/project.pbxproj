@@ -38,6 +38,8 @@
 		8B01E84C204AEC4D0065A39C /* PhoneNumberKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 342418641BB6E5A000EE70E7 /* PhoneNumberKit.framework */; };
 		8B01E84E204AECCC0065A39C /* PhoneNumberKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 342418641BB6E5A000EE70E7 /* PhoneNumberKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8B01E854204B13EF0065A39C /* PhoneNumberDigitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B01E853204B13EF0065A39C /* PhoneNumberDigitView.swift */; };
+		8B01E856204B1F540065A39C /* CustomDigitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B01E855204B1F540065A39C /* CustomDigitView.swift */; };
+		8B01E858204B241E0065A39C /* CustomDigitView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8B01E857204B241E0065A39C /* CustomDigitView.xib */; };
 		C6B53DA51D944F8000E607DD /* NSRegularExpression+Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C2EF381D62BC3200052D44 /* NSRegularExpression+Swift.swift */; };
 		C6B53DA61D944F8000E607DD /* NSRegularExpression+Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C2EF381D62BC3200052D44 /* NSRegularExpression+Swift.swift */; };
 		C6B53DA71D94508400E607DD /* NSRegularExpression+Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C2EF381D62BC3200052D44 /* NSRegularExpression+Swift.swift */; };
@@ -142,6 +144,8 @@
 		8B01E845204AE9EB0065A39C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8B01E847204AE9EB0065A39C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8B01E853204B13EF0065A39C /* PhoneNumberDigitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberDigitView.swift; sourceTree = "<group>"; };
+		8B01E855204B1F540065A39C /* CustomDigitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDigitView.swift; sourceTree = "<group>"; };
+		8B01E857204B241E0065A39C /* CustomDigitView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomDigitView.xib; sourceTree = "<group>"; };
 		C6DF6C4B1D1B09CF00259F4B /* PhoneNumberKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PhoneNumberKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6DF6C911D1B120400259F4B /* PhoneNumberKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PhoneNumberKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6DF6CA71D1B145300259F4B /* PhoneNumberKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhoneNumberKit.h; sourceTree = "<group>"; };
@@ -287,6 +291,8 @@
 			children = (
 				8B01E83B204AE9EB0065A39C /* AppDelegate.swift */,
 				8B01E83D204AE9EB0065A39C /* ViewController.swift */,
+				8B01E855204B1F540065A39C /* CustomDigitView.swift */,
+				8B01E857204B241E0065A39C /* CustomDigitView.xib */,
 				8B01E83F204AE9EB0065A39C /* Main.storyboard */,
 				8B01E842204AE9EB0065A39C /* Assets.xcassets */,
 				8B01E844204AE9EB0065A39C /* LaunchScreen.storyboard */,
@@ -538,6 +544,7 @@
 				8B01E846204AE9EB0065A39C /* LaunchScreen.storyboard in Resources */,
 				8B01E843204AE9EB0065A39C /* Assets.xcassets in Resources */,
 				8B01E841204AE9EB0065A39C /* Main.storyboard in Resources */,
+				8B01E858204B241E0065A39C /* CustomDigitView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -604,6 +611,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8B01E83E204AE9EB0065A39C /* ViewController.swift in Sources */,
+				8B01E856204B1F540065A39C /* CustomDigitView.swift in Sources */,
 				8B01E83C204AE9EB0065A39C /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -54,11 +54,7 @@ public class PhoneNumberValidationCode: UIView, UIKeyInput {
     /// Labels to display current input
     private var digitViews: [PhoneNumberDigitView] = []
     /// Current input
-    public private(set) var text: String = "" {
-        didSet {
-            self.updateText(with: self.text)
-        }
-    }
+    public private(set) var text: String = ""
     
     // MARK: - Initialization
     
@@ -123,6 +119,7 @@ public class PhoneNumberValidationCode: UIView, UIKeyInput {
     /// Reset text
     public func reset() {
         self.text = ""
+        self.updateText(with: self.text)
     }
     
     /// Default text for label who's input not yet enter
@@ -135,11 +132,14 @@ public class PhoneNumberValidationCode: UIView, UIKeyInput {
     // MARK: Key input
     
     public func insertText(_ text: String) {
-        if self.text.count + text.count <= self.length {
+        let finalCount: Int = self.text.count + text.count
+        if finalCount <= self.length {
             guard let valid = self.delegate?.validationCode?(self, willEnter: text), valid else {
                 return
             }
+            let range = Int(self.text.count)..<finalCount
             self.text += text
+            self.updateText(with: self.text, range: range)
             self.delegate?.validationCode?(self, didEnter: text)
             if self.text.count == self.length {
                 self.delegate?.validationCode?(self, didFinish: self.text)
@@ -149,11 +149,14 @@ public class PhoneNumberValidationCode: UIView, UIKeyInput {
     
     public func deleteBackward() {
         self.text = String(self.text.dropLast())
+        let c: Int = self.text.count
+        self.updateText(with: self.text, range: c..<c + 1)
     }
     
-    fileprivate func updateText(with value: String) {
-        for (idx, digitView) in self.digitViews.enumerated() {
-            digitView.display(value[idx])
+    fileprivate func updateText(with value: String, range: CountableRange<Int>? = nil) {
+        let range = range ?? 0..<Int(self.length)
+        for idx in range {
+            self.digitViews[idx].display(value[idx])
         }
     }
     

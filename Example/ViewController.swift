@@ -31,11 +31,8 @@ class ViewController: UIViewController, PhoneNumberValidationCodeDataSource, Pho
     // MARK: PhoneNumber Validation Code DataSource
     
     func validationCode(_ validationCode: PhoneNumberValidationCode, labelAtIndex index: UInt) -> PhoneNumberDigitView {
-        let label = PhoneNumberDigitLabel(frame: CGRect(x: 0, y: 0, width: 20, height: 40))
-        label.textAlignment = .center
-        label.backgroundColor = .white
-        label.textColor = .red
-        return label
+        let digiView = Bundle.main.loadNibNamed("CustomDigitView", owner: nil, options: nil)?.first as! CustomDigitView
+        return digiView
     }
     
     // MARK: PhoneNumber Validation Code Delegate
