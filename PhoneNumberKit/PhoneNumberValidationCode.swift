@@ -10,13 +10,19 @@ import UIKit
 
 public protocol PhoneNumberValidationCodeDataSource {
     
+    /// Called when labels are loaded.
     func validationCode(_ validationCode: PhoneNumberValidationCode, labelAtIndex index: UInt) -> UILabel
     
 }
 
 @objc public protocol PhoneNumberValidationCodeDelegate {
     
+    /// Called when input is full.
     @objc optional func validationCode(_ validationCode: PhoneNumberValidationCode, didFinish text: String)
+    
+    /// Called when an input is going to be added. False to reject.
+    @objc optional func validationCode(_ validationCode: PhoneNumberValidationCode, willEnter text: String) -> Bool
+    /// Called when an input has been added.
     @objc optional func validationCode(_ validationCode: PhoneNumberValidationCode, didEnter text: String)
     
 }
@@ -71,7 +77,7 @@ public class PhoneNumberValidationCode: UIView, UIKeyInput {
         self.addWidthConstraints()
     }
     
-    func addWidthConstraints() {
+    private func addWidthConstraints() {
         var views: [String:UIView] = [:]
         var hVisual = "H:|-"
         for (index, lbl) in self.labels.enumerated() {
@@ -118,11 +124,14 @@ public class PhoneNumberValidationCode: UIView, UIKeyInput {
     
     public func insertText(_ text: String) {
         if self.text.count + text.count <= self.length {
+            guard let valid = self.delegate?.validationCode?(self, willEnter: text), valid else {
+                return
+            }
             self.text += text
             self.delegate?.validationCode?(self, didEnter: text)
-        }
-        if self.text.count == self.length {
-            self.delegate?.validationCode?(self, didFinish: self.text)
+            if self.text.count == self.length {
+                self.delegate?.validationCode?(self, didFinish: self.text)
+            }
         }
     }
     

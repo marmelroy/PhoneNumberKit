@@ -20,25 +20,43 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bWo-q9-Ekt" customClass="PhoneNumberValidationCode" customModule="PhoneNumberKit">
-                                <rect key="frame" x="20" y="40" width="335" height="283.5"/>
-                                <color key="backgroundColor" red="0.99215686270000003" green="0.36470588240000001" blue="0.38431372549999998" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                <rect key="frame" x="20" y="152.5" width="335" height="170.5"/>
+                                <color key="backgroundColor" name="controlHighlightColor" catalog="System" colorSpace="catalog"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="length">
-                                        <integer key="value" value="6"/>
+                                        <integer key="value" value="4"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="number" keyPath="labelSpacing">
-                                        <real key="value" value="2"/>
+                                        <real key="value" value="10"/>
                                     </userDefinedRuntimeAttribute>
                                     <userDefinedRuntimeAttribute type="boolean" keyPath="autoResponder" value="YES"/>
                                 </userDefinedRuntimeAttributes>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Validation code" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Fk-zS-X7y">
+                                <rect key="frame" x="20" y="40" width="335" height="31.5"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter your validation code" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j6O-Mr-WUi">
+                                <rect key="frame" x="20" y="91.5" width="335" height="21"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                <color key="textColor" white="0.66666666669999997" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="1Fk-zS-X7y" secondAttribute="trailing" constant="20" id="4sg-1q-jB1"/>
+                            <constraint firstItem="j6O-Mr-WUi" firstAttribute="top" secondItem="1Fk-zS-X7y" secondAttribute="bottom" constant="20" id="8xE-Ko-fDi"/>
+                            <constraint firstItem="1Fk-zS-X7y" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="Azi-7S-Iy6"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="bWo-q9-Ekt" secondAttribute="trailing" constant="20" id="CcE-fz-UO9"/>
+                            <constraint firstItem="1Fk-zS-X7y" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="KIu-7u-pAz"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="centerY" secondItem="bWo-q9-Ekt" secondAttribute="bottom" constant="20" id="TN3-gW-Pgg"/>
                             <constraint firstItem="bWo-q9-Ekt" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="YKj-kz-JLv"/>
-                            <constraint firstItem="bWo-q9-Ekt" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="gad-37-Obt"/>
+                            <constraint firstItem="bWo-q9-Ekt" firstAttribute="top" secondItem="j6O-Mr-WUi" secondAttribute="bottom" constant="40" id="lyn-M3-LcW"/>
+                            <constraint firstItem="j6O-Mr-WUi" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="r5u-BA-N2X"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="j6O-Mr-WUi" secondAttribute="trailing" constant="20" id="rfJ-zh-IPY"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
@@ -48,6 +66,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="29.600000000000001" y="53.523238380809602"/>
         </scene>
     </scenes>
 </document>

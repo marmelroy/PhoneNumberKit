@@ -38,8 +38,13 @@ class ViewController: UIViewController, PhoneNumberValidationCodeDataSource, Pho
     
     // MARK: PhoneNumber Validation Code Delegate
     
+    func validationCode(_ validationCode: PhoneNumberValidationCode, willEnter text: String) -> Bool {
+        print("willEnter:", text)
+        return text != "1"
+    }
+    
     func validationCode(_ validationCode: PhoneNumberValidationCode, didEnter text: String) {
-        print("Enter:", text)
+        print("didEnter:", text)
     }
     
     func validationCode(_ validationCode: PhoneNumberValidationCode, didFinish text: String) {
