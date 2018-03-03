@@ -11,7 +11,7 @@ import UIKit
 public protocol PhoneNumberValidationCodeDataSource {
     
     /// Called when labels are loaded.
-    func validationCode(_ validationCode: PhoneNumberValidationCode, labelAtIndex index: UInt) -> UILabel
+    func validationCode(_ validationCode: PhoneNumberValidationCode, labelAtIndex index: UInt) -> PhoneNumberDigitView
     
 }
 
@@ -42,8 +42,6 @@ public class PhoneNumberValidationCode: UIView, UIKeyInput {
     public var dataSource: PhoneNumberValidationCodeDataSource!
     /// Delegate to interact with validation code
     public var delegate: PhoneNumberValidationCodeDelegate?
-    /// Default text for label who's input not yet enter
-    public var defaultText: Character = "•"
     /// Validation code length.
     @IBInspectable public var length: UInt = 6
     /// Space between each labels
@@ -54,7 +52,7 @@ public class PhoneNumberValidationCode: UIView, UIKeyInput {
     // MARK: Private properties
     
     /// Labels to display current input
-    private var labels: [UILabel] = []
+    private var digitViews: [PhoneNumberDigitView] = []
     /// Current input
     public private(set) var text: String = "" {
         didSet {
@@ -69,10 +67,10 @@ public class PhoneNumberValidationCode: UIView, UIKeyInput {
         self.dataSource = self
     }
     
-    private func createLabels() {
+    private func createDigitViews() {
         for i in 0...(self.length - 1) {
-            let label = self.insertLabel(atIndex: i)
-            self.labels.append(label)
+            let digitView = self.insertDigitView(atIndex: i)
+            self.digitViews.append(digitView)
         }
         self.addWidthConstraints()
     }
@@ -80,27 +78,27 @@ public class PhoneNumberValidationCode: UIView, UIKeyInput {
     private func addWidthConstraints() {
         var views: [String:UIView] = [:]
         var hVisual = "H:|-"
-        for (index, lbl) in self.labels.enumerated() {
-            let key = "lbl_\(index)"
-            views[key] = lbl
+        for (index, digitView) in self.digitViews.enumerated() {
+            let key = "v_\(index)"
+            views[key] = (digitView as! UIView)
             if index != 0 {
                 hVisual += "\(self.labelSpacing)-"
             }
-            hVisual += "[\(key)(==lbl_0)]-"
+            hVisual += "[\(key)(==v_0)]-"
         }
         hVisual += "|"
         let widthConstraints = NSLayoutConstraint.constraints(withVisualFormat: hVisual, options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views)
         self.addConstraints(widthConstraints)
     }
     
-    private func insertLabel(atIndex index: UInt) -> UILabel {
-        let label = self.dataSource.validationCode(self, labelAtIndex: index)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(label)
+    private func insertDigitView(atIndex index: UInt) -> PhoneNumberDigitView {
+        let view = self.dataSource.validationCode(self, labelAtIndex: index)
+        (view as! UIView).translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(view as! UIView)
         
-        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-[lbl]-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["lbl": label]))
-        self.addConstraints([NSLayoutConstraint(item: label, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0)])
-        return label
+        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-[v]-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["v": view]))
+        self.addConstraints([NSLayoutConstraint(item: view, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0)])
+        return view
     }
     
     // MARK: Layout
@@ -111,7 +109,7 @@ public class PhoneNumberValidationCode: UIView, UIKeyInput {
         if self.autoResponder {
             self.becomeFirstResponder()
         }
-        self.createLabels()
+        self.createDigitViews()
     }
     
     override public func layoutSubviews() {
@@ -125,6 +123,13 @@ public class PhoneNumberValidationCode: UIView, UIKeyInput {
     /// Reset text
     public func reset() {
         self.text = ""
+    }
+    
+    /// Default text for label who's input not yet enter
+    public func set(defaultText text: String) {
+        for digitView in self.digitViews {
+            digitView.defaultText = text
+        }
     }
     
     // MARK: Key input
@@ -147,9 +152,8 @@ public class PhoneNumberValidationCode: UIView, UIKeyInput {
     }
     
     fileprivate func updateText(with value: String) {
-        for (idx, label) in self.labels.enumerated() {
-            let char = value[idx] ?? self.defaultText
-            label.text = String(char)
+        for (idx, digitView) in self.digitViews.enumerated() {
+            digitView.display(value[idx])
         }
     }
     
@@ -159,9 +163,10 @@ public class PhoneNumberValidationCode: UIView, UIKeyInput {
 
 extension PhoneNumberValidationCode: PhoneNumberValidationCodeDataSource {
     
-    public func validationCode(_ validationCode: PhoneNumberValidationCode, labelAtIndex index: UInt) -> UILabel {
-        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 20, height: 40))
+    public func validationCode(_ validationCode: PhoneNumberValidationCode, labelAtIndex index: UInt) -> PhoneNumberDigitView {
+        let label = PhoneNumberDigitLabel(frame: CGRect(x: 0, y: 0, width: 20, height: 40))
         label.textAlignment = .center
+        label.display("t")
         return label
     }
     
@@ -169,9 +174,9 @@ extension PhoneNumberValidationCode: PhoneNumberValidationCodeDataSource {
 
 extension String {
     
-    subscript (i: Int) -> Character? {
+    subscript (i: Int) -> String? {
         if self.count > i {
-            return self[index(startIndex, offsetBy: i)]
+            return String(self[index(startIndex, offsetBy: i)])
         }
         return nil
     }
