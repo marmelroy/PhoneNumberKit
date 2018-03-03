@@ -7,12 +7,18 @@
 //
 
 import UIKit
+import PhoneNumberKit
 
-class ViewController: UIViewController {
-
+class ViewController: UIViewController, PhoneNumberValidationCodeDataSource {
+    
+    @IBOutlet weak var validationCodeView: PhoneNumberValidationCode!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        print("CONTROLLER", validationCodeView.autoResponder)
+        validationCodeView.autoResponder = false
+//        validationCodeView.dataSource = self
     }
 
     override func didReceiveMemoryWarning() {
@@ -20,6 +26,13 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    // MARK: PhoneNumber Validation Code DataSource
+    
+    func validationCode(_ validationCode: PhoneNumberValidationCode, labelAtIndex index: UInt) -> UILabel {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 20, height: 40))
+        label.textAlignment = .center
+        return label
+    }
 
 }
 

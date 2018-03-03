@@ -8,95 +8,135 @@
 
 import UIKit
 
-class PhoneNumberValidationCode: UIView, UIKeyInput {
+public protocol PhoneNumberValidationCodeDataSource {
     
-    override var canBecomeFirstResponder: Bool {
+    func validationCode(_ validationCode: PhoneNumberValidationCode, labelAtIndex index: UInt) -> UILabel
+    
+}
+
+/// Custom view to enter validation code
+public class PhoneNumberValidationCode: UIView, UIKeyInput {
+    
+    // MARK: - Properties
+    
+    override public var canBecomeFirstResponder: Bool {
         return true
     }
-    var keyboardType: UIKeyboardType
-    var hasText: Bool = false
     
-    var length: UInt
-    private var labels: [UILabel]
+    public var hasText: Bool = false
+    public var keyboardType: UIKeyboardType = .numberPad
+    /// Data Source to retreive labels
+    public var dataSource: PhoneNumberValidationCodeDataSource!
+    /// Default text for label who's input not yet enter
+    public var defaultText: Character = "•"
+    /// Validation code length.
+    @IBInspectable public var length: UInt = 6
+    /// Space between each labels
+    @IBInspectable public var labelSpacing: CGFloat = 10.0
+    /// Open keyboard automatically when view appear
+    @IBInspectable public var autoResponder: Bool = true
     
-    private var text: String {
+    // MARK: Private properties
+    
+    /// Labels to display current input
+    private var labels: [UILabel] = []
+    /// Current input
+    private(set) var text: String = "" {
         didSet {
-            self.updateLabelText()
+            self.updateText(with: self.text)
         }
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        self.keyboardType = .numberPad
-        self.length = 3
-        self.labels = []
-        self.text = ""
+    // MARK: - Initialization
+    
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        self.dataSource = self
     }
     
-    func insertText(_ text: String) {
-        self.text += text
-    }
-    
-    func deleteBackward() {
-        self.text = String(self.text.dropLast())
-    }
-    
-    override func awakeFromNib() {
+    override public func awakeFromNib() {
         super.awakeFromNib()
         
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.insertLabels()
+        self.createLabels()
     }
     
-    override func didMoveToSuperview() {
-        super.didMoveToSuperview()
-        
-        print("V2 - Moved :", self.canBecomeFirstResponder)
-        self.becomeFirstResponder()
-    }
-    
-    func updateLabelText() {
-        for (idx, label) in self.labels.enumerated() {
-            let char = self.text[idx] as String?
-            label.text = char ?? "•"
-        }
-    }
-    
-    func insertLabels() {
-        for i in 0...self.length {
-            self.labels.append(self.insertLabel(text: "\(i)"))
+    private func createLabels() {
+        for i in 0...(self.length - 1) {
+            let label = self.insertLabel(atIndex: i)
+            self.labels.append(label)
         }
         self.addWidthConstraints()
     }
     
     func addWidthConstraints() {
         var views: [String:UIView] = [:]
-        var hVisual = "H:|-10-"
+        var hVisual = "H:|-"
         for (index, lbl) in self.labels.enumerated() {
             let key = "lbl_\(index)"
             views[key] = lbl
-            hVisual += "[\(key)(==lbl_0)]-10-"
+            hVisual += "\(self.labelSpacing)-[\(key)(==lbl_0)]-"
         }
         hVisual += "|"
-        print(hVisual)
         let widthConstraints = NSLayoutConstraint.constraints(withVisualFormat: hVisual, options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views)
         self.addConstraints(widthConstraints)
     }
     
-    func insertLabel(text: String, isLast: Bool = false) -> UILabel {
-        let lbl = UILabel()
-        lbl.frame = CGRect(x: 0, y: 0, width: 20, height: 40)
-        lbl.text = text
-        lbl.textAlignment = .center
-        lbl.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(lbl)
+    private func insertLabel(atIndex index: UInt) -> UILabel {
+        let label = self.dataSource.validationCode(self, labelAtIndex: index)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(label)
         
-        let views = ["lbl": lbl]
-        let heightConstraints = NSLayoutConstraint.constraints(withVisualFormat: "V:[lbl(30)]", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: views)
-        let verticalConstraint = NSLayoutConstraint(item: lbl, attribute: NSLayoutAttribute.centerY, relatedBy: NSLayoutRelation.equal, toItem: self, attribute: NSLayoutAttribute.centerY, multiplier: 1, constant: 0)
-        self.addConstraints(heightConstraints)
-        self.addConstraints([verticalConstraint])
-        return lbl
+        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|-[lbl]-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["lbl": label]))
+        self.addConstraints([NSLayoutConstraint(item: label, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 0)])
+        return label
+    }
+    
+    // MARK: Layout
+    
+    override public func didMoveToWindow() {
+        super.didMoveToWindow()
+        
+        if self.autoResponder {
+            self.becomeFirstResponder()
+        }
+    }
+    
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+        
+        self.updateText(with: self.text)
+    }
+    
+    // MARK: Key input
+    
+    public func insertText(_ text: String) {
+        if self.text.count + text.count <= self.length {
+            self.text += text
+        }
+    }
+    
+    public func deleteBackward() {
+        self.text = String(self.text.dropLast())
+    }
+    
+    fileprivate func updateText(with value: String) {
+        for (idx, label) in self.labels.enumerated() {
+            let char = value[idx] ?? self.defaultText
+            label.text = String(char)
+        }
+    }
+    
+}
+
+// MARK: - Default implementation
+
+extension PhoneNumberValidationCode: PhoneNumberValidationCodeDataSource {
+    
+    public func validationCode(_ validationCode: PhoneNumberValidationCode, labelAtIndex index: UInt) -> UILabel {
+        let label = UILabel(frame: CGRect(x: 0, y: 0, width: 20, height: 40))
+        label.textAlignment = .center
+        return label
     }
     
 }
@@ -110,15 +150,5 @@ extension String {
         return nil
     }
     
-    subscript (i: Int) -> String? {
-        guard let char = (self[i] as Character?) else { return nil }
-        return String(char)
-    }
-    
-    subscript (r: Range<Int>) -> String {
-        let start = index(startIndex, offsetBy: r.lowerBound)
-        let end = index(startIndex, offsetBy: r.upperBound)
-        return String(self[Range(start ..< end)])
-    }
 }
 
