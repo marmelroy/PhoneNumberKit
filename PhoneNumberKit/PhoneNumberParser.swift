@@ -283,7 +283,7 @@ final class PhoneNumberParser {
                 let firstMatchString = number.substring(with: firstMatch.range)
                 let numOfGroups = firstMatch.numberOfRanges - 1
                 var transformedNumber: String = String()
-                let firstRange = firstMatch.range(at: numOfGroups)
+                let firstRange = firstMatch.rangeAt(numOfGroups)
                 let firstMatchStringWithGroup = (firstRange.location != NSNotFound && firstRange.location < number.count) ? number.substring(with: firstRange):  String()
                 let firstMatchStringWithGroupHasValue = regex.hasValue(firstMatchStringWithGroup)
                 if let transformRule = metadata.nationalPrefixTransformRule , firstMatchStringWithGroupHasValue == true {
