@@ -12,7 +12,7 @@ import Foundation
 Manager for parsing flow.
 */
 final class ParseManager {
-    
+
     weak var metadataManager: MetadataManager?
     let parser: PhoneNumberParser
     weak var regexManager: RegexManager?
@@ -34,7 +34,7 @@ final class ParseManager {
         // Make sure region is in uppercase so that it matches metadata (1)
         let region = region.uppercased()
         // Extract number (2)
-        
+
         var nationalNumber = numberString
 
         let match = try regexManager.phoneDataDetectorMatch(numberString)
@@ -64,14 +64,14 @@ final class ParseManager {
         // Nomralized number (5)
         let normalizedNationalNumber = parser.normalizePhoneNumber(nationalNumber)
         nationalNumber = normalizedNationalNumber
-        
+
         // If country code is not default, grab correct metadata (6)
         if countryCode != regionMetadata.countryCode, let countryMetadata = metadataManager.mainTerritoryByCode[countryCode] {
             regionMetadata = countryMetadata
         }
         // National Prefix Strip (7)
         parser.stripNationalPrefix(&nationalNumber, metadata: regionMetadata)
-		
+
         // Test number against general number description for correct metadata (8)
         if let generalNumberDesc = regionMetadata.generalDesc, (regexManager.hasValue(generalNumberDesc.nationalNumberPattern) == false || parser.isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc) == false) {
             throw PhoneNumberError.notANumber
@@ -94,12 +94,12 @@ final class ParseManager {
             }
         }
 
-        let phoneNumber = PhoneNumber(numberString: numberString, countryCode: countryCode, leadingZero: leadingZero, nationalNumber: finalNationalNumber, numberExtension: numberExtension, type: type)
+        let phoneNumber = PhoneNumber(numberString: numberString, countryCode: countryCode, leadingZero: leadingZero, nationalNumber: finalNationalNumber, numberExtension: numberExtension, type: type, countryString: region)
         return phoneNumber
     }
-    
+
     // Parse task
-    
+
     /**
     Fastest way to parse an array of phone numbers. Uses custom region code.
     - Parameter numberStrings: An array of raw number strings.

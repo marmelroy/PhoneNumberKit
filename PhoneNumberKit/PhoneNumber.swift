@@ -10,7 +10,7 @@ import Foundation
 
 /**
 Parsed phone number object
- 
+
 - numberString: String used to generate phone number struct
 - countryCode: Country dialing code as an unsigned. Int.
 - leadingZero: Some countries (e.g. Italy) require leading zeros. Bool.
@@ -25,6 +25,7 @@ public struct PhoneNumber {
     public let nationalNumber: UInt64
     public let numberExtension: String?
     public let type: PhoneNumberType
+    public let countryString: String?
 }
 
 extension PhoneNumber : Equatable {
@@ -47,11 +48,11 @@ extension PhoneNumber : Hashable {
 }
 
 extension PhoneNumber{
-    
+
     public static func notPhoneNumber() -> PhoneNumber{
-        return PhoneNumber(numberString: "", countryCode: 0, leadingZero: false, nationalNumber: 0, numberExtension: nil, type: .notParsed)
+        return PhoneNumber(numberString: "", countryCode: 0, leadingZero: false, nationalNumber: 0, numberExtension: nil, type: .notParsed, countryString: nil)
     }
-    
+
     public func notParsed() -> Bool{
         return type == .notParsed
     }
@@ -60,7 +61,7 @@ extension PhoneNumber{
 /// In past versions of PhoneNumebrKit you were able to initialize a PhoneNumber object to parse a String. Please use a PhoneNumberKit object's methods.
 public extension PhoneNumber {
     /**
-    DEPRECATED. 
+    DEPRECATED.
     Parse a string into a phone number object using default region. Can throw.
     - Parameter rawNumber: String to be parsed to phone number struct.
     */
@@ -69,7 +70,7 @@ public extension PhoneNumber {
         assertionFailure(PhoneNumberError.deprecated.localizedDescription)
         throw PhoneNumberError.deprecated
     }
-    
+
     /**
     DEPRECATED.
     Parse a string into a phone number object using custom region. Can throw.
@@ -82,5 +83,3 @@ public extension PhoneNumber {
     }
 
 }
-
-
