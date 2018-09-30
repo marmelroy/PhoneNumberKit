@@ -17,11 +17,11 @@ final class MetadataManager {
 
     // MARK: Lifecycle
 
-    /**
-     Private init populates metadata territories and the two hashed dictionaries for faster lookup.
-     */
-    public init (JSONDataCallback: JSONDataCallback? = nil) {
-        territories = populateTerritories(getJSONData: JSONDataCallback)
+    /// Private init populates metadata territories and the two hashed dictionaries for faster lookup.
+    ///
+    /// - Parameter metadataCallback: a closure that returns metadata as JSON Data.
+    public init (metadataCallback: MetadataCallback) {
+        territories = populateTerritories(metadataCallback: metadataCallback)
         for item in territories {
             var currentTerritories: [MetadataTerritory] = territoriesByCode[item.countryCode] ?? [MetadataTerritory]()
             currentTerritories.append(item)
@@ -40,21 +40,14 @@ final class MetadataManager {
     }
 
 
-    /// Populates the metadata from the included json file resource.
+    /// Populates the metadata from a metadataCallback.
     ///
-    /// - returns: array of MetadataTerritory objects
-    fileprivate func populateTerritories(getJSONData: JSONDataCallback? = nil) -> [MetadataTerritory] {
+    /// - Parameter metadataCallback: a closure that returns metadata as JSON Data.
+    /// - Returns: array of MetadataTerritory objects
+    fileprivate func populateTerritories(metadataCallback: MetadataCallback) -> [MetadataTerritory] {
         var territoryArray = [MetadataTerritory]()
-        let frameworkBundle = Bundle(for: PhoneNumberKit.self)
         do {
-            var jsonData: Data?
-            if let getJSONData = getJSONData, let data = getJSONData() {
-                jsonData = data
-            } else  if let jsonPath = frameworkBundle.path(forResource: "PhoneNumberMetadata", ofType: "json"),
-                let data = try? Data(contentsOf: URL(fileURLWithPath: jsonPath)) {
-                jsonData = data
-            }
-            
+            let jsonData: Data?  = try metadataCallback()
             if let jsonData = jsonData,
                 let jsonObjects = try JSONSerialization.jsonObject(with: jsonData, options: JSONSerialization.ReadingOptions.allowFragments) as? NSDictionary,
                 let metadataDict = jsonObjects["phoneNumberMetadata"] as? NSDictionary,
