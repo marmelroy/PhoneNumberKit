@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="CustomDigitView" customModule="Example" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="50" height="70"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kIn-ix-wsU">
+                    <rect key="frame" x="0.0" y="0.0" width="50" height="70"/>
+                    <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3le-BD-lYd">
+                    <rect key="frame" x="17.5" y="50" width="15" height="2"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="15" id="5VN-KF-yqC"/>
+                        <constraint firstAttribute="height" constant="2" id="yrk-QB-B0M"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <constraints>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="kIn-ix-wsU" secondAttribute="trailing" id="DKD-Om-MbO"/>
+                <constraint firstItem="3le-BD-lYd" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="EEY-hi-QxR"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="kIn-ix-wsU" secondAttribute="bottom" id="cDn-6U-fzM"/>
+                <constraint firstItem="kIn-ix-wsU" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" id="kJT-GY-DcX"/>
+                <constraint firstItem="3le-BD-lYd" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="centerY" constant="15" id="kkY-7Q-w8H"/>
+                <constraint firstItem="kIn-ix-wsU" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="wsn-1n-tfj"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <connections>
+                <outlet property="digitLabel" destination="kIn-ix-wsU" id="2lO-B4-d50"/>
+                <outlet property="line" destination="3le-BD-lYd" id="rOy-dc-OWd"/>
+            </connections>
+        </view>
+    </objects>
+</document>
