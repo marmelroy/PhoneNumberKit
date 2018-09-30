@@ -20,7 +20,7 @@ final class MetadataManager {
     /// Private init populates metadata territories and the two hashed dictionaries for faster lookup.
     ///
     /// - Parameter metadataCallback: a closure that returns metadata as JSON Data.
-    public init (metadataCallback: JSONDataCallback) {
+    public init (metadataCallback: MetadataCallback) {
         territories = populateTerritories(metadataCallback: metadataCallback)
         for item in territories {
             var currentTerritories: [MetadataTerritory] = territoriesByCode[item.countryCode] ?? [MetadataTerritory]()
@@ -44,7 +44,7 @@ final class MetadataManager {
     ///
     /// - Parameter metadataCallback: a closure that returns metadata as JSON Data.
     /// - Returns: array of MetadataTerritory objects
-    fileprivate func populateTerritories(metadataCallback: JSONDataCallback) -> [MetadataTerritory] {
+    fileprivate func populateTerritories(metadataCallback: MetadataCallback) -> [MetadataTerritory] {
         var territoryArray = [MetadataTerritory]()
         do {
             let jsonData: Data?  = try metadataCallback()

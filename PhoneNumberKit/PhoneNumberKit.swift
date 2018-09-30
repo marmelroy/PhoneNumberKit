@@ -11,7 +11,7 @@ import Foundation
 import CoreTelephony
 #endif
 
-public typealias JSONDataCallback = (() throws -> Data?)
+public typealias MetadataCallback = (() throws -> Data?)
 
 public final class PhoneNumberKit: NSObject {
 
@@ -21,8 +21,7 @@ public final class PhoneNumberKit: NSObject {
     let regexManager = RegexManager()
 
     // MARK: Lifecycle
-
-    public init(metadataCallback: @escaping JSONDataCallback = PhoneNumberKit.defaultMetadataCallback) {
+    public init(metadataCallback: @escaping MetadataCallback = PhoneNumberKit.defaultMetadataCallback) {
        self.metadataManager = MetadataManager(metadataCallback: metadataCallback)
        self.parseManager = ParseManager(metadataManager: metadataManager, regexManager: regexManager)
    }
