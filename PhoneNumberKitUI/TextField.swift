@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import PhoneNumberKit
 
 /// Custom text field that formats phone numbers
 open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
