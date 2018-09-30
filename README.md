@@ -4,7 +4,7 @@
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 # PhoneNumberKit
-Swift 4.0 framework for parsing, formatting and validating international phone numbers.
+Swift 4.2 framework for parsing, formatting and validating international phone numbers.
 Inspired by Google's libphonenumber.
 
 [Migrating from PhoneNumberKit 0.x? See the migration guide.](https://github.com/marmelroy/PhoneNumberKit/blob/master/Documentation/OXMIGRATIONGUIDE.md)  
