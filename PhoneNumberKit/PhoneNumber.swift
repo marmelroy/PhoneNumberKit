@@ -25,6 +25,7 @@ public struct PhoneNumber: Codable {
     public let nationalNumber: UInt64
     public let numberExtension: String?
     public let type: PhoneNumberType
+    public let regionID: String?
 }
 
 extension PhoneNumber : Equatable {
@@ -49,7 +50,7 @@ extension PhoneNumber : Hashable {
 extension PhoneNumber{
     
     public static func notPhoneNumber() -> PhoneNumber{
-        return PhoneNumber(numberString: "", countryCode: 0, leadingZero: false, nationalNumber: 0, numberExtension: nil, type: .notParsed)
+        return PhoneNumber(numberString: "", countryCode: 0, leadingZero: false, nationalNumber: 0, numberExtension: nil, type: .notParsed, regionID: nil)
     }
     
     public func notParsed() -> Bool{
