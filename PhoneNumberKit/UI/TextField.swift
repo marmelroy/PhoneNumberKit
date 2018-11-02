@@ -42,6 +42,12 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         }
     }
     
+    public var showNationalNumberPrefix = true {
+        didSet {
+            partialFormatter.showNationalNumberPrefix = showNationalNumberPrefix
+        }
+    }
+    
     public var withPrefix: Bool = true {
         didSet {
             partialFormatter.withPrefix = withPrefix
@@ -119,6 +125,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     override public init(frame:CGRect)
     {
         self.partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: defaultRegion, withPrefix: withPrefix)
+        
         super.init(frame:frame)
         self.setup()
     }
