@@ -200,30 +200,6 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTFail()
         }
     }
-    //
-    func testARNumber() {
-        do {
-            let phoneNumber1 = try phoneNumberKit.parse("011 8765-4321", withRegion: "AR")
-            XCTAssertNotNil(phoneNumber1)
-            let phoneNumberInternationalFormat1 = phoneNumberKit.format(phoneNumber1, toType: .international)
-            XCTAssertTrue(phoneNumberInternationalFormat1 == "+54 11 8765-4321")
-            let phoneNumberNationalFormat1 = phoneNumberKit.format(phoneNumber1, toType: .national)
-            XCTAssertTrue(phoneNumberNationalFormat1 == "011 8765-4321")
-            let phoneNumberE164Format1 = phoneNumberKit.format(phoneNumber1, toType: .e164)
-            XCTAssertTrue(phoneNumberE164Format1 == "+541187654321")
-            let phoneNumber2 = try phoneNumberKit.parse("011 15 8765-4321", withRegion: "AR")
-            XCTAssertNotNil(phoneNumber2)
-            let phoneNumberInternationalFormat2 = phoneNumberKit.format(phoneNumber2, toType: .international)
-            XCTAssertTrue(phoneNumberInternationalFormat2 == "+54 9 11 8765-4321")
-            let phoneNumberNationalFormat2 = phoneNumberKit.format(phoneNumber2, toType: .national)
-            XCTAssertTrue(phoneNumberNationalFormat2 == "011 15-8765-4321")
-            let phoneNumberE164Format2 = phoneNumberKit.format(phoneNumber2, toType: .e164)
-            XCTAssertTrue(phoneNumberE164Format2 == "+5491187654321")
-        }
-        catch {
-            XCTFail()
-        }
-    }
     
     func testAllExampleNumbers() {
         let metaDataArray = phoneNumberKit.metadataManager.territories.filter{$0.codeID.count == 2}
