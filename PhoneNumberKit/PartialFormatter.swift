@@ -17,11 +17,11 @@ public final class PartialFormatter {
     weak var parser: PhoneNumberParser?
     weak var regexManager: RegexManager?
 
-    public convenience init(phoneNumberKit: PhoneNumberKit = PhoneNumberKit(), defaultRegion: String = PhoneNumberKit.defaultRegionCode(), withPrefix: Bool = true) {
-        self.init(phoneNumberKit: phoneNumberKit, regexManager: phoneNumberKit.regexManager, metadataManager: phoneNumberKit.metadataManager, parser: phoneNumberKit.parseManager.parser, defaultRegion: defaultRegion, withPrefix: withPrefix)
+    public convenience init(phoneNumberKit: PhoneNumberKit = PhoneNumberKit(), defaultRegion: String = PhoneNumberKit.defaultRegionCode(), withPrefix: Bool = true, maxDigits: Int? = nil) {
+        self.init(phoneNumberKit: phoneNumberKit, regexManager: phoneNumberKit.regexManager, metadataManager: phoneNumberKit.metadataManager, parser: phoneNumberKit.parseManager.parser, defaultRegion: defaultRegion, withPrefix: withPrefix, maxDigits: maxDigits)
     }
     
-    init(phoneNumberKit: PhoneNumberKit, regexManager: RegexManager, metadataManager: MetadataManager, parser: PhoneNumberParser, defaultRegion: String, withPrefix: Bool = true) {
+    init(phoneNumberKit: PhoneNumberKit, regexManager: RegexManager, metadataManager: MetadataManager, parser: PhoneNumberParser, defaultRegion: String, withPrefix: Bool = true, maxDigits: Int? = nil) {
         self.phoneNumberKit = phoneNumberKit
         self.regexManager = regexManager
         self.metadataManager = metadataManager
@@ -29,6 +29,7 @@ public final class PartialFormatter {
         self.defaultRegion = defaultRegion
         updateMetadataForDefaultRegion()
         self.withPrefix = withPrefix
+        self.maxDigits = maxDigits
     }
 
     
@@ -37,6 +38,8 @@ public final class PartialFormatter {
             updateMetadataForDefaultRegion()
         }
     }
+    
+    public var maxDigits: Int?
     
     func updateMetadataForDefaultRegion() {
         guard let metadataManager = metadataManager else { return }
@@ -52,7 +55,6 @@ public final class PartialFormatter {
     var currentMetadata: MetadataTerritory?
     var prefixBeforeNationalNumber =  String()
     var shouldAddSpaceAfterNationalPrefix = false
-    var maxDigits: Int?
     var withPrefix = true
     
     //MARK: Status

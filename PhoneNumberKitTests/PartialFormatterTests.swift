@@ -297,6 +297,28 @@ class PartialFormatterTests: XCTestCase {
         XCTAssertEqual(partialFormatter.currentRegion, "DE")
     }
 
+    // MARK: max digits
+    func testMaxDigits() {
+        func test(_ maxDigits: Int?, _ formatted: String) {
+            let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "US", maxDigits: maxDigits)
+            XCTAssertEqual(partialFormatter.formatPartial("555 555 5555"), formatted)
+        }
+        
+        test(nil, "(555) 555-5555")
+        test(0, "")
+        test(1, "5")
+        test(2, "55")
+        test(3, "555")
+        test(4, "555-5")
+        test(5, "555-55")
+        test(6, "555-555")
+        test(7, "555-5555")
+        test(8, "(555) 555-55")
+        test(9, "(555) 555-555")
+        test(10, "(555) 555-5555")
+        test(11, "(555) 555-5555")
+    }
+    
     // MARK: convenience initializer
     func testConvenienceInitializerAllowsFormatting() {
         let partialFormatter = PartialFormatter(defaultRegion: "US")
