@@ -63,7 +63,6 @@ public enum PhoneNumberFormat {
     case national // 06 89 12 34 56
 }
 
-
 /**
  Phone number type enumeration
  - fixedLine: Fixed line numbers
@@ -114,12 +113,12 @@ struct PhoneNumberConstants {
 
 struct PhoneNumberPatterns {
   // MARK: Patterns
-  
+
   static let firstGroupPattern = "(\\$\\d)"
   static let fgPattern = "\\$FG"
   static let npPattern = "\\$NP"
 
-  static let allNormalizationMappings = ["0":"0", "1":"1", "2":"2", "3":"3", "4":"4", "5":"5", "6":"6", "7":"7", "8":"8", "9":"9"]
+  static let allNormalizationMappings = ["0": "0", "1": "1", "2": "2", "3": "3", "4": "4", "5": "5", "6": "6", "7": "7", "8": "8", "9": "9"]
 
   static let capturingDigitPattern = "([0-9０-９٠-٩۰-۹])"
 

@@ -81,7 +81,6 @@ extension MetadataTerritory {
             return modifiedFormat
         }
     }
-
 }
 
 // MARK: - MetadataPhoneNumberFormat
@@ -143,8 +142,7 @@ internal extension KeyedDecodingContainer where K : CodingKey {
     /// Decodes either a single object or an array into an array. Returns an empty array if empty.
     ///
     /// - Parameter key: Coding key to decode
-    internal func decodeArrayOrObject<T: Decodable>(forKey key: KeyedDecodingContainer<K>.Key) -> [T]
-    {
+    internal func decodeArrayOrObject<T: Decodable>(forKey key: KeyedDecodingContainer<K>.Key) -> [T] {
         guard let array: [T] = try? self.decode([T].self, forKey: key) else {
             guard let object: T = try? self.decode(T.self, forKey: key) else {
                 return [T]()

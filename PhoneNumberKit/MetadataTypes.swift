@@ -95,4 +95,3 @@ struct MetadataPhoneNumberFormat: Decodable {
 internal struct PhoneNumberMetadata: Decodable {
     var territories: [MetadataTerritory]
 }
-

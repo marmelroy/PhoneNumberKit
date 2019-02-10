@@ -39,7 +39,6 @@ final class MetadataManager {
         territoriesByCountry.removeAll()
     }
 
-
     /// Populates the metadata from a metadataCallback.
     ///
     /// - Parameter metadataCallback: a closure that returns metadata as JSON Data.
@@ -52,8 +51,7 @@ final class MetadataManager {
             if let jsonData = jsonData, let metadata: PhoneNumberMetadata = try? jsonDecoder.decode(PhoneNumberMetadata.self, from: jsonData) {
                 territoryArray = metadata.territories
             }
-        }
-        catch {}
+        } catch {}
         return territoryArray
     }
 
@@ -85,6 +83,5 @@ final class MetadataManager {
     internal func mainTerritory(forCode code: UInt64) -> MetadataTerritory? {
         return mainTerritoryByCode[code]
     }
-
 
 }
