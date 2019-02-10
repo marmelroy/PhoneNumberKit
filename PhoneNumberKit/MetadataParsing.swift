@@ -41,10 +41,11 @@ extension MetadataTerritory {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        // Custom parsing logic
         codeID = try container.decode(String.self, forKey: .codeID)
         let code = try! container.decode(String.self, forKey: .countryCode)
         countryCode = UInt64(code)!
-        internationalPrefix = try? container.decode(String.self, forKey: .internationalPrefix)
         mainCountryForCode = container.decodeBoolString(forKey: .mainCountryForCode)
         let possibleNationalPrefixForParsing: String? = try? container.decode(String.self, forKey: .nationalPrefixForParsing)
         let possibleNationalPrefix: String? = try? container.decode(String.self, forKey: .nationalPrefix)
@@ -53,8 +54,10 @@ extension MetadataTerritory {
         nationalPrefixFormattingRule = try? container.decode(String.self, forKey: .nationalPrefixFormattingRule)
         let availableFormats = try? container.nestedContainer(keyedBy: CodingKeys.self, forKey: .availableFormats)
         let temporaryFormatList: [MetadataPhoneNumberFormat] = availableFormats?.decodeArrayOrObject(forKey: .numberFormats) ?? [MetadataPhoneNumberFormat]()
-        numberFormats = MetadataTerritory.applyDefaultNationalPrefixFormattingRule(numberFormats: temporaryFormatList, nationalPrefixFormattingRule: nationalPrefixFormattingRule)
+        numberFormats = temporaryFormatList.withDefaultNationalPrefixFormattingRule(nationalPrefixFormattingRule)
 
+        // Default parsing logic
+        internationalPrefix = try? container.decode(String.self, forKey: .internationalPrefix)
         nationalPrefixTransformRule = try? container.decode(String.self, forKey: .nationalPrefixTransformRule)
         preferredExtnPrefix = try? container.decode(String.self, forKey: .preferredExtnPrefix)
         emergency = try? container.decode(MetadataPhoneNumberDesc.self, forKey: .emergency)
@@ -70,16 +73,6 @@ extension MetadataTerritory {
         voip = try? container.decode(MetadataPhoneNumberDesc.self, forKey: .voip)
         uan = try? container.decode(MetadataPhoneNumberDesc.self, forKey: .uan)
         leadingDigits = try? container.decode(String.self, forKey: .leadingDigits)
-    }
-
-    internal static func applyDefaultNationalPrefixFormattingRule(numberFormats: [MetadataPhoneNumberFormat], nationalPrefixFormattingRule: String?) -> [MetadataPhoneNumberFormat] {
-        return numberFormats.map { format -> MetadataPhoneNumberFormat in
-            var modifiedFormat = format
-            if modifiedFormat.nationalPrefixFormattingRule == nil {
-                modifiedFormat.nationalPrefixFormattingRule = nationalPrefixFormattingRule
-            }
-            return modifiedFormat
-        }
     }
 }
 
@@ -98,9 +91,12 @@ extension MetadataPhoneNumberFormat {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        // Custom parsing logic
         leadingDigitsPatterns = container.decodeArrayOrObject(forKey: .leadingDigitsPatterns)
         nationalPrefixOptionalWhenFormatting = container.decodeBoolString(forKey: .nationalPrefixOptionalWhenFormatting)
 
+        // Default parsing logic
         pattern = try? container.decode(String.self, forKey: .pattern)
         format = try? container.decode(String.self, forKey: .format)
         intlFormat = try? container.decode(String.self, forKey: .intlFormat)
@@ -128,11 +124,11 @@ extension PhoneNumberMetadata {
 
 // MARK: - Parsing helpers
 
-internal extension KeyedDecodingContainer where K : CodingKey {
+private extension KeyedDecodingContainer where K : CodingKey {
     /// Decodes a string to a boolean. Returns false if empty.
     ///
     /// - Parameter key: Coding key to decode
-    internal func decodeBoolString(forKey key: KeyedDecodingContainer<K>.Key) -> Bool {
+    func decodeBoolString(forKey key: KeyedDecodingContainer<K>.Key) -> Bool {
         guard let value: String = try? self.decode(String.self, forKey: key) else {
             return false
         }
@@ -142,7 +138,7 @@ internal extension KeyedDecodingContainer where K : CodingKey {
     /// Decodes either a single object or an array into an array. Returns an empty array if empty.
     ///
     /// - Parameter key: Coding key to decode
-    internal func decodeArrayOrObject<T: Decodable>(forKey key: KeyedDecodingContainer<K>.Key) -> [T] {
+    func decodeArrayOrObject<T: Decodable>(forKey key: KeyedDecodingContainer<K>.Key) -> [T] {
         guard let array: [T] = try? self.decode([T].self, forKey: key) else {
             guard let object: T = try? self.decode(T.self, forKey: key) else {
                 return [T]()
@@ -150,5 +146,17 @@ internal extension KeyedDecodingContainer where K : CodingKey {
             return [object]
         }
         return array
+    }
+}
+
+private extension Collection where Element == MetadataPhoneNumberFormat {
+    func withDefaultNationalPrefixFormattingRule(_ nationalPrefixFormattingRule: String?) -> [Element] {
+        return self.map { format -> MetadataPhoneNumberFormat in
+            var modifiedFormat = format
+            if modifiedFormat.nationalPrefixFormattingRule == nil {
+                modifiedFormat.nationalPrefixFormattingRule = nationalPrefixFormattingRule
+            }
+            return modifiedFormat
+        }
     }
 }
