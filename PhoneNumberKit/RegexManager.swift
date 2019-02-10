@@ -9,64 +9,60 @@
 import Foundation
 
 final class RegexManager {
-    
+
     // MARK: Regular expression pool
 
-    var regularExpresionPool = [String : NSRegularExpression]()
+    var regularExpresionPool = [String: NSRegularExpression]()
 
     var spaceCharacterSet: CharacterSet = {
         let characterSet = NSMutableCharacterSet(charactersIn: "\u{00a0}")
         characterSet.formUnion(with: CharacterSet.whitespacesAndNewlines)
         return characterSet as CharacterSet
     }()
-    
+
     deinit {
         regularExpresionPool.removeAll()
     }
 
     // MARK: Regular expression
-    
+
     func regexWithPattern(_ pattern: String) throws -> NSRegularExpression {
         if let regex = regularExpresionPool[pattern] {
             return regex
-        }
-        else {
+        } else {
             do {
                 let regularExpression: NSRegularExpression
                 regularExpression =  try NSRegularExpression(pattern: pattern, options:NSRegularExpression.Options.caseInsensitive)
                 regularExpresionPool[pattern] = regularExpression
                 return regularExpression
-            }
-            catch {
+            } catch {
                 throw PhoneNumberError.generalError
             }
         }
     }
-    
+
     func regexMatches(_ pattern: String, string: String) throws -> [NSTextCheckingResult] {
         do {
             let internalString = string
             let currentPattern =  try regexWithPattern(pattern)
             let matches = currentPattern.matches(in: internalString)
             return matches
-        }
-        catch {
+        } catch {
             throw PhoneNumberError.generalError
         }
     }
-    
+
     func phoneDataDetectorMatch(_ string: String) throws -> NSTextCheckingResult {
         let fallBackMatches = try regexMatches(PhoneNumberPatterns.validPhoneNumberPattern, string: string)
         if let firstMatch = fallBackMatches.first {
             return firstMatch
-        }
-        else {
+        } else {
             throw PhoneNumberError.notANumber
         }
     }
 
     // MARK: Match helpers
-    
+
     func matchesAtStart(_ pattern: String, string: String) -> Bool {
         do {
             let matches = try regexMatches(pattern, string: string)
@@ -75,12 +71,11 @@ final class RegexManager {
                     return true
                 }
             }
-        }
-        catch {
+        } catch {
         }
         return false
     }
-    
+
     func stringPositionByRegex(_ pattern: String, string: String) -> Int {
         do {
             let matches = try regexMatches(pattern, string: string)
@@ -92,7 +87,7 @@ final class RegexManager {
             return -1
         }
     }
-    
+
     func matchesExist(_ pattern: String?, string: String) -> Bool {
         guard let pattern = pattern else {
             return false
@@ -100,13 +95,11 @@ final class RegexManager {
         do {
             let matches = try regexMatches(pattern, string: string)
             return matches.count > 0
-        }
-        catch {
+        } catch {
             return false
         }
     }
 
-    
     func matchesEntirely(_ pattern: String?, string: String) -> Bool {
         guard var pattern = pattern else {
             return false
@@ -114,7 +107,7 @@ final class RegexManager {
         pattern = "^(\(pattern))$"
         return matchesExist(pattern, string: string)
     }
-    
+
     func matchedStringByRegex(_ pattern: String, string: String) throws -> [String] {
         do {
             let matches = try regexMatches(pattern, string: string)
@@ -124,14 +117,13 @@ final class RegexManager {
                 matchedStrings.append(processedString)
             }
             return matchedStrings
-        }
-        catch {
+        } catch {
         }
         return []
     }
-    
+
     // MARK: String and replace
-    
+
     func replaceStringByRegex(_ pattern: String, string: String) -> String {
         do {
             var replacementResult = string
@@ -143,8 +135,7 @@ final class RegexManager {
                     replacementResult = regex.stringByReplacingMatches(in: string, options: [], range: range, withTemplate: "")
                 }
                 return replacementResult
-            }
-            else if matches.count > 1 {
+            } else if matches.count > 1 {
                 replacementResult = regex.stringByReplacingMatches(in: string, withTemplate: "")
             }
             return replacementResult
@@ -152,7 +143,7 @@ final class RegexManager {
             return string
         }
     }
-    
+
     func replaceStringByRegex(_ pattern: String, string: String, template: String) -> String {
         do {
             var replacementResult = string
@@ -164,8 +155,7 @@ final class RegexManager {
                     replacementResult = regex.stringByReplacingMatches(in: string, options: [], range: range, withTemplate: template)
                 }
                 return replacementResult
-            }
-            else if matches.count > 1 {
+            } else if matches.count > 1 {
                 replacementResult = regex.stringByReplacingMatches(in: string, withTemplate: template)
             }
             return replacementResult
@@ -173,7 +163,7 @@ final class RegexManager {
             return string
         }
     }
-    
+
     func replaceFirstStringByRegex(_ pattern: String, string: String, templateString: String) -> String {
         do {
             let regex = try regexWithPattern(pattern)
@@ -186,7 +176,7 @@ final class RegexManager {
             return String()
         }
     }
-    
+
     func stringByReplacingOccurrences(_ string: String, map: [String:String]) -> String {
         var targetString = String()
         for i in 0 ..< string.count {
@@ -198,33 +188,29 @@ final class RegexManager {
         }
         return targetString
     }
-    
+
     // MARK: Validations
-    
+
     func hasValue(_ value: String?) -> Bool {
         if let valueString = value {
             if valueString.trimmingCharacters(in: spaceCharacterSet).count == 0 {
                 return false
             }
             return true
-        }
-        else {
+        } else {
             return false
         }
     }
-    
+
     func testStringLengthAgainstPattern(_ pattern: String, string: String) -> Bool {
         if (matchesEntirely(pattern, string: string)) {
             return true
-        }
-        else {
+        } else {
             return false
         }
     }
-    
+
 }
-
-
 
 // MARK: Extensions
 
@@ -234,6 +220,3 @@ extension String {
         return nsString.substring(with: range)
     }
 }
-
-
-

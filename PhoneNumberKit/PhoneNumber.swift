@@ -47,13 +47,13 @@ extension PhoneNumber : Hashable {
 
 }
 
-extension PhoneNumber{
-    
-    public static func notPhoneNumber() -> PhoneNumber{
+extension PhoneNumber {
+
+    public static func notPhoneNumber() -> PhoneNumber {
         return PhoneNumber(numberString: "", countryCode: 0, leadingZero: false, nationalNumber: 0, numberExtension: nil, type: .notParsed, regionID: nil)
     }
-    
-    public func notParsed() -> Bool{
+
+    public func notParsed() -> Bool {
         return type == .notParsed
     }
 }
@@ -70,7 +70,7 @@ public extension PhoneNumber {
         assertionFailure(PhoneNumberError.deprecated.localizedDescription)
         throw PhoneNumberError.deprecated
     }
-    
+
     /**
     DEPRECATED.
     Parse a string into a phone number object using custom region. Can throw.
@@ -83,5 +83,3 @@ public extension PhoneNumber {
     }
 
 }
-
-

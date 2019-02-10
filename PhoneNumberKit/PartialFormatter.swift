@@ -10,7 +10,7 @@ import Foundation
 
 /// Partial formatter
 public final class PartialFormatter {
-    
+
     private let phoneNumberKit: PhoneNumberKit
 
     weak var metadataManager: MetadataManager?
@@ -20,7 +20,7 @@ public final class PartialFormatter {
     public convenience init(phoneNumberKit: PhoneNumberKit = PhoneNumberKit(), defaultRegion: String = PhoneNumberKit.defaultRegionCode(), withPrefix: Bool = true, maxDigits: Int? = nil) {
         self.init(phoneNumberKit: phoneNumberKit, regexManager: phoneNumberKit.regexManager, metadataManager: phoneNumberKit.metadataManager, parser: phoneNumberKit.parseManager.parser, defaultRegion: defaultRegion, withPrefix: withPrefix, maxDigits: maxDigits)
     }
-    
+
     init(phoneNumberKit: PhoneNumberKit, regexManager: RegexManager, metadataManager: MetadataManager, parser: PhoneNumberParser, defaultRegion: String, withPrefix: Bool = true, maxDigits: Int? = nil) {
         self.phoneNumberKit = phoneNumberKit
         self.regexManager = regexManager
@@ -32,15 +32,14 @@ public final class PartialFormatter {
         self.maxDigits = maxDigits
     }
 
-    
     public var defaultRegion: String {
         didSet {
             updateMetadataForDefaultRegion()
         }
     }
-    
+
     public var maxDigits: Int?
-    
+
     func updateMetadataForDefaultRegion() {
         guard let metadataManager = metadataManager else { return }
         if let regionMetadata = metadataManager.territoriesByCountry[defaultRegion] {
@@ -50,45 +49,45 @@ public final class PartialFormatter {
         }
         currentMetadata = defaultMetadata
     }
-    
+
     var defaultMetadata: MetadataTerritory?
     var currentMetadata: MetadataTerritory?
     var prefixBeforeNationalNumber =  String()
     var shouldAddSpaceAfterNationalPrefix = false
     var withPrefix = true
-    
-    //MARK: Status
-    
+
+    // MARK: Status
+
     public var currentRegion: String {
         get {
             return currentMetadata?.codeID ?? defaultRegion
         }
     }
-    
+
     public func nationalNumber(from rawNumber: String) -> String {
         guard let parser = parser else { return rawNumber }
-        
+
         let iddFreeNumber = extractIDD(rawNumber)
         var nationalNumber = parser.normalizePhoneNumber(iddFreeNumber)
         if prefixBeforeNationalNumber.count > 0 {
             nationalNumber = extractCountryCallingCode(nationalNumber)
         }
-        
+
         nationalNumber = extractNationalPrefix(nationalNumber)
-        
+
         if let maxDigits = maxDigits {
             let extra = nationalNumber.count - maxDigits
-            
+
             if extra > 0 {
                 nationalNumber = String(nationalNumber.dropLast(extra))
             }
         }
-        
+
         return nationalNumber
     }
-    
-    //MARK: Lifecycle
-    
+
+    // MARK: Lifecycle
+
     /**
      Formats a partial string (for use in TextField)
      
@@ -99,18 +98,17 @@ public final class PartialFormatter {
     public func formatPartial(_ rawNumber: String) -> String {
         // Always reset variables with each new raw number
         resetVariables()
-        
+
         guard isValidRawNumber(rawNumber) else {
             return rawNumber
         }
-        
+
         var nationalNumber = self.nationalNumber(from: rawNumber)
-        
+
         if let formats = availableFormats(nationalNumber) {
             if let formattedNumber = applyFormat(nationalNumber, formats: formats) {
                 nationalNumber = formattedNumber
-            }
-            else {
+            } else {
                 for format in formats {
                     if let template = createFormattingTemplate(format, rawNumber: nationalNumber) {
                         nationalNumber = applyFormattingTemplate(template, rawNumber: nationalNumber)
@@ -123,7 +121,7 @@ public final class PartialFormatter {
         if prefixBeforeNationalNumber.count > 0 {
             finalNumber.append(prefixBeforeNationalNumber)
         }
-        if shouldAddSpaceAfterNationalPrefix && prefixBeforeNationalNumber.count > 0 && prefixBeforeNationalNumber.last != PhoneNumberConstants.separatorBeforeNationalNumber.first  {
+        if shouldAddSpaceAfterNationalPrefix && prefixBeforeNationalNumber.count > 0 && prefixBeforeNationalNumber.last != PhoneNumberConstants.separatorBeforeNationalNumber.first {
             finalNumber.append(PhoneNumberConstants.separatorBeforeNationalNumber)
         }
         if nationalNumber.count > 0 {
@@ -132,20 +130,20 @@ public final class PartialFormatter {
         if finalNumber.last == PhoneNumberConstants.separatorBeforeNationalNumber.first {
             finalNumber = String(finalNumber[..<finalNumber.index(before: finalNumber.endIndex)])
         }
-        
+
         return finalNumber
     }
-    
-    //MARK: Formatting Functions
-    
+
+    // MARK: Formatting Functions
+
     internal func resetVariables() {
         currentMetadata = defaultMetadata
         prefixBeforeNationalNumber = String()
         shouldAddSpaceAfterNationalPrefix = false
     }
-    
-    //MARK: Formatting Tests
-    
+
+    // MARK: Formatting Tests
+
     internal func isValidRawNumber(_ rawNumber: String) -> Bool {
         do {
             // In addition to validPhoneNumberPattern,
@@ -156,21 +154,20 @@ public final class PartialFormatter {
             if validNumberMatches?.count == 0 || validStart != 0 {
                 return false
             }
-        }
-        catch {
+        } catch {
             return false
         }
         return true
     }
-    
+
     internal func isNanpaNumberWithNationalPrefix(_ rawNumber: String) -> Bool {
         guard currentMetadata?.countryCode == 1 && rawNumber.count > 1 else { return false }
-        
+
         let firstCharacter: String = String(describing: rawNumber.first)
         let secondCharacter: String = String(describing: rawNumber[rawNumber.index(rawNumber.startIndex, offsetBy: 1)])
         return (firstCharacter == "1" && secondCharacter != "0" && secondCharacter != "1")
     }
-    
+
     func isFormatEligible(_ format: MetadataPhoneNumberFormat) -> Bool {
         guard let phoneFormat = format.format else {
             return false
@@ -180,13 +177,12 @@ public final class PartialFormatter {
             if validRegex?.firstMatch(in: phoneFormat, options: [], range: NSMakeRange(0, phoneFormat.count)) != nil {
                 return true
             }
-        }
-        catch {}
+        } catch {}
         return false
     }
-    
-    //MARK: Formatting Extractions
-    
+
+    // MARK: Formatting Extractions
+
     func extractIDD(_ rawNumber: String) -> String {
         var processedNumber = rawNumber
         do {
@@ -200,20 +196,18 @@ public final class PartialFormatter {
                     prefixBeforeNationalNumber = String(rawNumber[..<index])
                 }
             }
-        }
-        catch {
+        } catch {
             return processedNumber
         }
         return processedNumber
     }
-    
+
     func extractNationalPrefix(_ rawNumber: String) -> String {
         var processedNumber = rawNumber
         var startOfNationalNumber: Int = 0
         if isNanpaNumberWithNationalPrefix(rawNumber) {
             prefixBeforeNationalNumber.append("1 ")
-        }
-        else {
+        } else {
             do {
                 if let nationalPrefix = currentMetadata?.nationalPrefixForParsing {
                     let nationalPrefixPattern = String(format: PhoneNumberPatterns.nationalPrefixParsingPattern, arguments: [nationalPrefix])
@@ -222,8 +216,7 @@ public final class PartialFormatter {
                         startOfNationalNumber = m.count
                     }
                 }
-            }
-            catch {
+            } catch {
                 return processedNumber
             }
         }
@@ -232,7 +225,7 @@ public final class PartialFormatter {
         prefixBeforeNationalNumber.append(String(rawNumber[..<index]))
         return processedNumber
     }
-    
+
     func extractCountryCallingCode(_ rawNumber: String) -> String {
         var processedNumber = rawNumber
         if rawNumber.isEmpty {
@@ -248,15 +241,14 @@ public final class PartialFormatter {
             let potentialCountryCodeString = String(potentialCountryCode)
             prefixBeforeNationalNumber.append(potentialCountryCodeString)
             prefixBeforeNationalNumber.append(" ")
-        }
-        else if withPrefix == false && prefixBeforeNationalNumber.isEmpty {
+        } else if withPrefix == false && prefixBeforeNationalNumber.isEmpty {
             let potentialCountryCodeString = String(describing: currentMetadata?.countryCode)
             prefixBeforeNationalNumber.append(potentialCountryCodeString)
             prefixBeforeNationalNumber.append(" ")
         }
         return processedNumber
     }
-    
+
     func availableFormats(_ rawNumber: String) -> [MetadataPhoneNumberFormat]? {
         guard let regexManager = regexManager else { return nil }
         var tempPossibleFormats = [MetadataPhoneNumberFormat]()
@@ -270,8 +262,7 @@ public final class PartialFormatter {
                         if (regexManager.stringPositionByRegex(leadingDigitPattern, string: String(rawNumber)) == 0) {
                             possibleFormats.append(format)
                         }
-                    }
-                    else {
+                    } else {
                         if (regexManager.matchesEntirely(format.pattern, string: String(rawNumber))) {
                             possibleFormats.append(format)
                         }
@@ -285,8 +276,7 @@ public final class PartialFormatter {
         }
         return nil
     }
-    
-    
+
     func applyFormat(_ rawNumber: String, formats: [MetadataPhoneNumberFormat]) -> String? {
         guard let regexManager = regexManager else { return nil }
         for format in formats {
@@ -305,18 +295,15 @@ public final class PartialFormatter {
                         let formattedNumber = regexManager.replaceStringByRegex(pattern, string: rawNumber, template: formatTemplate)
                         return formattedNumber
                     }
-                }
-                catch {
-                    
+                } catch {
+
                 }
             }
         }
         return nil
     }
-    
-    
-    
-    func createFormattingTemplate(_ format: MetadataPhoneNumberFormat, rawNumber: String) -> String?  {
+
+    func createFormattingTemplate(_ format: MetadataPhoneNumberFormat, rawNumber: String) -> String? {
         guard var numberPattern = format.pattern, let numberFormat = format.format, let regexManager = regexManager else {
             return nil
         }
@@ -326,10 +313,10 @@ public final class PartialFormatter {
         do {
             let characterClassRegex = try regexManager.regexWithPattern(PhoneNumberPatterns.characterClassPattern)
             numberPattern = characterClassRegex.stringByReplacingMatches(in: numberPattern, withTemplate: "\\\\d")
-            
+
             let standaloneDigitRegex = try regexManager.regexWithPattern(PhoneNumberPatterns.standaloneDigitPattern)
             numberPattern = standaloneDigitRegex.stringByReplacingMatches(in: numberPattern, withTemplate: "\\\\d")
-            
+
             if let tempTemplate = getFormattingTemplate(numberPattern, numberFormat: numberFormat, rawNumber: rawNumber) {
                 if let nationalPrefixFormattingRule = format.nationalPrefixFormattingRule {
                     let separatorRegex = try regexManager.regexWithPattern(PhoneNumberPatterns.prefixSeparatorPattern)
@@ -340,11 +327,10 @@ public final class PartialFormatter {
                 }
                 return tempTemplate
             }
-        }
-        catch { }
+        } catch { }
         return nil
     }
-    
+
     func getFormattingTemplate(_ numberPattern: String, numberFormat: String, rawNumber: String) -> String? {
         guard let regexManager = regexManager else { return nil }
         do {
@@ -357,13 +343,12 @@ public final class PartialFormatter {
                 template = regexManager.replaceStringByRegex("9", string: template, template: PhoneNumberConstants.digitPlaceholder)
                 return template
             }
-        }
-        catch {
-            
+        } catch {
+
         }
         return nil
     }
-    
+
     func applyFormattingTemplate(_ template: String, rawNumber: String) -> String {
         var rebuiltString = String()
         var rebuiltIndex = 0
@@ -374,8 +359,7 @@ public final class PartialFormatter {
                     rebuiltString.append(rawNumber[nationalCharacterIndex])
                     rebuiltIndex += 1
                 }
-            }
-            else {
+            } else {
                 if rebuiltIndex < rawNumber.count {
                     rebuiltString.append(character)
                 }
@@ -387,8 +371,8 @@ public final class PartialFormatter {
             rebuiltString.append(remainingNationalNumber)
         }
         rebuiltString = rebuiltString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
-        
+
         return rebuiltString
     }
-    
+
 }

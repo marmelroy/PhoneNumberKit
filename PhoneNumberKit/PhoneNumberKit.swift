@@ -41,8 +41,8 @@ public final class PhoneNumberKit: NSObject {
 
         do {
             return try parseManager.parse(numberString, withRegion: region, ignoreType: ignoreType)
-        } catch  {
-            if (numberStringWithPlus.first != "+"){
+        } catch {
+            if (numberStringWithPlus.first != "+") {
                 numberStringWithPlus = "+" + numberStringWithPlus
             }
         }
@@ -70,7 +70,7 @@ public final class PhoneNumberKit: NSObject {
     /// - parameter prefix:      whether or not to include the prefix.
     ///
     /// - returns: Formatted representation of the PhoneNumber.
-    public func format(_ phoneNumber: PhoneNumber, toType formatType:PhoneNumberFormat, withPrefix prefix: Bool = true) -> String {
+    public func format(_ phoneNumber: PhoneNumber, toType formatType: PhoneNumberFormat, withPrefix prefix: Bool = true) -> String {
         if formatType == .e164 {
             let formattedNationalNumber = phoneNumber.adjustedNationalNumber()
             if prefix == false {
@@ -95,7 +95,7 @@ public final class PhoneNumberKit: NSObject {
     ///
     /// - returns: An array of ISO 639 compliant region codes.
     public func allCountries() -> [String] {
-        let results = metadataManager.territories.map{$0.codeID}
+        let results = metadataManager.territories.map {$0.codeID}
         return results
     }
 
@@ -105,7 +105,7 @@ public final class PhoneNumberKit: NSObject {
     ///
     /// - returns: optional array of ISO 639 compliant region codes.
     public func countries(withCode countryCode: UInt64) -> [String]? {
-        let results = metadataManager.filterTerritories(byCode: countryCode)?.map{$0.codeID}
+        let results = metadataManager.filterTerritories(byCode: countryCode)?.map {$0.codeID}
         return results
     }
 
@@ -178,7 +178,7 @@ public final class PhoneNumberKit: NSObject {
     public static func defaultMetadataCallback() throws -> Data? {
         let frameworkBundle = Bundle(for: PhoneNumberKit.self)
         guard let jsonPath = frameworkBundle.path(forResource: "PhoneNumberMetadata", ofType: "json") else {
-            throw PhoneNumberError.metadataNotFound;
+            throw PhoneNumberError.metadataNotFound
         }
         let data = try Data(contentsOf: URL(fileURLWithPath: jsonPath))
         return data
