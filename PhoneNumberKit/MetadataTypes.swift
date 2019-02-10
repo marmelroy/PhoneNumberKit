@@ -8,6 +8,24 @@
 
 import Foundation
 
+
+/// Internal object for metadata parsing
+internal struct PhoneNumberMetadata: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case phoneNumberMetadata
+        case territories
+        case territory
+    }
+    var territories: [MetadataTerritory]
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let metadataObject = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .phoneNumberMetadata)
+        let territoryObject = try metadataObject.nestedContainer(keyedBy: CodingKeys.self, forKey: .territories)
+        territories = try territoryObject.decode([MetadataTerritory].self, forKey: .territory)
+    }
+}
+
 /**
 MetadataTerritory object
 - Parameter codeID: ISO 639 compliant region code
@@ -32,7 +50,34 @@ MetadataTerritory object
 - Parameter uan: MetadataPhoneNumberDesc for uan numbers
 - Parameter leadingDigits: Optional leading digits for the territory
 */
-struct MetadataTerritory {
+struct MetadataTerritory: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case codeID = "id"
+        case countryCode
+        case internationalPrefix
+        case mainCountryForCode
+        case nationalPrefix
+        case nationalPrefixFormattingRule
+        case nationalPrefixForParsing
+        case nationalPrefixTransformRule
+        case preferredExtnPrefix
+        case emergency
+        case fixedLine
+        case generalDesc
+        case mobile
+        case pager
+        case personalNumber
+        case premiumRate
+        case sharedCost
+        case tollFree
+        case voicemail
+        case voip
+        case uan
+        case numberFormats = "numberFormat"
+        case leadingDigits
+        case availableFormats
+    }
+
     let codeID: String
     let countryCode: UInt64
     let internationalPrefix: String?
@@ -56,66 +101,52 @@ struct MetadataTerritory {
     let uan: MetadataPhoneNumberDesc?
     let numberFormats: [MetadataPhoneNumberFormat]
     let leadingDigits: String?
-
 }
 
 extension MetadataTerritory {
-    /**
-    Parse a json dictionary into a MetadataTerritory.
-    - Parameter jsondDict: json dictionary from attached json metadata file.
-    */
-    init(jsondDict: NSDictionary) {
-        self.generalDesc = MetadataPhoneNumberDesc(jsondDict: (jsondDict.value(forKey: "generalDesc") as? NSDictionary))
-        self.fixedLine = MetadataPhoneNumberDesc(jsondDict: (jsondDict.value(forKey: "fixedLine") as? NSDictionary))
-        self.mobile = MetadataPhoneNumberDesc(jsondDict: (jsondDict.value(forKey: "mobile") as? NSDictionary))
-        self.tollFree = MetadataPhoneNumberDesc(jsondDict: (jsondDict.value(forKey: "tollFree") as? NSDictionary))
-        self.premiumRate = MetadataPhoneNumberDesc(jsondDict: (jsondDict.value(forKey: "premiumRate") as? NSDictionary))
-        self.sharedCost = MetadataPhoneNumberDesc(jsondDict: (jsondDict.value(forKey: "sharedCost") as? NSDictionary))
-        self.personalNumber = MetadataPhoneNumberDesc(jsondDict: (jsondDict.value(forKey: "personalNumber") as? NSDictionary))
-        self.voip = MetadataPhoneNumberDesc(jsondDict: (jsondDict.value(forKey: "voip") as? NSDictionary))
-        self.pager = MetadataPhoneNumberDesc(jsondDict: (jsondDict.value(forKey: "pager") as? NSDictionary))
-        self.uan = MetadataPhoneNumberDesc(jsondDict: (jsondDict.value(forKey: "uan") as? NSDictionary))
-        self.emergency = MetadataPhoneNumberDesc(jsondDict: (jsondDict.value(forKey: "emergency") as? NSDictionary))
-        self.voicemail = MetadataPhoneNumberDesc(jsondDict: (jsondDict.value(forKey: "voicemail") as? NSDictionary))
-        self.codeID = jsondDict.value(forKey: "id") as! String
-        self.countryCode = UInt64(jsondDict.value(forKey: "countryCode") as! String)!
-        self.internationalPrefix = jsondDict.value(forKey: "internationalPrefix") as? String
-        self.nationalPrefixTransformRule = jsondDict.value(forKey: "nationalPrefixTransformRule") as? String
-        let possibleNationalPrefixForParsing = jsondDict.value(forKey: "nationalPrefixForParsing") as? String
-        let possibleNationalPrefix = jsondDict.value(forKey: "nationalPrefix") as? String
-        self.nationalPrefix = possibleNationalPrefix
-        if (possibleNationalPrefixForParsing == nil && possibleNationalPrefix != nil) {
-            self.nationalPrefixForParsing = self.nationalPrefix
-        }
-        else {
-            self.nationalPrefixForParsing = possibleNationalPrefixForParsing
-        }
-        self.preferredExtnPrefix = jsondDict.value(forKey: "preferredExtnPrefix") as? String
-        self.nationalPrefixFormattingRule = jsondDict.value(forKey: "nationalPrefixFormattingRule") as? String
-        if let mainCountryForCode = jsondDict.value(forKey: "mainCountryForCode") as? NSString {
-            self.mainCountryForCode = mainCountryForCode.boolValue
-        } else {
-            self.mainCountryForCode = false
-        }
-        var numberFormats = [MetadataPhoneNumberFormat]()
-        
-        if let availableFormats = (jsondDict.value(forKey: "availableFormats") as? NSDictionary)?.value(forKey: "numberFormat") {
-            if let formatsArray = availableFormats as? NSArray {
-                for format in formatsArray {
-                    var processedFormat = MetadataPhoneNumberFormat(jsondDict: format as? NSDictionary)
-                    if processedFormat.nationalPrefixFormattingRule == nil {
-                        processedFormat.nationalPrefixFormattingRule = self.nationalPrefixFormattingRule
-                    }
-                    numberFormats.append(processedFormat)
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        codeID = try container.decode(String.self, forKey: .codeID)
+        let code = try! container.decode(String.self, forKey: .countryCode)
+        countryCode = UInt64(code)!
+        internationalPrefix = try? container.decode(String.self, forKey: .internationalPrefix)
+        mainCountryForCode = parseBoolStringOrEmpty(container: container, codingKey: .mainCountryForCode)
+        let possibleNationalPrefixForParsing: String? = try? container.decode(String.self, forKey: .nationalPrefixForParsing)
+        let possibleNationalPrefix: String? = try? container.decode(String.self, forKey: .nationalPrefix)
+        nationalPrefix = possibleNationalPrefix
+        nationalPrefixForParsing = (possibleNationalPrefixForParsing == nil && possibleNationalPrefix != nil) ? nationalPrefix : possibleNationalPrefixForParsing
+        nationalPrefixFormattingRule = try? container.decode(String.self, forKey: .nationalPrefixFormattingRule)
+        nationalPrefixTransformRule = try? container.decode(String.self, forKey: .nationalPrefixTransformRule)
+        preferredExtnPrefix = try? container.decode(String.self, forKey: .preferredExtnPrefix)
+        emergency = try? container.decode(MetadataPhoneNumberDesc.self, forKey: .emergency)
+        fixedLine = try? container.decode(MetadataPhoneNumberDesc.self, forKey: .fixedLine)
+        generalDesc = try? container.decode(MetadataPhoneNumberDesc.self, forKey: .generalDesc)
+        mobile = try? container.decode(MetadataPhoneNumberDesc.self, forKey: .mobile)
+        pager = try? container.decode(MetadataPhoneNumberDesc.self, forKey: .pager)
+        personalNumber = try? container.decode(MetadataPhoneNumberDesc.self, forKey: .personalNumber)
+        premiumRate = try? container.decode(MetadataPhoneNumberDesc.self, forKey: .premiumRate)
+        sharedCost = try? container.decode(MetadataPhoneNumberDesc.self, forKey: .sharedCost)
+        tollFree = try? container.decode(MetadataPhoneNumberDesc.self, forKey: .tollFree)
+        voicemail = try? container.decode(MetadataPhoneNumberDesc.self, forKey: .voicemail)
+        voip = try? container.decode(MetadataPhoneNumberDesc.self, forKey: .voip)
+        uan = try? container.decode(MetadataPhoneNumberDesc.self, forKey: .uan)
+        do {
+            let availableFormats = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .availableFormats)
+            let temporaryFormatList: [MetadataPhoneNumberFormat] = parseArrayOrObject(container: availableFormats, codingKey: .numberFormats)
+            var processedNumberFormats = [MetadataPhoneNumberFormat]()
+            for format in temporaryFormatList {
+                var modifiedFormat = format
+                if modifiedFormat.nationalPrefixFormattingRule == nil {
+                    modifiedFormat.nationalPrefixFormattingRule = self.nationalPrefixFormattingRule
                 }
+                processedNumberFormats.append(modifiedFormat)
             }
-            if let format = availableFormats as? NSDictionary {
-                let processedFormat = MetadataPhoneNumberFormat(jsondDict: format)
-                numberFormats.append(processedFormat)
-            }
+            numberFormats = processedNumberFormats
+        } catch {
+            numberFormats = [MetadataPhoneNumberFormat]()
         }
-        self.numberFormats = numberFormats
-        self.leadingDigits = jsondDict.value(forKey: "leadingDigits") as? String
+        leadingDigits = try? container.decode(String.self, forKey: .leadingDigits)
     }
 }
 
@@ -126,23 +157,10 @@ MetadataPhoneNumberDesc object
 - Parameter nationalNumberPattern:  National number regex pattern. Optional.
 - Parameter possibleNumberPattern:  Possible number regex pattern. Optional.
 */
-struct MetadataPhoneNumberDesc {
+struct MetadataPhoneNumberDesc: Decodable {
     let exampleNumber: String?
     let nationalNumberPattern: String?
     let possibleNumberPattern: String?
-}
-
-extension MetadataPhoneNumberDesc {
-    /**
-    Parse a json dictionary into a MetadataPhoneNumberDesc.
-    - Parameter jsondDict: json dictionary from attached json metadata file.
-    */
-    init(jsondDict: NSDictionary?) {
-        self.nationalNumberPattern = jsondDict?.value(forKey: "nationalNumberPattern") as? String
-        self.possibleNumberPattern = jsondDict?.value(forKey: "possibleNumberPattern") as? String
-        self.exampleNumber = jsondDict?.value(forKey: "exampleNumber") as? String
-        
-    }
 }
 
 /**
@@ -156,7 +174,17 @@ extension MetadataPhoneNumberDesc {
  - Parameter nationalPrefixOptionalWhenFormatting: National prefix optional bool. Optional.
  - Parameter domesticCarrierCodeFormattingRule: Domestic carrier code formatting rule. Optional.
  */
-struct MetadataPhoneNumberFormat {
+struct MetadataPhoneNumberFormat: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case pattern
+        case format
+        case intlFormat
+        case leadingDigitsPatterns = "leadingDigits"
+        case nationalPrefixFormattingRule
+        case nationalPrefixOptionalWhenFormatting
+        case domesticCarrierCodeFormattingRule = "carrierCodeFormattingRule"
+    }
+
     let pattern: String?
     let format: String?
     let intlFormat: String?
@@ -164,35 +192,35 @@ struct MetadataPhoneNumberFormat {
     var nationalPrefixFormattingRule: String?
     let nationalPrefixOptionalWhenFormatting: Bool?
     let domesticCarrierCodeFormattingRule: String?
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        pattern = try? container.decode(String.self, forKey: .pattern)
+        format = try? container.decode(String.self, forKey: .format)
+        intlFormat = try? container.decode(String.self, forKey: .intlFormat)
+        leadingDigitsPatterns = parseArrayOrObject(container: container, codingKey: .leadingDigitsPatterns)
+        nationalPrefixFormattingRule = try? container.decode(String.self, forKey: .nationalPrefixFormattingRule)
+        nationalPrefixOptionalWhenFormatting = parseBoolStringOrEmpty(container: container, codingKey: .nationalPrefixOptionalWhenFormatting)
+        domesticCarrierCodeFormattingRule = try? container.decode(String.self, forKey: .domesticCarrierCodeFormattingRule)
+    }
 }
 
-extension MetadataPhoneNumberFormat {
-    /**
-     Parse a json dictionary into a MetadataPhoneNumberFormat.
-     - Parameter jsondDict: json dictionary from attached json metadata file.
-     */
-    init(jsondDict: NSDictionary?) {
-        self.pattern = jsondDict?.value(forKey: "pattern") as? String
-        self.format = jsondDict?.value(forKey: "format") as? String
-        self.intlFormat = jsondDict?.value(forKey: "intlFormat") as? String
-        var leadingDigits = [String]()
-        if let leadingDigitsPatterns = jsondDict?.value(forKey: "leadingDigits") {
-            if let leadingDigitArray = leadingDigitsPatterns as? [String] {
-                for leadingDigit in leadingDigitArray {
-                    leadingDigits.append(leadingDigit)
-                }
-            }
-            if let leadingDigit = leadingDigitsPatterns as? String {
-                leadingDigits.append(leadingDigit)
-            }
+//MARK: Parsing helpers
+
+private func parseArrayOrObject<T: Decodable, Key: CodingKey>(container: KeyedDecodingContainer<Key>, codingKey: Key) -> [T]
+{
+    guard let array: [T] = try? container.decode([T].self, forKey: codingKey) else {
+        guard let object: T = try? container.decode(T.self, forKey: codingKey) else {
+            return [T]()
         }
-        self.leadingDigitsPatterns = leadingDigits
-        self.nationalPrefixFormattingRule = jsondDict?.value(forKey: "nationalPrefixFormattingRule") as? String
-        if let _nationalPrefixOptionalWhenFormatting = jsondDict?.value(forKey: "nationalPrefixOptionalWhenFormatting") as? NSString {
-            self.nationalPrefixOptionalWhenFormatting = _nationalPrefixOptionalWhenFormatting.boolValue
-        } else {
-            self.nationalPrefixOptionalWhenFormatting = false
-        }
-        self.domesticCarrierCodeFormattingRule = jsondDict?.value(forKey: "carrierCodeFormattingRule") as? String
+        return [object]
     }
+    return array
+}
+
+private func parseBoolStringOrEmpty<Key: CodingKey>(container: KeyedDecodingContainer<Key>, codingKey: Key) -> Bool {
+    guard let value: String = try? container.decode(String.self, forKey: codingKey) else {
+        return false
+    }
+    return Bool(value) ?? false
 }
