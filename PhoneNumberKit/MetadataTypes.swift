@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 /// Internal object for metadata parsing
 internal struct PhoneNumberMetadata: Decodable {
     enum CodingKeys: String, CodingKey {
@@ -111,7 +110,7 @@ extension MetadataTerritory {
         let code = try! container.decode(String.self, forKey: .countryCode)
         countryCode = UInt64(code)!
         internationalPrefix = try? container.decode(String.self, forKey: .internationalPrefix)
-        mainCountryForCode = parseBoolStringOrEmpty(container: container, codingKey: .mainCountryForCode)
+        mainCountryForCode = container.decodeBoolString(forKey: .mainCountryForCode)
         let possibleNationalPrefixForParsing: String? = try? container.decode(String.self, forKey: .nationalPrefixForParsing)
         let possibleNationalPrefix: String? = try? container.decode(String.self, forKey: .nationalPrefix)
         nationalPrefix = possibleNationalPrefix
@@ -133,7 +132,7 @@ extension MetadataTerritory {
         uan = try? container.decode(MetadataPhoneNumberDesc.self, forKey: .uan)
         do {
             let availableFormats = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .availableFormats)
-            let temporaryFormatList: [MetadataPhoneNumberFormat] = parseArrayOrObject(container: availableFormats, codingKey: .numberFormats)
+            let temporaryFormatList: [MetadataPhoneNumberFormat] = availableFormats.decodeArrayOrObject(forKey: .numberFormats)
             var processedNumberFormats = [MetadataPhoneNumberFormat]()
             for format in temporaryFormatList {
                 var modifiedFormat = format
@@ -198,29 +197,37 @@ struct MetadataPhoneNumberFormat: Decodable {
         pattern = try? container.decode(String.self, forKey: .pattern)
         format = try? container.decode(String.self, forKey: .format)
         intlFormat = try? container.decode(String.self, forKey: .intlFormat)
-        leadingDigitsPatterns = parseArrayOrObject(container: container, codingKey: .leadingDigitsPatterns)
+        leadingDigitsPatterns = container.decodeArrayOrObject(forKey: .leadingDigitsPatterns)
         nationalPrefixFormattingRule = try? container.decode(String.self, forKey: .nationalPrefixFormattingRule)
-        nationalPrefixOptionalWhenFormatting = parseBoolStringOrEmpty(container: container, codingKey: .nationalPrefixOptionalWhenFormatting)
+        nationalPrefixOptionalWhenFormatting = container.decodeBoolString(forKey: .nationalPrefixOptionalWhenFormatting)
         domesticCarrierCodeFormattingRule = try? container.decode(String.self, forKey: .domesticCarrierCodeFormattingRule)
     }
 }
 
 //MARK: Parsing helpers
 
-private func parseArrayOrObject<T: Decodable, Key: CodingKey>(container: KeyedDecodingContainer<Key>, codingKey: Key) -> [T]
-{
-    guard let array: [T] = try? container.decode([T].self, forKey: codingKey) else {
-        guard let object: T = try? container.decode(T.self, forKey: codingKey) else {
-            return [T]()
+internal extension KeyedDecodingContainer where K : CodingKey {
+    /// Decodes a string to a boolean. Returns false if empty.
+    ///
+    /// - Parameter key: Coding key to decode
+    internal func decodeBoolString(forKey key: KeyedDecodingContainer<K>.Key) -> Bool {
+        guard let value: String = try? self.decode(String.self, forKey: key) else {
+            return false
         }
-        return [object]
+        return Bool(value) ?? false
     }
-    return array
-}
 
-private func parseBoolStringOrEmpty<Key: CodingKey>(container: KeyedDecodingContainer<Key>, codingKey: Key) -> Bool {
-    guard let value: String = try? container.decode(String.self, forKey: codingKey) else {
-        return false
+    /// Decodes either a single object or an array into an array. Returns an empty array if empty.
+    ///
+    /// - Parameter key: Coding key to decode
+    internal func decodeArrayOrObject<T: Decodable>(forKey key: KeyedDecodingContainer<K>.Key) -> [T]
+    {
+        guard let array: [T] = try? self.decode([T].self, forKey: key) else {
+            guard let object: T = try? self.decode(T.self, forKey: key) else {
+                return [T]()
+            }
+            return [object]
+        }
+        return array
     }
-    return Bool(value) ?? false
 }
