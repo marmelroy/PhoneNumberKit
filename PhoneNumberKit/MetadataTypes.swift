@@ -63,11 +63,18 @@ public struct MetadataTerritory: Decodable {
  - Parameter exampleNumber: An example phone number for the given type. Optional.
  - Parameter nationalNumberPattern:  National number regex pattern. Optional.
  - Parameter possibleNumberPattern:  Possible number regex pattern. Optional.
+ - Parameter possibleLengths: Possible phone number lengths. Optional.
  */
 public struct MetadataPhoneNumberDesc: Decodable {
     public let exampleNumber: String?
     public let nationalNumberPattern: String?
     public let possibleNumberPattern: String?
+    public let possibleLengths: MetadataPossibleLengths?
+}
+
+public struct MetadataPossibleLengths: Decodable {
+    let national: String?
+    let localOnly: String?
 }
 
 /**

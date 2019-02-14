@@ -93,6 +93,11 @@ public enum PhoneNumberType: String, Codable {
     case notParsed
 }
 
+public enum PossibleLengthType: String, Codable {
+  case national
+  case localOnly
+}
+
 // MARK: Constants
 
 struct PhoneNumberConstants {
