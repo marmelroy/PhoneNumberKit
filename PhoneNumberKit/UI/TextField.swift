@@ -12,7 +12,7 @@ import UIKit
 /// Custom text field that formats phone numbers
 open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
 
-    let phoneNumberKit = PhoneNumberKit()
+    public let phoneNumberKit = PhoneNumberKit()
 
     /// Override setText so number will be automatically formatted when setting text by code
     override open var text: String? {
@@ -91,11 +91,6 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             let rawNumber = self.text ?? String()
             return partialFormatter.nationalNumber(from: rawNumber)
         }
-    }
-    
-    public func parsed() -> PhoneNumber? {
-        do { return try phoneNumberKit.parse(self.text ?? String(), withRegion: currentRegion) }
-        catch { return nil }
     }
 
     public var isValidNumber: Bool {
