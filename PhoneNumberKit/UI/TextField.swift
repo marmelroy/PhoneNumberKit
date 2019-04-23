@@ -92,6 +92,11 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             return partialFormatter.nationalNumber(from: rawNumber)
         }
     }
+    
+    public func parsed() -> PhoneNumber? {
+        do { return try phoneNumberKit.parse(self.text ?? String(), withRegion: currentRegion) }
+        catch { return nil }
+    }
 
     public var isValidNumber: Bool {
         get {
