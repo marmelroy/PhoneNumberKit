@@ -35,7 +35,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
 
     /// Override region to set a custom region. Automatically uses the default region code.
-    public var defaultRegion = PhoneNumberKit.defaultRegionCode() {
+    open var defaultRegion = PhoneNumberKit.defaultRegionCode() {
         didSet {
             partialFormatter.defaultRegion = defaultRegion
         }
