@@ -47,7 +47,19 @@ class PhoneNumberKitTests: XCTestCase {
             XCTAssert(true)
         }
     }
-    
+
+    // Valid indian number, GitHub issue #235
+    func testValidNumber6() {
+        do {
+            let phoneNumber = try phoneNumberKit.parse("6297062979", withRegion: "IN")
+            print(phoneNumberKit.format(phoneNumber, toType: .e164))
+            XCTAssert(true)
+        }
+        catch {
+            XCTFail()
+        }
+    }
+
     // Invalid american number, GitHub issue #9 by lobodin
     func testAmbiguousFixedOrMobileNumber() {
         do {

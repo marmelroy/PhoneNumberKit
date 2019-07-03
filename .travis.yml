@@ -1,4 +1,4 @@
-osx_image: xcode8.3
+osx_image: xcode10
 language: objective-c
 env:
   global:

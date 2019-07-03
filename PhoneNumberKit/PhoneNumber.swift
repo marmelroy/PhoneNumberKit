@@ -18,13 +18,14 @@ Parsed phone number object
 - numberExtension: Extension if available. String. Optional
 - type: Computed phone number type on access. Returns from an enumeration - PNPhoneNumberType.
 */
-public struct PhoneNumber {
+public struct PhoneNumber: Codable {
     public let numberString: String
     public let countryCode: UInt64
     public let leadingZero: Bool
     public let nationalNumber: UInt64
     public let numberExtension: String?
     public let type: PhoneNumberType
+    public let regionID: String?
 }
 
 extension PhoneNumber : Equatable {
@@ -46,6 +47,17 @@ extension PhoneNumber : Hashable {
 
 }
 
+extension PhoneNumber {
+
+    public static func notPhoneNumber() -> PhoneNumber {
+        return PhoneNumber(numberString: "", countryCode: 0, leadingZero: false, nationalNumber: 0, numberExtension: nil, type: .notParsed, regionID: nil)
+    }
+
+    public func notParsed() -> Bool {
+        return type == .notParsed
+    }
+}
+
 /// In past versions of PhoneNumebrKit you were able to initialize a PhoneNumber object to parse a String. Please use a PhoneNumberKit object's methods.
 public extension PhoneNumber {
     /**
@@ -58,7 +70,7 @@ public extension PhoneNumber {
         assertionFailure(PhoneNumberError.deprecated.localizedDescription)
         throw PhoneNumberError.deprecated
     }
-    
+
     /**
     DEPRECATED.
     Parse a string into a phone number object using custom region. Can throw.
@@ -71,5 +83,3 @@ public extension PhoneNumber {
     }
 
 }
-
-

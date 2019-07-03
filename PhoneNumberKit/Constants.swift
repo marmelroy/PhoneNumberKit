@@ -27,6 +27,7 @@ Enumeration for parsing error types
 - TooLong: The string provided is too long to be a valid number
 - TooShort: The string provided is too short to be a valid number
 - Deprecated: The method used was deprecated
+- metadataNotFound: PhoneNumberKit was unable to read the included metadata
 */
 public enum PhoneNumberError: Error {
     case generalError
@@ -36,6 +37,7 @@ public enum PhoneNumberError: Error {
     case tooLong
     case tooShort
     case deprecated
+    case metadataNotFound
 }
 
 extension PhoneNumberError: LocalizedError {
@@ -49,6 +51,7 @@ extension PhoneNumberError: LocalizedError {
         case .tooLong: return NSLocalizedString("The number provided is too long.", comment: "")
         case .tooShort: return NSLocalizedString("The number provided is too short.", comment: "")
         case .deprecated: return NSLocalizedString("This function is deprecated.", comment: "")
+        case .metadataNotFound: return NSLocalizedString("Valid metadata is missing.", comment: "")
         }
     }
 
@@ -59,7 +62,6 @@ public enum PhoneNumberFormat {
     case international // +33 6 89 12 34 56
     case national // 06 89 12 34 56
 }
-
 
 /**
  Phone number type enumeration
@@ -76,7 +78,7 @@ public enum PhoneNumberFormat {
  - uan: UAN numbers
  - unknown: Unknown number type
  */
-public enum PhoneNumberType {
+public enum PhoneNumberType: String, Codable {
     case fixedLine
     case mobile
     case fixedOrMobile
@@ -89,6 +91,7 @@ public enum PhoneNumberType {
     case voip
     case uan
     case unknown
+    case notParsed
 }
 
 // MARK: Constants
@@ -110,12 +113,12 @@ struct PhoneNumberConstants {
 
 struct PhoneNumberPatterns {
   // MARK: Patterns
-  
+
   static let firstGroupPattern = "(\\$\\d)"
   static let fgPattern = "\\$FG"
   static let npPattern = "\\$NP"
 
-  static let allNormalizationMappings = ["0":"0", "1":"1", "2":"2", "3":"3", "4":"4", "5":"5", "6":"6", "7":"7", "8":"8", "9":"9"]
+  static let allNormalizationMappings = ["0": "0", "1": "1", "2": "2", "3": "3", "4": "4", "5": "5", "6": "6", "7": "7", "8": "8", "9": "9"]
 
   static let capturingDigitPattern = "([0-9０-９٠-٩۰-۹])"
 
