@@ -198,19 +198,19 @@
 			children = (
 				C6DF6CA71D1B145300259F4B /* PhoneNumberKit.h */,
 				342418691BB6E5A000EE70E7 /* Info.plist */,
-				346922681BC023A60023482F /* PhoneNumberKit.swift */,
-				340757841DA03A1700D493A0 /* Metadata */,
-				3422D9B91BE6A2D500867D02 /* ParseManager.swift */,
-				34566C991BC112C500715E6B /* RegexManager.swift */,
-				3424187F1BB705B500EE70E7 /* PhoneNumber.swift */,
 				34AA66011BDD160B00467912 /* Constants.swift */,
 				3420CF5D1BE8959F00FAE34F /* Formatter.swift */,
-				343B850A1C62A25600918E46 /* PartialFormatter.swift */,
-				343B850B1C62A25600918E46 /* TextField.swift */,
-				342418811BB70F5200EE70E7 /* PhoneNumberParser.swift */,
 				11C2EF381D62BC3200052D44 /* NSRegularExpression+Swift.swift */,
-				3435CC8F1BBFF66F003F953B /* Resources */,
+				3422D9B91BE6A2D500867D02 /* ParseManager.swift */,
+				343B850A1C62A25600918E46 /* PartialFormatter.swift */,
+				3424187F1BB705B500EE70E7 /* PhoneNumber.swift */,
+				346922681BC023A60023482F /* PhoneNumberKit.swift */,
+				342418811BB70F5200EE70E7 /* PhoneNumberParser.swift */,
+				34566C991BC112C500715E6B /* RegexManager.swift */,
+				343B850B1C62A25600918E46 /* TextField.swift */,
 				3420981B1BE1F1250036BBB1 /* Frameworks */,
+				340757841DA03A1700D493A0 /* Metadata */,
+				3435CC8F1BBFF66F003F953B /* Resources */,
 			);
 			path = PhoneNumberKit;
 			sourceTree = "<group>";
@@ -399,6 +399,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 3424185A1BB6E5A000EE70E7;
