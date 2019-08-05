@@ -113,7 +113,7 @@ public extension PhoneNumber {
      Adjust national number for display by adding leading zero if needed. Used for basic formatting functions.
      - Returns: A string representing the adjusted national number.
      */
-    public func adjustedNationalNumber() -> String {
+    func adjustedNationalNumber() -> String {
         if self.leadingZero == true {
             return "0" + String(nationalNumber)
         } else {
