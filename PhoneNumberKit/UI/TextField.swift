@@ -41,6 +41,15 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         get {
             return self._defaultRegion
         }
+        @available(*,
+            deprecated,
+            message: """
+                The setter of defaultRegion is deprecated,
+                please override defaultRegion in a subclass instead.
+            """
+        )
+        set {
+        }
     }
 
     public var withPrefix: Bool = true {
@@ -60,10 +69,10 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             partialFormatter.maxDigits = maxDigits
         }
     }
-
-    private var _partialFormatter: PartialFormatter?
     
-    var partialFormatter: PartialFormatter {
+    private var _partialFormatter: PartialFormatter?
+
+    private var partialFormatter: PartialFormatter {
         return self._partialFormatter!
     }
 
