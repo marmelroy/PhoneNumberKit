@@ -72,7 +72,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     
     private var _partialFormatter: PartialFormatter?
 
-    private var partialFormatter: PartialFormatter {
+    public var partialFormatter: PartialFormatter {
         return self._partialFormatter!
     }
 
