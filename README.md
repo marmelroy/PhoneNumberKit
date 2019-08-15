@@ -73,7 +73,17 @@ phoneNumberKit.format(phoneNumber, toType: .national) // (02) 3661 8300
 
 To use the AsYouTypeFormatter, just replace your UITextField with a PhoneNumberTextField (if you are using Interface Builder make sure the module field is set to PhoneNumberKit).
 
-PhoneNumberTextField automatically formats phone numbers and gives the user full editing capabilities. If you want to customize you can use the PartialFormatter directly. The default region code is automatically computed but can be overridden if needed.  
+PhoneNumberTextField automatically formats phone numbers and gives the user full editing capabilities. If you want to customize you can use the PartialFormatter directly. The default region code is automatically computed but can be overridden if needed (see the example given below).
+```swift
+class MyGBTextField: PhoneNumberTextField {
+    override var defaultRegion: String {
+        get {
+            return "GB"
+        }
+        set {} // exists for backward compatibility
+    }
+}
+```
 
 ![AsYouTypeFormatter](http://i.giphy.com/3o6gbgrudyCM8Ak6yc.gif)
 
