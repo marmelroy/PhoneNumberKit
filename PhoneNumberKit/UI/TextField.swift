@@ -70,11 +70,11 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         }
     }
     
-    private var _partialFormatter: PartialFormatter?
-
-    public var partialFormatter: PartialFormatter {
-        return self._partialFormatter!
-    }
+    public private(set) lazy var partialFormatter: PartialFormatter = PartialFormatter(
+        phoneNumberKit: phoneNumberKit,
+        defaultRegion: defaultRegion,
+        withPrefix: withPrefix
+    )
 
     let nonNumericSet: NSCharacterSet = {
         var mutableSet = NSMutableCharacterSet.decimalDigit().inverted
@@ -131,7 +131,6 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
      */
     override public init(frame: CGRect) {
         super.init(frame:frame)
-        self._partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: defaultRegion, withPrefix: withPrefix)
         self.setup()
     }
 
@@ -144,7 +143,6 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
      */
     required public init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)!
-        self._partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: defaultRegion, withPrefix: withPrefix)
         self.setup()
     }
 
