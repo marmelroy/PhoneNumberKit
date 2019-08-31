@@ -34,10 +34,21 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         super.text = newValue
     }
 
+    private lazy var _defaultRegion: String = PhoneNumberKit.defaultRegionCode()
+
     /// Override region to set a custom region. Automatically uses the default region code.
-    open var defaultRegion = PhoneNumberKit.defaultRegionCode() {
-        didSet {
-            partialFormatter.defaultRegion = defaultRegion
+    open var defaultRegion: String {
+        get {
+            return self._defaultRegion
+        }
+        @available(*,
+            deprecated,
+            message: """
+                The setter of defaultRegion is deprecated,
+                please override defaultRegion in a subclass instead.
+            """
+        )
+        set {
         }
     }
 
@@ -58,8 +69,12 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             partialFormatter.maxDigits = maxDigits
         }
     }
-
-    let partialFormatter: PartialFormatter
+    
+    public private(set) lazy var partialFormatter: PartialFormatter = PartialFormatter(
+        phoneNumberKit: phoneNumberKit,
+        defaultRegion: defaultRegion,
+        withPrefix: withPrefix
+    )
 
     let nonNumericSet: NSCharacterSet = {
         var mutableSet = NSMutableCharacterSet.decimalDigit().inverted
@@ -115,7 +130,6 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
      - returns: UITextfield
      */
     override public init(frame: CGRect) {
-        self.partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: defaultRegion, withPrefix: withPrefix)
         super.init(frame:frame)
         self.setup()
     }
@@ -128,7 +142,6 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
      - returns: UITextfield
      */
     required public init(coder aDecoder: NSCoder) {
-        self.partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: defaultRegion, withPrefix: withPrefix)
         super.init(coder: aDecoder)!
         self.setup()
     }
