@@ -99,6 +99,13 @@ phoneNumberKit.countries(withCode: 33)
 phoneNumberKit.countryCode(for: "FR")
 ```
 
+## Need more customization?
+
+You can access the metadata powering PhoneNumberKit yourself, this enables you to program any behaviours as they may be implemented in PhoneNumberKit itself. It does mean you are exposed to the less polished interface of the underlying file format. If you program something you find useful please push it upstream!
+```swift
+phoneNumberKit.metadata(for: "AU")?.mobile?.exampleNumber // 412345678
+```
+
 ### Setting up with Carthage
 
 [Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager that automates the process of adding frameworks to your Cocoa application.

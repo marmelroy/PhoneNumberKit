@@ -148,6 +148,22 @@ public final class PhoneNumberKit: NSObject {
         return parseManager.getRegionCode(of: phoneNumber.nationalNumber, countryCode: phoneNumber.countryCode, leadingZero: phoneNumber.leadingZero)
     }
 
+    /// Get the MetadataTerritory objects for an ISO 639 compliant region code.
+    ///
+    /// - parameter country: ISO 639 compliant region code (e.g "GB" for the UK).
+    ///
+    /// - returns: A MetadataTerritory object, or nil if no metadata was found for the country code
+    public func metadata(for country: String) -> MetadataTerritory? {
+        return metadataManager.filterTerritories(byCountry: country)
+    }
+
+    /// Get an array of MetadataTerritory objects corresponding to a given country code.
+    ///
+    /// - parameter countryCode: international country code (e.g 44 for the UK)
+    public func metadata(forCode countryCode: UInt64) -> [MetadataTerritory]? {
+        return metadataManager.filterTerritories(byCode: countryCode)
+    }
+
     // MARK: Class functions
 
     /// Get a user's default region code
