@@ -11,8 +11,7 @@ import UIKit
 
 /// Custom text field that formats phone numbers
 open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
-
-    public let phoneNumberKit = PhoneNumberKit()
+    public let phoneNumberKit: PhoneNumberKit!
 
     /// Override setText so number will be automatically formatted when setting text by code
     override open var text: String? {
@@ -123,6 +122,33 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     // MARK: Lifecycle
 
     /**
+     Init with a phone number kit instance. Because a PhoneNumberKit initialization is expensive,
+     you can pass a pre-initialized instance to avoid incurring perf penalties.
+
+     - parameter phoneNumberKit: A PhoneNumberKit instance to be used by the text field.
+
+     - returns: UITextfield
+     */
+    public convenience init(withPhoneNumberKit phoneNumberKit: PhoneNumberKit) {
+        self.init(frame: .zero, phoneNumberKit: phoneNumberKit)
+    }
+
+    /**
+     Init with frame and phone number kit instance.
+
+     - parameter frame: UITextfield frame
+     - parameter phoneNumberKit: A PhoneNumberKit instance to be used by the text field.
+
+     - returns: UITextfield
+     */
+    public init(frame: CGRect, phoneNumberKit: PhoneNumberKit) {
+        self.phoneNumberKit = phoneNumberKit
+        super.init(frame: frame)
+        self.setup()
+    }
+
+
+    /**
      Init with frame
      
      - parameter frame: UITextfield F
@@ -130,6 +156,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
      - returns: UITextfield
      */
     override public init(frame: CGRect) {
+        phoneNumberKit = PhoneNumberKit()
         super.init(frame:frame)
         self.setup()
     }
@@ -142,6 +169,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
      - returns: UITextfield
      */
     required public init(coder aDecoder: NSCoder) {
+        phoneNumberKit = PhoneNumberKit()
         super.init(coder: aDecoder)!
         self.setup()
     }
