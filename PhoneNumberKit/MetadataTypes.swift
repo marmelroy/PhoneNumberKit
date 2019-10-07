@@ -32,30 +32,30 @@ import Foundation
  - Parameter uan: MetadataPhoneNumberDesc for uan numbers
  - Parameter leadingDigits: Optional leading digits for the territory
  */
-struct MetadataTerritory: Decodable {
-    let codeID: String
-    let countryCode: UInt64
-    let internationalPrefix: String?
-    let mainCountryForCode: Bool
-    let nationalPrefix: String?
-    let nationalPrefixFormattingRule: String?
-    let nationalPrefixForParsing: String?
-    let nationalPrefixTransformRule: String?
-    let preferredExtnPrefix: String?
-    let emergency: MetadataPhoneNumberDesc?
-    let fixedLine: MetadataPhoneNumberDesc?
-    let generalDesc: MetadataPhoneNumberDesc?
-    let mobile: MetadataPhoneNumberDesc?
-    let pager: MetadataPhoneNumberDesc?
-    let personalNumber: MetadataPhoneNumberDesc?
-    let premiumRate: MetadataPhoneNumberDesc?
-    let sharedCost: MetadataPhoneNumberDesc?
-    let tollFree: MetadataPhoneNumberDesc?
-    let voicemail: MetadataPhoneNumberDesc?
-    let voip: MetadataPhoneNumberDesc?
-    let uan: MetadataPhoneNumberDesc?
-    let numberFormats: [MetadataPhoneNumberFormat]
-    let leadingDigits: String?
+public struct MetadataTerritory: Decodable {
+    public let codeID: String
+    public let countryCode: UInt64
+    public let internationalPrefix: String?
+    public let mainCountryForCode: Bool
+    public let nationalPrefix: String?
+    public let nationalPrefixFormattingRule: String?
+    public let nationalPrefixForParsing: String?
+    public let nationalPrefixTransformRule: String?
+    public let preferredExtnPrefix: String?
+    public let emergency: MetadataPhoneNumberDesc?
+    public let fixedLine: MetadataPhoneNumberDesc?
+    public let generalDesc: MetadataPhoneNumberDesc?
+    public let mobile: MetadataPhoneNumberDesc?
+    public let pager: MetadataPhoneNumberDesc?
+    public let personalNumber: MetadataPhoneNumberDesc?
+    public let premiumRate: MetadataPhoneNumberDesc?
+    public let sharedCost: MetadataPhoneNumberDesc?
+    public let tollFree: MetadataPhoneNumberDesc?
+    public let voicemail: MetadataPhoneNumberDesc?
+    public let voip: MetadataPhoneNumberDesc?
+    public let uan: MetadataPhoneNumberDesc?
+    public let numberFormats: [MetadataPhoneNumberFormat]
+    public let leadingDigits: String?
 }
 
 /**
@@ -64,10 +64,10 @@ MetadataPhoneNumberDesc object
 - Parameter nationalNumberPattern:  National number regex pattern. Optional.
 - Parameter possibleNumberPattern:  Possible number regex pattern. Optional.
 */
-struct MetadataPhoneNumberDesc: Decodable {
-    let exampleNumber: String?
-    let nationalNumberPattern: String?
-    let possibleNumberPattern: String?
+public struct MetadataPhoneNumberDesc: Decodable {
+    public let exampleNumber: String?
+    public let nationalNumberPattern: String?
+    public let possibleNumberPattern: String?
 }
 
 /**
@@ -81,14 +81,14 @@ struct MetadataPhoneNumberDesc: Decodable {
  - Parameter nationalPrefixOptionalWhenFormatting: National prefix optional bool. Optional.
  - Parameter domesticCarrierCodeFormattingRule: Domestic carrier code formatting rule. Optional.
  */
-struct MetadataPhoneNumberFormat: Decodable {
-    let pattern: String?
-    let format: String?
-    let intlFormat: String?
-    let leadingDigitsPatterns: [String]?
-    var nationalPrefixFormattingRule: String?
-    let nationalPrefixOptionalWhenFormatting: Bool?
-    let domesticCarrierCodeFormattingRule: String?
+public struct MetadataPhoneNumberFormat: Decodable {
+    public let pattern: String?
+    public let format: String?
+    public let intlFormat: String?
+    public let leadingDigitsPatterns: [String]?
+    public var nationalPrefixFormattingRule: String?
+    public let nationalPrefixOptionalWhenFormatting: Bool?
+    public let domesticCarrierCodeFormattingRule: String?
 }
 
 /// Internal object for metadata parsing

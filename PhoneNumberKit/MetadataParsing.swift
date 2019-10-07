@@ -10,7 +10,7 @@ import Foundation
 
 // MARK: - MetadataTerritory
 
-extension MetadataTerritory {
+public extension MetadataTerritory {
 
     enum CodingKeys: String, CodingKey {
         case codeID = "id"
@@ -78,7 +78,7 @@ extension MetadataTerritory {
 
 // MARK: - MetadataPhoneNumberFormat
 
-extension MetadataPhoneNumberFormat {
+public extension MetadataPhoneNumberFormat {
     enum CodingKeys: String, CodingKey {
         case pattern
         case format
