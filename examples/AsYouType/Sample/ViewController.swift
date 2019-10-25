@@ -43,4 +43,19 @@ class ViewController: UIViewController, CNContactPickerDelegate {
             self.textField.placeholder = "Enter phone number"
         }
     }
+
+    @IBAction func withPrefixDidChange(_ sender: Any) {
+        self.textField.withPrefix = self.withPrefixSwitch.isOn
+    }
+
+    @IBAction func withFlagDidChange(_ sender: Any) {
+        self.textField.withFlag = self.withFlagSwitch.isOn
+    }
+
+    @IBAction func withExamplePlaceholderDidChange(_ sender: Any) {
+        self.textField.withExamplePlaceholder = self.withExamplePlaceholderSwitch.isOn
+        if !self.textField.withExamplePlaceholder {
+            self.textField.placeholder = "Enter phone number"
+        }
+    }
 }
