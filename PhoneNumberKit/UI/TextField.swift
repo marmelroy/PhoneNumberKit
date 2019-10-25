@@ -13,6 +13,10 @@ import UIKit
 open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     public let phoneNumberKit: PhoneNumberKit!
 
+    public let flagButton = UIButton()
+
+    lazy var example = exampleNumber(for: currentRegion)
+
     /// Override setText so number will be automatically formatted when setting text by code
     override open var text: String? {
         set {
@@ -61,6 +65,26 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             }
         }
     }
+
+    public var withFlag: Bool = false {
+        didSet {
+            leftView = withFlag ? flagButton : nil
+            leftViewMode = withFlag ? .always : .never
+            withPrefix = true
+            updateFlag()
+        }
+    }
+
+    public var withExamplePlaceholder: Bool = false {
+        didSet {
+            if withExamplePlaceholder {
+                updatePlaceholder()
+            } else {
+                attributedPlaceholder = nil
+            }
+        }
+    }
+
     public var isPartialFormatterEnabled = true
 
     public var maxDigits: Int? {
@@ -131,6 +155,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
      */
     public convenience init(withPhoneNumberKit phoneNumberKit: PhoneNumberKit) {
         self.init(frame: .zero, phoneNumberKit: phoneNumberKit)
+        self.setup()
     }
 
     /**
@@ -178,6 +203,52 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         self.autocorrectionType = .no
         self.keyboardType = UIKeyboardType.phonePad
         super.delegate = self
+    }
+
+    open func exampleNumber(for countryCode: String) -> String {
+        let exampleNationalNumber = phoneNumberKit.metadata(for: currentRegion)?.mobile?.exampleNumber ?? "12345678"
+        do {
+            let phoneNumber = try phoneNumberKit.parse(exampleNationalNumber, withRegion: currentRegion, ignoreType: true)
+            return phoneNumberKit.format(phoneNumber, toType: .international, withPrefix: true)
+        } catch {
+            print("Failed to parse example phone number in PhoneNumberKit")
+        }
+        return exampleNationalNumber
+    }
+
+    func internationalPrefix(for countryCode: String) -> String? {
+        guard let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description else { return nil }
+        return "+" + countryCode
+    }
+
+    open func updateFlag() {
+        guard withFlag else { return }
+        let flagBase = UnicodeScalar("🇦").value - UnicodeScalar("A").value
+
+        let flag = currentRegion
+            .uppercased()
+            .unicodeScalars
+            .compactMap({ UnicodeScalar(flagBase + $0.value)?.description })
+            .joined()
+
+        flagButton.setTitle(flag + " ", for: .normal)
+        let fontSize = (font ?? UIFont.preferredFont(forTextStyle: .body)).pointSize
+        flagButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize)
+    }
+
+    open func updatePlaceholder() {
+        guard withExamplePlaceholder else { return }
+        example = exampleNumber(for: currentRegion)
+
+        let firstSpaceIndex = example.firstIndex(where: { $0 == " " }) ?? example.startIndex
+
+        let font = self.font ?? UIFont.preferredFont(forTextStyle: .body)
+        let ph = NSMutableAttributedString(string: example, attributes: [.font: font])
+        if #available(iOS 13.0, *) {
+            ph.addAttribute(.foregroundColor, value: UIColor.secondaryLabel, range: NSRange(..<firstSpaceIndex, in: example))
+            ph.addAttribute(.foregroundColor, value: UIColor.tertiaryLabel, range: NSRange(firstSpaceIndex..., in: example))
+        }
+        self.attributedPlaceholder = ph
     }
 
     // MARK: Phone number formatting
@@ -262,7 +333,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         let modifiedTextField = textAsNSString.replacingCharacters(in: range, with: string)
 
         let filteredCharacters = modifiedTextField.filter {
-            return  String($0).rangeOfCharacter(from: (textField as! PhoneNumberTextField).nonNumericSet as CharacterSet) == nil
+            return String($0).rangeOfCharacter(from: (textField as! PhoneNumberTextField).nonNumericSet as CharacterSet) == nil
         }
         let rawNumberString = String(filteredCharacters)
 
@@ -283,6 +354,12 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             textField.selectedTextRange = selectionRange
         }
 
+        // we change the default region to be the one most recently typed
+        _defaultRegion = currentRegion
+        partialFormatter.defaultRegion = currentRegion
+        updateFlag()
+        updatePlaceholder()
+
         return false
     }
 
@@ -293,6 +370,9 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
 
     open func textFieldDidBeginEditing(_ textField: UITextField) {
+        if withExamplePlaceholder, let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description, (text ?? "").isEmpty {
+            text = "+" + countryCode + " "
+        }
         _delegate?.textFieldDidBeginEditing?(textField)
     }
 
@@ -301,6 +381,13 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
 
     open func textFieldDidEndEditing(_ textField: UITextField) {
+        if withExamplePlaceholder, let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description,
+            let text = textField.text,
+            text == internationalPrefix(for: countryCode) {
+            textField.text = ""
+            updateFlag()
+            updatePlaceholder()
+        }
         _delegate?.textFieldDidEndEditing?(textField)
     }
 
