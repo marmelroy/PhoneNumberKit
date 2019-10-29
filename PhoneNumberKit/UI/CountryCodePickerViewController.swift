@@ -117,7 +117,9 @@ class CountryCodePickerViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == 0, hasCurrent {
+        if isFiltering {
+            return nil
+        } else if section == 0, hasCurrent {
             return "Current"
         } else if section == 0, !hasCurrent && hasPopular {
             return "Popular"
