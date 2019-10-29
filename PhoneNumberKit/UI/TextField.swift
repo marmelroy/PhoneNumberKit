@@ -88,6 +88,15 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         }
     }
 
+    public var withDefaultPickerUI: Bool = false {
+        didSet {
+            if #available(iOS 11.0, *), flagButton.actions(forTarget: self, forControlEvent: .touchUpInside) == nil {
+                print(#function)
+                flagButton.addTarget(self, action: #selector(didPressFlagButton), for: .touchUpInside)
+            }
+        }
+    }
+
     public var isPartialFormatterEnabled = true
 
     public var maxDigits: Int? {
@@ -251,6 +260,29 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         self.attributedPlaceholder = ph
     }
 
+    @available(iOS 11.0, *)
+    @objc func didPressFlagButton() {
+        guard withDefaultPickerUI else { return }
+        let vc = CountryCodePickerViewController(phoneNumberKit: phoneNumberKit)
+        vc.delegate = self
+        if let nav = containingViewController?.navigationController {
+            nav.pushViewController(vc, animated: true)
+        } else {
+            let nav = UINavigationController(rootViewController: vc)
+            containingViewController?.present(nav, animated: true)
+        }
+    }
+
+    /// containingViewController looks at the responder chain to find the view controller nearest to itself
+    var containingViewController: UIViewController? {
+        var responder: UIResponder? = self
+        while !(responder is UIViewController) && responder != nil {
+            responder = responder?.next
+        }
+        return (responder as? UIViewController)
+    }
+
+
     // MARK: Phone number formatting
 
     /**
@@ -396,6 +428,24 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
 
     open func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         return self._delegate?.textFieldShouldReturn?(textField) ?? true
+    }
+}
+
+@available(iOS 11.0, *)
+extension PhoneNumberTextField: CountryCodePickerDelegate {
+
+    func countryCodePickerViewControllerDidPickCountry(_ country: CountryCodePickerViewController.Country) {
+        text = ""
+        _defaultRegion = country.code
+        partialFormatter.defaultRegion = country.code
+        updateFlag()
+        updatePlaceholder()
+
+        if let nav = containingViewController?.navigationController {
+            nav.popViewController(animated: true)
+        } else {
+            containingViewController?.dismiss(animated: true)
+        }
     }
 }
 

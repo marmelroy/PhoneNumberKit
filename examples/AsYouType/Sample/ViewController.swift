@@ -12,10 +12,12 @@ import PhoneNumberKit
 import UIKit
 
 class ViewController: UIViewController, CNContactPickerDelegate {
+    
     @IBOutlet var textField: PhoneNumberTextField!
     @IBOutlet var withPrefixSwitch: UISwitch!
     @IBOutlet var withFlagSwitch: UISwitch!
     @IBOutlet var withExamplePlaceholderSwitch: UISwitch!
+    @IBOutlet var withDefaultPickerUISwitch: UISwitch!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,5 +59,9 @@ class ViewController: UIViewController, CNContactPickerDelegate {
         if !self.textField.withExamplePlaceholder {
             self.textField.placeholder = "Enter phone number"
         }
+    }
+
+    @IBAction func withDefaultPickerUIDidChange(_ sender: Any) {
+        self.textField.withDefaultPickerUI = self.withDefaultPickerUISwitch.isOn
     }
 }

@@ -28,7 +28,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Jz3-GQ-0AX">
-                                <rect key="frame" x="36" y="130" width="528" height="109"/>
+                                <rect key="frame" x="36" y="130" width="528" height="148"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vKY-YQ-0hZ">
                                         <rect key="frame" x="0.0" y="0.0" width="528" height="31"/>
@@ -81,10 +81,27 @@
                                             </switch>
                                         </subviews>
                                     </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jpr-Yc-iVG">
+                                        <rect key="frame" x="0.0" y="117" width="528" height="31"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="withDefaultPickerUI" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ojl-wu-bPW">
+                                                <rect key="frame" x="0.0" y="0.0" width="479" height="31"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="nV1-lR-6LE">
+                                                <rect key="frame" x="479" y="0.0" width="51" height="31"/>
+                                                <connections>
+                                                    <action selector="withDefaultPickerUIDidChange:" destination="BYZ-38-t0r" eventType="valueChanged" id="EKx-XU-qn0"/>
+                                                </connections>
+                                            </switch>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Above are the options you have to configure the text field" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5TG-DO-EsG">
-                                <rect key="frame" x="20" y="271" width="560" height="20.5"/>
+                                <rect key="frame" x="20" y="310" width="560" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" systemColor="secondaryLabelColor" red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -112,6 +129,7 @@
                     <size key="freeformSize" width="600" height="600"/>
                     <connections>
                         <outlet property="textField" destination="RfZ-67-gtf" id="dgp-k7-Gek"/>
+                        <outlet property="withDefaultPickerUISwitch" destination="nV1-lR-6LE" id="l6H-lU-uxK"/>
                         <outlet property="withExamplePlaceholderSwitch" destination="J2G-b9-t87" id="0Zm-n4-rDz"/>
                         <outlet property="withFlagSwitch" destination="uoY-qU-AJO" id="4f8-6a-0wu"/>
                         <outlet property="withPrefixSwitch" destination="pXB-8Z-JGO" id="jKy-NW-9yP"/>
