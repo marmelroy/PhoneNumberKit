@@ -13,9 +13,7 @@ import UIKit
 open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     public let phoneNumberKit: PhoneNumberKit!
 
-    public let flagButton = UIButton()
-
-    lazy var example = exampleNumber(for: currentRegion)
+    public lazy var flagButton = UIButton()
 
     /// Override setText so number will be automatically formatted when setting text by code
     override open var text: String? {
@@ -63,6 +61,9 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             } else {
                 self.keyboardType = UIKeyboardType.phonePad
             }
+            if withExamplePlaceholder {
+                updatePlaceholder()
+            }
         }
     }
 
@@ -70,7 +71,6 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         didSet {
             leftView = withFlag ? flagButton : nil
             leftViewMode = withFlag ? .always : .never
-            withPrefix = true
             updateFlag()
         }
     }
@@ -205,17 +205,6 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         super.delegate = self
     }
 
-    open func exampleNumber(for countryCode: String) -> String {
-        let exampleNationalNumber = phoneNumberKit.metadata(for: currentRegion)?.mobile?.exampleNumber ?? "12345678"
-        do {
-            let phoneNumber = try phoneNumberKit.parse(exampleNationalNumber, withRegion: currentRegion, ignoreType: true)
-            return phoneNumberKit.format(phoneNumber, toType: .international, withPrefix: true)
-        } catch {
-            print("Failed to parse example phone number in PhoneNumberKit")
-        }
-        return exampleNationalNumber
-    }
-
     func internationalPrefix(for countryCode: String) -> String? {
         guard let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description else { return nil }
         return "+" + countryCode
@@ -238,13 +227,18 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
 
     open func updatePlaceholder() {
         guard withExamplePlaceholder else { return }
-        example = exampleNumber(for: currentRegion)
-
-        let firstSpaceIndex = example.firstIndex(where: { $0 == " " }) ?? example.startIndex
+        if isEditing && !(text ?? "").isEmpty { return } // No need to update a placeholder while the placeholder isn't showing
+        let format = withPrefix ? PhoneNumberFormat.international : .national
+        let example = phoneNumberKit.getFormattedExampleNumber(forCountry: currentRegion, withFormat: format, withPrefix: withPrefix) ?? "12345678"
 
         let font = self.font ?? UIFont.preferredFont(forTextStyle: .body)
         let ph = NSMutableAttributedString(string: example, attributes: [.font: font])
-        if #available(iOS 13.0, *) {
+        if #available(iOS 13.0, *), withPrefix {
+            // because the textfield will automatically handle insert & removal of the international prefix we make the
+            // prefix darker to indicate non default behaviour to users, this behaviour currently only happens on iOS 13
+            // and above just because that is where we have access to label colors
+            let firstSpaceIndex = example.firstIndex(where: { $0 == " " }) ?? example.startIndex
+
             ph.addAttribute(.foregroundColor, value: UIColor.secondaryLabel, range: NSRange(..<firstSpaceIndex, in: example))
             ph.addAttribute(.foregroundColor, value: UIColor.tertiaryLabel, range: NSRange(firstSpaceIndex..., in: example))
         }
@@ -370,7 +364,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
 
     open func textFieldDidBeginEditing(_ textField: UITextField) {
-        if withExamplePlaceholder, let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description, (text ?? "").isEmpty {
+        if withExamplePlaceholder, withPrefix, let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description, (text ?? "").isEmpty {
             text = "+" + countryCode + " "
         }
         _delegate?.textFieldDidBeginEditing?(textField)
@@ -381,7 +375,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
 
     open func textFieldDidEndEditing(_ textField: UITextField) {
-        if withExamplePlaceholder, let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description,
+        if withExamplePlaceholder, withPrefix, let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description,
             let text = textField.text,
             text == internationalPrefix(for: countryCode) {
             textField.text = ""
