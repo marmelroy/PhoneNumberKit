@@ -143,6 +143,14 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         }
     }
 
+    open override func layoutSubviews() {
+        if withFlag {
+            let width = flagButton.systemLayoutSizeFitting(bounds.size).width
+            flagButton.frame.size.width = width
+        }
+        super.layoutSubviews()
+    }
+
     // MARK: Lifecycle
 
     /**
