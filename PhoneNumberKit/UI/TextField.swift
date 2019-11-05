@@ -144,7 +144,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
 
     open override func layoutSubviews() {
-        if withFlag {
+        if withFlag { // update the width of the flagButton automatically, iOS <13 doesn't handle this for you
             let width = flagButton.systemLayoutSizeFitting(bounds.size).width
             flagButton.frame.size.width = width
         }
