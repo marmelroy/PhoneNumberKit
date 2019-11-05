@@ -91,7 +91,6 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     public var withDefaultPickerUI: Bool = false {
         didSet {
             if #available(iOS 11.0, *), flagButton.actions(forTarget: self, forControlEvent: .touchUpInside) == nil {
-                print(#function)
                 flagButton.addTarget(self, action: #selector(didPressFlagButton), for: .touchUpInside)
             }
         }
