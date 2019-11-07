@@ -13,6 +13,8 @@ import UIKit
 open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     public let phoneNumberKit: PhoneNumberKit!
 
+    public lazy var flagButton = UIButton()
+
     /// Override setText so number will be automatically formatted when setting text by code
     override open var text: String? {
         set {
@@ -59,8 +61,30 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             } else {
                 self.keyboardType = UIKeyboardType.phonePad
             }
+            if withExamplePlaceholder {
+                updatePlaceholder()
+            }
         }
     }
+
+    public var withFlag: Bool = false {
+        didSet {
+            leftView = withFlag ? flagButton : nil
+            leftViewMode = withFlag ? .always : .never
+            updateFlag()
+        }
+    }
+
+    public var withExamplePlaceholder: Bool = false {
+        didSet {
+            if withExamplePlaceholder {
+                updatePlaceholder()
+            } else {
+                attributedPlaceholder = nil
+            }
+        }
+    }
+
     public var isPartialFormatterEnabled = true
 
     public var maxDigits: Int? {
@@ -119,6 +143,14 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         }
     }
 
+    open override func layoutSubviews() {
+        if withFlag { // update the width of the flagButton automatically, iOS <13 doesn't handle this for you
+            let width = flagButton.systemLayoutSizeFitting(bounds.size).width
+            flagButton.frame.size.width = width
+        }
+        super.layoutSubviews()
+    }
+
     // MARK: Lifecycle
 
     /**
@@ -131,6 +163,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
      */
     public convenience init(withPhoneNumberKit phoneNumberKit: PhoneNumberKit) {
         self.init(frame: .zero, phoneNumberKit: phoneNumberKit)
+        self.setup()
     }
 
     /**
@@ -178,6 +211,46 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         self.autocorrectionType = .no
         self.keyboardType = UIKeyboardType.phonePad
         super.delegate = self
+    }
+
+    func internationalPrefix(for countryCode: String) -> String? {
+        guard let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description else { return nil }
+        return "+" + countryCode
+    }
+
+    open func updateFlag() {
+        guard withFlag else { return }
+        let flagBase = UnicodeScalar("🇦").value - UnicodeScalar("A").value
+
+        let flag = currentRegion
+            .uppercased()
+            .unicodeScalars
+            .compactMap({ UnicodeScalar(flagBase + $0.value)?.description })
+            .joined()
+
+        flagButton.setTitle(flag + " ", for: .normal)
+        let fontSize = (font ?? UIFont.preferredFont(forTextStyle: .body)).pointSize
+        flagButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize)
+    }
+
+    open func updatePlaceholder() {
+        guard withExamplePlaceholder else { return }
+        if isEditing && !(text ?? "").isEmpty { return } // No need to update a placeholder while the placeholder isn't showing
+        let format = withPrefix ? PhoneNumberFormat.international : .national
+        let example = phoneNumberKit.getFormattedExampleNumber(forCountry: currentRegion, withFormat: format, withPrefix: withPrefix) ?? "12345678"
+
+        let font = self.font ?? UIFont.preferredFont(forTextStyle: .body)
+        let ph = NSMutableAttributedString(string: example, attributes: [.font: font])
+        if #available(iOS 13.0, *), withPrefix {
+            // because the textfield will automatically handle insert & removal of the international prefix we make the
+            // prefix darker to indicate non default behaviour to users, this behaviour currently only happens on iOS 13
+            // and above just because that is where we have access to label colors
+            let firstSpaceIndex = example.firstIndex(where: { $0 == " " }) ?? example.startIndex
+
+            ph.addAttribute(.foregroundColor, value: UIColor.secondaryLabel, range: NSRange(..<firstSpaceIndex, in: example))
+            ph.addAttribute(.foregroundColor, value: UIColor.tertiaryLabel, range: NSRange(firstSpaceIndex..., in: example))
+        }
+        self.attributedPlaceholder = ph
     }
 
     // MARK: Phone number formatting
@@ -262,7 +335,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         let modifiedTextField = textAsNSString.replacingCharacters(in: range, with: string)
 
         let filteredCharacters = modifiedTextField.filter {
-            return  String($0).rangeOfCharacter(from: (textField as! PhoneNumberTextField).nonNumericSet as CharacterSet) == nil
+            return String($0).rangeOfCharacter(from: (textField as! PhoneNumberTextField).nonNumericSet as CharacterSet) == nil
         }
         let rawNumberString = String(filteredCharacters)
 
@@ -283,6 +356,12 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             textField.selectedTextRange = selectionRange
         }
 
+        // we change the default region to be the one most recently typed
+        _defaultRegion = currentRegion
+        partialFormatter.defaultRegion = currentRegion
+        updateFlag()
+        updatePlaceholder()
+
         return false
     }
 
@@ -293,6 +372,9 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
 
     open func textFieldDidBeginEditing(_ textField: UITextField) {
+        if withExamplePlaceholder, withPrefix, let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description, (text ?? "").isEmpty {
+            text = "+" + countryCode + " "
+        }
         _delegate?.textFieldDidBeginEditing?(textField)
     }
 
@@ -301,6 +383,13 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
 
     open func textFieldDidEndEditing(_ textField: UITextField) {
+        if withExamplePlaceholder, withPrefix, let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description,
+            let text = textField.text,
+            text == internationalPrefix(for: countryCode) {
+            textField.text = ""
+            updateFlag()
+            updatePlaceholder()
+        }
         _delegate?.textFieldDidEndEditing?(textField)
     }
 
