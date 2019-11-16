@@ -9,7 +9,6 @@
 import Foundation
 
 final class MetadataManager {
-
     var territories = [MetadataTerritory]()
     var territoriesByCode = [UInt64: [MetadataTerritory]]()
     var mainTerritoryByCode = [UInt64: MetadataTerritory]()
@@ -20,16 +19,16 @@ final class MetadataManager {
     /// Private init populates metadata territories and the two hashed dictionaries for faster lookup.
     ///
     /// - Parameter metadataCallback: a closure that returns metadata as JSON Data.
-    public init (metadataCallback: MetadataCallback) {
-        territories = populateTerritories(metadataCallback: metadataCallback)
-        for item in territories {
-            var currentTerritories: [MetadataTerritory] = territoriesByCode[item.countryCode] ?? [MetadataTerritory]()
+    public init(metadataCallback: MetadataCallback) {
+        self.territories = self.populateTerritories(metadataCallback: metadataCallback)
+        for item in self.territories {
+            var currentTerritories: [MetadataTerritory] = self.territoriesByCode[item.countryCode] ?? [MetadataTerritory]()
             currentTerritories.append(item)
-            territoriesByCode[item.countryCode] = currentTerritories
-            if mainTerritoryByCode[item.countryCode] == nil || item.mainCountryForCode == true {
-                mainTerritoryByCode[item.countryCode] = item
+            self.territoriesByCode[item.countryCode] = currentTerritories
+            if self.mainTerritoryByCode[item.countryCode] == nil || item.mainCountryForCode == true {
+                self.mainTerritoryByCode[item.countryCode] = item
             }
-            territoriesByCountry[item.codeID] = item
+            self.territoriesByCountry[item.codeID] = item
         }
     }
 
@@ -43,10 +42,10 @@ final class MetadataManager {
     ///
     /// - Parameter metadataCallback: a closure that returns metadata as JSON Data.
     /// - Returns: array of MetadataTerritory objects
-    fileprivate func populateTerritories(metadataCallback: MetadataCallback) -> [MetadataTerritory] {
+    private func populateTerritories(metadataCallback: MetadataCallback) -> [MetadataTerritory] {
         var territoryArray = [MetadataTerritory]()
         do {
-            let jsonData: Data?  = try metadataCallback()
+            let jsonData: Data? = try metadataCallback()
             let jsonDecoder = JSONDecoder()
             if let jsonData = jsonData, let metadata: PhoneNumberMetadata = try? jsonDecoder.decode(PhoneNumberMetadata.self, from: jsonData) {
                 territoryArray = metadata.territories
@@ -63,7 +62,7 @@ final class MetadataManager {
     ///
     /// - returns: optional array of MetadataTerritory objects.
     internal func filterTerritories(byCode code: UInt64) -> [MetadataTerritory]? {
-        return territoriesByCode[code]
+        return self.territoriesByCode[code]
     }
 
     /// Get the MetadataTerritory objects for an ISO 639 compliant region code.
@@ -72,7 +71,7 @@ final class MetadataManager {
     ///
     /// - returns: A MetadataTerritory object.
     internal func filterTerritories(byCountry country: String) -> MetadataTerritory? {
-        return territoriesByCountry[country.uppercased()]
+        return self.territoriesByCountry[country.uppercased()]
     }
 
     /// Get the main MetadataTerritory objects for a given country code.
@@ -81,7 +80,6 @@ final class MetadataManager {
     ///
     /// - returns: A MetadataTerritory object.
     internal func mainTerritory(forCode code: UInt64) -> MetadataTerritory? {
-        return mainTerritoryByCode[code]
+        return self.mainTerritoryByCode[code]
     }
-
 }
