@@ -6,6 +6,8 @@
 //  Copyright © 2019 Roy Marmelstein. All rights reserved.
 //
 
+#if canImport(UIKit)
+
 @testable import PhoneNumberKit
 import UIKit
 import XCTest
@@ -27,3 +29,5 @@ class TextFieldTests: XCTestCase {
         XCTAssertEqual(tf.text, "(412) 555-1212")
     }
 }
+
+#endif
