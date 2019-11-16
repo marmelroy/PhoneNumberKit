@@ -16,9 +16,9 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     public lazy var flagButton = UIButton()
 
     /// Override setText so number will be automatically formatted when setting text by code
-    override open var text: String? {
+    open override var text: String? {
         set {
-            if isPartialFormatterEnabled && newValue != nil {
+            if isPartialFormatterEnabled, newValue != nil {
                 let formattedNumber = partialFormatter.formatPartial(newValue! as String)
                 super.text = formattedNumber
             } else {
@@ -42,43 +42,43 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         get {
             return self._defaultRegion
         }
-        @available(*,
+        @available(
+            *,
             deprecated,
             message: """
                 The setter of defaultRegion is deprecated,
                 please override defaultRegion in a subclass instead.
             """
         )
-        set {
-        }
+        set {}
     }
 
     public var withPrefix: Bool = true {
         didSet {
-            partialFormatter.withPrefix = withPrefix
-            if withPrefix == false {
+            self.partialFormatter.withPrefix = self.withPrefix
+            if self.withPrefix == false {
                 self.keyboardType = UIKeyboardType.numberPad
             } else {
                 self.keyboardType = UIKeyboardType.phonePad
             }
-            if withExamplePlaceholder {
-                updatePlaceholder()
+            if self.withExamplePlaceholder {
+                self.updatePlaceholder()
             }
         }
     }
 
     public var withFlag: Bool = false {
         didSet {
-            leftView = withFlag ? flagButton : nil
-            leftViewMode = withFlag ? .always : .never
-            updateFlag()
+            leftView = self.withFlag ? self.flagButton : nil
+            leftViewMode = self.withFlag ? .always : .never
+            self.updateFlag()
         }
     }
 
     public var withExamplePlaceholder: Bool = false {
         didSet {
-            if withExamplePlaceholder {
-                updatePlaceholder()
+            if self.withExamplePlaceholder {
+                self.updatePlaceholder()
             } else {
                 attributedPlaceholder = nil
             }
@@ -89,10 +89,10 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
 
     public var maxDigits: Int? {
         didSet {
-            partialFormatter.maxDigits = maxDigits
+            self.partialFormatter.maxDigits = self.maxDigits
         }
     }
-    
+
     public private(set) lazy var partialFormatter: PartialFormatter = PartialFormatter(
         phoneNumberKit: phoneNumberKit,
         defaultRegion: defaultRegion,
@@ -105,11 +105,11 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         return mutableSet as NSCharacterSet
     }()
 
-    weak private var _delegate: UITextFieldDelegate?
+    private weak var _delegate: UITextFieldDelegate?
 
-    override open var delegate: UITextFieldDelegate? {
+    open override var delegate: UITextFieldDelegate? {
         get {
-            return _delegate
+            return self._delegate
         }
         set {
             self._delegate = newValue
@@ -119,34 +119,28 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     // MARK: Status
 
     public var currentRegion: String {
-        get {
-            return partialFormatter.currentRegion
-        }
+        return self.partialFormatter.currentRegion
     }
 
     public var nationalNumber: String {
-        get {
-            let rawNumber = self.text ?? String()
-            return partialFormatter.nationalNumber(from: rawNumber)
-        }
+        let rawNumber = self.text ?? String()
+        return self.partialFormatter.nationalNumber(from: rawNumber)
     }
 
     public var isValidNumber: Bool {
-        get {
-            let rawNumber = self.text ?? String()
-            do {
-                _ = try phoneNumberKit.parse(rawNumber, withRegion: currentRegion)
-                return true
-            } catch {
-                return false
-            }
+        let rawNumber = self.text ?? String()
+        do {
+            _ = try phoneNumberKit.parse(rawNumber, withRegion: currentRegion)
+            return true
+        } catch {
+            return false
         }
     }
 
     open override func layoutSubviews() {
-        if withFlag { // update the width of the flagButton automatically, iOS <13 doesn't handle this for you
-            let width = flagButton.systemLayoutSizeFitting(bounds.size).width
-            flagButton.frame.size.width = width
+        if self.withFlag { // update the width of the flagButton automatically, iOS <13 doesn't handle this for you
+            let width = self.flagButton.systemLayoutSizeFitting(bounds.size).width
+            self.flagButton.frame.size.width = width
         }
         super.layoutSubviews()
     }
@@ -180,29 +174,28 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         self.setup()
     }
 
-
     /**
      Init with frame
-     
+
      - parameter frame: UITextfield F
-     
+
      - returns: UITextfield
      */
-    override public init(frame: CGRect) {
-        phoneNumberKit = PhoneNumberKit()
-        super.init(frame:frame)
+    public override init(frame: CGRect) {
+        self.phoneNumberKit = PhoneNumberKit()
+        super.init(frame: frame)
         self.setup()
     }
 
     /**
      Init with coder
-     
+
      - parameter aDecoder: decoder
-     
+
      - returns: UITextfield
      */
-    required public init(coder aDecoder: NSCoder) {
-        phoneNumberKit = PhoneNumberKit()
+    public required init(coder aDecoder: NSCoder) {
+        self.phoneNumberKit = PhoneNumberKit()
         super.init(coder: aDecoder)!
         self.setup()
     }
@@ -219,29 +212,29 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
 
     open func updateFlag() {
-        guard withFlag else { return }
+        guard self.withFlag else { return }
         let flagBase = UnicodeScalar("🇦").value - UnicodeScalar("A").value
 
-        let flag = currentRegion
+        let flag = self.currentRegion
             .uppercased()
             .unicodeScalars
-            .compactMap({ UnicodeScalar(flagBase + $0.value)?.description })
+            .compactMap { UnicodeScalar(flagBase + $0.value)?.description }
             .joined()
 
-        flagButton.setTitle(flag + " ", for: .normal)
+        self.flagButton.setTitle(flag + " ", for: .normal)
         let fontSize = (font ?? UIFont.preferredFont(forTextStyle: .body)).pointSize
-        flagButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize)
+        self.flagButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize)
     }
 
     open func updatePlaceholder() {
-        guard withExamplePlaceholder else { return }
-        if isEditing && !(text ?? "").isEmpty { return } // No need to update a placeholder while the placeholder isn't showing
-        let format = withPrefix ? PhoneNumberFormat.international : .national
-        let example = phoneNumberKit.getFormattedExampleNumber(forCountry: currentRegion, withFormat: format, withPrefix: withPrefix) ?? "12345678"
+        guard self.withExamplePlaceholder else { return }
+        if isEditing, !(self.text ?? "").isEmpty { return } // No need to update a placeholder while the placeholder isn't showing
+        let format = self.withPrefix ? PhoneNumberFormat.international : .national
+        let example = self.phoneNumberKit.getFormattedExampleNumber(forCountry: self.currentRegion, withFormat: format, withPrefix: self.withPrefix) ?? "12345678"
 
         let font = self.font ?? UIFont.preferredFont(forTextStyle: .body)
         let ph = NSMutableAttributedString(string: example, attributes: [.font: font])
-        if #available(iOS 13.0, *), withPrefix {
+        if #available(iOS 13.0, *), self.withPrefix {
             // because the textfield will automatically handle insert & removal of the international prefix we make the
             // prefix darker to indicate non default behaviour to users, this behaviour currently only happens on iOS 13
             // and above just because that is where we have access to label colors
@@ -273,12 +266,12 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         let textAsNSString = text as NSString
         let cursorEnd = offset(from: beginningOfDocument, to: selectedTextRange.end)
         // Look for the next valid number after the cursor, when found return a CursorPosition struct
-        for i in cursorEnd ..< textAsNSString.length {
-            let cursorRange = NSMakeRange(i, 1)
+        for i in cursorEnd..<textAsNSString.length {
+            let cursorRange = NSRange(location: i, length: 1)
             let candidateNumberAfterCursor: NSString = textAsNSString.substring(with: cursorRange) as NSString
-            if (candidateNumberAfterCursor.rangeOfCharacter(from: nonNumericSet as CharacterSet).location == NSNotFound) {
-                for j in cursorRange.location ..< textAsNSString.length {
-                    let candidateCharacter = textAsNSString.substring(with: NSMakeRange(j, 1))
+            if candidateNumberAfterCursor.rangeOfCharacter(from: self.nonNumericSet as CharacterSet).location == NSNotFound {
+                for j in cursorRange.location..<textAsNSString.length {
+                    let candidateCharacter = textAsNSString.substring(with: NSRange(location: j, length: 1))
                     if candidateCharacter == candidateNumberAfterCursor as String {
                         repetitionCountFromEnd += 1
                     }
@@ -297,8 +290,8 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             return nil
         }
 
-        for i in stride(from: (textAsNSString.length - 1), through: 0, by: -1) {
-            let candidateRange = NSMakeRange(i, 1)
+        for i in stride(from: textAsNSString.length - 1, through: 0, by: -1) {
+            let candidateRange = NSRange(location: i, length: 1)
             let candidateCharacter = textAsNSString.substring(with: candidateRange)
             if candidateCharacter == cursorPosition.numberAfterCursor {
                 countFromEnd += 1
@@ -312,9 +305,8 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
 
     open func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-
         // This allows for the case when a user autocompletes a phone number:
-        if range == NSRange(location: 0, length: 0) && string == " " {
+        if range == NSRange(location: 0, length: 0), string == " " {
             return true
         }
 
@@ -323,10 +315,10 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         }
 
         // allow delegate to intervene
-        guard _delegate?.textField?(textField, shouldChangeCharactersIn: range, replacementString: string) ?? true else {
+        guard self._delegate?.textField?(textField, shouldChangeCharactersIn: range, replacementString: string) ?? true else {
             return false
         }
-        guard isPartialFormatterEnabled else {
+        guard self.isPartialFormatterEnabled else {
             return true
         }
 
@@ -335,19 +327,19 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         let modifiedTextField = textAsNSString.replacingCharacters(in: range, with: string)
 
         let filteredCharacters = modifiedTextField.filter {
-            return String($0).rangeOfCharacter(from: (textField as! PhoneNumberTextField).nonNumericSet as CharacterSet) == nil
+            String($0).rangeOfCharacter(from: (textField as! PhoneNumberTextField).nonNumericSet as CharacterSet) == nil
         }
         let rawNumberString = String(filteredCharacters)
 
-        let formattedNationalNumber = partialFormatter.formatPartial(rawNumberString as String)
+        let formattedNationalNumber = self.partialFormatter.formatPartial(rawNumberString as String)
         var selectedTextRange: NSRange?
 
-        let nonNumericRange = (changedRange.rangeOfCharacter(from: nonNumericSet as CharacterSet).location != NSNotFound)
-        if (range.length == 1 && string.isEmpty && nonNumericRange) {
-            selectedTextRange = selectionRangeForNumberReplacement(textField: textField, formattedText: modifiedTextField)
+        let nonNumericRange = (changedRange.rangeOfCharacter(from: self.nonNumericSet as CharacterSet).location != NSNotFound)
+        if range.length == 1, string.isEmpty, nonNumericRange {
+            selectedTextRange = self.selectionRangeForNumberReplacement(textField: textField, formattedText: modifiedTextField)
             textField.text = modifiedTextField
         } else {
-            selectedTextRange = selectionRangeForNumberReplacement(textField: textField, formattedText: formattedNationalNumber)
+            selectedTextRange = self.selectionRangeForNumberReplacement(textField: textField, formattedText: formattedNationalNumber)
             textField.text = formattedNationalNumber
         }
         sendActions(for: .editingChanged)
@@ -357,10 +349,10 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         }
 
         // we change the default region to be the one most recently typed
-        _defaultRegion = currentRegion
-        partialFormatter.defaultRegion = currentRegion
-        updateFlag()
-        updatePlaceholder()
+        self._defaultRegion = self.currentRegion
+        self.partialFormatter.defaultRegion = self.currentRegion
+        self.updateFlag()
+        self.updatePlaceholder()
 
         return false
     }
@@ -368,36 +360,36 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     // MARK: UITextfield Delegate
 
     open func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        return _delegate?.textFieldShouldBeginEditing?(textField) ?? true
+        return self._delegate?.textFieldShouldBeginEditing?(textField) ?? true
     }
 
     open func textFieldDidBeginEditing(_ textField: UITextField) {
-        if withExamplePlaceholder, withPrefix, let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description, (text ?? "").isEmpty {
+        if self.withExamplePlaceholder, self.withPrefix, let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description, (text ?? "").isEmpty {
             text = "+" + countryCode + " "
         }
-        _delegate?.textFieldDidBeginEditing?(textField)
+        self._delegate?.textFieldDidBeginEditing?(textField)
     }
 
     open func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-        return _delegate?.textFieldShouldEndEditing?(textField) ?? true
+        return self._delegate?.textFieldShouldEndEditing?(textField) ?? true
     }
 
     open func textFieldDidEndEditing(_ textField: UITextField) {
-        if withExamplePlaceholder, withPrefix, let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description,
+        if self.withExamplePlaceholder, self.withPrefix, let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description,
             let text = textField.text,
             text == internationalPrefix(for: countryCode) {
             textField.text = ""
-            updateFlag()
-            updatePlaceholder()
+            self.updateFlag()
+            self.updatePlaceholder()
         }
-        _delegate?.textFieldDidEndEditing?(textField)
+        self._delegate?.textFieldDidEndEditing?(textField)
     }
 
     open func textFieldShouldClear(_ textField: UITextField) -> Bool {
-        return _delegate?.textFieldShouldClear?(textField) ?? true
+        return self._delegate?.textFieldShouldClear?(textField) ?? true
     }
 
     open func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        return _delegate?.textFieldShouldReturn?(textField) ?? true
+        return self._delegate?.textFieldShouldReturn?(textField) ?? true
     }
 }

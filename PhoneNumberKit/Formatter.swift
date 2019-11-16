@@ -9,7 +9,6 @@
 import Foundation
 
 final class Formatter {
-
     weak var regexManager: RegexManager?
 
     init(phoneNumberKit: PhoneNumberKit) {
@@ -32,7 +31,7 @@ final class Formatter {
     func format(phoneNumber: PhoneNumber, formatType: PhoneNumberFormat, regionMetadata: MetadataTerritory?) -> String {
         var formattedNationalNumber = phoneNumber.adjustedNationalNumber()
         if let regionMetadata = regionMetadata {
-            formattedNationalNumber = formatNationalNumber(formattedNationalNumber, regionMetadata: regionMetadata, formatType: formatType)
+            formattedNationalNumber = self.formatNationalNumber(formattedNationalNumber, regionMetadata: regionMetadata, formatType: formatType)
             if let formattedExtension = formatExtension(phoneNumber.numberExtension, regionMetadata: regionMetadata) {
                 formattedNationalNumber = formattedNationalNumber + formattedExtension
             }
@@ -70,14 +69,14 @@ final class Formatter {
         var selectedFormat: MetadataPhoneNumberFormat?
         for format in formats {
             if let leadingDigitPattern = format.leadingDigitsPatterns?.last {
-                if (regexManager.stringPositionByRegex(leadingDigitPattern, string: String(nationalNumber)) == 0) {
-                    if (regexManager.matchesEntirely(format.pattern, string: String(nationalNumber))) {
+                if regexManager.stringPositionByRegex(leadingDigitPattern, string: String(nationalNumber)) == 0 {
+                    if regexManager.matchesEntirely(format.pattern, string: String(nationalNumber)) {
                         selectedFormat = format
                         break
                     }
                 }
             } else {
-                if (regexManager.matchesEntirely(format.pattern, string: String(nationalNumber))) {
+                if regexManager.matchesEntirely(format.pattern, string: String(nationalNumber)) {
                     selectedFormat = format
                     break
                 }
@@ -91,9 +90,9 @@ final class Formatter {
             var prefixFormattingRule = String()
             if let nationalPrefixFormattingRule = formatPattern.nationalPrefixFormattingRule, let nationalPrefix = regionMetadata.nationalPrefix {
                 prefixFormattingRule = regexManager.replaceStringByRegex(PhoneNumberPatterns.npPattern, string: nationalPrefixFormattingRule, template: nationalPrefix)
-                prefixFormattingRule = regexManager.replaceStringByRegex(PhoneNumberPatterns.fgPattern, string: prefixFormattingRule, template:"\\$1")
+                prefixFormattingRule = regexManager.replaceStringByRegex(PhoneNumberPatterns.fgPattern, string: prefixFormattingRule, template: "\\$1")
             }
-            if formatType == PhoneNumberFormat.national && regexManager.hasValue(prefixFormattingRule) {
+            if formatType == PhoneNumberFormat.national, regexManager.hasValue(prefixFormattingRule) {
                 let replacePattern = regexManager.replaceFirstStringByRegex(PhoneNumberPatterns.firstGroupPattern, string: numberFormatRule, templateString: prefixFormattingRule)
                 formattedNationalNumber = regexManager.replaceStringByRegex(pattern, string: nationalNumber, template: replacePattern)
             } else {
@@ -104,11 +103,9 @@ final class Formatter {
             return nationalNumber
         }
     }
-
 }
 
 public extension PhoneNumber {
-
     /**
      Adjust national number for display by adding leading zero if needed. Used for basic formatting functions.
      - Returns: A string representing the adjusted national number.
@@ -120,5 +117,4 @@ public extension PhoneNumber {
             return String(nationalNumber)
         }
     }
-
 }

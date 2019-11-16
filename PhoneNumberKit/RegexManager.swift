@@ -9,7 +9,6 @@
 import Foundation
 
 final class RegexManager {
-
     // MARK: Regular expression pool
 
     var regularExpresionPool = [String: NSRegularExpression]()
@@ -27,7 +26,7 @@ final class RegexManager {
     func regexWithPattern(_ pattern: String) throws -> NSRegularExpression {
         var cached: NSRegularExpression?
 
-        regularExpressionPoolQueue.sync {
+        self.regularExpressionPoolQueue.sync {
             cached = self.regularExpresionPool[pattern]
         }
 
@@ -51,7 +50,7 @@ final class RegexManager {
     func regexMatches(_ pattern: String, string: String) throws -> [NSTextCheckingResult] {
         do {
             let internalString = string
-            let currentPattern =  try regexWithPattern(pattern)
+            let currentPattern = try regexWithPattern(pattern)
             let matches = currentPattern.matches(in: internalString)
             return matches
         } catch {
@@ -78,8 +77,7 @@ final class RegexManager {
                     return true
                 }
             }
-        } catch {
-        }
+        } catch {}
         return false
     }
 
@@ -112,7 +110,7 @@ final class RegexManager {
             return false
         }
         pattern = "^(\(pattern))$"
-        return matchesExist(pattern, string: string)
+        return self.matchesExist(pattern, string: string)
     }
 
     func matchedStringByRegex(_ pattern: String, string: String) throws -> [String] {
@@ -124,8 +122,7 @@ final class RegexManager {
                 matchedStrings.append(processedString)
             }
             return matchedStrings
-        } catch {
-        }
+        } catch {}
         return []
     }
 
@@ -134,7 +131,7 @@ final class RegexManager {
     func replaceStringByRegex(_ pattern: String, string: String) -> String {
         do {
             var replacementResult = string
-            let regex =  try regexWithPattern(pattern)
+            let regex = try regexWithPattern(pattern)
             let matches = regex.matches(in: string)
             if matches.count == 1 {
                 let range = regex.rangeOfFirstMatch(in: string)
@@ -154,7 +151,7 @@ final class RegexManager {
     func replaceStringByRegex(_ pattern: String, string: String, template: String) -> String {
         do {
             var replacementResult = string
-            let regex =  try regexWithPattern(pattern)
+            let regex = try regexWithPattern(pattern)
             let matches = regex.matches(in: string)
             if matches.count == 1 {
                 let range = regex.rangeOfFirstMatch(in: string)
@@ -184,9 +181,9 @@ final class RegexManager {
         }
     }
 
-    func stringByReplacingOccurrences(_ string: String, map: [String:String]) -> String {
+    func stringByReplacingOccurrences(_ string: String, map: [String: String]) -> String {
         var targetString = String()
-        for i in 0 ..< string.count {
+        for i in 0..<string.count {
             let oneChar = string[string.index(string.startIndex, offsetBy: i)]
             let keyString = String(oneChar).uppercased()
             if let mappedValue = map[keyString] {
@@ -200,7 +197,7 @@ final class RegexManager {
 
     func hasValue(_ value: String?) -> Bool {
         if let valueString = value {
-            if valueString.trimmingCharacters(in: spaceCharacterSet).count == 0 {
+            if valueString.trimmingCharacters(in: self.spaceCharacterSet).count == 0 {
                 return false
             }
             return true
@@ -210,13 +207,12 @@ final class RegexManager {
     }
 
     func testStringLengthAgainstPattern(_ pattern: String, string: String) -> Bool {
-        if (matchesEntirely(pattern, string: string)) {
+        if self.matchesEntirely(pattern, string: string) {
             return true
         } else {
             return false
         }
     }
-
 }
 
 // MARK: Extensions

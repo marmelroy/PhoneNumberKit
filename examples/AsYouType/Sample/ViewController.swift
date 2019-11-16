@@ -6,43 +6,41 @@
 //  Copyright © 2015 Roy Marmelstein. All rights reserved.
 //
 
-import UIKit
-import Foundation
 import ContactsUI
+import Foundation
 import PhoneNumberKit
+import UIKit
 
 class ViewController: UIViewController, CNContactPickerDelegate {
-    
-    @IBOutlet weak var textField: PhoneNumberTextField!
-    @IBOutlet weak var withPrefixSwitch: UISwitch!
-    @IBOutlet weak var withFlagSwitch: UISwitch!
-    @IBOutlet weak var withExamplePlaceholderSwitch: UISwitch!
+    @IBOutlet var textField: PhoneNumberTextField!
+    @IBOutlet var withPrefixSwitch: UISwitch!
+    @IBOutlet var withFlagSwitch: UISwitch!
+    @IBOutlet var withExamplePlaceholderSwitch: UISwitch!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        textField.becomeFirstResponder()
-        withPrefixSwitch.isOn = textField.withPrefix
-        withFlagSwitch.isOn = textField.withFlag
-        withExamplePlaceholderSwitch.isOn = textField.withExamplePlaceholder
+        self.textField.becomeFirstResponder()
+        self.withPrefixSwitch.isOn = self.textField.withPrefix
+        self.withFlagSwitch.isOn = self.textField.withFlag
+        self.withExamplePlaceholderSwitch.isOn = self.textField.withExamplePlaceholder
     }
 
     @IBAction func didTapView(_ sender: Any) {
-        textField.resignFirstResponder()
+        self.textField.resignFirstResponder()
     }
 
     @IBAction func withPrefixDidChange(_ sender: Any) {
-        textField.withPrefix = withPrefixSwitch.isOn
+        self.textField.withPrefix = self.withPrefixSwitch.isOn
     }
 
     @IBAction func withFlagDidChange(_ sender: Any) {
-        textField.withFlag = withFlagSwitch.isOn
+        self.textField.withFlag = self.withFlagSwitch.isOn
     }
 
     @IBAction func withExamplePlaceholderDidChange(_ sender: Any) {
-        textField.withExamplePlaceholder = withExamplePlaceholderSwitch.isOn
-        if !textField.withExamplePlaceholder {
-            textField.placeholder = "Enter phone number"
+        self.textField.withExamplePlaceholder = self.withExamplePlaceholderSwitch.isOn
+        if !self.textField.withExamplePlaceholder {
+            self.textField.placeholder = "Enter phone number"
         }
     }
 }
-

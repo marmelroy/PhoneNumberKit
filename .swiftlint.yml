@@ -1,0 +1,50 @@
+# rule identifiers to exclude from running
+disabled_rules:
+  - trailing_whitespace
+  - line_length              # This should be removed from disabled_rules, code needs a lot of refactoring
+  - cyclomatic_complexity    # This should be removed from disabled_rules, code needs a lot of refactoring
+  - file_length              # This should be removed from disabled_rules, code needs a lot of refactoring
+  - type_body_length         # This should be removed from disabled_rules, code needs a lot of refactoring
+  - todo                     # This should be removed from disabled_rules, code needs a lot of refactoring
+  - function_parameter_count # This should be removed from disabled_rules, code needs a lot of refactoring
+  - force_try                # I need this because of realm but this should be removed from disabled_rules
+  - unused_closure_parameter # Added this for readability purposes of the code.
+  - function_body_length
+  - discarded_notification_center_observer # I don't understand this at the moment so I'll disable this.
+  - statement_position
+  - nesting
+  - large_tuple
+  - private_over_fileprivate
+
+opt_in_rules:
+- empty_count
+
+# paths to ignore during linting. Takes precedence over `included`.
+excluded:
+  - Carthage
+  - Pods
+
+empty_count: warning # implicitly
+force_cast: warning # implicitly
+
+type_name:
+  max_length:
+    warning: 99
+    error: 100
+  min_length:
+    warning: 2
+    error: 3
+    
+identifier_name:
+  max_length:
+    warning: 99
+    error: 100
+  min_length:
+    warning: 1
+    error: 2
+  excluded: # excluded via string array
+    - id
+    - i # for loop iteration
+    - e # for error e
+    - x # x axis
+    - y # y axis

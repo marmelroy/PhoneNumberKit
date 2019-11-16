@@ -6,9 +6,9 @@
 //  Copyright © 2019 Roy Marmelstein. All rights reserved.
 //
 
-import XCTest
-import UIKit
 @testable import PhoneNumberKit
+import UIKit
+import XCTest
 
 class TextFieldTests: XCTestCase {
     func testWorksWithPhoneNumberKitInstance() {
