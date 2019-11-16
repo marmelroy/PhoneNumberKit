@@ -6,6 +6,8 @@
 //  Copyright © 2015 Roy Marmelstein. All rights reserved.
 //
 
+#if canImport(UIKit)
+
 import Foundation
 import UIKit
 
@@ -396,3 +398,5 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         return self._delegate?.textFieldShouldReturn?(textField) ?? true
     }
 }
+
+#endif
