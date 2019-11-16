@@ -99,9 +99,9 @@ public final class PartialFormatter {
         guard self.isValidRawNumber(rawNumber) else {
             return rawNumber
         }
-
-        var nationalNumber = self.nationalNumber(from: rawNumber)
-
+        let split = splitNumberAndPausesOrWaits(rawNumber)
+        
+        var nationalNumber = self.nationalNumber(from: split.number)
         if let formats = availableFormats(nationalNumber) {
             if let formattedNumber = applyFormat(nationalNumber, formats: formats) {
                 nationalNumber = formattedNumber
@@ -114,6 +114,7 @@ public final class PartialFormatter {
                 }
             }
         }
+        
         var finalNumber = String()
         if self.prefixBeforeNationalNumber.count > 0 {
             finalNumber.append(self.prefixBeforeNationalNumber)
@@ -127,7 +128,7 @@ public final class PartialFormatter {
         if finalNumber.last == PhoneNumberConstants.separatorBeforeNationalNumber.first {
             finalNumber = String(finalNumber[..<finalNumber.index(before: finalNumber.endIndex)])
         }
-
+        finalNumber.append(split.pausesOrWaits)
         return finalNumber
     }
 
@@ -245,7 +246,28 @@ public final class PartialFormatter {
         }
         return processedNumber
     }
-
+    
+    func splitNumberAndPausesOrWaits(_ rawNumber: String) -> (number: String, pausesOrWaits: String) {
+        if rawNumber.isEmpty {
+            return (rawNumber, "")
+        }
+        
+        let splitByComma = rawNumber.split(separator: ",", maxSplits: 1, omittingEmptySubsequences: false)
+        let splitBySemiColon = rawNumber.split(separator: ";", maxSplits: 1, omittingEmptySubsequences: false)
+        
+        if splitByComma[0].count != splitBySemiColon[0].count {
+            let foundCommasFirst = splitByComma[0].count < splitBySemiColon[0].count
+            
+            if foundCommasFirst {
+                return (String(splitByComma[0]), "," + splitByComma[1])
+            }
+            else {
+                return (String(splitBySemiColon[0]), ";" + splitBySemiColon[1])
+            }
+        }
+        return (rawNumber, "")
+    }
+    
     func availableFormats(_ rawNumber: String) -> [MetadataPhoneNumberFormat]? {
         guard let regexManager = regexManager else { return nil }
         var tempPossibleFormats = [MetadataPhoneNumberFormat]()

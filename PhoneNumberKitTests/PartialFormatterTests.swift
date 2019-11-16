@@ -272,6 +272,49 @@ class PartialFormatterTests: XCTestCase {
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "07739 555555")
     }
 
+    // 07739555555,9
+    func testUKMobileNumberWithDigitsPausesAndWaits() {
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "GB")
+        var testNumber = "0"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "0")
+        testNumber = "07"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "07")
+        testNumber = "077"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "077")
+        testNumber = "0773"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "0773")
+        testNumber = "07739"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "07739")
+        testNumber = "077395"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "07739 5")
+        testNumber = "0773955"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "07739 55")
+        testNumber = "07739555"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "07739 555")
+        testNumber = "077395555"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "07739 5555")
+        testNumber = "0773955555"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "07739 55555")
+        testNumber = "07739555555"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "07739 555555")
+        testNumber = "07739555555,"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "07739 555555,")
+        testNumber = "07739555555,9"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "07739 555555,9")
+        testNumber = "07739555555,9,"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "07739555555,9,")
+        testNumber = "07739555555,9,1"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "07739 555555,9,1")
+        testNumber = "07739555555,9,1;"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "07739555555,9,1;") // not quite the expected, should keep formatting and just add pauses and waits during typing.
+        testNumber = "07739555555,9,1;2"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "07739 555555,9,1;2")
+        testNumber = "07739555555,9,1;2;"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "07739555555,9,1;2;") // not quite the expected, should keep formatting and just add pauses and waits during typing.
+        testNumber = "07739555555,9,1;2;5"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "07739 555555,9,1;2;5")
+    }
+    
     // MARK: region prediction
 
     func testMinimalFrenchNumber() {
@@ -325,4 +368,99 @@ class PartialFormatterTests: XCTestCase {
         let testNumber = "8675309"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "867-5309")
     }
+    
+    // *144
+    func testBrazilianOperatorService() {
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "BR")
+        var testNumber = "*"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "*")
+        testNumber = "*1"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "*1")
+        testNumber = "*14"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "*14")
+        testNumber = "*144"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "*144")
+    }
+    
+    // *#06#
+    func testImeiCodeRetrieval() {
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "BR")
+        var testNumber = "*"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "*")
+        testNumber = "*#"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "*#")
+        testNumber = "*#0"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "*#0")
+        testNumber = "*#06"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "*#06")
+        testNumber = "*#06#"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "*#06#")
+    }
+    
+    // *#*6#
+    func testAsteriskShouldNotBeRejectedInTheMiddle() {
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "BR")
+        var testNumber = "*"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "*")
+        testNumber = "*#"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "*#")
+        testNumber = "*#*"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "*#*")
+        testNumber = "*#*6"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "*#*6")
+        testNumber = "*#*6#"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "*#*6#")
+    }
+    
+    // *#*6#
+    func testPoundShouldNotBeRejectedInTheMiddle() {
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "BR")
+        var testNumber = "*"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "*")
+        testNumber = "*#"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "*#")
+        testNumber = "*#*"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "*#*")
+        testNumber = "*#*6"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "*#*6")
+        testNumber = "*#*6#"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "*#*6#")
+    }
+    
+    // Pauses and waits (http://allgaierconsulting.com/techtalk/2014/8/1/why-and-how-to-insert-a-pause-or-wait-key-on-your-iphone)
+    
+    // 650,9,2
+    func testPausedPhoneNumber() {
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "US")
+        var testNumber = "6"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "6")
+        testNumber = "65"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "65")
+        testNumber = "650"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "650")
+        testNumber = "650,"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "650,")
+        testNumber = "650,9"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "650,9")
+        testNumber = "650,9,"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "650,9,")
+        testNumber = "650,9,2"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "650,9,2")
+    }
+    
+    // 121;4
+    func testWaitPhoneNumber() {
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "US")
+        var testNumber = "1"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "1")
+        testNumber = "12"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "12")
+        testNumber = "121"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "121")
+        testNumber = "121;"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "121;")
+        testNumber = "121;4"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "121;4")
+    }
+    
 }

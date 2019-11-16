@@ -103,6 +103,8 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     let nonNumericSet: NSCharacterSet = {
         var mutableSet = NSMutableCharacterSet.decimalDigit().inverted
         mutableSet.remove(charactersIn: PhoneNumberConstants.plusChars)
+        mutableSet.remove(charactersIn: PhoneNumberConstants.pausesAndWaitsChars)
+        mutableSet.remove(charactersIn: PhoneNumberConstants.operatorChars)
         return mutableSet as NSCharacterSet
     }()
 
