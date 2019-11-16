@@ -70,7 +70,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
         XCTAssertEqual(uan.exampleNumber, "7102123456")
         XCTAssertEqual(uan.nationalNumberPattern, "710[2-9]\\d{6}")
         XCTAssertNil(uan.possibleNumberPattern)
-        var numberFormats = sut.numberFormats
+        let numberFormats = sut.numberFormats
         let firstNumberFormat: MetadataPhoneNumberFormat = numberFormats[0]
         XCTAssertEqual(firstNumberFormat.pattern, "(\\d{3})(\\d{4})")
         XCTAssertEqual(firstNumberFormat.format, "$1-$2")
