@@ -217,7 +217,7 @@ public final class PhoneNumberKit: NSObject {
     ///
     /// - returns: A computed value for the user's current region - based on the iPhone's carrier and if not available, the device region.
     public class func defaultRegionCode() -> String {
-#if os(iOS)
+#if os(iOS) && !targetEnvironment(macCatalyst)
         let networkInfo = CTTelephonyNetworkInfo()
         let carrier = networkInfo.subscriberCellularProvider
         if let isoCountryCode = carrier?.isoCountryCode {
