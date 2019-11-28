@@ -157,22 +157,22 @@ public final class PhoneNumberKit: NSObject {
         let metadata = self.metadata(for: countryCode)
         let example: String?
         switch type {
-        case .fixedLine:      example = metadata?.fixedLine?.exampleNumber
-        case .mobile:         example = metadata?.mobile?.exampleNumber
-        case .fixedOrMobile:  example = metadata?.mobile?.exampleNumber
-        case .pager:          example = metadata?.pager?.exampleNumber
+        case .fixedLine: example = metadata?.fixedLine?.exampleNumber
+        case .mobile: example = metadata?.mobile?.exampleNumber
+        case .fixedOrMobile: example = metadata?.mobile?.exampleNumber
+        case .pager: example = metadata?.pager?.exampleNumber
         case .personalNumber: example = metadata?.personalNumber?.exampleNumber
-        case .premiumRate:    example = metadata?.premiumRate?.exampleNumber
-        case .sharedCost:     example = metadata?.sharedCost?.exampleNumber
-        case .tollFree:       example = metadata?.tollFree?.exampleNumber
-        case .voicemail:      example = metadata?.voicemail?.exampleNumber
-        case .voip:           example = metadata?.voip?.exampleNumber
-        case .uan:            example = metadata?.uan?.exampleNumber
-        case .unknown:        return nil
-        case .notParsed:      return nil
+        case .premiumRate: example = metadata?.premiumRate?.exampleNumber
+        case .sharedCost: example = metadata?.sharedCost?.exampleNumber
+        case .tollFree: example = metadata?.tollFree?.exampleNumber
+        case .voicemail: example = metadata?.voicemail?.exampleNumber
+        case .voip: example = metadata?.voip?.exampleNumber
+        case .uan: example = metadata?.uan?.exampleNumber
+        case .unknown: return nil
+        case .notParsed: return nil
         }
         do {
-            return try example.flatMap({ try parse($0, withRegion: countryCode, ignoreType: false) })
+            return try example.flatMap { try parse($0, withRegion: countryCode, ignoreType: false) }
         } catch {
             print("[PhoneNumberKit] Failed to parse example number for \(countryCode) region")
             return nil
@@ -189,10 +189,10 @@ public final class PhoneNumberKit: NSObject {
     /// - returns: A formatted example phone number
     public func getFormattedExampleNumber(
         forCountry countryCode: String, ofType type: PhoneNumberType = .mobile,
-        withFormat format: PhoneNumberFormat = .international, withPrefix prefix: Bool = true) -> String?
-    {
-        return getExampleNumber(forCountry: countryCode, ofType: type)
-            .flatMap({ self.format($0, toType: format, withPrefix: prefix) })
+        withFormat format: PhoneNumberFormat = .international, withPrefix prefix: Bool = true
+    ) -> String? {
+        return self.getExampleNumber(forCountry: countryCode, ofType: type)
+            .flatMap { self.format($0, toType: format, withPrefix: prefix) }
     }
 
     /// Get the MetadataTerritory objects for an ISO 639 compliant region code.
