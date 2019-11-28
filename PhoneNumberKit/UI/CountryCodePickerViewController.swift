@@ -1,4 +1,6 @@
 
+#if canImport(UIKit)
+
 import UIKit
 
 @available(iOS 11.0, *)
@@ -234,3 +236,5 @@ internal extension CountryCodePickerViewController {
         }
     }
 }
+
+#endif

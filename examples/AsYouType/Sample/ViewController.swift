@@ -12,7 +12,6 @@ import PhoneNumberKit
 import UIKit
 
 class ViewController: UIViewController, CNContactPickerDelegate {
-    
     @IBOutlet var textField: PhoneNumberTextField!
     @IBOutlet var withPrefixSwitch: UISwitch!
     @IBOutlet var withFlagSwitch: UISwitch!
@@ -30,26 +29,11 @@ class ViewController: UIViewController, CNContactPickerDelegate {
         self.withPrefixSwitch.isOn = self.textField.withPrefix
         self.withFlagSwitch.isOn = self.textField.withFlag
         self.withExamplePlaceholderSwitch.isOn = self.textField.withExamplePlaceholder
-        self.withDefaultPickerUI.isOn = self.textField.withDefaultPickerUI
+        self.withDefaultPickerUISwitch.isOn = self.textField.withDefaultPickerUI
     }
 
     @IBAction func didTapView(_ sender: Any) {
         self.textField.resignFirstResponder()
-    }
-
-    @IBAction func withPrefixDidChange(_ sender: Any) {
-        self.textField.withPrefix = self.withPrefixSwitch.isOn
-    }
-
-    @IBAction func withFlagDidChange(_ sender: Any) {
-        self.textField.withFlag = self.withFlagSwitch.isOn
-    }
-
-    @IBAction func withExamplePlaceholderDidChange(_ sender: Any) {
-        self.textField.withExamplePlaceholder = self.withExamplePlaceholderSwitch.isOn
-        if !self.textField.withExamplePlaceholder {
-            self.textField.placeholder = "Enter phone number"
-        }
     }
 
     @IBAction func withPrefixDidChange(_ sender: Any) {

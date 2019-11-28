@@ -157,54 +157,6 @@ public final class PhoneNumberKit: NSObject {
         let metadata = self.metadata(for: countryCode)
         let example: String?
         switch type {
-        case .fixedLine: example = metadata?.fixedLine?.exampleNumber
-        case .mobile: example = metadata?.mobile?.exampleNumber
-        case .fixedOrMobile: example = metadata?.mobile?.exampleNumber
-        case .pager: example = metadata?.pager?.exampleNumber
-        case .personalNumber: example = metadata?.personalNumber?.exampleNumber
-        case .premiumRate: example = metadata?.premiumRate?.exampleNumber
-        case .sharedCost: example = metadata?.sharedCost?.exampleNumber
-        case .tollFree: example = metadata?.tollFree?.exampleNumber
-        case .voicemail: example = metadata?.voicemail?.exampleNumber
-        case .voip: example = metadata?.voip?.exampleNumber
-        case .uan: example = metadata?.uan?.exampleNumber
-        case .unknown: return nil
-        case .notParsed: return nil
-        }
-        do {
-            return try example.flatMap { try parse($0, withRegion: countryCode, ignoreType: false) }
-        } catch {
-            print("[PhoneNumberKit] Failed to parse example number for \(countryCode) region")
-            return nil
-        }
-    }
-
-    /// Get a formatted example phone number for an ISO 639 compliant region code.
-    ///
-    /// - parameter countryCode: ISO 639 compliant region code.
-    /// - parameter type: `PhoneNumberType` desired. default: `.mobile`
-    /// - parameter format: `PhoneNumberFormat` to use for formatting. default: `.international`
-    /// - parameter prefix: Whether or not to include the prefix.
-    ///
-    /// - returns: A formatted example phone number
-    public func getFormattedExampleNumber(
-        forCountry countryCode: String, ofType type: PhoneNumberType = .mobile,
-        withFormat format: PhoneNumberFormat = .international, withPrefix prefix: Bool = true
-    ) -> String? {
-        return self.getExampleNumber(forCountry: countryCode, ofType: type)
-            .flatMap { self.format($0, toType: format, withPrefix: prefix) }
-    }
-
-    /// Get an example phone number for an ISO 639 compliant region code.
-    ///
-    /// - parameter countryCode: ISO 639 compliant region code.
-    /// - parameter type: The `PhoneNumberType` desired. default: `.mobile`
-    ///
-    /// - returns: An example phone number
-    public func getExampleNumber(forCountry countryCode: String, ofType type: PhoneNumberType = .mobile) -> PhoneNumber? {
-        let metadata = self.metadata(for: countryCode)
-        let example: String?
-        switch type {
         case .fixedLine:      example = metadata?.fixedLine?.exampleNumber
         case .mobile:         example = metadata?.mobile?.exampleNumber
         case .fixedOrMobile:  example = metadata?.mobile?.exampleNumber
