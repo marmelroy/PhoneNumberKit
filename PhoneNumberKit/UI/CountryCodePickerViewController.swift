@@ -11,12 +11,11 @@ protocol CountryCodePickerDelegate: class {
 @available(iOS 11.0, *)
 public class CountryCodePickerViewController: UITableViewController {
 
-    /// Common Country Codes are shown below the Current section
-    public static var commonCountryCodes: [String] = []
-
     lazy var searchController = UISearchController(searchResultsController: nil)
 
     public let phoneNumberKit: PhoneNumberKit
+
+    let commonCountryCodes: [String]
 
     var shouldRestoreNavigationBarToHidden = false
 
@@ -44,7 +43,7 @@ public class CountryCodePickerViewController: UITableViewController {
                 return collection
             }
 
-        let popular = Self.commonCountryCodes.compactMap({ Country(for: $0, with: phoneNumberKit) })
+        let popular = commonCountryCodes.compactMap({ Country(for: $0, with: phoneNumberKit) })
 
         var result: [[Country]] = []
         // Note we should maybe use the user's current carrier's country code?
@@ -64,10 +63,29 @@ public class CountryCodePickerViewController: UITableViewController {
 
     lazy var cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(dismissAnimated))
 
-    public init(phoneNumberKit: PhoneNumberKit) {
-        self.phoneNumberKit = phoneNumberKit
-        super.init(style: .grouped)
+    /**
+     Init with a phone number kit instance. Because a PhoneNumberKit initialization is expensive you can must pass a pre-initialized instance to avoid incurring perf penalties.
 
+     - parameter phoneNumberKit: A PhoneNumberKit instance to be used by the text field.
+     - parameter commonCountryCodes: An array of country codes to display in the section below the current region section. defaults to `PhoneNumberKit.CountryCodePicker.commonCountryCodes`
+     */
+    public init(
+        phoneNumberKit: PhoneNumberKit,
+        commonCountryCodes: [String] = PhoneNumberKit.CountryCodePicker.commonCountryCodes)
+    {
+        self.phoneNumberKit = phoneNumberKit
+        self.commonCountryCodes = commonCountryCodes
+        super.init(style: .grouped)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        self.phoneNumberKit = PhoneNumberKit()
+        self.commonCountryCodes = PhoneNumberKit.CountryCodePicker.commonCountryCodes
+        super.init(coder: aDecoder)
+        self.commonInit()
+    }
+
+    func commonInit() {
         self.title = "Choose your country"
 
         tableView.register(Cell.self, forCellReuseIdentifier: Cell.reuseIdentifier)
@@ -76,10 +94,6 @@ public class CountryCodePickerViewController: UITableViewController {
         searchController.searchBar.backgroundColor = .clear
         navigationItem.searchController = searchController
         definesPresentationContext = true
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 
     public override func viewWillAppear(_ animated: Bool) {
@@ -132,9 +146,9 @@ public class CountryCodePickerViewController: UITableViewController {
             return nil
         } else if section == 0, hasCurrent {
             return "Current"
-        } else if section == 0, !hasCurrent && hasCommon {
+        } else if section == 0, !hasCurrent, hasCommon {
             return "Common"
-        } else if section == 1 && hasCurrent && hasCommon {
+        } else if section == 1, hasCurrent, hasCommon {
             return "Common"
         }
         return countries[section].first?.name.first.map(String.init)
@@ -205,7 +219,7 @@ internal extension CountryCodePickerViewController {
                 let name = (Locale.current as NSLocale).localizedString(forCountryCode: countryCode),
                 let prefix = phoneNumberKit.countryCode(for: countryCode)?.description
             else {
-                    return nil
+                return nil
             }
 
             self.code = countryCode

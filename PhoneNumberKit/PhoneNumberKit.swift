@@ -247,3 +247,17 @@ public final class PhoneNumberKit: NSObject {
         return data
     }
 }
+
+#if canImport(UIKit)
+extension PhoneNumberKit {
+
+    /// Configuration for the CountryCodePicker presented from PhoneNumberTextField if `withDefaultPickerUI` is `true`
+    public enum CountryCodePicker {
+        /// Common Country Codes are shown below the Current section in the CountryCodePicker by default
+        public static var commonCountryCodes: [String] = []
+
+        /// When the Picker is shown from the textfield it is presented modally
+        public static var forceModalPresentation: Bool = false
+    }
+}
+#endif
