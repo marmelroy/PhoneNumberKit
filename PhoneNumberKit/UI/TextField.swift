@@ -234,7 +234,14 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     open func updatePlaceholder() {
         guard self.withExamplePlaceholder else { return }
         if isEditing, !(self.text ?? "").isEmpty { return } // No need to update a placeholder while the placeholder isn't showing
-        let format = self.withPrefix ? PhoneNumberFormat.international : .national
+        
+        let format: PhoneNumberFormat
+        if self.currentRegion == "RU" {
+            format = self.withPrefix ? PhoneNumberFormat.national : .international
+        } else {
+            format = self.withPrefix ? PhoneNumberFormat.international : .national
+        }
+                
         let example = self.phoneNumberKit.getFormattedExampleNumber(forCountry: self.currentRegion, withFormat: format, withPrefix: self.withPrefix) ?? "12345678"
 
         let font = self.font ?? UIFont.preferredFont(forTextStyle: .body)
