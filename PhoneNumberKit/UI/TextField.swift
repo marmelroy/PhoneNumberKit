@@ -13,15 +13,15 @@ import UIKit
 
 /// Custom text field that formats phone numbers
 open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
-    public let phoneNumberKit: PhoneNumberKit!
+    public let phoneNumberKit: PhoneNumberKit
 
     public lazy var flagButton = UIButton()
 
     /// Override setText so number will be automatically formatted when setting text by code
     open override var text: String? {
         set {
-            if isPartialFormatterEnabled, newValue != nil {
-                let formattedNumber = partialFormatter.formatPartial(newValue! as String)
+            if isPartialFormatterEnabled, let newValue = newValue {
+                let formattedNumber = partialFormatter.formatPartial(newValue)
                 super.text = formattedNumber
             } else {
                 super.text = newValue
@@ -60,9 +60,9 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         didSet {
             self.partialFormatter.withPrefix = self.withPrefix
             if self.withPrefix == false {
-                self.keyboardType = UIKeyboardType.numberPad
+                self.keyboardType = .numberPad
             } else {
-                self.keyboardType = UIKeyboardType.phonePad
+                self.keyboardType = .phonePad
             }
             if self.withExamplePlaceholder {
                 self.updatePlaceholder()
@@ -221,7 +221,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
 
     func setup() {
         self.autocorrectionType = .no
-        self.keyboardType = UIKeyboardType.phonePad
+        self.keyboardType = .phonePad
         super.delegate = self
     }
 
