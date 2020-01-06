@@ -114,12 +114,12 @@ public final class PartialFormatter {
                 }
             }
         }
-        
+
         var finalNumber = String()
-        if self.prefixBeforeNationalNumber.count > 0 {
+        if self.withPrefix, self.prefixBeforeNationalNumber.count > 0 {
             finalNumber.append(self.prefixBeforeNationalNumber)
         }
-        if self.shouldAddSpaceAfterNationalPrefix, self.prefixBeforeNationalNumber.count > 0, self.prefixBeforeNationalNumber.last != PhoneNumberConstants.separatorBeforeNationalNumber.first {
+        if self.withPrefix, self.shouldAddSpaceAfterNationalPrefix, self.prefixBeforeNationalNumber.count > 0, self.prefixBeforeNationalNumber.last != PhoneNumberConstants.separatorBeforeNationalNumber.first {
             finalNumber.append(PhoneNumberConstants.separatorBeforeNationalNumber)
         }
         if nationalNumber.count > 0 {

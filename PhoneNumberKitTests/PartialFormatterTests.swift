@@ -314,6 +314,13 @@ class PartialFormatterTests: XCTestCase {
         testNumber = "07739555555,9,1;2;5"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "07739 555555,9,1;2;5")
     }
+
+    func testWithPrefixDisabled() {
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "CZ")
+        partialFormatter.withPrefix = false
+        let formatted = partialFormatter.formatPartial("+420777123456")
+        XCTAssertEqual(formatted, "777 123 456")
+    }
     
     // MARK: region prediction
 
