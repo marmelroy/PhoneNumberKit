@@ -273,6 +273,58 @@ class PhoneNumberKitTests: XCTestCase {
             XCTFail()
         }
     }
+    
+    func testValidAENumberWithHinduArabicNumerals() {
+        let testNumber = "+٩٧١٥٠٠٥٠٠٥٥٠"
+        do {
+            let phoneNumber = try phoneNumberKit.parse(testNumber, withRegion: "AE")
+            XCTAssertEqual(self.phoneNumberKit.format(phoneNumber, toType: .e164), "+971500500550")
+            XCTAssertEqual(phoneNumber.countryCode, 971)
+            XCTAssertEqual(phoneNumber.nationalNumber, 500500550)
+            XCTAssertEqual(phoneNumber.leadingZero, false)
+        } catch {
+            XCTFail()
+        }
+    }
+
+    func testValidAENumberWithMixedHinduArabicNumerals() {
+        let testNumber = "+٩٧١5٠٠5٠٠55٠"
+        do {
+            let phoneNumber = try phoneNumberKit.parse(testNumber, withRegion: "AE")
+            XCTAssertEqual(self.phoneNumberKit.format(phoneNumber, toType: .e164), "+971500500550")
+            XCTAssertEqual(phoneNumber.countryCode, 971)
+            XCTAssertEqual(phoneNumber.nationalNumber, 500500550)
+            XCTAssertEqual(phoneNumber.leadingZero, false)
+        } catch {
+            XCTFail()
+        }
+    }
+
+    func testValidAENumberWithEasternArabicNumerals() {
+        let testNumber = "+۹۷۱۵۰۰۵۰۰۵۵۰"
+        do {
+            let phoneNumber = try phoneNumberKit.parse(testNumber, withRegion: "AE")
+            XCTAssertEqual(self.phoneNumberKit.format(phoneNumber, toType: .e164), "+971500500550")
+            XCTAssertEqual(phoneNumber.countryCode, 971)
+            XCTAssertEqual(phoneNumber.nationalNumber, 500500550)
+            XCTAssertEqual(phoneNumber.leadingZero, false)
+        } catch {
+            XCTFail()
+        }
+    }
+
+    func testValidAENumberWithMixedEasternArabicNumerals() {
+        let testNumber = "+۹۷۱5۰۰5۰۰55۰"
+        do {
+            let phoneNumber = try phoneNumberKit.parse(testNumber, withRegion: "AE")
+            XCTAssertEqual(self.phoneNumberKit.format(phoneNumber, toType: .e164), "+971500500550")
+            XCTAssertEqual(phoneNumber.countryCode, 971)
+            XCTAssertEqual(phoneNumber.nationalNumber, 500500550)
+            XCTAssertEqual(phoneNumber.leadingZero, false)
+        } catch {
+            XCTFail()
+        }
+    }
 
     //  Invalid number too short
     func testInvalidNumberTooShort() {

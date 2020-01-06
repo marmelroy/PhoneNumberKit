@@ -315,6 +315,130 @@ class PartialFormatterTests: XCTestCase {
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "07739 555555,9,1;2;5")
     }
 
+    // +٩٧١٥٠٠٥٠٠٥٥٠ (+971500500550)
+    func testAENumberWithHinduArabicNumerals() {
+         let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "AE")
+         var testNumber = "+"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+")
+         testNumber = "+٩"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+9")
+         testNumber = "+٩٧"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+9 7")
+         testNumber = "+٩٧١"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971")
+         testNumber = "+٩٧١٥"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 5")
+         testNumber = "+٩٧١٥٠"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50")
+         testNumber = "+٩٧١٥٠٠"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 0")
+         testNumber = "+٩٧١٥٠٠٥"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 05")
+         testNumber = "+٩٧١٥٠٠٥٠"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 050")
+         testNumber = "+٩٧١٥٠٠٥٠٠"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 050 0")
+         testNumber = "+٩٧١٥٠٠٥٠٠٥"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 050 05")
+         testNumber = "+٩٧١٥٠٠٥٠٠٥٥"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 050 055")
+         testNumber = "+٩٧١٥٠٠٥٠٠٥٥٠"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 050 0550")
+    }
+
+    // +٩٧١5٠٠5٠٠55٠ (+971500500550)
+    func testAENumberWithMixedHinduArabicNumerals() {
+         let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "AE")
+         var testNumber = "+"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+")
+         testNumber = "+٩"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+9")
+         testNumber = "+٩٧"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+9 7")
+         testNumber = "+٩٧١"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971")
+         testNumber = "+٩٧١5"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 5")
+         testNumber = "+٩٧١5٠"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50")
+         testNumber = "+٩٧١5٠٠"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 0")
+         testNumber = "+٩٧١5٠٠5"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 05")
+         testNumber = "+٩٧١5٠٠5٠"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 050")
+         testNumber = "+٩٧١5٠٠5٠٠"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 050 0")
+         testNumber = "+٩٧١5٠٠5٠٠5"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 050 05")
+         testNumber = "+٩٧١5٠٠5٠٠55"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 050 055")
+         testNumber = "+٩٧١5٠٠5٠٠55٠"
+         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 050 0550")
+    }
+
+    // +۹۷۱۵۰۰۵۰۰۵۵۰ (+971500500550)
+    func testAENumberWithEasternArabicNumerals() {
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "AE")
+        var testNumber = "+"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+")
+        testNumber = "+۹"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+9")
+        testNumber = "+۹۷"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+9 7")
+        testNumber = "+۹۷١"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971")
+        testNumber = "+۹۷۱۵"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 5")
+        testNumber = "+۹۷۱۵۰"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50")
+        testNumber = "+۹۷۱۵۰۰"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 0")
+        testNumber = "+۹۷۱۵۰۰۵"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 05")
+        testNumber = "+۹۷۱۵۰۰۵۰"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 050")
+        testNumber = "+۹۷۱۵۰۰۵۰۰"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 050 0")
+        testNumber = "+۹۷۱۵۰۰۵۰۰۵"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 050 05")
+        testNumber = "+۹۷۱۵۰۰۵۰۰۵۵"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 050 055")
+        testNumber = "+۹۷۱۵۰۰۵۰۰۵۵۰"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 050 0550")
+    }
+
+    // +۹۷۱5۰۰5۰۰55۰ (+971500500550)
+    func testAENumberWithMixedEasternArabicNumerals() {
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "AE")
+        var testNumber = "+"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+")
+        testNumber = "+۹"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+9")
+        testNumber = "+۹۷"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+9 7")
+        testNumber = "+۹۷١"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971")
+        testNumber = "+۹۷۱5"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 5")
+        testNumber = "+۹۷۱5۰"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50")
+        testNumber = "+۹۷۱5۰۰"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 0")
+        testNumber = "+۹۷۱5۰۰5"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 05")
+        testNumber = "+۹۷۱5۰۰5۰"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 050")
+        testNumber = "+۹۷۱5۰۰5۰۰"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 050 0")
+        testNumber = "+۹۷۱5۰۰5۰۰5"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 050 05")
+        testNumber = "+۹۷۱5۰۰5۰۰55"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 050 055")
+        testNumber = "+۹۷۱5۰۰5۰۰55۰"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971 50 050 0550")
+    }
+
     func testWithPrefixDisabled() {
         let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "CZ")
         partialFormatter.withPrefix = false
