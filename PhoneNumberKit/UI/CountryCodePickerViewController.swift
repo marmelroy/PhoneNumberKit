@@ -76,6 +76,7 @@ public class CountryCodePickerViewController: UITableViewController {
         self.phoneNumberKit = phoneNumberKit
         self.commonCountryCodes = commonCountryCodes
         super.init(style: .grouped)
+        self.commonInit()
     }
 
     required init?(coder aDecoder: NSCoder) {
