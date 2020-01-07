@@ -430,6 +430,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             let text = textField.text,
             text == internationalPrefix(for: countryCode) {
             textField.text = ""
+            sendActions(for: .editingChanged)
             self.updateFlag()
             self.updatePlaceholder()
         }
