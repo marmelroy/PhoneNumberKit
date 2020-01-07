@@ -356,6 +356,66 @@ class PhoneNumberKitParsingTests: XCTestCase {
         XCTAssertEqual(number.type, PhoneNumberType.mobile)
     }
 
+    func testAENumberWithHinduArabicNumerals() {
+        do {
+            let phoneNumber1 = try phoneNumberKit.parse("+٩٧١٥٠٠٥٠٠٥٥٠", withRegion: "AE")
+            XCTAssertNotNil(phoneNumber1)
+            let phoneNumberInternationalFormat1 = self.phoneNumberKit.format(phoneNumber1, toType: .international)
+            XCTAssertTrue(phoneNumberInternationalFormat1 == "+971 50 050 0550")
+            let phoneNumberNationalFormat1 = self.phoneNumberKit.format(phoneNumber1, toType: .national)
+            XCTAssertTrue(phoneNumberNationalFormat1 == "050 050 0550")
+            let phoneNumberE164Format1 = self.phoneNumberKit.format(phoneNumber1, toType: .e164)
+            XCTAssertTrue(phoneNumberE164Format1 == "+971500500550")
+        } catch {
+            XCTFail()
+        }
+    }
+
+    func testAENumberWithMixedHinduArabicNumerals() {
+        do {
+            let phoneNumber1 = try phoneNumberKit.parse("+٩٧١5٠٠5٠٠55٠", withRegion: "AE")
+            XCTAssertNotNil(phoneNumber1)
+            let phoneNumberInternationalFormat1 = self.phoneNumberKit.format(phoneNumber1, toType: .international)
+            XCTAssertTrue(phoneNumberInternationalFormat1 == "+971 50 050 0550")
+            let phoneNumberNationalFormat1 = self.phoneNumberKit.format(phoneNumber1, toType: .national)
+            XCTAssertTrue(phoneNumberNationalFormat1 == "050 050 0550")
+            let phoneNumberE164Format1 = self.phoneNumberKit.format(phoneNumber1, toType: .e164)
+            XCTAssertTrue(phoneNumberE164Format1 == "+971500500550")
+        } catch {
+            XCTFail()
+        }
+    }
+
+    func testAENumberWithEasternArabicNumerals() {
+        do {
+            let phoneNumber1 = try phoneNumberKit.parse("+۹۷۱۵۰۰۵۰۰۵۵۰", withRegion: "AE")
+            XCTAssertNotNil(phoneNumber1)
+            let phoneNumberInternationalFormat1 = self.phoneNumberKit.format(phoneNumber1, toType: .international)
+            XCTAssertTrue(phoneNumberInternationalFormat1 == "+971 50 050 0550")
+            let phoneNumberNationalFormat1 = self.phoneNumberKit.format(phoneNumber1, toType: .national)
+            XCTAssertTrue(phoneNumberNationalFormat1 == "050 050 0550")
+            let phoneNumberE164Format1 = self.phoneNumberKit.format(phoneNumber1, toType: .e164)
+            XCTAssertTrue(phoneNumberE164Format1 == "+971500500550")
+        } catch {
+            XCTFail()
+        }
+    }
+
+    func testAENumberWithMixedEasternArabicNumerals() {
+        do {
+            let phoneNumber1 = try phoneNumberKit.parse("+۹۷۱5۰۰5۰۰55۰", withRegion: "AE")
+            XCTAssertNotNil(phoneNumber1)
+            let phoneNumberInternationalFormat1 = self.phoneNumberKit.format(phoneNumber1, toType: .international)
+            XCTAssertTrue(phoneNumberInternationalFormat1 == "+971 50 050 0550")
+            let phoneNumberNationalFormat1 = self.phoneNumberKit.format(phoneNumber1, toType: .national)
+            XCTAssertTrue(phoneNumberNationalFormat1 == "050 050 0550")
+            let phoneNumberE164Format1 = self.phoneNumberKit.format(phoneNumber1, toType: .e164)
+            XCTAssertTrue(phoneNumberE164Format1 == "+971500500550")
+        } catch {
+            XCTFail()
+        }
+    }
+    
     func testPerformanceSimple() {
         let numberOfParses = 1000
         let startTime = Date()

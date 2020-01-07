@@ -38,7 +38,8 @@ final class ParseManager {
 
         let match = try regexManager.phoneDataDetectorMatch(numberString)
         let matchedNumber = nationalNumber.substring(with: match.range)
-        nationalNumber = matchedNumber
+        // Replace Arabic and Persian numerals and let the rest unchanged
+        nationalNumber = regexManager.stringByReplacingOccurrences(matchedNumber, map: PhoneNumberPatterns.allNormalizationMappings, keepUnmapped: true)
 
         // Strip and extract extension (3)
         var numberExtension: String?
