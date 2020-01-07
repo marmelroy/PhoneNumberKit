@@ -55,6 +55,12 @@ class PhoneNumberKitTests: XCTestCase {
             XCTFail()
         }
     }
+    
+    // Bool checker, GitHub issue #325
+    func testValidNumberBool() {
+        XCTAssert(phoneNumberKit.isValidPhoneNumber("6297062979", withRegion: "IN"))
+        XCTAssertFalse(phoneNumberKit.isValidPhoneNumber("202 00e 0000", withRegion: "US"))
+    }
 
     // Invalid american number, GitHub issue #9 by lobodin
     func testAmbiguousFixedOrMobileNumber() {
