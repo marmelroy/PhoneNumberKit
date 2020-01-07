@@ -59,6 +59,19 @@ public final class PhoneNumberKit: NSObject {
     public func parse(_ numberStrings: [String], withRegion region: String = PhoneNumberKit.defaultRegionCode(), ignoreType: Bool = false, shouldReturnFailedEmptyNumbers: Bool = false) -> [PhoneNumber] {
         return self.parseManager.parseMultiple(numberStrings, withRegion: region, ignoreType: ignoreType, shouldReturnFailedEmptyNumbers: shouldReturnFailedEmptyNumbers)
     }
+    
+    // MARK: Checking
+    
+    /// Checks if a number string is a valid PhoneNumber object
+    ///
+    /// - Parameters:
+    ///   - numberString: the raw number string.
+    ///   - region: ISO 639 compliant region code.
+    ///   - ignoreType: Avoids number type checking for faster performance.
+    /// - Returns: Bool
+    public func isValidPhoneNumber(_ numberString: String, withRegion region: String = PhoneNumberKit.defaultRegionCode(), ignoreType: Bool = false) -> Bool {
+        return (try? self.parse(numberString, withRegion: region, ignoreType: ignoreType)) != nil
+    }
 
     // MARK: Formatting
 
