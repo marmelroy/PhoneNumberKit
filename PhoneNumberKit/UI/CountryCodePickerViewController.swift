@@ -87,7 +87,7 @@ public class CountryCodePickerViewController: UITableViewController {
     }
 
     func commonInit() {
-        self.title = "Choose your country"
+        self.title = NSLocalizedString("PhoneNumberKit.CountryCodePicker.Title", value: "Choose your country", comment: "Title of CountryCodePicker ViewController")
 
         tableView.register(Cell.self, forCellReuseIdentifier: Cell.reuseIdentifier)
         searchController.searchResultsUpdater = self
@@ -146,11 +146,11 @@ public class CountryCodePickerViewController: UITableViewController {
         if isFiltering {
             return nil
         } else if section == 0, hasCurrent {
-            return "Current"
+            return NSLocalizedString("PhoneNumberKit.CountryCodePicker.Current", value: "Current", comment: "Name of \"Current\" section")
         } else if section == 0, !hasCurrent, hasCommon {
-            return "Common"
+            return NSLocalizedString("PhoneNumberKit.CountryCodePicker.Common", value: "Common", comment: "Name of \"Common\" section")
         } else if section == 1, hasCurrent, hasCommon {
-            return "Common"
+            return NSLocalizedString("PhoneNumberKit.CountryCodePicker.Common", value: "Common", comment: "Name of \"Common\" section")
         }
         return countries[section].first?.name.first.map(String.init)
     }
