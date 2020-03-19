@@ -134,3 +134,7 @@ github "marmelroy/PhoneNumberKit"
 source 'https://github.com/CocoaPods/Specs.git'
 pod 'PhoneNumberKit', '~> 3.1'
 ```
+
+### Setting up with [Swift Package Manager](https://swiftpm.co/?query=PhoneNumberKit)
+As of swift 5.1, Swift Package Manager does not support resources bundled with Swift packages.
+Becuase of this, you need to manually copy `PhoneNumberMetadata.json` into your project.
