@@ -58,7 +58,13 @@ public final class PartialFormatter {
     // MARK: Status
 
     public var currentRegion: String {
-        return self.currentMetadata?.codeID ?? self.defaultRegion
+        if self.phoneNumberKit.countryCode(for: self.defaultRegion) != 1 {
+            return currentMetadata?.codeID ?? "US"
+        } else {
+            return self.currentMetadata?.countryCode == 1
+                ? self.defaultRegion
+                : self.currentMetadata?.codeID ?? self.defaultRegion
+        }
     }
 
     public func nationalNumber(from rawNumber: String) -> String {
