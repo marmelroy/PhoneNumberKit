@@ -1,5 +1,5 @@
 //
-//  TextField.swift
+//  PhoneNumberTextField.swift
 //  PhoneNumberKit
 //
 //  Created by Roy Marmelstein on 07/11/2015.
@@ -156,6 +156,19 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         }
     }
 
+    /**
+     Returns the current valid phone number.
+     - returns: PhoneNumber?
+     */
+    public var phoneNumber: PhoneNumber? {
+        guard let rawNumber = self.text else { return nil }
+        do {
+            return try phoneNumberKit.parse(rawNumber, withRegion: currentRegion)
+        } catch {
+            return nil
+        }
+    }
+
     open override func layoutSubviews() {
         if self.withFlag { // update the width of the flagButton automatically, iOS <13 doesn't handle this for you
             let width = self.flagButton.systemLayoutSizeFitting(bounds.size).width
@@ -248,14 +261,14 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     open func updatePlaceholder() {
         guard self.withExamplePlaceholder else { return }
         if isEditing, !(self.text ?? "").isEmpty { return } // No need to update a placeholder while the placeholder isn't showing
-        
+
         let format: PhoneNumberFormat
         if self.currentRegion == "RU" {
             format = self.withPrefix ? PhoneNumberFormat.national : .international
         } else {
             format = self.withPrefix ? PhoneNumberFormat.international : .national
         }
-                
+
         let example = self.phoneNumberKit.getFormattedExampleNumber(forCountry: self.currentRegion, withFormat: format, withPrefix: self.withPrefix) ?? "12345678"
 
         let font = self.font ?? UIFont.preferredFont(forTextStyle: .body)

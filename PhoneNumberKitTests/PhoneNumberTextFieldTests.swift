@@ -1,5 +1,5 @@
 //
-//  TextFieldTests.swift
+//  PhoneNumberTextFieldTests.swift
 //  PhoneNumberKitTests
 //
 //  Created by Travis Kaufman on 10/4/19.
@@ -12,7 +12,7 @@
 import UIKit
 import XCTest
 
-class TextFieldTests: XCTestCase {
+class PhoneNumberTextFieldTests: XCTestCase {
     func testWorksWithPhoneNumberKitInstance() {
         let pnk = PhoneNumberKit()
         let tf = PhoneNumberTextField(withPhoneNumberKit: pnk)
@@ -28,6 +28,15 @@ class TextFieldTests: XCTestCase {
         tf.text = "4125551212"
         XCTAssertEqual(tf.text, "(412) 555-1212")
     }
+
+	func testPhoneNumberProperty() {
+		let pnk = PhoneNumberKit()
+		let tf = PhoneNumberTextField(withPhoneNumberKit: pnk)
+		tf.text = "4125551212"
+		XCTAssertNotNil(tf.phoneNumber)
+		tf.text = ""
+		XCTAssertNil(tf.phoneNumber)
+	}
 }
 
 #endif
