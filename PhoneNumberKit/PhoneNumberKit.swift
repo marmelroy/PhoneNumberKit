@@ -224,6 +224,70 @@ public final class PhoneNumberKit: NSObject {
         return self.metadataManager.filterTerritories(byCode: countryCode)
     }
 
+    /// Get an array of possible phone number lengths for the country, as specified by the parameters.
+    ///
+    /// - parameter country: ISO 639 compliant region code.
+    /// - parameter phoneNumberType: PhoneNumberType enum.
+    /// - parameter lengthType: PossibleLengthType enum.
+    ///
+    /// - returns: Array of possible lengths for the country. May be empty.
+    public func possiblePhoneNumberLengths(forCountry country: String, phoneNumberType: PhoneNumberType, lengthType: PossibleLengthType) -> [Int] {
+        guard let territory = metadataManager.filterTerritories(byCountry: country) else { return [] }
+
+        let possibleLengths = possiblePhoneNumberLengths(forTerritory: territory, phoneNumberType: phoneNumberType)
+
+        switch lengthType {
+        case .national:     return possibleLengths?.national.flatMap { self.parsePossibleLengths($0) } ?? []
+        case .localOnly:    return possibleLengths?.localOnly.flatMap { self.parsePossibleLengths($0) } ?? []
+        }
+    }
+
+    private func possiblePhoneNumberLengths(forTerritory territory: MetadataTerritory, phoneNumberType: PhoneNumberType) -> MetadataPossibleLengths? {
+        switch phoneNumberType {
+        case .fixedLine:        return territory.fixedLine?.possibleLengths
+        case .mobile:           return territory.mobile?.possibleLengths
+        case .pager:            return territory.pager?.possibleLengths
+        case .personalNumber:   return territory.personalNumber?.possibleLengths
+        case .premiumRate:      return territory.premiumRate?.possibleLengths
+        case .sharedCost:       return territory.sharedCost?.possibleLengths
+        case .tollFree:         return territory.tollFree?.possibleLengths
+        case .voicemail:        return territory.voicemail?.possibleLengths
+        case .voip:             return territory.voip?.possibleLengths
+        case .uan:              return territory.uan?.possibleLengths
+        case .fixedOrMobile:    return nil // caller needs to combine results for .fixedLine and .mobile
+        case .unknown:          return nil
+        case .notParsed:        return nil
+        }
+    }
+
+    /// Parse lengths string into array of Int, e.g. "6,[8-10]" becomes [6,8,9,10]
+    private func parsePossibleLengths(_ lengths: String) -> [Int] {
+        let components = lengths.components(separatedBy: ",")
+        let results = components.reduce([Int](), { result, component in
+            let newComponents = parseLengthComponent(component)
+            return result + newComponents
+        })
+
+        return results
+    }
+
+    /// Parses numbers and ranges into array of Int
+    private func parseLengthComponent(_ component: String) -> [Int] {
+        if let int = Int(component) {
+            return [int]
+        } else {
+            let trimmedComponent = component.trimmingCharacters(in: CharacterSet(charactersIn: "[]"))
+            let rangeLimits = trimmedComponent.components(separatedBy: "-").compactMap { Int($0) }
+
+            guard rangeLimits.count == 2,
+                let rangeStart = rangeLimits.first,
+                let rangeEnd = rangeLimits.last
+                else { return [] }
+
+            return Array(rangeStart...rangeEnd)
+        }
+    }
+
     // MARK: Class functions
 
     /// Get a user's default region code
