@@ -32,6 +32,10 @@ class ViewController: UIViewController, CNContactPickerDelegate {
         if #available(iOS 11.0, *) {
             self.withDefaultPickerUISwitch.isOn = self.textField.withDefaultPickerUI
         }
+        
+        if #available(iOS 13.0, *) {
+            self.view.backgroundColor = .systemBackground
+        }
     }
 
     @IBAction func didTapView(_ sender: Any) {
