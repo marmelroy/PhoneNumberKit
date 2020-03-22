@@ -79,7 +79,11 @@ final class MetadataManager {
     /// - parameter code: An international country code (e.g 1 for the US).
     ///
     /// - returns: A MetadataTerritory object.
-    internal func mainTerritory(forCode code: UInt64) -> MetadataTerritory? {
-        return self.mainTerritoryByCode[code]
+    internal func mainTerritory(withCountryID id: String?, withCode code: UInt64) -> MetadataTerritory? {
+        if let nonEmptyCountryID = id, let filteredCountry = filterTerritories(byCountry: nonEmptyCountryID), filteredCountry.countryCode == code {
+            return filteredCountry
+        } else {
+            return self.mainTerritoryByCode[code]
+        }
     }
 }
