@@ -23,6 +23,10 @@ class ViewController: UIViewController, CNContactPickerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.clearResults()
+        
+        if #available(iOS 13.0, *) {
+            self.view.backgroundColor = .systemBackground
+        }
     }
 
     override func didReceiveMemoryWarning() {
