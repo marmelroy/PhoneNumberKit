@@ -88,6 +88,34 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         }
     }
 
+    #if compiler(>=5.1)
+    /// Available on iOS 13 and above just.
+    public var countryCodePlaceholderColor: UIColor = {
+        if #available(iOS 13.0, *) {
+            return .secondaryLabel
+        } else {
+            return UIColor(red: 0, green: 0, blue: 0.0980392, alpha: 0.22)
+        }
+    }() {
+        didSet {
+            self.updatePlaceholder()
+        }
+    }
+
+    /// Available on iOS 13 and above just.
+    public var numberPlaceholderColor: UIColor = {
+        if #available(iOS 13.0, *) {
+            return .tertiaryLabel
+        } else {
+            return UIColor(red: 0, green: 0, blue: 0.0980392, alpha: 0.22)
+        }
+    }() {
+        didSet {
+            self.updatePlaceholder()
+        }
+    }
+    #endif
+
     private var _withDefaultPickerUI: Bool = false {
         didSet {
             if #available(iOS 11.0, *), flagButton.actions(forTarget: self, forControlEvent: .touchUpInside) == nil {
@@ -280,8 +308,8 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             // and above just because that is where we have access to label colors
             let firstSpaceIndex = example.firstIndex(where: { $0 == " " }) ?? example.startIndex
 
-            ph.addAttribute(.foregroundColor, value: UIColor.secondaryLabel, range: NSRange(..<firstSpaceIndex, in: example))
-            ph.addAttribute(.foregroundColor, value: UIColor.tertiaryLabel, range: NSRange(firstSpaceIndex..., in: example))
+            ph.addAttribute(.foregroundColor, value: self.countryCodePlaceholderColor, range: NSRange(..<firstSpaceIndex, in: example))
+            ph.addAttribute(.foregroundColor, value: self.numberPlaceholderColor, range: NSRange(firstSpaceIndex..., in: example))
         }
         #endif
         self.attributedPlaceholder = ph
