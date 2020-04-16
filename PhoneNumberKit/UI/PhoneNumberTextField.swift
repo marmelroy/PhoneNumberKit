@@ -290,17 +290,11 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         guard self.withExamplePlaceholder else { return }
         if isEditing, !(self.text ?? "").isEmpty { return } // No need to update a placeholder while the placeholder isn't showing
 
-        let format: PhoneNumberFormat
-        if self.currentRegion == "RU" {
-            format = self.withPrefix ? PhoneNumberFormat.national : .international
-        } else {
-            format = self.withPrefix ? PhoneNumberFormat.international : .national
-        }
-
+        let format = self.withPrefix ? PhoneNumberFormat.international : .national
         let example = self.phoneNumberKit.getFormattedExampleNumber(forCountry: self.currentRegion, withFormat: format, withPrefix: self.withPrefix) ?? "12345678"
-
         let font = self.font ?? UIFont.preferredFont(forTextStyle: .body)
         let ph = NSMutableAttributedString(string: example, attributes: [.font: font])
+
         #if compiler(>=5.1)
         if #available(iOS 13.0, *), self.withPrefix {
             // because the textfield will automatically handle insert & removal of the international prefix we make the
@@ -312,6 +306,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             ph.addAttribute(.foregroundColor, value: self.numberPlaceholderColor, range: NSRange(firstSpaceIndex..., in: example))
         }
         #endif
+
         self.attributedPlaceholder = ph
     }
 
