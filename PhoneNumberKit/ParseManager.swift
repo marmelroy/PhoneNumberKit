@@ -60,7 +60,7 @@ final class ParseManager {
         if countryCode == 0 {
             countryCode = regionMetadata.countryCode
         }
-        // Nomralized number (5)
+        // Normalized number (5)
         let normalizedNationalNumber = self.parser.normalizePhoneNumber(nationalNumber)
         nationalNumber = normalizedNationalNumber
 
@@ -115,8 +115,8 @@ final class ParseManager {
             queue.async(group: group) {
                 [weak self] in
                 do {
-                    if let phoneNumebr = try self?.parse(numberString, withRegion: region, ignoreType: ignoreType) {
-                        multiParseArray.append(phoneNumebr)
+                    if let phoneNumber = try self?.parse(numberString, withRegion: region, ignoreType: ignoreType) {
+                        multiParseArray.append(phoneNumber)
                     } else if shouldReturnFailedEmptyNumbers {
                         multiParseArray.append(PhoneNumber.notPhoneNumber())
                     }

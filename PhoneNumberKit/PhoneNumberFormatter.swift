@@ -108,7 +108,7 @@ extension PhoneNumberFormatter {
         repeat {
             char = text.character(at: cursorEnd) // should work even if char is start of compound sequence
             cursorEnd += 1
-            // We considere only digit as other caracters may be inserted by the formatter (especially spaces)
+            // We consider only digit as other characters may be inserted by the formatter (especially spaces)
         } while !char.isDigit() && cursorEnd < text.length
 
         guard cursorEnd < text.length else {
