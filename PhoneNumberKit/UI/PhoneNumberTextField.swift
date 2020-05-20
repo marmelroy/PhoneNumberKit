@@ -492,7 +492,8 @@ extension PhoneNumberTextField: CountryCodePickerDelegate {
         updateFlag()
         updatePlaceholder()
 
-        if let nav = containingViewController?.navigationController, !PhoneNumberKit.CountryCodePicker.forceModalPresentation {
+        if !PhoneNumberKit.CountryCodePicker.forceModalPresentation,
+            let nav = containingViewController?.navigationController, !PhoneNumberKit.CountryCodePicker.forceModalPresentation {
             nav.popViewController(animated: true)
         } else {
             containingViewController?.dismiss(animated: true)
