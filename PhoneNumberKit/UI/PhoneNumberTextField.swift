@@ -486,12 +486,23 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
 extension PhoneNumberTextField: CountryCodePickerDelegate {
 
     func countryCodePickerViewControllerDidPickCountry(_ country: CountryCodePickerViewController.Country) {
-        text = isEditing ? "+" + country.prefix : ""
+        var couldSwitchPrefix = false
+        if let nn = phoneNumber?.nationalNumber {
+            couldSwitchPrefix = true
+            self.text = partialFormatter.formatPartial("+\(country.prefix)\(nn)")
+        }
+        if let text = text, let nn = try? phoneNumberKit.parse(text, withRegion: country.code).nationalNumber, couldSwitchPrefix == false {
+            couldSwitchPrefix = true
+            self.text = partialFormatter.formatPartial("+\(country.prefix)\(nn)")
+        }
+        if couldSwitchPrefix == false {
+            text = isEditing ? "+\(country.prefix)" : ""
+        }
         _defaultRegion = country.code
         partialFormatter.defaultRegion = country.code
         updateFlag()
         updatePlaceholder()
-
+        
         if let nav = containingViewController?.navigationController, !PhoneNumberKit.CountryCodePicker.forceModalPresentation {
             nav.popViewController(animated: true)
         } else {
