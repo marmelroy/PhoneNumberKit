@@ -50,7 +50,9 @@ final class MetadataManager {
             if let jsonData = jsonData, let metadata: PhoneNumberMetadata = try? jsonDecoder.decode(PhoneNumberMetadata.self, from: jsonData) {
                 territoryArray = metadata.territories
             }
-        } catch {}
+        } catch {
+            debugPrint("ERROR: Unable to load PhoneNumberMetadata.json resource: \(error.localizedDescription)")
+        }
         return territoryArray
     }
 
