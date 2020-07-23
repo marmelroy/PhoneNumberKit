@@ -53,7 +53,9 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
                 please override defaultRegion in a subclass instead.
             """
         )
-        set {}
+        set {
+            self.partialFormatter.defaultRegion = newValue
+        }
     }
 
     public var withPrefix: Bool = true {
