@@ -15,7 +15,8 @@ let package = Package(
                 exclude: ["Resources/Original",
                           "Resources/README.md",
                           "Resources/update.sh",
-                          "Info.plist"],
+                          "Info.plist", 
+                          "Bundle+Resources.swift"],
                 resources: [
                     .process("Resources/PhoneNumberMetadata.json")
                 ]),
