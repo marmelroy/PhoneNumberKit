@@ -417,4 +417,15 @@ class PhoneNumberKitTests: XCTestCase {
         }
         XCTAssertEqual(self.phoneNumberKit.getRegionCode(of: phoneNumber), "IT")
     }
+    
+    // In the case of multiple
+    // countries sharing a calling code, the one
+    // indicated with "isMainCountryForCode" in the metadata should be first.
+    func testGetRegionCodeForTollFreeFromUS() {
+        guard let phoneNumber = try? phoneNumberKit.parse("+1 888 579 4458") else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(self.phoneNumberKit.getRegionCode(of: phoneNumber), "US")
+    }
 }
