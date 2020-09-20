@@ -34,7 +34,6 @@ if [ "$MODE" = "examples" ]; then
 
     for example in examples/*/; do
         echo "Building $example."
-        pod install --project-directory=$example
         xcodebuild \
             -workspace "${example}Sample.xcworkspace" \
             -scheme Sample \
