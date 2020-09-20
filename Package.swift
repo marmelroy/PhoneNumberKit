@@ -1,4 +1,4 @@
-// swift-tools-version:5.0
+// swift-tools-version:5.3
 
 import PackageDescription
 
@@ -8,7 +8,19 @@ let package = Package(
         .library(name: "PhoneNumberKit", targets: ["PhoneNumberKit"])
     ],
     targets: [
-        .target(name: "PhoneNumberKit", path: "PhoneNumberKit", exclude: []),
-        .testTarget(name: "PhoneNumberKitTests", dependencies: ["PhoneNumberKit"], path: "PhoneNumberKitTests")
+        .target(name: "PhoneNumberKit",
+                path: "PhoneNumberKit",
+                exclude: ["Resources/Original",
+                         "Resources/README.md",
+                         "Resources/update.sh",
+                         "Info.plist"],
+                sources: nil,
+                resources: [
+                    .process("Resources/PhoneNumberMetadata.json")
+                ]),
+        .testTarget(name: "PhoneNumberKitTests",
+                    dependencies: ["PhoneNumberKit"],
+                    path: "PhoneNumberKitTests",
+                    exclude: ["Info.plist"])
     ]
 )
