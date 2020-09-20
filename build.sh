@@ -35,7 +35,7 @@ if [ "$MODE" = "examples" ]; then
     for example in examples/*/; do
         echo "Building $example."
         xcodebuild \
-            -workspace "${example}Sample.xcworkspace" \
+            -project "${example}Sample.xcodeproj" \
             -scheme Sample \
             -sdk "$SDK" \
             -destination "$PLATFORM" \
