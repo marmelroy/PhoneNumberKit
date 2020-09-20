@@ -120,6 +120,26 @@ You can access the metadata powering PhoneNumberKit yourself, this enables you t
 phoneNumberKit.metadata(for: "AU")?.mobile?.exampleNumber // 412345678
 ```
 
+### [Preferrred] Setting up with [Swift Package Manager](https://swiftpm.co/?query=PhoneNumberKit)
+
+The [Swift Package Manager](https://swift.org/package-manager/) is now the preferred tool for distributing PhoneNumberKit. 
+
+From Xcode 11+ :
+
+1. Select File > Swift Packages > Add Package Dependency. Enter `https://github.com/marmelroy/PhoneNumberKit.git` in the "Choose Package Repository" dialog.
+2. In the next page, specify the version resolving rule as "Up to Next Major" with "3.3.0".
+3. After Xcode checked out the source and resolving the version, you can choose the "PhoneNumberKit" library and add it to your app target.
+
+For more info, read [Adding Package Dependencies to Your App](https://developer.apple.com/documentation/xcode/adding_package_dependencies_to_your_app) from Apple.
+
+Alternatively, you can also add PhoneNumberKit to your `Package.swift` file:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/marmelroy/PhoneNumberKit", .upToNextMajor(from: "3.3.0"))
+]
+```
+
 ### Setting up with Carthage
 
 [Carthage](https://github.com/Carthage/Carthage) is a decentralized dependency manager that automates the process of adding frameworks to your Cocoa application.
@@ -143,8 +163,3 @@ github "marmelroy/PhoneNumberKit"
 source 'https://github.com/CocoaPods/Specs.git'
 pod 'PhoneNumberKit', '~> 3.3'
 ```
-
-### Setting up with [Swift Package Manager](https://swiftpm.co/?query=PhoneNumberKit)
-
-As of swift 5.3, Swift Package Manager does support resources bundled with Swift packages.
-Becuase of this, you no longer need to manually copy `PhoneNumberMetadata.json` into your project.
