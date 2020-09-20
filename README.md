@@ -5,10 +5,8 @@
 
 # PhoneNumberKit
 
-Swift 5.0 framework for parsing, formatting and validating international phone numbers.
+Swift 5.3 framework for parsing, formatting and validating international phone numbers.
 Inspired by Google's libphonenumber.
-
-[Migrating from PhoneNumberKit 0.x? See the migration guide.](https://github.com/marmelroy/PhoneNumberKit/blob/master/Documentation/OXMIGRATIONGUIDE.md)
 
 ## Features
 
@@ -143,7 +141,7 @@ github "marmelroy/PhoneNumberKit"
 
 ```ruby
 source 'https://github.com/CocoaPods/Specs.git'
-pod 'PhoneNumberKit', '~> 3.1'
+pod 'PhoneNumberKit', '~> 3.3'
 ```
 
 ### Setting up with [Swift Package Manager](https://swiftpm.co/?query=PhoneNumberKit)
