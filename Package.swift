@@ -1,9 +1,11 @@
 // swift-tools-version:5.3
-
 import PackageDescription
 
 let package = Package(
     name: "PhoneNumberKit",
+    platforms: [
+        .iOS(.v9), .macOS(.v10_10), .tvOS(.v9), .watchOS(.v2)
+    ],
     products: [
         .library(name: "PhoneNumberKit", targets: ["PhoneNumberKit"]),
         .library(name: "PhoneNumberKit-Static", type: .static, targets: ["PhoneNumberKit"]),
