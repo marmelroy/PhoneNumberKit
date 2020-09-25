@@ -136,7 +136,7 @@ Alternatively, you can also add PhoneNumberKit to your `Package.swift` file:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/marmelroy/PhoneNumberKit", .upToNextMajor(from: "3.3.0"))
+    .package(url: "https://github.com/marmelroy/PhoneNumberKit", .upToNextMajor(from: "3.3.1"))
 ]
 ```
 
