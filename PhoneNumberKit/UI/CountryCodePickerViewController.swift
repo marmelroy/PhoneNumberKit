@@ -214,7 +214,7 @@ public extension CountryCodePickerViewController {
         public var name: String
         public var prefix: String
 
-        init?(for countryCode: String, with phoneNumberKit: PhoneNumberKit) {
+        public init?(for countryCode: String, with phoneNumberKit: PhoneNumberKit) {
             let flagBase = UnicodeScalar("🇦").value - UnicodeScalar("A").value
             guard
                 let name = (Locale.current as NSLocale).localizedString(forCountryCode: countryCode),
