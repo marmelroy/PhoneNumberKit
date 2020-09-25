@@ -471,7 +471,13 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     @available (iOS 10.0, tvOS 10.0, *)
     open func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
         updateTextFieldDidEndEditing(textField)
-        self._delegate?.textFieldDidEndEditing?(textField, reason: reason)
+        if let _delegate = _delegate {
+            if (_delegate.responds(to: #selector(textFieldDidEndEditing(_:reason:)))) {
+                _delegate.textFieldDidEndEditing?(textField, reason: reason)
+            } else {
+                _delegate.textFieldDidEndEditing?(textField)
+            }
+        }
     }
 
     open func textFieldShouldClear(_ textField: UITextField) -> Bool {
