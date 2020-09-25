@@ -463,7 +463,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         return self._delegate?.textFieldShouldEndEditing?(textField) ?? true
     }
 
-    open func textFieldDidEndEditing(_ textField: UITextField) {
+    open func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
         if self.withExamplePlaceholder, self.withPrefix, let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description,
             let text = textField.text,
             text == internationalPrefix(for: countryCode) {
@@ -472,6 +472,8 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             self.updateFlag()
             self.updatePlaceholder()
         }
+
+        self._delegate?.textFieldDidEndEditing?(textField, reason: reason)
         self._delegate?.textFieldDidEndEditing?(textField)
     }
 
