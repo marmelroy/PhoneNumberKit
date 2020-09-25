@@ -33,7 +33,7 @@ Pod::Spec.new do |s|
   s.ios.frameworks = 'CoreTelephony'
   s.osx.frameworks = 'CoreTelephony'
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '9.0'
   s.osx.deployment_target = '10.10'
   s.tvos.deployment_target = '9.0'
   s.watchos.deployment_target = '2.0'
@@ -42,7 +42,7 @@ Pod::Spec.new do |s|
   s.swift_version = '5.0'
 
   s.subspec 'PhoneNumberKitCore' do |core|
-    core.ios.deployment_target = '8.0'
+    core.ios.deployment_target = '9.0'
     core.osx.deployment_target = '10.10'
     core.tvos.deployment_target = '9.0'
     core.watchos.deployment_target = '2.0'
@@ -52,7 +52,7 @@ Pod::Spec.new do |s|
 
   s.subspec 'UIKit' do |ui|
     ui.dependency 'PhoneNumberKit/PhoneNumberKitCore'
-    ui.ios.deployment_target = '8.0'
+    ui.ios.deployment_target = '9.0'
     ui.source_files = 'PhoneNumberKit/UI/'
   end
 
