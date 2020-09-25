@@ -463,18 +463,15 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         return self._delegate?.textFieldShouldEndEditing?(textField) ?? true
     }
 
-    open func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
-        if self.withExamplePlaceholder, self.withPrefix, let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description,
-            let text = textField.text,
-            text == internationalPrefix(for: countryCode) {
-            textField.text = ""
-            sendActions(for: .editingChanged)
-            self.updateFlag()
-            self.updatePlaceholder()
-        }
-
-        self._delegate?.textFieldDidEndEditing?(textField, reason: reason)
+    open func textFieldDidEndEditing(_ textField: UITextField) {
+        updateTextFieldDidEndEditing(textField)
         self._delegate?.textFieldDidEndEditing?(textField)
+    }
+
+    @available (iOS 10.0, tvOS 10.0, *)
+    open func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
+        updateTextFieldDidEndEditing(textField)
+        self._delegate?.textFieldDidEndEditing?(textField, reason: reason)
     }
 
     open func textFieldShouldClear(_ textField: UITextField) -> Bool {
@@ -483,6 +480,17 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
 
     open func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         return self._delegate?.textFieldShouldReturn?(textField) ?? true
+    }
+
+    private func updateTextFieldDidEndEditing(_ textField: UITextField) {
+        if self.withExamplePlaceholder, self.withPrefix, let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description,
+            let text = textField.text,
+            text == internationalPrefix(for: countryCode) {
+            textField.text = ""
+            sendActions(for: .editingChanged)
+            self.updateFlag()
+            self.updatePlaceholder()
+        }
     }
 }
 
