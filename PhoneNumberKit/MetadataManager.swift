@@ -3,7 +3,7 @@
 //  PhoneNumberKit
 //
 //  Created by Roy Marmelstein on 03/10/2015.
-//  Copyright © 2015 Roy Marmelstein. All rights reserved.
+//  Copyright © 2020 Roy Marmelstein. All rights reserved.
 //
 
 import Foundation
@@ -23,7 +23,13 @@ final class MetadataManager {
         self.territories = self.populateTerritories(metadataCallback: metadataCallback)
         for item in self.territories {
             var currentTerritories: [MetadataTerritory] = self.territoriesByCode[item.countryCode] ?? [MetadataTerritory]()
-            currentTerritories.append(item)
+            // In the case of multiple countries sharing a calling code, such as the NANPA countries,
+            // the one indicated with "isMainCountryForCode" in the metadata should be first.
+            if item.mainCountryForCode {
+                currentTerritories.insert(item, at: 0)
+            } else {
+                currentTerritories.append(item)
+            }
             self.territoriesByCode[item.countryCode] = currentTerritories
             if self.mainTerritoryByCode[item.countryCode] == nil || item.mainCountryForCode == true {
                 self.mainTerritoryByCode[item.countryCode] = item
@@ -50,7 +56,9 @@ final class MetadataManager {
             if let jsonData = jsonData, let metadata: PhoneNumberMetadata = try? jsonDecoder.decode(PhoneNumberMetadata.self, from: jsonData) {
                 territoryArray = metadata.territories
             }
-        } catch {}
+        } catch {
+            debugPrint("ERROR: Unable to load PhoneNumberMetadata.json resource: \(error.localizedDescription)")
+        }
         return territoryArray
     }
 

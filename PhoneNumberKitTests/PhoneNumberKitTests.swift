@@ -3,7 +3,7 @@
 //  PhoneNumberKitTests
 //
 //  Created by Roy Marmelstein on 26/09/2015.
-//  Copyright © 2015 Roy Marmelstein. All rights reserved.
+//  Copyright © 2020 Roy Marmelstein. All rights reserved.
 //
 
 @testable import PhoneNumberKit
@@ -416,5 +416,16 @@ class PhoneNumberKitTests: XCTestCase {
             return
         }
         XCTAssertEqual(self.phoneNumberKit.getRegionCode(of: phoneNumber), "IT")
+    }
+    
+    // In the case of multiple
+    // countries sharing a calling code, the one
+    // indicated with "isMainCountryForCode" in the metadata should be first.
+    func testGetRegionCodeForTollFreeFromUS() {
+        guard let phoneNumber = try? phoneNumberKit.parse("+1 888 579 4458") else {
+            XCTFail()
+            return
+        }
+        XCTAssertEqual(self.phoneNumberKit.getRegionCode(of: phoneNumber), "US")
     }
 }
