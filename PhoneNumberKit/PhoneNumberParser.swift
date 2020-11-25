@@ -267,7 +267,12 @@ final class PhoneNumberParser {
         guard let possibleNationalPrefix = metadata.nationalPrefixForParsing else {
             return
         }
+        #if canImport(ObjectiveC)
         let prefixPattern = String(format: "^(?:%@)", possibleNationalPrefix)
+        #else
+        // FIX: String format with %@ doesn't work without ObjectiveC (e.g. Linux)
+        let prefixPattern = "^(?:\(possibleNationalPrefix))"
+        #endif
         do {
             let matches = try regex.regexMatches(prefixPattern, string: number)
             if let firstMatch = matches.first {

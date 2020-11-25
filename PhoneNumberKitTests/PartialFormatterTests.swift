@@ -6,6 +6,7 @@
 //  Copyright © 2016 Roy Marmelstein. All rights reserved.
 //
 
+#if canImport(ObjectiveC)
 @testable import PhoneNumberKit
 import XCTest
 
@@ -595,3 +596,4 @@ class PartialFormatterTests: XCTestCase {
     }
     
 }
+#endif
