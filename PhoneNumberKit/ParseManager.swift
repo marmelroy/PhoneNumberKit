@@ -50,51 +50,74 @@ final class ParseManager {
         guard var regionMetadata = metadataManager.territoriesByCountry[region] else {
             throw PhoneNumberError.invalidCountryCode
         }
-        var countryCode: UInt64 = 0
+        let countryCode: UInt64
         do {
             countryCode = try self.parser.extractCountryCode(nationalNumber, nationalNumber: &nationalNumber, metadata: regionMetadata)
         } catch {
             let plusRemovedNumberString = regexManager.replaceStringByRegex(PhoneNumberPatterns.leadingPlusCharsPattern, string: nationalNumber as String)
             countryCode = try self.parser.extractCountryCode(plusRemovedNumberString, nationalNumber: &nationalNumber, metadata: regionMetadata)
         }
-        if countryCode == 0 {
-            countryCode = regionMetadata.countryCode
-        }
-        // Normalized number (5)
-        let normalizedNationalNumber = self.parser.normalizePhoneNumber(nationalNumber)
-        nationalNumber = normalizedNationalNumber
+                        
+        func phoneNumber(from nationalNumber: String, using regionMetadata: MetadataTerritory, countryCode: UInt64) throws -> PhoneNumber? {
+            var nationalNumber = nationalNumber
+            var regionMetadata = regionMetadata
+            
+            // National Prefix Strip (7)
+            self.parser.stripNationalPrefix(&nationalNumber, metadata: regionMetadata)
 
+            // Test number against general number description for correct metadata (8)
+            if let generalNumberDesc = regionMetadata.generalDesc, regexManager.hasValue(generalNumberDesc.nationalNumberPattern) == false || parser.isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc) == false {
+                return nil
+            }
+            // Finalize remaining parameters and create phone number object (9)
+            let leadingZero = nationalNumber.hasPrefix("0")
+            guard let finalNationalNumber = UInt64(nationalNumber) else {
+                throw PhoneNumberError.notANumber
+            }
+
+            // Check if the number if of a known type (10)
+            var type: PhoneNumberType = .unknown
+            if ignoreType == false {
+                if let regionCode = getRegionCode(of: finalNationalNumber, countryCode: countryCode, leadingZero: leadingZero), let foundMetadata = metadataManager.territoriesByCountry[regionCode] {
+                    regionMetadata = foundMetadata
+                }
+                type = self.parser.checkNumberType(String(nationalNumber), metadata: regionMetadata, leadingZero: leadingZero)
+                if type == .unknown {
+                    throw PhoneNumberError.unknownType
+                }
+            }
+
+            return PhoneNumber(numberString: numberString, countryCode: countryCode, leadingZero: leadingZero, nationalNumber: finalNationalNumber, numberExtension: numberExtension, type: type, regionID: regionMetadata.codeID)
+        }
+        
+        // Normalized number (5)
+        nationalNumber = self.parser.normalizePhoneNumber(nationalNumber)
+
+        if countryCode == 0 {
+            if let result = try phoneNumber(from: nationalNumber, using: regionMetadata, countryCode: regionMetadata.countryCode) {
+                return result
+            }
+            throw PhoneNumberError.notANumber
+        }
+        
         // If country code is not default, grab correct metadata (6)
         if countryCode != regionMetadata.countryCode, let countryMetadata = metadataManager.mainTerritoryByCode[countryCode] {
             regionMetadata = countryMetadata
         }
-        // National Prefix Strip (7)
-        self.parser.stripNationalPrefix(&nationalNumber, metadata: regionMetadata)
 
-        // Test number against general number description for correct metadata (8)
-        if let generalNumberDesc = regionMetadata.generalDesc, regexManager.hasValue(generalNumberDesc.nationalNumberPattern) == false || parser.isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc) == false {
-            throw PhoneNumberError.notANumber
-        }
-        // Finalize remaining parameters and create phone number object (9)
-        let leadingZero = nationalNumber.hasPrefix("0")
-        guard let finalNationalNumber = UInt64(nationalNumber) else {
-            throw PhoneNumberError.notANumber
+        if let result = try phoneNumber(from: nationalNumber, using: regionMetadata, countryCode: countryCode) {
+            return result
         }
 
-        // Check if the number if of a known type (10)
-        var type: PhoneNumberType = .unknown
-        if ignoreType == false {
-            if let regionCode = getRegionCode(of: finalNationalNumber, countryCode: countryCode, leadingZero: leadingZero), let foundMetadata = metadataManager.territoriesByCountry[regionCode] {
-                regionMetadata = foundMetadata
-            }
-            type = self.parser.checkNumberType(String(nationalNumber), metadata: regionMetadata, leadingZero: leadingZero)
-            if type == .unknown {
-                throw PhoneNumberError.unknownType
+        if let metadataList = metadataManager.filterTerritories(byCode: countryCode) {
+            for metadata in metadataList where regionMetadata.codeID != metadata.codeID {
+                if let result = try phoneNumber(from: nationalNumber, using: metadata, countryCode: countryCode) {
+                    return result
+                }
             }
         }
-
-        let phoneNumber = PhoneNumber(numberString: numberString, countryCode: countryCode, leadingZero: leadingZero, nationalNumber: finalNationalNumber, numberExtension: numberExtension, type: type, regionID: regionMetadata.codeID)
-        return phoneNumber
+                
+        throw PhoneNumberError.notANumber
     }
 
     // Parse task
