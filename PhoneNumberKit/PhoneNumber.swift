@@ -3,7 +3,7 @@
 //  PhoneNumberKit
 //
 //  Created by Roy Marmelstein on 26/09/2015.
-//  Copyright © 2020 Roy Marmelstein. All rights reserved.
+//  Copyright © 2021 Roy Marmelstein. All rights reserved.
 //
 
 import Foundation
