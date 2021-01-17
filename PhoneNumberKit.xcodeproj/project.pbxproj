@@ -728,7 +728,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				VALID_ARCHS = "armv7s arm64 arm64e x86_64";
+				VALID_ARCHS = "armv7 armv7s arm64 arm64e x86_64";
 			};
 			name = Debug;
 		};
@@ -751,7 +751,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				VALID_ARCHS = "armv7s arm64 arm64e x86_64";
+				VALID_ARCHS = "armv7 armv7s arm64 arm64e x86_64";
 			};
 			name = Release;
 		};
