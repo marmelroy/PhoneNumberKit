@@ -127,7 +127,7 @@ public final class PhoneNumberKit: NSObject {
     ///
     /// - returns: ISO 639 compliant region code string.
     public func mainCountry(forCode countryCode: UInt64) -> String? {
-        let country = self.metadataManager.mainTerritory(forCode: countryCode)
+        let country = self.metadataManager.mainTerritory(withCountryID: nil, withCode: countryCode)
         return country?.codeID
     }
 
