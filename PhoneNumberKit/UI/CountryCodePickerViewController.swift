@@ -4,7 +4,7 @@
 import UIKit
 
 @available(iOS 11.0, *)
-protocol CountryCodePickerDelegate: class {
+public protocol CountryCodePickerDelegate: class {
     func countryCodePickerViewControllerDidPickCountry(_ country: CountryCodePickerViewController.Country)
 }
 
@@ -59,7 +59,7 @@ public class CountryCodePickerViewController: UITableViewController {
 
     var filteredCountries: [Country] = []
 
-    weak var delegate: CountryCodePickerDelegate?
+    public weak var delegate: CountryCodePickerDelegate?
 
     lazy var cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(dismissAnimated))
 
@@ -206,15 +206,15 @@ extension CountryCodePickerViewController: UISearchResultsUpdating {
 // MARK: Types
 
 @available(iOS 11.0, *)
-internal extension CountryCodePickerViewController {
+public extension CountryCodePickerViewController {
 
     struct Country {
-        var code: String
-        var flag: String
-        var name: String
-        var prefix: String
+        public var code: String
+        public var flag: String
+        public var name: String
+        public var prefix: String
 
-        init?(for countryCode: String, with phoneNumberKit: PhoneNumberKit) {
+        public init?(for countryCode: String, with phoneNumberKit: PhoneNumberKit) {
             let flagBase = UnicodeScalar("🇦").value - UnicodeScalar("A").value
             guard
                 let name = (Locale.current as NSLocale).localizedString(forCountryCode: countryCode),

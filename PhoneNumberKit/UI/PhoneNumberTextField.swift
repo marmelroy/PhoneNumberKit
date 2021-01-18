@@ -3,7 +3,7 @@
 //  PhoneNumberKit
 //
 //  Created by Roy Marmelstein on 07/11/2015.
-//  Copyright © 2020 Roy Marmelstein. All rights reserved.
+//  Copyright © 2021 Roy Marmelstein. All rights reserved.
 //
 
 #if canImport(UIKit)
@@ -395,7 +395,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
 
     open func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         // This allows for the case when a user autocompletes a phone number:
-        if range == NSRange(location: 0, length: 0), string == " " {
+        if range == NSRange(location: 0, length: 0) && string.isBlank {
             return true
         }
 
@@ -503,7 +503,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
 @available(iOS 11.0, *)
 extension PhoneNumberTextField: CountryCodePickerDelegate {
 
-    func countryCodePickerViewControllerDidPickCountry(_ country: CountryCodePickerViewController.Country) {
+    open func countryCodePickerViewControllerDidPickCountry(_ country: CountryCodePickerViewController.Country) {
         var couldSwitchPrefix = false
         if let nn = phoneNumber?.nationalNumber {
             couldSwitchPrefix = true
@@ -521,6 +521,7 @@ extension PhoneNumberTextField: CountryCodePickerDelegate {
         updateFlag()
         updatePlaceholder()
         
+
         if let nav = containingViewController?.navigationController, !PhoneNumberKit.CountryCodePicker.forceModalPresentation {
             nav.popViewController(animated: true)
         } else {

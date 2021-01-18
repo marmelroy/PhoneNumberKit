@@ -28,12 +28,22 @@ extension String {
 }
 
 extension NSRegularExpression {
+    #if canImport(ObjectiveC)
     func enumerateMatches(in string: String, options: NSRegularExpression.MatchingOptions = [], range: Range<String.Index>? = nil, using block: (NSTextCheckingResult?, NSRegularExpression.MatchingFlags, UnsafeMutablePointer<ObjCBool>) -> Swift.Void) {
         let range = range ?? string.startIndex..<string.endIndex
         let nsRange = string.nsRange(from: range)
 
         self.enumerateMatches(in: string, options: options, range: nsRange, using: block)
     }
+    #else
+    // FIX: block needs to be @escaping
+    func enumerateMatches(in string: String, options: NSRegularExpression.MatchingOptions = [], range: Range<String.Index>? = nil, using block: @escaping (NSTextCheckingResult?, NSRegularExpression.MatchingFlags, UnsafeMutablePointer<ObjCBool>) -> Swift.Void) {
+        let range = range ?? string.startIndex..<string.endIndex
+        let nsRange = string.nsRange(from: range)
+
+        self.enumerateMatches(in: string, options: options, range: nsRange, using: block)
+    }
+    #endif
 
     func matches(in string: String, options: NSRegularExpression.MatchingOptions = [], range: Range<String.Index>? = nil) -> [NSTextCheckingResult] {
         let range = range ?? string.startIndex..<string.endIndex

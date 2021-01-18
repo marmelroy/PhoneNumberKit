@@ -127,7 +127,7 @@ The [Swift Package Manager](https://swift.org/package-manager/) is now the prefe
 From Xcode 11+ :
 
 1. Select File > Swift Packages > Add Package Dependency. Enter `https://github.com/marmelroy/PhoneNumberKit.git` in the "Choose Package Repository" dialog.
-2. In the next page, specify the version resolving rule as "Up to Next Major" with "3.3.0".
+2. In the next page, specify the version resolving rule as "Up to Next Major" with "3.3.3".
 3. After Xcode checked out the source and resolving the version, you can choose the "PhoneNumberKit" library and add it to your app target.
 
 For more info, read [Adding Package Dependencies to Your App](https://developer.apple.com/documentation/xcode/adding_package_dependencies_to_your_app) from Apple.
@@ -136,7 +136,7 @@ Alternatively, you can also add PhoneNumberKit to your `Package.swift` file:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/marmelroy/PhoneNumberKit", .upToNextMajor(from: "3.3.1"))
+    .package(url: "https://github.com/marmelroy/PhoneNumberKit", .upToNextMajor(from: "3.3.3"))
 ]
 ```
 

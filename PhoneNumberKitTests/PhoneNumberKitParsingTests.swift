@@ -3,7 +3,7 @@
 //  PhoneNumberKit
 //
 //  Created by Roy Marmelstein on 29/10/2015.
-//  Copyright © 2020 Roy Marmelstein. All rights reserved.
+//  Copyright © 2021 Roy Marmelstein. All rights reserved.
 //
 
 import Foundation
@@ -56,7 +56,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
         XCTAssertNil(mobile.possibleNumberPattern)
         let personalNumber = sut.personalNumber!
         XCTAssertEqual(personalNumber.exampleNumber, "5002345678")
-        XCTAssertEqual(personalNumber.nationalNumberPattern, "52(?:35(?:[02-46-9]\\d|1[02-9]|5[0-46-9])|45(?:[034]\\d|1[02-9]|2[024-9]|5[0-46-9]))\\d{4}|52(?:3[2-46-9]|4[2-4])(?:[02-9]\\d|1[02-9])\\d{4}|5(?:00|2[12]|33|44|66|77|88)[2-9]\\d{6}")
+        XCTAssertEqual(personalNumber.nationalNumberPattern, "52(?:3(?:[2-46-9][02-9]\\d|5(?:[02-46-9]\\d|5[0-46-9]))|4(?:[2-478][02-9]\\d|5(?:[034]\\d|2[024-9]|5[0-46-9])|6(?:0[1-9]|[2-9]\\d)|9(?:[05-9]\\d|2[0-5]|49)))\\d{4}|52[34][2-9]1[02-9]\\d{4}|5(?:00|2[12]|33|44|66|77|88)[2-9]\\d{6}")
         XCTAssertNil(personalNumber.possibleNumberPattern)
         let premiumRate = sut.premiumRate!
         XCTAssertEqual(premiumRate.exampleNumber, "9002345678")

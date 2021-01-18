@@ -3,7 +3,7 @@
 //  PhoneNumberKitTests
 //
 //  Created by Roy Marmelstein on 26/09/2015.
-//  Copyright © 2020 Roy Marmelstein. All rights reserved.
+//  Copyright © 2021 Roy Marmelstein. All rights reserved.
 //
 
 @testable import PhoneNumberKit
@@ -427,5 +427,41 @@ class PhoneNumberKitTests: XCTestCase {
             return
         }
         XCTAssertEqual(self.phoneNumberKit.getRegionCode(of: phoneNumber), "US")
+    }
+    
+    // RU number with KZ country code
+    func testValidRUNumberWithKZRegion() {
+        let testNumber = "+7 916 195 55 58"
+        do {
+            let phoneNumber = try phoneNumberKit.parse(testNumber, withRegion: "KZ")
+            XCTAssertEqual(self.phoneNumberKit.format(phoneNumber, toType: .e164), "+79161955558")
+            XCTAssertEqual(phoneNumber.countryCode, 7)
+            XCTAssertEqual(phoneNumber.nationalNumber, 9161955558)
+            XCTAssertEqual(phoneNumber.leadingZero, false)
+            XCTAssertEqual(phoneNumber.regionID, "RU")
+        } catch {
+            XCTFail()
+        }
+    }
+    
+    func testValidKZNumbersWithInternationalPrefix() {
+        let numbers = ["+7 (777)110-85-31", "+77777056982", "+7(701)977-75-05"]
+        numbers.forEach { XCTAssertTrue(phoneNumberKit.isValidPhoneNumber($0, withRegion: "KZ")) }
+        numbers.forEach { XCTAssertTrue(phoneNumberKit.isValidPhoneNumber($0)) }
+        numbers.forEach { XCTAssertTrue(phoneNumberKit.isValidPhoneNumber($0, withRegion: "RU")) }
+    }
+
+    func testValidKZNumbersWithoutInternationalPrefix() {
+        let numbers = ["(777)110-85-31", "7777056982", "(701)977-75-05"]
+        numbers.forEach { XCTAssertTrue(phoneNumberKit.isValidPhoneNumber($0, withRegion: "KZ")) }
+        numbers.forEach {
+            do {
+                let phoneNumber = try phoneNumberKit.parse($0, withRegion: "RU")
+                XCTAssertEqual(phoneNumber.countryCode, 7)
+                XCTAssertEqual(phoneNumber.regionID, "KZ")
+            } catch {
+                XCTFail()
+            }
+        }
     }
 }
