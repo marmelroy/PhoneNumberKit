@@ -131,6 +131,8 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         get { _withDefaultPickerUI }
         set { _withDefaultPickerUI = newValue }
     }
+    
+    public var modalPresentationStyle: UIModalPresentationStyle?
 
     public var isPartialFormatterEnabled = true
 
@@ -321,6 +323,9 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             nav.pushViewController(vc, animated: true)
         } else {
             let nav = UINavigationController(rootViewController: vc)
+            if modalPresentationStyle != nil {
+                nav.modalPresentationStyle = modalPresentationStyle ?? .fullScreen
+            }
             containingViewController?.present(nav, animated: true)
         }
     }
