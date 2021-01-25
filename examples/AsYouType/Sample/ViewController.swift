@@ -26,6 +26,7 @@ class ViewController: UIViewController, CNContactPickerDelegate {
             PhoneNumberKit.CountryCodePicker.commonCountryCodes = ["US", "CA", "MX", "AU", "GB", "DE"]
         }
         self.textField.becomeFirstResponder()
+        self.textField.
         self.withPrefixSwitch.isOn = self.textField.withPrefix
         self.withFlagSwitch.isOn = self.textField.withFlag
         self.withExamplePlaceholderSwitch.isOn = self.textField.withExamplePlaceholder

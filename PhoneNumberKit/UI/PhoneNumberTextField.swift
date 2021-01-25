@@ -324,7 +324,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         } else {
             let nav = UINavigationController(rootViewController: vc)
             if modalPresentationStyle != nil {
-                nav.modalPresentationStyle = modalPresentationStyle ?? .fullScreen
+                nav.modalPresentationStyle = modalPresentationStyle!
             }
             containingViewController?.present(nav, animated: true)
         }
