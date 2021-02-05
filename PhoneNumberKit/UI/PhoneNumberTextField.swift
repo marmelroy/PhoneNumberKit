@@ -284,6 +284,18 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             .joined()
 
         self.flagButton.setTitle(flag + " ", for: .normal)
+        self.flagButton.accessibilityLabel = NSLocalizedString(
+            "PhoneNumberKit.CountryCodePickerEntryButton.AccessibilityLabel",
+            value: "Select your country code",
+            comment: "Accessibility Label for Country Code Picker button")
+
+        if let countryName = Locale.autoupdatingCurrent.localizedString(forRegionCode: self.currentRegion) {
+            let selectedFormat = NSLocalizedString(
+                "PhoneNumberKit.CountryCodePickerEntryButton.AccessibilityHint",
+                value: "%@ selected",
+                comment: "Accessiblity hint for currently selected country code")
+            self.flagButton.accessibilityHint = String(format: selectedFormat, countryName)
+        }
         let fontSize = (font ?? UIFont.preferredFont(forTextStyle: .body)).pointSize
         self.flagButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize)
     }
