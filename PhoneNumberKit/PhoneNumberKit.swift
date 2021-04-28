@@ -21,9 +21,17 @@ public final class PhoneNumberKit: NSObject {
 
     // MARK: Lifecycle
 
-    public init(metadataCallback: @escaping MetadataCallback = PhoneNumberKit.defaultMetadataCallback) {
+    public init(metadataCallback: @escaping MetadataCallback) {
         self.metadataManager = MetadataManager(metadataCallback: metadataCallback)
         self.parseManager = ParseManager(metadataManager: self.metadataManager, regexManager: self.regexManager)
+        super.init()
+    }
+
+    public override init() {
+        let metadataCallback = PhoneNumberKit.defaultMetadataCallback
+        self.metadataManager = MetadataManager(metadataCallback: metadataCallback)
+        self.parseManager = ParseManager(metadataManager: self.metadataManager, regexManager: self.regexManager)
+        super.init()
     }
 
     // MARK: Parsing

@@ -46,6 +46,12 @@ open class PhoneNumberFormatter: Foundation.Formatter {
         super.init()
     }
 
+    public override init() {
+        self.phoneNumberKit = PhoneNumberKit()
+        self.partialFormatter = PartialFormatter(phoneNumberKit: self.phoneNumberKit, defaultRegion: PhoneNumberKit.defaultRegionCode(), withPrefix: true)
+        super.init()
+    }
+
     public required init?(coder aDecoder: NSCoder) {
         self.phoneNumberKit = PhoneNumberKit()
         self.partialFormatter = PartialFormatter(phoneNumberKit: self.phoneNumberKit, defaultRegion: self.defaultRegion, withPrefix: self.withPrefix)
