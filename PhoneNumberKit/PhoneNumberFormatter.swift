@@ -46,7 +46,7 @@ open class PhoneNumberFormatter: Foundation.Formatter {
         super.init()
     }
 
-    public override init() {
+    @objc public override dynamic init() {
         self.phoneNumberKit = PhoneNumberKit()
         self.partialFormatter = PartialFormatter(phoneNumberKit: self.phoneNumberKit, defaultRegion: PhoneNumberKit.defaultRegionCode(), withPrefix: true)
         super.init()

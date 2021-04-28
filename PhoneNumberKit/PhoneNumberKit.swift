@@ -27,7 +27,7 @@ public final class PhoneNumberKit: NSObject {
         super.init()
     }
 
-    public override init() {
+    @objc public override dynamic init() {
         let metadataCallback = PhoneNumberKit.defaultMetadataCallback
         self.metadataManager = MetadataManager(metadataCallback: metadataCallback)
         self.parseManager = ParseManager(metadataManager: self.metadataManager, regexManager: self.regexManager)
