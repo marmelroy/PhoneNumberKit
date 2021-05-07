@@ -4,7 +4,7 @@
 import UIKit
 
 @available(iOS 11.0, *)
-public protocol CountryCodePickerDelegate: class {
+public protocol CountryCodePickerDelegate: AnyObject {
     func countryCodePickerViewControllerDidPickCountry(_ country: CountryCodePickerViewController.Country)
 }
 
