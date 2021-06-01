@@ -4,7 +4,7 @@ import PackageDescription
 let package = Package(
     name: "PhoneNumberKit",
     platforms: [
-        .iOS(.v9), .macOS(.v10_10), .tvOS(.v9), .watchOS(.v2)
+        .iOS(.v9), .macOS(.v10_10), .tvOS(.v10), .watchOS(.v2)
     ],
     products: [
         .library(name: "PhoneNumberKit", targets: ["PhoneNumberKit"]),
