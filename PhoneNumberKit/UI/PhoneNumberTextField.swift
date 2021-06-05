@@ -219,7 +219,6 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
      */
     public convenience init(withPhoneNumberKit phoneNumberKit: PhoneNumberKit) {
         self.init(frame: .zero, phoneNumberKit: phoneNumberKit)
-        self.setup()
     }
 
     /**
