@@ -137,7 +137,7 @@ struct PhoneNumberPatterns {
 
     static let standaloneDigitPattern = "\\d(?=[^,}][^,}])"
 
-    static let nationalPrefixParsingPattern = "^(?:%@)"
+    static let nationalPrefixParsingPattern = "^/d(?:%@)"
 
     static let prefixSeparatorPattern = "[- ]"
 
