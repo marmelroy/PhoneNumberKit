@@ -86,7 +86,7 @@ public final class PartialFormatter {
                 nationalNumber = String(nationalNumber.dropLast(extra))
             }
         }
-
+        
         return nationalNumber
     }
 

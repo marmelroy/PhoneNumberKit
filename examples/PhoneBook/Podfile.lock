@@ -1,0 +1,21 @@
+PODS:
+  - PhoneNumberKit (3.3.3):
+    - PhoneNumberKit/PhoneNumberKitCore (= 3.3.3)
+    - PhoneNumberKit/UIKit (= 3.3.3)
+  - PhoneNumberKit/PhoneNumberKitCore (3.3.3)
+  - PhoneNumberKit/UIKit (3.3.3):
+    - PhoneNumberKit/PhoneNumberKitCore
+
+DEPENDENCIES:
+  - PhoneNumberKit (from `/Users/prasenjitdasgupta/Documents/Pod_Project/Git_Projects/PhoneNumberKit`)
+
+EXTERNAL SOURCES:
+  PhoneNumberKit:
+    :path: "/Users/prasenjitdasgupta/Documents/Pod_Project/Git_Projects/PhoneNumberKit"
+
+SPEC CHECKSUMS:
+  PhoneNumberKit: 4ce83273551c4d2ae10b7361162f4283dd02835f
+
+PODFILE CHECKSUM: 63c12cbc23213a0d75b357c01e0de3aa9d0df709
+
+COCOAPODS: 1.10.1

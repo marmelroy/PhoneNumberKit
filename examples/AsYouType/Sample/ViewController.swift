@@ -23,8 +23,9 @@ class ViewController: UIViewController, CNContactPickerDelegate {
 
         // Country picker is only available on >iOS 11.0
         if #available(iOS 11.0, *) {
-            PhoneNumberKit.CountryCodePicker.commonCountryCodes = ["US", "CA", "MX", "AU", "GB", "DE"]
+            PhoneNumberKit.CountryCodePicker.commonCountryCodes = ["IN","US", "CA", "MX", "AU", "GB", "DE", "RU"]
         }
+        //self.textField.isPartialFormatterEnabled = false
         self.textField.becomeFirstResponder()
         self.withPrefixSwitch.isOn = self.textField.withPrefix
         self.withFlagSwitch.isOn = self.textField.withFlag
@@ -36,10 +37,13 @@ class ViewController: UIViewController, CNContactPickerDelegate {
         if #available(iOS 13.0, *) {
             self.view.backgroundColor = .systemBackground
         }
+        
+        
     }
 
     @IBAction func didTapView(_ sender: Any) {
         self.textField.resignFirstResponder()
+        print(self.textField.isValidNumber ? "Valid" : "InValid")
     }
 
     @IBAction func withPrefixDidChange(_ sender: Any) {

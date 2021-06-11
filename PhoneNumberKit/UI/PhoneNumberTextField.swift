@@ -491,12 +491,14 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     private func updateTextFieldDidEndEditing(_ textField: UITextField) {
         if self.withExamplePlaceholder, self.withPrefix, let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description,
             let text = textField.text,
+            
             text == internationalPrefix(for: countryCode) {
             textField.text = ""
             sendActions(for: .editingChanged)
             self.updateFlag()
             self.updatePlaceholder()
         }
+        
     }
 }
 

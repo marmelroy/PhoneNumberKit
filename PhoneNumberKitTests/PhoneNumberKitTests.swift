@@ -434,9 +434,9 @@ class PhoneNumberKitTests: XCTestCase {
         let testNumber = "+7 916 195 55 58"
         do {
             let phoneNumber = try phoneNumberKit.parse(testNumber, withRegion: "KZ")
-            XCTAssertEqual(self.phoneNumberKit.format(phoneNumber, toType: .e164), "+79161955558")
+            XCTAssertEqual(self.phoneNumberKit.format(phoneNumber, toType: .e164), "+789161955558")
             XCTAssertEqual(phoneNumber.countryCode, 7)
-            XCTAssertEqual(phoneNumber.nationalNumber, 9161955558)
+            XCTAssertEqual(phoneNumber.nationalNumber, 89161955558)
             XCTAssertEqual(phoneNumber.leadingZero, false)
             XCTAssertEqual(phoneNumber.regionID, "RU")
         } catch {
