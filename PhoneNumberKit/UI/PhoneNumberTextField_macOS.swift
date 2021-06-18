@@ -533,8 +533,16 @@ open class PhoneNumberTextFieldCell: NSTextFieldCell {
         return rect
     }
     
-    open override func drawingRect(forBounds rect: NSRect) -> NSRect {
-        super.drawingRect(forBounds: paddedRect(forBounds: rect))
+    open override func drawInterior(withFrame cellFrame: NSRect, in controlView: NSView) {
+        super.drawInterior(withFrame: paddedRect(forBounds: cellFrame), in: controlView)
+    }
+    
+    open override func edit(withFrame rect: NSRect, in controlView: NSView, editor textObj: NSText, delegate: Any?, event: NSEvent?) {
+        super.edit(withFrame: paddedRect(forBounds: rect), in: controlView, editor: textObj, delegate: delegate, event: event)
+    }
+    
+    open override func select(withFrame rect: NSRect, in controlView: NSView, editor textObj: NSText, delegate: Any?, start selStart: Int, length selLength: Int) {
+        super.select(withFrame: paddedRect(forBounds: rect), in: controlView, editor: textObj, delegate: delegate, start: selStart, length: selLength)
     }
 }
 
