@@ -438,7 +438,7 @@ open class PhoneNumberTextField: NSTextField, NSTextFieldDelegate, NSTextViewDel
         let formattedText = self.partialFormatter.formatPartial(newString)
         let formattedTextEndingSel = self.partialFormatter.formatPartial(textBeforeSel + replacementString)
         let newSelectedRange = NSMakeRange((formattedTextEndingSel as NSString).length, 0)
-        textView.string = formattedText
+        stringValue = formattedText
         textView.setSelectedRange(newSelectedRange)
         
         self._defaultRegion = self.currentRegion
@@ -446,8 +446,6 @@ open class PhoneNumberTextField: NSTextField, NSTextFieldDelegate, NSTextViewDel
         self.updateFlag()
         self.updatePlaceholder()
         
-        NotificationCenter.default.post(name: NSTextField.textDidChangeNotification, object: self)
-
         return false
     }
     
@@ -463,6 +461,10 @@ open class PhoneNumberTextField: NSTextField, NSTextFieldDelegate, NSTextViewDel
     
     open func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
         delegate?.control?(control, textView: textView, doCommandBy: commandSelector) ?? false
+    }
+    
+    public func controlTextDidChange(_ obj: Notification) {
+        delegate?.controlTextDidChange?(obj)
     }
     
     private func updateTextFieldDidEndEditing(_ textField: NSTextField) {

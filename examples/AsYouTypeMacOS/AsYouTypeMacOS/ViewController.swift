@@ -18,6 +18,13 @@ class ViewController: NSViewController {
         phoneField.withExamplePlaceholder = true
         phoneField.withPrefix = true
         phoneField.font = .systemFont(ofSize: 20)
+        phoneField.delegate = self
     }
 }
 
+
+extension ViewController: NSTextFieldDelegate {
+    func controlTextDidChange(_ obj: Notification) {
+        print("text changed")
+    }
+}
