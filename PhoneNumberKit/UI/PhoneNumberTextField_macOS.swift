@@ -445,6 +445,8 @@ open class PhoneNumberTextField: NSTextField, NSTextFieldDelegate, NSTextViewDel
         self.partialFormatter.defaultRegion = self.currentRegion
         self.updateFlag()
         self.updatePlaceholder()
+        
+        NotificationCenter.default.post(name: NSTextField.textDidChangeNotification, object: self)
 
         return false
     }
