@@ -29,7 +29,7 @@ open class PhoneNumberTextField: NSTextField, NSTextFieldDelegate, NSTextViewDel
             return super.stringValue
         }
     }
-
+    
     /// allows text to be set without formatting
     open func setTextUnformatted(newValue: String) {
         super.stringValue = newValue
@@ -114,6 +114,8 @@ open class PhoneNumberTextField: NSTextField, NSTextFieldDelegate, NSTextViewDel
             
             flagButton.menu = menu
             flagButton.selectItem(at: index)
+            
+            updatePlaceholder()
         }
     }
     
@@ -295,10 +297,10 @@ open class PhoneNumberTextField: NSTextField, NSTextFieldDelegate, NSTextViewDel
     }
     
     public func controlTextDidEndEditing(_ obj: Notification) {
-        updateTextFieldDidEndEditing(self)
         self.isEditing = false
+        updateTextFieldDidEndEditing(self)
     }
-
+    
     func internationalPrefix(for countryCode: String) -> String? {
         guard let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description else { return nil }
         return "+" + countryCode
@@ -476,7 +478,6 @@ open class PhoneNumberTextField: NSTextField, NSTextFieldDelegate, NSTextViewDel
             self.updatePlaceholder()
         }
     }
-
 }
 
 fileprivate extension String {
@@ -537,8 +538,9 @@ open class PhoneNumberTextFieldCell: NSTextFieldCell {
         return rect
     }
     
-    open override func drawInterior(withFrame cellFrame: NSRect, in controlView: NSView) {
-        super.drawInterior(withFrame: paddedRect(forBounds: cellFrame), in: controlView)
+    
+    open override func draw(withFrame cellFrame: NSRect, in controlView: NSView) {
+        super.draw(withFrame: paddedRect(forBounds: cellFrame), in: controlView)
     }
     
     open override func edit(withFrame rect: NSRect, in controlView: NSView, editor textObj: NSText, delegate: Any?, event: NSEvent?) {
@@ -547,6 +549,18 @@ open class PhoneNumberTextFieldCell: NSTextFieldCell {
     
     open override func select(withFrame rect: NSRect, in controlView: NSView, editor textObj: NSText, delegate: Any?, start selStart: Int, length selLength: Int) {
         super.select(withFrame: paddedRect(forBounds: rect), in: controlView, editor: textObj, delegate: delegate, start: selStart, length: selLength)
+    }
+    
+    open override func hitTest(for event: NSEvent, in cellFrame: NSRect, of controlView: NSView) -> NSCell.HitResult {
+        super.hitTest(for: event, in: paddedRect(forBounds: cellFrame), of: controlView)
+    }
+    
+    open override class var prefersTrackingUntilMouseUp: Bool {
+        true
+    }
+    
+    open override func trackMouse(with event: NSEvent, in cellFrame: NSRect, of controlView: NSView, untilMouseUp flag: Bool) -> Bool {
+        super.trackMouse(with: event, in: paddedRect(forBounds: cellFrame), of: controlView, untilMouseUp: flag)
     }
 }
 
