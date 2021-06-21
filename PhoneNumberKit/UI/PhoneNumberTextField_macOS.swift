@@ -211,7 +211,11 @@ open class PhoneNumberTextField: NSTextField, NSTextFieldDelegate, NSTextViewDel
     open override func layout() {
         if self.withFlag {
             let size = self.flagButton.fittingSize
-            self.flagButton.frame = CGRect(x: 0, y: frame.height / 2 - size.height / 2, width: size.width, height: size.height)
+            var interiorFrame = frame
+            if let cell = cell as? PhoneNumberTextFieldCell {
+                interiorFrame = cell.drawingRect(forBounds: frame)
+            }
+            self.flagButton.frame = CGRect(x: 0, y: interiorFrame.height / 2 - size.height / 2, width: size.width, height: size.height)
         }
         super.layout()
     }
@@ -538,9 +542,8 @@ open class PhoneNumberTextFieldCell: NSTextFieldCell {
         return rect
     }
     
-    
-    open override func draw(withFrame cellFrame: NSRect, in controlView: NSView) {
-        super.draw(withFrame: paddedRect(forBounds: cellFrame), in: controlView)
+    open override func drawingRect(forBounds rect: NSRect) -> NSRect {
+        super.drawingRect(forBounds: paddedRect(forBounds: rect))
     }
     
     open override func edit(withFrame rect: NSRect, in controlView: NSView, editor textObj: NSText, delegate: Any?, event: NSEvent?) {
