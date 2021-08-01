@@ -17,7 +17,11 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
 
     public lazy var flagButton = UIButton()
 
-    public var flagFontScale: CGFloat = 1.0
+    public var flagFontScale: CGFloat = 1.0 {
+        didSet {
+            updateFlag()
+        }
+    }
 
     /// Override setText so number will be automatically formatted when setting text by code
     open override var text: String? {
