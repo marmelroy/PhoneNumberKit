@@ -17,6 +17,8 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
 
     public lazy var flagButton = UIButton()
 
+    public var flagFontScale: CGFloat = 1.0
+
     /// Override setText so number will be automatically formatted when setting text by code
     open override var text: String? {
         set {
@@ -266,9 +268,6 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         self.autocorrectionType = .no
         self.keyboardType = .phonePad
         super.delegate = self
-
-        let fontSize = (font ?? UIFont.preferredFont(forTextStyle: .body)).pointSize
-        self.flagButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize)
     }
 
     func internationalPrefix(for countryCode: String) -> String? {
@@ -287,6 +286,8 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             .joined()
 
         self.flagButton.setTitle(flag + " ", for: .normal)
+        let fontSize = (font ?? UIFont.preferredFont(forTextStyle: .body)).pointSize * flagFontScale
+        self.flagButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize)
     }
 
     open func updatePlaceholder() {
