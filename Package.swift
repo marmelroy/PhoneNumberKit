@@ -7,14 +7,24 @@ let package = Package(
         .iOS(.v9), .macOS(.v10_10), .tvOS(.v9), .watchOS(.v2)
     ],
     products: [
-        .library(name: "PhoneNumberKit", targets: ["PhoneNumberKit"]),
+        .library(name: "PhoneNumberKit", targets: ["PhoneNumberKit","UICondition"]),
         .library(name: "PhoneNumberKit-Static", type: .static, targets: ["PhoneNumberKit"]),
         .library(name: "PhoneNumberKit-Dynamic", type: .dynamic, targets: ["PhoneNumberKit"])
     ],
     targets: [
+
+        .target(name:"UICondition",
+                dependencies: [
+                    .target(name: "UI", condition: .when(platforms: [.iOS]))
+                ]
+        ),
+        .target(name: "UI",
+                path: "PhoneNumberKit/UI"
+        ),
         .target(name: "PhoneNumberKit",
                 path: "PhoneNumberKit",
-                exclude: ["Resources/Original",
+                exclude: ["UI",
+                          "Resources/Original",
                           "Resources/README.md",
                           "Resources/update.sh",
                           "Info.plist", 
