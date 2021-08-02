@@ -14,12 +14,12 @@ let package = Package(
     targets: [
         .target(name:"UICondition",
                 dependencies: [
-                    .target(name: "PhoneNumberKit"),
+                    .target(name: "PhoneNumberKit", condition: .when(platforms: [.watchOS])),
                     .target(name: "UI", condition: .when(platforms: [.iOS]))
                 ]
         ),
 
-        .target(name: "UI", path: "PhoneNumberKit/UI"),
+        .target(name: "UI", dependencies: [.target(name: "PhoneNumberKit")], path: "PhoneNumberKit/UI"),
         .target(name: "PhoneNumberKit",
                 path: "PhoneNumberKit",
                 exclude: [ "UI",
