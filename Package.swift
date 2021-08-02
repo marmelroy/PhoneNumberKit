@@ -7,23 +7,22 @@ let package = Package(
         .iOS(.v9), .macOS(.v10_10), .tvOS(.v9), .watchOS(.v2)
     ],
     products: [
-        .library(name: "PhoneNumberKit", targets: ["PhoneNumberKit","UICondition"]),
-        .library(name: "PhoneNumberKit-Static", type: .static, targets: ["PhoneNumberKit"]),
-        .library(name: "PhoneNumberKit-Dynamic", type: .dynamic, targets: ["PhoneNumberKit"])
+        .library(name: "PhoneNumberKit", targets: ["UICondition"]),
+        .library(name: "PhoneNumberKit-Static", type: .static, targets: ["UICondition"]),
+        .library(name: "PhoneNumberKit-Dynamic", type: .dynamic, targets: ["UICondition"])
     ],
     targets: [
-
         .target(name:"UICondition",
                 dependencies: [
+                    .target(name: "PhoneNumberKit"),
                     .target(name: "UI", condition: .when(platforms: [.iOS]))
                 ]
         ),
-        .target(name: "UI",
-                path: "PhoneNumberKit/UI"
-        ),
+
+        .target(name: "UI", path: "PhoneNumberKit/UI"),
         .target(name: "PhoneNumberKit",
                 path: "PhoneNumberKit",
-                exclude: ["UI",
+                exclude: [ "UI",
                           "Resources/Original",
                           "Resources/README.md",
                           "Resources/update.sh",
@@ -32,6 +31,7 @@ let package = Package(
                 resources: [
                     .process("Resources/PhoneNumberMetadata.json")
                 ]),
+
         .testTarget(name: "PhoneNumberKitTests",
                     dependencies: ["PhoneNumberKit"],
                     path: "PhoneNumberKitTests",
