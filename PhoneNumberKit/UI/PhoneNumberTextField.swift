@@ -12,7 +12,7 @@ import Foundation
 import UIKit
 
 /// Custom text field that formats phone numbers
-open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
+@objcMembers open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     public let phoneNumberKit: PhoneNumberKit
 
     public lazy var flagButton = UIButton()
