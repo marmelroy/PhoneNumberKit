@@ -531,6 +531,18 @@ extension String {
 
 // Glidetalk
 extension PhoneNumberTextField {
+
+    @objc open var numberString: String? {
+        phoneNumber?.numberString
+    }
+    @objc open var countryCode: UInt64 {
+        phoneNumber?.countryCode ?? 0
+    }
+
+    @objc open var numberExtension: String? {
+        phoneNumber?.numberExtension
+    }
+
     @objc open var formatted: String? {
         guard let phoneNumber = phoneNumber else { return nil }
         return phoneNumberKit.format(phoneNumber, toType: .international)
