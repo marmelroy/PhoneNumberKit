@@ -13,6 +13,7 @@ import CoreTelephony
 
 public typealias MetadataCallback = (() throws -> Data?)
 
+@objcMembers
 public final class PhoneNumberKit: NSObject {
     // Manager objects
     let metadataManager: MetadataManager
