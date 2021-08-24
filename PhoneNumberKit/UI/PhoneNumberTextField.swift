@@ -535,8 +535,9 @@ extension PhoneNumberTextField {
     @objc open var numberString: String? {
         phoneNumber?.numberString
     }
-    @objc open var countryCode: UInt64 {
-        phoneNumber?.countryCode ?? 0
+
+    @objc open var countryCode: String {
+        "\(phoneNumber?.countryCode ?? 0)"
     }
 
     @objc open var numberExtension: String? {
