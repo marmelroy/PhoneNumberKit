@@ -13,7 +13,6 @@ import CoreTelephony
 
 public typealias MetadataCallback = (() throws -> Data?)
 
-@objcMembers
 public final class PhoneNumberKit: NSObject {
     // Manager objects
     let metadataManager: MetadataManager
@@ -36,7 +35,7 @@ public final class PhoneNumberKit: NSObject {
     ///   - region: ISO 639 compliant region code.
     ///   - ignoreType: Avoids number type checking for faster performance.
     /// - Returns: PhoneNumber object.
-    public func parse(_ numberString: String, withRegion region: String = PhoneNumberKit.defaultRegionCode(), ignoreType: Bool = false) throws -> PhoneNumber {
+     public func parse(_ numberString: String, withRegion region: String = PhoneNumberKit.defaultRegionCode(), ignoreType: Bool = false) throws -> PhoneNumber {
         var numberStringWithPlus = numberString
 
         do {
@@ -70,7 +69,7 @@ public final class PhoneNumberKit: NSObject {
     ///   - region: ISO 639 compliant region code.
     ///   - ignoreType: Avoids number type checking for faster performance.
     /// - Returns: Bool
-    public func isValidPhoneNumber(_ numberString: String, withRegion region: String = PhoneNumberKit.defaultRegionCode(), ignoreType: Bool = false) -> Bool {
+    @objc public func isValidPhoneNumber(_ numberString: String, withRegion region: String = PhoneNumberKit.defaultRegionCode(), ignoreType: Bool = false) -> Bool {
         return (try? self.parse(numberString, withRegion: region, ignoreType: ignoreType)) != nil
     }
 

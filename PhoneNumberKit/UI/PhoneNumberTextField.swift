@@ -22,7 +22,6 @@ import UIKit
             updateFlag()
         }
     }
-
     /// Override setText so number will be automatically formatted when setting text by code
     open override var text: String? {
         set {
@@ -530,4 +529,11 @@ extension String {
   }
 }
 
+// Glidetalk
+extension PhoneNumberTextField {
+    @objc open var formatted: String? {
+        guard let phoneNumber = phoneNumber else { return nil }
+        return phoneNumberKit.format(phoneNumber, toType: .international)
+    }
+}
 #endif
