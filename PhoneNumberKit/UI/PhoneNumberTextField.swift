@@ -548,5 +548,14 @@ extension PhoneNumberTextField {
         guard let phoneNumber = phoneNumber else { return nil }
         return phoneNumberKit.format(phoneNumber, toType: .international)
     }
+    
+    @objc
+     static func format(phoneNumber: String, region: String) -> String? {
+        let kit = PhoneNumberKit()
+        if let phoneNumber = try? kit.parse(phoneNumber, withRegion: region, ignoreType: true) {
+            return kit.format(phoneNumber, toType: .international)
+        }
+        return nil
+    }
 }
 #endif
