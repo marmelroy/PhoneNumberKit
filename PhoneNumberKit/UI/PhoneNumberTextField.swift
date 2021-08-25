@@ -566,5 +566,14 @@ extension PhoneNumberTextField {
             return 0;
         }
     }
+
+    @objc
+    static public func region(phoneNumber: String) -> String? {
+        let kit = PhoneNumberKit()
+        if let phoneNumber = try? kit.parse(phoneNumber) {
+            return phoneNumber.regionID
+        }
+        return nil
+    }
 }
 #endif
