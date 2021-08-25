@@ -555,5 +555,16 @@ extension PhoneNumberTextField {
         let phoneNumber = try kit.parse(phoneNumber, withRegion: region, ignoreType: true)
         return kit.format(phoneNumber, toType: .international)
     }
+
+    @objc
+    static public func regionCode(phoneNumber: String) -> UInt64 {
+        let kit = PhoneNumberKit()
+        do {
+        let phoneNumber = try kit.parse(phoneNumber)
+            return phoneNumber.countryCode
+        } catch {
+            return 0;
+        }
+    }
 }
 #endif
