@@ -557,7 +557,7 @@ extension PhoneNumberTextField {
     }
 
     @objc
-    static public func regionCode(phoneNumber: String) -> UInt64 {
+    static public func countryCode(phoneNumber: String) -> UInt64 {
         let kit = PhoneNumberKit()
         do {
         let phoneNumber = try kit.parse(phoneNumber)
