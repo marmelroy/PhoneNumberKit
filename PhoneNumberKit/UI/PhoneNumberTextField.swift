@@ -550,7 +550,7 @@ extension PhoneNumberTextField {
     }
 
     @objc
-     static open func format(phoneNumber: String, region: String) -> String? {
+     static public func format(phoneNumber: String, region: String) -> String? {
         let kit = PhoneNumberKit()
         if let phoneNumber = try? kit.parse(phoneNumber, withRegion: region, ignoreType: true) {
             return kit.format(phoneNumber, toType: .international)
