@@ -532,6 +532,7 @@ extension String {
 // Glidetalk
 extension PhoneNumberTextField {
 
+
     @objc open var numberString: String? {
         phoneNumber?.numberString
     }
@@ -574,6 +575,11 @@ extension PhoneNumberTextField {
             return phoneNumber.regionID
         }
         return nil
+    }
+
+    @objc
+    static public func isValid(phoneNumber: String) -> Bool {
+        return PhoneNumberKit().isValidPhoneNumber(phoneNumber)
     }
 }
 #endif
