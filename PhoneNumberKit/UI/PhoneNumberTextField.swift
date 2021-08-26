@@ -578,8 +578,13 @@ extension PhoneNumberTextField {
     }
 
     @objc
-    static public func isValid(phoneNumber: String) -> Bool {
+    static public func isValid(_  phoneNumber: String) -> Bool {
         return PhoneNumberKit().isValidPhoneNumber(phoneNumber)
+    }
+
+    @objc
+    static public func sayHello() {
+       print("hello")
     }
 }
 #endif
