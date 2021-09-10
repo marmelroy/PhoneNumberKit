@@ -24277,7 +24277,7 @@
       </fixedLine>
       <!-- http://www.enigma-system.net/business/customized-phone-number.html confirms that the
            numbers are restricted to those starting with 07000.
-           Make mobile prefix 079x valid based on open-source report and confirmation by existence of such numbers online.
+           Make mobile prefix 079x (Vodafone) and 071x (Orange) valid based on open-source report and confirmation by existence of such numbers online.
            As per Ancom official doc, mobile numbers can also begin with 6. However, we didn't
            find any numbers online with this prefix, and the wikipedia source doesn't mention it,
            so we do not support it for now. -->
@@ -24287,9 +24287,8 @@
         <nationalNumberPattern>
           7[01]20\d{5}|
           7(?:
-            0[013-9]|
-            1[01]|
-            [2-79]\d|
+            0[013-9]
+            [1-79]\d|
             8[03-8]
           )\d{6}
         </nationalNumberPattern>
