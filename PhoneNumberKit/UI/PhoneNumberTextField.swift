@@ -79,6 +79,12 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             self.updateFlag()
         }
     }
+    
+    public var withCountryCodeNearFlag: Bool = false {
+        didSet {
+            self.updateFlag()
+        }
+    }
 
     public var withExamplePlaceholder: Bool = false {
         didSet {
@@ -114,6 +120,19 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }() {
         didSet {
             self.updatePlaceholder()
+        }
+    }
+    
+    /// Available on iOS 13 and above just.
+    public var countryCodeNearFlagColor: UIColor = {
+        if #available(iOS 13.0, *) {
+            return .secondaryLabel
+        } else {
+            return UIColor(red: 0, green: 0, blue: 0.0980392, alpha: 0.22)
+        }
+    }() {
+        didSet {
+            self.updateFlag()
         }
     }
     #endif
@@ -283,7 +302,10 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             .compactMap { UnicodeScalar(flagBase + $0.value)?.description }
             .joined()
 
-        self.flagButton.setTitle(flag + " ", for: .normal)
+        guard let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description else { return }
+        let titleForFlagButton = withCountryCodeNearFlag ? flag + " +" + countryCode + " " : flag + " "
+        self.flagButton.setTitle(titleForFlagButton, for: .normal)
+        self.flagButton.setTitleColor(countryCodeNearFlagColor, for: .normal)
         let fontSize = (font ?? UIFont.preferredFont(forTextStyle: .body)).pointSize
         self.flagButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize)
     }
