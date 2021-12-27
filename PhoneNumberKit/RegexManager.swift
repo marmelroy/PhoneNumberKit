@@ -15,7 +15,7 @@ final class RegexManager {
 
     private let regularExpressionPoolQueue = DispatchQueue(label: "com.phonenumberkit.regexpool", attributes: .concurrent)
 
-    var spaceCharacterSet: CharacterSet = {
+    lazy var spaceCharacterSet: CharacterSet = {
         let characterSet = NSMutableCharacterSet(charactersIn: "\u{00a0}")
         characterSet.formUnion(with: CharacterSet.whitespacesAndNewlines)
         return characterSet as CharacterSet
