@@ -15,11 +15,11 @@ final class RegexManager {
 
     private let regularExpressionPoolQueue = DispatchQueue(label: "com.phonenumberkit.regexpool", attributes: .concurrent)
 
-    var spaceCharacterSet: CharacterSet = {
+    var spaceCharacterSet() -> CharacterSet {
         let characterSet = NSMutableCharacterSet(charactersIn: "\u{00a0}")
         characterSet.formUnion(with: CharacterSet.whitespacesAndNewlines)
         return characterSet as CharacterSet
-    }()
+    }
 
     // MARK: Regular expression
 
@@ -199,7 +199,7 @@ final class RegexManager {
 
     func hasValue(_ value: String?) -> Bool {
         if let valueString = value {
-            if valueString.trimmingCharacters(in: self.spaceCharacterSet).count == 0 {
+            if valueString.trimmingCharacters(in: self.spaceCharacterSet()).count == 0 {
                 return false
             }
             return true
