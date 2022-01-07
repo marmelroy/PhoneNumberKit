@@ -225,7 +225,13 @@ public extension CountryCodePickerViewController {
 
             self.code = countryCode
             self.name = name
-            self.prefix = "+" + prefix
+
+            var localPrefix = "+" + prefix
+            if let leadingDigits = phoneNumberKit.leadingDigits(for: countryCode) {
+                localPrefix += "\(leadingDigits)"
+            }
+            self.prefix = localPrefix
+            
             self.flag = ""
             countryCode.uppercased().unicodeScalars.forEach {
                 if let scaler = UnicodeScalar(flagBase + $0.value) {
