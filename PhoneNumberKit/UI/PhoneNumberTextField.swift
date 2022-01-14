@@ -509,7 +509,7 @@ extension PhoneNumberTextField: CountryCodePickerDelegate {
         partialFormatter.defaultRegion = country.code
         updateFlag()
         updatePlaceholder()
-
+        sendActions(for: .editingChanged)
         if let nav = containingViewController?.navigationController, !PhoneNumberKit.CountryCodePicker.forceModalPresentation {
             nav.popViewController(animated: true)
         } else {
