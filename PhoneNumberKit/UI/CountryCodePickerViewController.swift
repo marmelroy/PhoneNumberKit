@@ -227,9 +227,14 @@ public extension CountryCodePickerViewController {
             self.name = name
 
             var localPrefix = "+" + prefix
-            if let leadingDigits = phoneNumberKit.leadingDigits(for: countryCode) {
-                localPrefix += "\(leadingDigits)"
+            let leadingDigits = phoneNumberKit.leadingDigits(for: countryCode)
+            if var example = phoneNumberKit.getFormattedExampleNumber(forCountry: countryCode), example.contains("-"), leadingDigits != nil {
+                example = example.replacingOccurrences(of: " ", with: "")
+                if let totalPrefix = example.split(separator: "-").first {
+                    localPrefix = String(totalPrefix)
+                }
             }
+            
             self.prefix = localPrefix
             
             self.flag = ""
