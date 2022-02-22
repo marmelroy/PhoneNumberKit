@@ -93,30 +93,3 @@ public extension PhoneNumber {
     }
 }
 
-#if os(iOS)
-import UIKit
-
-public extension PhoneNumber {
-    
-    /**
-     Calls the phone number.
-     */
-    func call() {
-        guard let url = url else { return }
-        UIApplication.shared.openURL(url)
-    }
-}
-#elseif os(macOS)
-import AppKit
-
-public extension PhoneNumber {
-    
-    /**
-     Calls the phone number.
-     */
-    func call() {
-        guard let url = url else { return }
-        NSWorkspace.shared.open(url)
-    }
-}
-#endif
