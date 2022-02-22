@@ -298,7 +298,7 @@ public final class PhoneNumberKit: NSObject {
         let networkInfo = CTTelephonyNetworkInfo()
         var carrier: CTCarrier? = nil
         if #available(iOS 12.0, *) {
-            carrier = networkInfo.serviceSubscriberCellularProviders?.values.first
+            carrier = networkInfo.serviceSubscriberCellularProviders?.values.compactMap({ $0 }).first
         } else {
             carrier = networkInfo.subscriberCellularProvider
         }
