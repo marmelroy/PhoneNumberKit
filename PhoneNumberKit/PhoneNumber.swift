@@ -58,6 +58,14 @@ extension PhoneNumber {
     public func notParsed() -> Bool {
         return self.type == .notParsed
     }
+    
+    /**
+     Get a callable URL from the number.
+     - Returns: A callable URL.
+     */
+    public var url: URL? {
+        return URL(string: "tel://" + numberString)
+    }
 }
 
 /// In past versions of PhoneNumberKit you were able to initialize a PhoneNumber object to parse a String. Please use a PhoneNumberKit object's methods.
@@ -84,3 +92,31 @@ public extension PhoneNumber {
         throw PhoneNumberError.deprecated
     }
 }
+
+#if os(iOS)
+import UIKit
+
+public extension PhoneNumber {
+    
+    /**
+     Calls the phone number.
+     */
+    func call() {
+        guard let url = url else { return }
+        UIApplication.shared.openURL(url)
+    }
+}
+#elseif os(macOS)
+import AppKit
+
+public extension PhoneNumber {
+    
+    /**
+     Calls the phone number.
+     */
+    func call() {
+        guard let url = url else { return }
+        NSWorkspace.shared.open(url)
+    }
+}
+#endif
