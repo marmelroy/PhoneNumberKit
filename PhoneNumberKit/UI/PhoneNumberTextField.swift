@@ -410,10 +410,17 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         guard self.isPartialFormatterEnabled else {
             return true
         }
+        
+        var _string = string
+        
+        // add prefix to the string if it's the first input character
+        if self.withExamplePlaceholder, self.withPrefix, let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description, text.isEmpty {
+            _string = "+" + countryCode + " " + _string
+        }
 
         let textAsNSString = text as NSString
         let changedRange = textAsNSString.substring(with: range) as NSString
-        let modifiedTextField = textAsNSString.replacingCharacters(in: range, with: string)
+        let modifiedTextField = textAsNSString.replacingCharacters(in: range, with: _string)
 
         let filteredCharacters = modifiedTextField.filter {
             String($0).rangeOfCharacter(from: (textField as! PhoneNumberTextField).nonNumericSet as CharacterSet) == nil
@@ -424,7 +431,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         var selectedTextRange: NSRange?
 
         let nonNumericRange = (changedRange.rangeOfCharacter(from: self.nonNumericSet as CharacterSet).location != NSNotFound)
-        if range.length == 1, string.isEmpty, nonNumericRange {
+        if range.length == 1, _string.isEmpty, nonNumericRange {
             selectedTextRange = self.selectionRangeForNumberReplacement(textField: textField, formattedText: modifiedTextField)
             textField.text = modifiedTextField
         } else {
@@ -453,9 +460,6 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
 
     open func textFieldDidBeginEditing(_ textField: UITextField) {
-        if self.withExamplePlaceholder, self.withPrefix, let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description, (text ?? "").isEmpty {
-            text = "+" + countryCode + " "
-        }
         self._delegate?.textFieldDidBeginEditing?(textField)
     }
 
@@ -504,7 +508,6 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
 extension PhoneNumberTextField: CountryCodePickerDelegate {
 
     public func countryCodePickerViewControllerDidPickCountry(_ country: CountryCodePickerViewController.Country) {
-        text = isEditing ? "+" + country.prefix : ""
         _defaultRegion = country.code
         partialFormatter.defaultRegion = country.code
         updateFlag()
