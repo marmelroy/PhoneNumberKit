@@ -30,6 +30,7 @@ class ViewController: UIViewController, CNContactPickerDelegate {
         self.textField.withFlag = true
         self.textField.withExamplePlaceholder = true
         self.textField.withDefaultPickerUI = true
+        self.textField.borderStyle = .roundedRect
         
         self.withPrefixSwitch.isOn = self.textField.withPrefix
         self.withFlagSwitch.isOn = self.textField.withFlag
