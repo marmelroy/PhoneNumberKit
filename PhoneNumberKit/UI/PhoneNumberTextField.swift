@@ -15,7 +15,23 @@ import UIKit
 open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     public let phoneNumberKit: PhoneNumberKit
 
-    public lazy var flagButton = UIButton()
+    public lazy var flagButton = UIButton(type: .system)
+    
+    public lazy var flagSeparator: UIView = {
+        let view = UIView()
+        view.widthAnchor.constraint(equalToConstant: 1).isActive = true
+        view.backgroundColor = numberPlaceholderColor
+        return view
+    }()
+        
+    public lazy var flagContainer: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [flagButton, flagSeparator])
+        stackView.axis = .horizontal
+        stackView.layoutMargins = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+        stackView.spacing = 8
+        stackView.isLayoutMarginsRelativeArrangement = true
+        return stackView
+    }()
 
     /// Override setText so number will be automatically formatted when setting text by code
     open override var text: String? {
@@ -27,6 +43,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
                 super.text = newValue
             }
             NotificationCenter.default.post(name: UITextField.textDidChangeNotification, object: self)
+            self.updateFlag()
         }
         get {
             return super.text
@@ -74,7 +91,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
 
     public var withFlag: Bool = false {
         didSet {
-            leftView = self.withFlag ? self.flagButton : nil
+            leftView = self.withFlag ? self.flagContainer : nil
             leftViewMode = self.withFlag ? .always : .never
             self.updateFlag()
         }
@@ -282,9 +299,10 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             .compactMap { UnicodeScalar(flagBase + $0.value)?.description }
             .joined()
 
-        self.flagButton.setTitle(flag + " ", for: .normal)
+        self.flagButton.setTitle(flag + "›", for: .normal)
         let fontSize = (font ?? UIFont.preferredFont(forTextStyle: .body)).pointSize
         self.flagButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize)
+        self.flagButton.setTitleColor(numberPlaceholderColor, for: .normal)
     }
 
     open func updatePlaceholder() {
