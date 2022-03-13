@@ -16,7 +16,7 @@
 		347209751BB808D1004DE6DA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 347209731BB808D1004DE6DA /* LaunchScreen.storyboard */; };
 		347209801BB808D1004DE6DA /* SampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3472097F1BB808D1004DE6DA /* SampleTests.swift */; };
 		3472098E1BB80A4F004DE6DA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3472098D1BB80A4F004DE6DA /* Foundation.framework */; };
-		D2D4ADA627D7FF6100667722 /* PhoneNumberKit in Frameworks */ = {isa = PBXBuildFile; productRef = D2D4ADA527D7FF6100667722 /* PhoneNumberKit */; };
+		D26C57AE27DE9373007BEBA6 /* PhoneNumberKit in Frameworks */ = {isa = PBXBuildFile; productRef = D26C57AD27DE9373007BEBA6 /* PhoneNumberKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,7 +65,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				344D875A1BDED6A600487684 /* ContactsUI.framework in Frameworks */,
-				D2D4ADA627D7FF6100667722 /* PhoneNumberKit in Frameworks */,
+				D26C57AE27DE9373007BEBA6 /* PhoneNumberKit in Frameworks */,
 				344D87571BDED6A200487684 /* Contacts.framework in Frameworks */,
 				3472098E1BB80A4F004DE6DA /* Foundation.framework in Frameworks */,
 			);
@@ -151,7 +151,7 @@
 			);
 			name = Sample;
 			packageProductDependencies = (
-				D2D4ADA527D7FF6100667722 /* PhoneNumberKit */,
+				D26C57AD27DE9373007BEBA6 /* PhoneNumberKit */,
 			);
 			productName = Sample;
 			productReference = 347209671BB808D1004DE6DA /* Sample.app */;
@@ -186,6 +186,7 @@
 				TargetAttributes = {
 					347209661BB808D1004DE6DA = {
 						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = S5L8VVQQZ2;
 					};
 					3472097A1BB808D1004DE6DA = {
 						CreatedOnToolsVersion = 7.0;
@@ -400,6 +401,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = S5L8VVQQZ2;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Sample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -417,6 +419,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = S5L8VVQQZ2;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Sample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -502,7 +505,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		D2D4ADA527D7FF6100667722 /* PhoneNumberKit */ = {
+		D26C57AD27DE9373007BEBA6 /* PhoneNumberKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = PhoneNumberKit;
 		};
