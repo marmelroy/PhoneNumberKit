@@ -431,7 +431,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         var _string = string
         
         // add prefix to the string if it's the first input character
-        if self.withExamplePlaceholder, self.withPrefix, let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description, text.isEmpty {
+        if self.withExamplePlaceholder, self.withPrefix, let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description, text.isEmpty, string.count == 1 {
             _string = "+" + countryCode + " " + _string
         }
 
