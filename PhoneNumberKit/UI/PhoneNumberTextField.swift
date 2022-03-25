@@ -27,6 +27,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
                 super.text = newValue
             }
             NotificationCenter.default.post(name: UITextField.textDidChangeNotification, object: self)
+            self.updateFlag()
         }
         get {
             return super.text
