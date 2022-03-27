@@ -146,12 +146,12 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         withPrefix: withPrefix
     )
 
-    let nonNumericSet: NSCharacterSet = {
-        var mutableSet = NSMutableCharacterSet.decimalDigit().inverted
+    let nonNumericSet: CharacterSet = {
+        var mutableSet = CharacterSet.decimalDigits.inverted
         mutableSet.remove(charactersIn: PhoneNumberConstants.plusChars)
         mutableSet.remove(charactersIn: PhoneNumberConstants.pausesAndWaitsChars)
         mutableSet.remove(charactersIn: PhoneNumberConstants.operatorChars)
-        return mutableSet as NSCharacterSet
+        return mutableSet
     }()
 
     private weak var _delegate: UITextFieldDelegate?
@@ -357,7 +357,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         for i in cursorEnd..<textAsNSString.length {
             let cursorRange = NSRange(location: i, length: 1)
             let candidateNumberAfterCursor: NSString = textAsNSString.substring(with: cursorRange) as NSString
-            if candidateNumberAfterCursor.rangeOfCharacter(from: self.nonNumericSet as CharacterSet).location == NSNotFound {
+            if candidateNumberAfterCursor.rangeOfCharacter(from: self.nonNumericSet).location == NSNotFound {
                 for j in cursorRange.location..<textAsNSString.length {
                     let candidateCharacter = textAsNSString.substring(with: NSRange(location: j, length: 1))
                     if candidateCharacter == candidateNumberAfterCursor as String {
@@ -415,14 +415,14 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         let modifiedTextField = textAsNSString.replacingCharacters(in: range, with: string)
 
         let filteredCharacters = modifiedTextField.filter {
-            String($0).rangeOfCharacter(from: (textField as! PhoneNumberTextField).nonNumericSet as CharacterSet) == nil
+            String($0).rangeOfCharacter(from: (textField as! PhoneNumberTextField).nonNumericSet) == nil
         }
         let rawNumberString = String(filteredCharacters)
 
         let formattedNationalNumber = self.partialFormatter.formatPartial(rawNumberString as String)
         var selectedTextRange: NSRange?
 
-        let nonNumericRange = (changedRange.rangeOfCharacter(from: self.nonNumericSet as CharacterSet).location != NSNotFound)
+        let nonNumericRange = (changedRange.rangeOfCharacter(from: self.nonNumericSet).location != NSNotFound)
         if range.length == 1, string.isEmpty, nonNumericRange {
             selectedTextRange = self.selectionRangeForNumberReplacement(textField: textField, formattedText: modifiedTextField)
             textField.text = modifiedTextField

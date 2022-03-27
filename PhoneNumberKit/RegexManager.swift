@@ -11,9 +11,9 @@ import Foundation
 final class RegexManager {
 
     public init() {
-        let characterSet = NSMutableCharacterSet(charactersIn: "\u{00a0}")
-        characterSet.formUnion(with: CharacterSet.whitespacesAndNewlines)
-        self.spaceCharacterSet = characterSet as CharacterSet
+        var characterSet = CharacterSet(charactersIn: "\u{00a0}")
+        characterSet.formUnion(.whitespacesAndNewlines)
+        self.spaceCharacterSet = characterSet
     }
 
     // MARK: Regular expression pool
