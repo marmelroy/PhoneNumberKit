@@ -11,7 +11,7 @@ import Foundation
 final class RegexManager {
 
     public init() {
-        var characterSet = CharacterSet(charactersIn: "\u{00a0}")
+        var characterSet = CharacterSet(charactersIn: PhoneNumberConstants.nonBreakingSpace)
         characterSet.formUnion(.whitespacesAndNewlines)
         self.spaceCharacterSet = characterSet
     }
