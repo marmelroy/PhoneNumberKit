@@ -45,6 +45,12 @@
 		A863BC9B23801ABC00088460 /* PhoneNumberMetadata.json in Resources */ = {isa = PBXBuildFile; fileRef = A863BC9923801ABC00088460 /* PhoneNumberMetadata.json */; };
 		A863BC9C23801ABC00088460 /* PhoneNumberMetadata.json in Resources */ = {isa = PBXBuildFile; fileRef = A863BC9923801ABC00088460 /* PhoneNumberMetadata.json */; };
 		A863BC9D23801ABC00088460 /* PhoneNumberMetadata.json in Resources */ = {isa = PBXBuildFile; fileRef = A863BC9923801ABC00088460 /* PhoneNumberMetadata.json */; };
+		C5639CD025B9127D009637AF /* PhoneNumberTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343B850B1C62A25600918E46 /* PhoneNumberTextField.swift */; };
+		C5639CD625B9127D009637AF /* PhoneNumberTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343B850B1C62A25600918E46 /* PhoneNumberTextField.swift */; };
+		C5639CD725B9127E009637AF /* PhoneNumberTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343B850B1C62A25600918E46 /* PhoneNumberTextField.swift */; };
+		C5639CDD25B91283009637AF /* CountryCodePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D14267C238F5842002DD197 /* CountryCodePickerViewController.swift */; };
+		C5639CE325B91284009637AF /* CountryCodePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D14267C238F5842002DD197 /* CountryCodePickerViewController.swift */; };
+		C5639CE425B91284009637AF /* CountryCodePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D14267C238F5842002DD197 /* CountryCodePickerViewController.swift */; };
 		C6B53DA51D944F8000E607DD /* NSRegularExpression+Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C2EF381D62BC3200052D44 /* NSRegularExpression+Swift.swift */; };
 		C6B53DA61D944F8000E607DD /* NSRegularExpression+Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C2EF381D62BC3200052D44 /* NSRegularExpression+Swift.swift */; };
 		C6B53DA71D94508400E607DD /* NSRegularExpression+Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C2EF381D62BC3200052D44 /* NSRegularExpression+Swift.swift */; };
@@ -528,9 +534,11 @@
 				C6DF6C551D1B09DD00259F4B /* Formatter.swift in Sources */,
 				1B80904E2300B4DC006AE849 /* MetadataParsing.swift in Sources */,
 				C6DF6C5C1D1B09DD00259F4B /* PhoneNumber.swift in Sources */,
+				C5639CD025B9127D009637AF /* PhoneNumberTextField.swift in Sources */,
 				C6DF6C541D1B09DD00259F4B /* Constants.swift in Sources */,
 				34F26FBF2517DCB700B6AF4D /* Bundle+Resources.swift in Sources */,
 				C6DF6C591D1B09DD00259F4B /* MetadataTypes.swift in Sources */,
+				C5639CDD25B91283009637AF /* CountryCodePickerViewController.swift in Sources */,
 				C6DF6C5F1D1B09DD00259F4B /* RegexManager.swift in Sources */,
 				C6DF6C581D1B09DD00259F4B /* MetadataManager.swift in Sources */,
 				C6DF6C561D1B09DD00259F4B /* PartialFormatter.swift in Sources */,
@@ -549,9 +557,11 @@
 				C6DF6CB31D1B159A00259F4B /* Formatter.swift in Sources */,
 				1B80904F2300B4DC006AE849 /* MetadataParsing.swift in Sources */,
 				C6DF6CBA1D1B159A00259F4B /* PhoneNumber.swift in Sources */,
+				C5639CD625B9127D009637AF /* PhoneNumberTextField.swift in Sources */,
 				C6DF6CB21D1B159A00259F4B /* Constants.swift in Sources */,
 				34F26FC02517DCB700B6AF4D /* Bundle+Resources.swift in Sources */,
 				C6DF6CB71D1B159A00259F4B /* MetadataTypes.swift in Sources */,
+				C5639CE325B91284009637AF /* CountryCodePickerViewController.swift in Sources */,
 				C6DF6CBD1D1B159A00259F4B /* RegexManager.swift in Sources */,
 				C6DF6CB61D1B159A00259F4B /* MetadataManager.swift in Sources */,
 				C6DF6CB41D1B159A00259F4B /* PartialFormatter.swift in Sources */,
@@ -570,9 +580,11 @@
 				C6DF6CDD1D1B18D800259F4B /* PhoneNumber.swift in Sources */,
 				C6DF6CD51D1B18D800259F4B /* Constants.swift in Sources */,
 				1B8090502300B4DD006AE849 /* MetadataParsing.swift in Sources */,
+				C5639CD725B9127E009637AF /* PhoneNumberTextField.swift in Sources */,
 				C6DF6CDA1D1B18D800259F4B /* MetadataTypes.swift in Sources */,
 				34F26FC12517DCB700B6AF4D /* Bundle+Resources.swift in Sources */,
 				C6DF6CE01D1B18D800259F4B /* RegexManager.swift in Sources */,
+				C5639CE425B91284009637AF /* CountryCodePickerViewController.swift in Sources */,
 				C6DF6CD91D1B18D800259F4B /* MetadataManager.swift in Sources */,
 				1B1A4DD82300759E006AE849 /* PhoneNumberFormatter.swift in Sources */,
 				C6DF6CD71D1B18D800259F4B /* PartialFormatter.swift in Sources */,
