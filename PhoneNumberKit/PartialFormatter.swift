@@ -73,7 +73,7 @@ public final class PartialFormatter {
 
         let iddFreeNumber = self.extractIDD(rawNumber)
         var nationalNumber = parser.normalizePhoneNumber(iddFreeNumber)
-        if self.prefixBeforeNationalNumber.count > 0 {
+        if !self.prefixBeforeNationalNumber.isEmpty {
             nationalNumber = self.extractCountryCallingCode(nationalNumber)
         }
 
@@ -123,13 +123,13 @@ public final class PartialFormatter {
         }
 
         var finalNumber = String()
-        if self.withPrefix, self.prefixBeforeNationalNumber.count > 0 {
+        if self.withPrefix, !self.prefixBeforeNationalNumber.isEmpty {
             finalNumber.append(self.prefixBeforeNationalNumber)
         }
-        if self.withPrefix, self.shouldAddSpaceAfterNationalPrefix, self.prefixBeforeNationalNumber.count > 0, self.prefixBeforeNationalNumber.last != PhoneNumberConstants.separatorBeforeNationalNumber.first {
+        if self.withPrefix, self.shouldAddSpaceAfterNationalPrefix, !self.prefixBeforeNationalNumber.isEmpty, self.prefixBeforeNationalNumber.last != PhoneNumberConstants.separatorBeforeNationalNumber.first {
             finalNumber.append(PhoneNumberConstants.separatorBeforeNationalNumber)
         }
-        if nationalNumber.count > 0 {
+        if !nationalNumber.isEmpty {
             finalNumber.append(nationalNumber)
         }
         if finalNumber.last == PhoneNumberConstants.separatorBeforeNationalNumber.first {
@@ -156,7 +156,7 @@ public final class PartialFormatter {
             let validPartialPattern = "[+＋]?(\\s*\\d)+\\s*$|\(PhoneNumberPatterns.validPhoneNumberPattern)"
             let validNumberMatches = try regexManager?.regexMatches(validPartialPattern, string: rawNumber)
             let validStart = self.regexManager?.stringPositionByRegex(PhoneNumberPatterns.validStartPattern, string: rawNumber)
-            if validNumberMatches?.count == 0 || validStart != 0 {
+            if validNumberMatches?.isEmpty == true || validStart != 0 {
                 return false
             }
         } catch {
@@ -194,8 +194,8 @@ public final class PartialFormatter {
             if let internationalPrefix = currentMetadata?.internationalPrefix {
                 let prefixPattern = String(format: PhoneNumberPatterns.iddPattern, arguments: [internationalPrefix])
                 let matches = try regexManager?.matchedStringByRegex(prefixPattern, string: rawNumber)
-                if let m = matches?.first {
-                    let startCallingCode = m.count
+                if let match = matches?.first {
+                    let startCallingCode = match.count
                     let index = rawNumber.index(rawNumber.startIndex, offsetBy: startCallingCode)
                     processedNumber = String(rawNumber[index...])
                     self.prefixBeforeNationalNumber = String(rawNumber[..<index])
@@ -217,8 +217,8 @@ public final class PartialFormatter {
                 if let nationalPrefix = currentMetadata?.nationalPrefixForParsing {
                     let nationalPrefixPattern = String(format: PhoneNumberPatterns.nationalPrefixParsingPattern, arguments: [nationalPrefix])
                     let matches = try regexManager?.matchedStringByRegex(nationalPrefixPattern, string: rawNumber)
-                    if let m = matches?.first {
-                        startOfNationalNumber = m.count
+                    if let match = matches?.first {
+                        startOfNationalNumber = match.count
                     }
                 }
             } catch {
@@ -294,7 +294,7 @@ public final class PartialFormatter {
                     }
                 }
             }
-            if possibleFormats.count == 0 {
+            if possibleFormats.isEmpty {
                 possibleFormats.append(contentsOf: tempPossibleFormats)
             }
             return possibleFormats
@@ -309,11 +309,11 @@ public final class PartialFormatter {
                 let patternRegExp = String(format: PhoneNumberPatterns.formatPattern, arguments: [pattern])
                 do {
                     let matches = try regexManager.regexMatches(patternRegExp, string: rawNumber)
-                    if matches.count > 0 {
+                    if !matches.isEmpty {
                         if let nationalPrefixFormattingRule = format.nationalPrefixFormattingRule {
                             let separatorRegex = try regexManager.regexWithPattern(PhoneNumberPatterns.prefixSeparatorPattern)
                             let nationalPrefixMatches = separatorRegex.matches(in: nationalPrefixFormattingRule, options: [], range: NSRange(location: 0, length: nationalPrefixFormattingRule.count))
-                            if nationalPrefixMatches.count > 0 {
+                            if !nationalPrefixMatches.isEmpty {
                                 self.shouldAddSpaceAfterNationalPrefix = true
                             }
                         }

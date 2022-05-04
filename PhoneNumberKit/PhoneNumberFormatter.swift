@@ -73,7 +73,7 @@ extension PhoneNumberFormatter {
             do {
                 obj?.pointee = try self.phoneNumberKit.parse(string) as AnyObject?
                 return true
-            } catch (let e) {
+            } catch let e {
                 error?.pointee = e.localizedDescription as NSString
                 return false
             }

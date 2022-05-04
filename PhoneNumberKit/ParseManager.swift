@@ -101,20 +101,19 @@ final class ParseManager {
         let queue = DispatchQueue(label: "com.phonenumberkit.multipleparse", qos: .default)
         for (index, numberString) in numberStrings.enumerated() {
             group.enter()
-            queue.async(group: group) {
-                [weak self] in
-                    do {
-                        if let phoneNumber = try self?.parse(numberString, withRegion: region, ignoreType: ignoreType) {
-                            multiParseArray.append(phoneNumber)
-                        } else if shouldReturnFailedEmptyNumbers {
-                            multiParseArray.append(PhoneNumber.notPhoneNumber())
-                        }
-                    } catch {
-                        if shouldReturnFailedEmptyNumbers {
-                            multiParseArray.append(PhoneNumber.notPhoneNumber())
-                        }
+            queue.async(group: group) { [weak self] in
+                do {
+                    if let phoneNumber = try self?.parse(numberString, withRegion: region, ignoreType: ignoreType) {
+                        multiParseArray.append(phoneNumber)
+                    } else if shouldReturnFailedEmptyNumbers {
+                        multiParseArray.append(PhoneNumber.notPhoneNumber())
                     }
-                    group.leave()
+                } catch {
+                    if shouldReturnFailedEmptyNumbers {
+                        multiParseArray.append(PhoneNumber.notPhoneNumber())
+                    }
+                }
+                group.leave()
             }
             if index == numberStrings.count / 2 {
                 testCallback?()

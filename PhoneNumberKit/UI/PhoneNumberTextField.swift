@@ -19,6 +19,9 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
 
     /// Override setText so number will be automatically formatted when setting text by code
     override open var text: String? {
+        get {
+            super.text
+        }
         set {
             if isPartialFormatterEnabled, let newValue = newValue {
                 let formattedNumber = partialFormatter.formatPartial(newValue)
@@ -28,9 +31,6 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             }
             NotificationCenter.default.post(name: UITextField.textDidChangeNotification, object: self)
             self.updateFlag()
-        }
-        get {
-            super.text
         }
     }
 
@@ -434,7 +434,8 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         let modifiedTextField = textAsNSString.replacingCharacters(in: range, with: string)
 
         let filteredCharacters = modifiedTextField.filter {
-            String($0).rangeOfCharacter(from: (textField as! PhoneNumberTextField).nonNumericSet) == nil
+            guard let phoneNumberTextField = textField as? PhoneNumberTextField else { return false }
+            return String($0).rangeOfCharacter(from: phoneNumberTextField.nonNumericSet) == nil
         }
         let rawNumberString = String(filteredCharacters)
 
@@ -507,15 +508,20 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
 
     private func updateTextFieldDidEndEditing(_ textField: UITextField) {
-        if self.withExamplePlaceholder, self.withPrefix, let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description,
-           let text = textField.text,
-           text == internationalPrefix(for: countryCode)
-        {
-            textField.text = ""
-            sendActions(for: .editingChanged)
-            self.updateFlag()
-            self.updatePlaceholder()
+        guard
+            self.withExamplePlaceholder,
+            self.withPrefix,
+            let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description,
+            let text = textField.text,
+            text == internationalPrefix(for: countryCode)
+        else {
+            return
         }
+
+        textField.text = ""
+        sendActions(for: .editingChanged)
+        self.updateFlag()
+        self.updatePlaceholder()
     }
 }
 

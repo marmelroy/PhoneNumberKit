@@ -45,6 +45,11 @@ identifier_name:
   excluded: # excluded via string array
     - id
     - i # for loop iteration
+    - j # for nested loop iteration
     - e # for error e
     - x # x axis
     - y # y axis
+    - _delegate #internal accessor
+
+excluded:
+  - PhoneNumberKitTests

@@ -283,7 +283,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
                                     XCTAssertEqual(phoneNumber.type, type, "Expected type \(type) for number \(phoneNumber)")
                                 }
                             }
-                        } catch (let e) {
+                        } catch let e {
                             XCTFail("Failed to create PhoneNumber for \(exampleNumber): \(e)")
                         }
                     }

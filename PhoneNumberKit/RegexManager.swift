@@ -74,10 +74,8 @@ final class RegexManager {
     func matchesAtStart(_ pattern: String, string: String) -> Bool {
         do {
             let matches = try regexMatches(pattern, string: string)
-            for match in matches {
-                if match.range.location == 0 {
-                    return true
-                }
+            for match in matches where match.range.location == 0 {
+                return true
             }
         } catch {}
         return false
@@ -101,7 +99,7 @@ final class RegexManager {
         }
         do {
             let matches = try regexMatches(pattern, string: string)
-            return matches.count > 0
+            return !matches.isEmpty
         } catch {
             return false
         }
@@ -181,7 +179,7 @@ final class RegexManager {
 
     func hasValue(_ value: String?) -> Bool {
         if let valueString = value {
-            if valueString.trimmingCharacters(in: self.spaceCharacterSet).count == 0 {
+            if valueString.trimmingCharacters(in: self.spaceCharacterSet).isEmpty {
                 return false
             }
             return true
