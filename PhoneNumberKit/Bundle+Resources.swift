@@ -9,6 +9,7 @@ private class CurrentBundleFinder {}
 //
 extension Bundle {
     static var phoneNumberKit: Bundle = {
+        #if SWIFT_PACKAGE && DEBUG
         let bundleName = "PhoneNumberKit_PhoneNumberKit"
         let candidates = [
             /* Bundle should be present here when the package is linked into an App. */
@@ -26,6 +27,7 @@ extension Bundle {
                 return bundle
             }
         }
-        fatalError("Could not find bundle \(bundleName), tried candidates: \(candidates)!")
+        #endif
+        return Bundle(for: CurrentBundleFinder.self)
     }()
 }
