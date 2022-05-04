@@ -120,7 +120,7 @@ You can access the metadata powering PhoneNumberKit yourself, this enables you t
 phoneNumberKit.metadata(for: "AU")?.mobile?.exampleNumber // 412345678
 ```
 
-### [Preferrred] Setting up with [Swift Package Manager](https://swiftpm.co/?query=PhoneNumberKit)
+### [Preferred] Setting up with [Swift Package Manager](https://swiftpm.co/?query=PhoneNumberKit)
 
 The [Swift Package Manager](https://swift.org/package-manager/) is now the preferred tool for distributing PhoneNumberKit. 
 
