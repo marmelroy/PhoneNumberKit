@@ -31,15 +31,15 @@ class PhoneNumberTextFieldTests: XCTestCase {
         XCTAssertEqual(tf.text, "(412) 555-1212")
     }
 
-	func testPhoneNumberProperty() {
-		let pnk = PhoneNumberKit()
-		let tf = PhoneNumberTextField(withPhoneNumberKit: pnk)
+    func testPhoneNumberProperty() {
+        let pnk = PhoneNumberKit()
+        let tf = PhoneNumberTextField(withPhoneNumberKit: pnk)
         tf.partialFormatter.defaultRegion = "US"
-		tf.text = "4125551212"
-		XCTAssertNotNil(tf.phoneNumber)
-		tf.text = ""
-		XCTAssertNil(tf.phoneNumber)
-	}
+        tf.text = "4125551212"
+        XCTAssertNotNil(tf.phoneNumber)
+        tf.text = ""
+        XCTAssertNil(tf.phoneNumber)
+    }
 }
 
 #endif

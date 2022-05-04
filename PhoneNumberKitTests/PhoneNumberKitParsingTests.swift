@@ -415,7 +415,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTFail()
         }
     }
-    
+
     func testPerformanceSimple() {
         let numberOfParses = 1000
         let startTime = Date()
@@ -478,6 +478,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
             XCTFail()
         }
     }
+
     func testExtensionWithCommaParsing() {
         guard let number = try? phoneNumberKit.parse("+33 612-345-678,22") else {
             XCTFail()
@@ -486,7 +487,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
         XCTAssertEqual(number.type, PhoneNumberType.mobile)
         XCTAssertEqual(number.numberExtension, "22")
     }
-    
+
     func testExtensionWithSemiColonParsing() {
         guard let number = try? phoneNumberKit.parse("+33 612-345-678;22") else {
             XCTFail()

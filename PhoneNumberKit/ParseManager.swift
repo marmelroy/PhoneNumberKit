@@ -64,7 +64,7 @@ final class ParseManager {
             }
             throw PhoneNumberError.notANumber
         }
-        
+
         // If country code is not default, grab correct metadata (6)
         if countryCode != regionMetadata.countryCode, let countryMetadata = metadataManager.mainTerritoryByCode[countryCode] {
             regionMetadata = countryMetadata
@@ -82,7 +82,7 @@ final class ParseManager {
                 }
             }
         }
-            
+
         throw PhoneNumberError.notANumber
     }
 
@@ -103,18 +103,18 @@ final class ParseManager {
             group.enter()
             queue.async(group: group) {
                 [weak self] in
-                do {
-                    if let phoneNumber = try self?.parse(numberString, withRegion: region, ignoreType: ignoreType) {
-                        multiParseArray.append(phoneNumber)
-                    } else if shouldReturnFailedEmptyNumbers {
-                        multiParseArray.append(PhoneNumber.notPhoneNumber())
+                    do {
+                        if let phoneNumber = try self?.parse(numberString, withRegion: region, ignoreType: ignoreType) {
+                            multiParseArray.append(phoneNumber)
+                        } else if shouldReturnFailedEmptyNumbers {
+                            multiParseArray.append(PhoneNumber.notPhoneNumber())
+                        }
+                    } catch {
+                        if shouldReturnFailedEmptyNumbers {
+                            multiParseArray.append(PhoneNumber.notPhoneNumber())
+                        }
                     }
-                } catch {
-                    if shouldReturnFailedEmptyNumbers {
-                        multiParseArray.append(PhoneNumber.notPhoneNumber())
-                    }
-                }
-                group.leave()
+                    group.leave()
             }
             if index == numberStrings.count / 2 {
                 testCallback?()
@@ -155,8 +155,7 @@ final class ParseManager {
         return nil
     }
 
-    //MARK: Internal method
-
+    // MARK: Internal method
 
     /// Creates a valid phone number given a specifc region metadata, used internally by the parse function
     private func validPhoneNumber(from nationalNumber: String, using regionMetadata: MetadataTerritory, countryCode: UInt64, ignoreType: Bool, numberString: String, numberExtension: String?) throws -> PhoneNumber? {
@@ -192,5 +191,4 @@ final class ParseManager {
 
         return PhoneNumber(numberString: numberString, countryCode: countryCode, leadingZero: leadingZero, nationalNumber: finalNationalNumber, numberExtension: numberExtension, type: type, regionID: regionMetadata.codeID)
     }
-
 }

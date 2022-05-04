@@ -55,11 +55,11 @@ class PhoneNumberKitTests: XCTestCase {
             XCTFail()
         }
     }
-    
+
     // Bool checker, GitHub issue #325
     func testValidNumberBool() {
-        XCTAssert(phoneNumberKit.isValidPhoneNumber("6297062979", withRegion: "IN"))
-        XCTAssertFalse(phoneNumberKit.isValidPhoneNumber("202 00e 0000", withRegion: "US"))
+        XCTAssert(self.phoneNumberKit.isValidPhoneNumber("6297062979", withRegion: "IN"))
+        XCTAssertFalse(self.phoneNumberKit.isValidPhoneNumber("202 00e 0000", withRegion: "US"))
     }
 
     // Invalid american number, GitHub issue #9 by lobodin
@@ -279,7 +279,7 @@ class PhoneNumberKitTests: XCTestCase {
             XCTFail()
         }
     }
-    
+
     func testValidAENumberWithHinduArabicNumerals() {
         let testNumber = "+٩٧١٥٠٠٥٠٠٥٥٠"
         do {
@@ -417,7 +417,7 @@ class PhoneNumberKitTests: XCTestCase {
         }
         XCTAssertEqual(self.phoneNumberKit.getRegionCode(of: phoneNumber), "IT")
     }
-    
+
     // In the case of multiple
     // countries sharing a calling code, the one
     // indicated with "isMainCountryForCode" in the metadata should be first.
@@ -428,7 +428,7 @@ class PhoneNumberKitTests: XCTestCase {
         }
         XCTAssertEqual(self.phoneNumberKit.getRegionCode(of: phoneNumber), "US")
     }
-    
+
     // RU number with KZ country code
     func testValidRUNumberWithKZRegion() {
         let testNumber = "+7 916 195 55 58"
@@ -443,7 +443,7 @@ class PhoneNumberKitTests: XCTestCase {
             XCTFail()
         }
     }
-    
+
     func testValidKZNumbersWithInternationalPrefix() {
         let numbers = ["+7 (777)110-85-31", "+77777056982", "+7(701)977-75-05"]
         numbers.forEach { XCTAssertTrue(phoneNumberKit.isValidPhoneNumber($0, withRegion: "KZ")) }

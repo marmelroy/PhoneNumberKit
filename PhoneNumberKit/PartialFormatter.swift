@@ -60,7 +60,7 @@ public final class PartialFormatter {
 
     public var currentRegion: String {
         if self.phoneNumberKit.countryCode(for: self.defaultRegion) != 1 {
-            return currentMetadata?.codeID ?? "US"
+            return self.currentMetadata?.codeID ?? "US"
         } else {
             return self.currentMetadata?.countryCode == 1
                 ? self.defaultRegion
@@ -106,8 +106,8 @@ public final class PartialFormatter {
         guard self.isValidRawNumber(rawNumber) else {
             return rawNumber
         }
-        let split = splitNumberAndPausesOrWaits(rawNumber)
-        
+        let split = self.splitNumberAndPausesOrWaits(rawNumber)
+
         var nationalNumber = self.nationalNumber(from: split.number)
         if let formats = availableFormats(nationalNumber) {
             if let formattedNumber = applyFormat(nationalNumber, formats: formats) {
@@ -168,8 +168,8 @@ public final class PartialFormatter {
     internal func isNanpaNumberWithNationalPrefix(_ rawNumber: String) -> Bool {
         guard self.currentMetadata?.countryCode == 1, rawNumber.count > 1 else { return false }
 
-        let firstCharacter: String = String(describing: rawNumber.first)
-        let secondCharacter: String = String(describing: rawNumber[rawNumber.index(rawNumber.startIndex, offsetBy: 1)])
+        let firstCharacter = String(describing: rawNumber.first)
+        let secondCharacter = String(describing: rawNumber[rawNumber.index(rawNumber.startIndex, offsetBy: 1)])
         return (firstCharacter == "1" && secondCharacter != "0" && secondCharacter != "1")
     }
 
@@ -209,7 +209,7 @@ public final class PartialFormatter {
 
     func extractNationalPrefix(_ rawNumber: String) -> String {
         var processedNumber = rawNumber
-        var startOfNationalNumber: Int = 0
+        var startOfNationalNumber = 0
         if self.isNanpaNumberWithNationalPrefix(rawNumber) {
             self.prefixBeforeNationalNumber.append("1 ")
         } else {
@@ -244,7 +244,7 @@ public final class PartialFormatter {
             processedNumber = numberWithoutCountryCallingCode
             self.currentMetadata = self.metadataManager?.mainTerritory(forCode: potentialCountryCode)
             let potentialCountryCodeString = String(potentialCountryCode)
-            prefixBeforeNationalNumber.append(potentialCountryCodeString)
+            self.prefixBeforeNationalNumber.append(potentialCountryCodeString)
             self.prefixBeforeNationalNumber.append(" ")
         } else if self.withPrefix == false, self.prefixBeforeNationalNumber.isEmpty {
             let potentialCountryCodeString = String(describing: currentMetadata?.countryCode)
@@ -253,28 +253,27 @@ public final class PartialFormatter {
         }
         return processedNumber
     }
-    
+
     func splitNumberAndPausesOrWaits(_ rawNumber: String) -> (number: String, pausesOrWaits: String) {
         if rawNumber.isEmpty {
             return (rawNumber, "")
         }
-        
+
         let splitByComma = rawNumber.split(separator: ",", maxSplits: 1, omittingEmptySubsequences: false)
         let splitBySemiColon = rawNumber.split(separator: ";", maxSplits: 1, omittingEmptySubsequences: false)
-        
+
         if splitByComma[0].count != splitBySemiColon[0].count {
             let foundCommasFirst = splitByComma[0].count < splitBySemiColon[0].count
-            
+
             if foundCommasFirst {
                 return (String(splitByComma[0]), "," + splitByComma[1])
-            }
-            else {
+            } else {
                 return (String(splitBySemiColon[0]), ";" + splitBySemiColon[1])
             }
         }
         return (rawNumber, "")
     }
-    
+
     func availableFormats(_ rawNumber: String) -> [MetadataPhoneNumberFormat]? {
         guard let regexManager = regexManager else { return nil }
         var tempPossibleFormats = [MetadataPhoneNumberFormat]()
@@ -389,7 +388,7 @@ public final class PartialFormatter {
         }
         if rebuiltIndex < rawNumber.count {
             let nationalCharacterIndex = rawNumber.index(rawNumber.startIndex, offsetBy: rebuiltIndex)
-            let remainingNationalNumber: String = String(rawNumber[nationalCharacterIndex...])
+            let remainingNationalNumber = String(rawNumber[nationalCharacterIndex...])
             rebuiltString.append(remainingNationalNumber)
         }
         rebuiltString = rebuiltString.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)

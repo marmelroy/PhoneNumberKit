@@ -170,7 +170,7 @@ final class PhoneNumberParser {
      - Returns: True or false.
      */
     func isNumberMatchingDesc(_ nationalNumber: String, numberDesc: MetadataPhoneNumberDesc?) -> Bool {
-        return self.regex.matchesEntirely(numberDesc?.nationalNumberPattern, string: nationalNumber)
+        self.regex.matchesEntirely(numberDesc?.nationalNumberPattern, string: nationalNumber)
     }
 
     /**
@@ -276,7 +276,7 @@ final class PhoneNumberParser {
                 let nationalNumberRule = metadata.generalDesc?.nationalNumberPattern
                 let firstMatchString = number.substring(with: firstMatch.range)
                 let numOfGroups = firstMatch.numberOfRanges - 1
-                var transformedNumber: String = String()
+                var transformedNumber = String()
                 let firstRange = firstMatch.range(at: numOfGroups)
                 let firstMatchStringWithGroup = (firstRange.location != NSNotFound && firstRange.location < number.count) ? number.substring(with: firstRange) : String()
                 let firstMatchStringWithGroupHasValue = self.regex.hasValue(firstMatchStringWithGroup)

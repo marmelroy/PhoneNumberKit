@@ -13,7 +13,7 @@
 --header ignore
 --hexgrouping none
 --hexliteralcase uppercase
---ifdef outdent
+--ifdef no-indent
 --importgrouping alphabetized
 --indent 4
 --indentcase false

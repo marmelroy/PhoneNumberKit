@@ -9,7 +9,6 @@
 import Foundation
 
 final class RegexManager {
-
     public init() {
         var characterSet = CharacterSet(charactersIn: PhoneNumberConstants.nonBreakingSpace)
         characterSet.formUnion(.whitespacesAndNewlines)
@@ -40,7 +39,7 @@ final class RegexManager {
         do {
             let regex = try NSRegularExpression(pattern: pattern, options: .caseInsensitive)
 
-            regularExpressionPoolQueue.async(flags: .barrier) {
+            self.regularExpressionPoolQueue.async(flags: .barrier) {
                 self.regularExpresionPool[pattern] = regex
             }
 

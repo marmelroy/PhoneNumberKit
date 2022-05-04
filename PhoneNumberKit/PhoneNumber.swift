@@ -30,7 +30,7 @@ public struct PhoneNumber: Codable {
 
 extension PhoneNumber: Equatable {
     public static func == (lhs: PhoneNumber, rhs: PhoneNumber) -> Bool {
-        return (lhs.countryCode == rhs.countryCode)
+        (lhs.countryCode == rhs.countryCode)
             && (lhs.leadingZero == rhs.leadingZero)
             && (lhs.nationalNumber == rhs.nationalNumber)
             && (lhs.numberExtension == rhs.numberExtension)
@@ -50,21 +50,21 @@ extension PhoneNumber: Hashable {
     }
 }
 
-extension PhoneNumber {
-    public static func notPhoneNumber() -> PhoneNumber {
-        return PhoneNumber(numberString: "", countryCode: 0, leadingZero: false, nationalNumber: 0, numberExtension: nil, type: .notParsed, regionID: nil)
+public extension PhoneNumber {
+    static func notPhoneNumber() -> PhoneNumber {
+        PhoneNumber(numberString: "", countryCode: 0, leadingZero: false, nationalNumber: 0, numberExtension: nil, type: .notParsed, regionID: nil)
     }
 
-    public func notParsed() -> Bool {
-        return self.type == .notParsed
+    func notParsed() -> Bool {
+        self.type == .notParsed
     }
-    
+
     /**
      Get a callable URL from the number.
      - Returns: A callable URL.
      */
-    public var url: URL? {
-        return URL(string: "tel://" + numberString)
+    var url: URL? {
+        URL(string: "tel://" + self.numberString)
     }
 }
 
@@ -92,4 +92,3 @@ public extension PhoneNumber {
         throw PhoneNumberError.deprecated
     }
 }
-

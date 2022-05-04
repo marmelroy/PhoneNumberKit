@@ -94,13 +94,13 @@ public enum PhoneNumberType: String, Codable {
 }
 
 public enum PossibleLengthType: String, Codable {
-  case national
-  case localOnly
+    case national
+    case localOnly
 }
 
 // MARK: Constants
 
-struct PhoneNumberConstants {
+enum PhoneNumberConstants {
     static let defaultCountry = "US"
     static let defaultExtnPrefix = " ext. "
     static let longPhoneNumber = "999999999999999"
@@ -117,14 +117,14 @@ struct PhoneNumberConstants {
     static let separatorBeforeNationalNumber = " "
 }
 
-struct PhoneNumberPatterns {
+enum PhoneNumberPatterns {
     // MARK: Patterns
 
     static let firstGroupPattern = "(\\$\\d)"
     static let fgPattern = "\\$FG"
     static let npPattern = "\\$NP"
 
-    static let allNormalizationMappings = ["0":"0", "1":"1", "2":"2", "3":"3", "4":"4", "5":"5", "6":"6", "7":"7", "8":"8", "9":"9", "٠":"0", "١":"1", "٢":"2", "٣":"3", "٤":"4", "٥":"5", "٦":"6", "٧":"7", "٨":"8", "٩":"9", "۰":"0", "۱":"1", "۲":"2", "۳":"3", "۴":"4", "۵":"5", "۶":"6", "۷":"7", "۸":"8", "۹":"9", "*":"*", "#":"#", ",":",", ";":";"]
+    static let allNormalizationMappings = ["0": "0", "1": "1", "2": "2", "3": "3", "4": "4", "5": "5", "6": "6", "7": "7", "8": "8", "9": "9", "٠": "0", "١": "1", "٢": "2", "٣": "3", "٤": "4", "٥": "5", "٦": "6", "٧": "7", "٨": "8", "٩": "9", "۰": "0", "۱": "1", "۲": "2", "۳": "3", "۴": "4", "۵": "5", "۶": "6", "۷": "7", "۸": "8", "۹": "9", "*": "*", "#": "#", ",": ",", ";": ";"]
     static let capturingDigitPattern = "([0-9０-９٠-٩۰-۹])"
 
     static let extnPattern = "(?:;ext=([0-9０-９٠-٩۰-۹]{1,7})|[  \\t,]*(?:e?xt(?:ensi(?:ó?|ó))?n?|ｅ?ｘｔｎ?|[,xｘX#＃~～;]|int|anexo|ｉｎｔ)[:\\.．]?[  \\t,-]*([0-9０-９٠-٩۰-۹]{1,7})#?|[- ]+([0-9０-９٠-٩۰-۹]{1,5})#)$"

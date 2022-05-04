@@ -12,18 +12,24 @@ let package = Package(
         .library(name: "PhoneNumberKit-Dynamic", type: .dynamic, targets: ["PhoneNumberKit"])
     ],
     targets: [
-        .target(name: "PhoneNumberKit",
-                path: "PhoneNumberKit",
-                exclude: ["Resources/Original",
-                          "Resources/README.md",
-                          "Resources/update.sh",
-                          "Info.plist"],
-                resources: [
-                    .process("Resources/PhoneNumberMetadata.json")
-                ]),
-        .testTarget(name: "PhoneNumberKitTests",
-                    dependencies: ["PhoneNumberKit"],
-                    path: "PhoneNumberKitTests",
-                    exclude: ["Info.plist"])
+        .target(
+            name: "PhoneNumberKit",
+            path: "PhoneNumberKit",
+            exclude: [
+                "Resources/Original",
+                "Resources/README.md",
+                "Resources/update.sh",
+                "Info.plist"
+            ],
+            resources: [
+                .process("Resources/PhoneNumberMetadata.json")
+            ]
+        ),
+        .testTarget(
+            name: "PhoneNumberKitTests",
+            dependencies: ["PhoneNumberKit"],
+            path: "PhoneNumberKitTests",
+            exclude: ["Info.plist"]
+        )
     ]
 )

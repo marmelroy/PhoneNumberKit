@@ -150,7 +150,7 @@ private extension KeyedDecodingContainer where K: CodingKey {
 
 private extension Collection where Element == MetadataPhoneNumberFormat {
     func withDefaultNationalPrefixFormattingRule(_ nationalPrefixFormattingRule: String?) -> [Element] {
-        return self.map { format -> MetadataPhoneNumberFormat in
+        self.map { format -> MetadataPhoneNumberFormat in
             var modifiedFormat = format
             if modifiedFormat.nationalPrefixFormattingRule == nil {
                 modifiedFormat.nationalPrefixFormattingRule = nationalPrefixFormattingRule

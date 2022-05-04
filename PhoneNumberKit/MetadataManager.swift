@@ -70,7 +70,7 @@ final class MetadataManager {
     ///
     /// - returns: optional array of MetadataTerritory objects.
     internal func filterTerritories(byCode code: UInt64) -> [MetadataTerritory]? {
-        return self.territoriesByCode[code]
+        self.territoriesByCode[code]
     }
 
     /// Get the MetadataTerritory objects for an ISO 639 compliant region code.
@@ -79,7 +79,7 @@ final class MetadataManager {
     ///
     /// - returns: A MetadataTerritory object.
     internal func filterTerritories(byCountry country: String) -> MetadataTerritory? {
-        return self.territoriesByCountry[country.uppercased()]
+        self.territoriesByCountry[country.uppercased()]
     }
 
     /// Get the main MetadataTerritory objects for a given country code.
@@ -88,6 +88,6 @@ final class MetadataManager {
     ///
     /// - returns: A MetadataTerritory object.
     internal func mainTerritory(forCode code: UInt64) -> MetadataTerritory? {
-        return self.mainTerritoryByCode[code]
+        self.mainTerritoryByCode[code]
     }
 }

@@ -35,7 +35,7 @@ open class PhoneNumberFormatter: Foundation.Formatter {
 
     @objc public dynamic
     var currentRegion: String {
-        return self.partialFormatter.currentRegion
+        self.partialFormatter.currentRegion
     }
 
     // MARK: Lifecycle
@@ -58,7 +58,7 @@ open class PhoneNumberFormatter: Foundation.Formatter {
 // MARK: NSFormatter implementation
 
 extension PhoneNumberFormatter {
-    open override func string(for obj: Any?) -> String? {
+    override open func string(for obj: Any?) -> String? {
         if let pn = obj as? PhoneNumber {
             return self.phoneNumberKit.format(pn, toType: self.withPrefix ? .international : .national)
         }
@@ -68,7 +68,7 @@ extension PhoneNumberFormatter {
         return nil
     }
 
-    open override func getObjectValue(_ obj: AutoreleasingUnsafeMutablePointer<AnyObject?>?, for string: String, errorDescription error: AutoreleasingUnsafeMutablePointer<NSString?>?) -> Bool {
+    override open func getObjectValue(_ obj: AutoreleasingUnsafeMutablePointer<AnyObject?>?, for string: String, errorDescription error: AutoreleasingUnsafeMutablePointer<NSString?>?) -> Bool {
         if self.generatesPhoneNumber {
             do {
                 obj?.pointee = try self.phoneNumberKit.parse(string) as AnyObject?
@@ -146,7 +146,7 @@ extension PhoneNumberFormatter {
         return .replace
     }
 
-    open override func isPartialStringValid(
+    override open func isPartialStringValid(
         _ partialStringPtr: AutoreleasingUnsafeMutablePointer<NSString>,
         proposedSelectedRange proposedSelRangePtr: NSRangePointer?,
         originalString origString: String,
@@ -211,13 +211,13 @@ extension PhoneNumberFormatter {
 
 private extension NSString {
     func isWhiteSpace(in range: NSRange) -> Bool {
-        return rangeOfCharacter(from: CharacterSet.whitespacesAndNewlines.inverted, options: [.literal], range: range).location == NSNotFound
+        rangeOfCharacter(from: CharacterSet.whitespacesAndNewlines.inverted, options: [.literal], range: range).location == NSNotFound
     }
 }
 
 private extension unichar {
     func isDigit() -> Bool {
-        return self >= 0x30 && self <= 0x39 // '0' < '9'
+        self >= 0x30 && self <= 0x39 // '0' < '9'
     }
 }
 #endif

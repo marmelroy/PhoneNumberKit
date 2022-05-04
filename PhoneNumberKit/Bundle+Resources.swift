@@ -28,7 +28,7 @@ extension Bundle {
             }
         }
         #endif
-        
+
         #if SWIFT_PACKAGE
         return Bundle.module
         #else
