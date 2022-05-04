@@ -9,7 +9,7 @@ private class CurrentBundleFinder {}
 //
 extension Bundle {
     static var phoneNumberKit: Bundle = {
-        #if SWIFT_PACKAGE && DEBUG
+        #if DEBUG && SWIFT_PACKAGE
         let bundleName = "PhoneNumberKit_PhoneNumberKit"
         let candidates = [
             /* Bundle should be present here when the package is linked into an App. */
@@ -28,6 +28,11 @@ extension Bundle {
             }
         }
         #endif
+        
+        #if SWIFT_PACKAGE
+        return Bundle.module
+        #else
         return Bundle(for: CurrentBundleFinder.self)
+        #endif
     }()
 }
