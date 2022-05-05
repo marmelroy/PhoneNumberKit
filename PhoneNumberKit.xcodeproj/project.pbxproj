@@ -87,6 +87,11 @@
 		C6DF6CDF1D1B18D800259F4B /* PhoneNumberParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342418811BB70F5200EE70E7 /* PhoneNumberParser.swift */; };
 		C6DF6CE01D1B18D800259F4B /* RegexManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34566C991BC112C500715E6B /* RegexManager.swift */; };
 		C9D81F822348025700B75AB7 /* PhoneNumberTextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D81F812348025700B75AB7 /* PhoneNumberTextFieldTests.swift */; };
+		D51A60A9274416050021EE7E /* PhoneNumber+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51A60A8274416050021EE7E /* PhoneNumber+Codable.swift */; };
+		D51A60AA2744160B0021EE7E /* PhoneNumber+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51A60A8274416050021EE7E /* PhoneNumber+Codable.swift */; };
+		D51A60AB2744160B0021EE7E /* PhoneNumber+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51A60A8274416050021EE7E /* PhoneNumber+Codable.swift */; };
+		D51A60AC2744160C0021EE7E /* PhoneNumber+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51A60A8274416050021EE7E /* PhoneNumber+Codable.swift */; };
+		D51A60AE27442EF50021EE7E /* PhoneNumber+CodableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51A60AD27442EF50021EE7E /* PhoneNumber+CodableTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -132,6 +137,8 @@
 		C6DF6CA71D1B145300259F4B /* PhoneNumberKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhoneNumberKit.h; sourceTree = "<group>"; };
 		C6DF6CCC1D1B18B000259F4B /* PhoneNumberKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PhoneNumberKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9D81F812348025700B75AB7 /* PhoneNumberTextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberTextFieldTests.swift; sourceTree = "<group>"; };
+		D51A60A8274416050021EE7E /* PhoneNumber+Codable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhoneNumber+Codable.swift"; sourceTree = "<group>"; };
+		D51A60AD27442EF50021EE7E /* PhoneNumber+CodableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhoneNumber+CodableTests.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -228,6 +235,7 @@
 				34566C991BC112C500715E6B /* RegexManager.swift */,
 				34F26FBD2517DCB700B6AF4D /* Bundle+Resources.swift */,
 				3424187F1BB705B500EE70E7 /* PhoneNumber.swift */,
+				D51A60A8274416050021EE7E /* PhoneNumber+Codable.swift */,
 				34AA66011BDD160B00467912 /* Constants.swift */,
 				3420CF5D1BE8959F00FAE34F /* Formatter.swift */,
 				343B850A1C62A25600918E46 /* PartialFormatter.swift */,
@@ -246,6 +254,7 @@
 			isa = PBXGroup;
 			children = (
 				342418731BB6E5A000EE70E7 /* PhoneNumberKitTests.swift */,
+				D51A60AD27442EF50021EE7E /* PhoneNumber+CodableTests.swift */,
 				346EF14D1C69C688008C7306 /* PartialFormatterTests.swift */,
 				34776AA71BE2BF1100400790 /* PhoneNumberKitParsingTests.swift */,
 				342418751BB6E5A000EE70E7 /* Info.plist */,
@@ -502,6 +511,7 @@
 				3417BD6B2210AC4900477EE7 /* MetadataParsing.swift in Sources */,
 				346922691BC023A60023482F /* PhoneNumberKit.swift in Sources */,
 				343B850C1C62A25600918E46 /* PartialFormatter.swift in Sources */,
+				D51A60A9274416050021EE7E /* PhoneNumber+Codable.swift in Sources */,
 				3422D9BA1BE6A2D500867D02 /* ParseManager.swift in Sources */,
 				34566C9A1BC112C500715E6B /* RegexManager.swift in Sources */,
 				342418801BB705B500EE70E7 /* PhoneNumber.swift in Sources */,
@@ -515,6 +525,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D51A60AE27442EF50021EE7E /* PhoneNumber+CodableTests.swift in Sources */,
 				34776AA81BE2BF1100400790 /* PhoneNumberKitParsingTests.swift in Sources */,
 				342418741BB6E5A000EE70E7 /* PhoneNumberKitTests.swift in Sources */,
 				346EF14E1C69C688008C7306 /* PartialFormatterTests.swift in Sources */,
@@ -536,6 +547,7 @@
 				C6DF6C5C1D1B09DD00259F4B /* PhoneNumber.swift in Sources */,
 				C5639CD025B9127D009637AF /* PhoneNumberTextField.swift in Sources */,
 				C6DF6C541D1B09DD00259F4B /* Constants.swift in Sources */,
+				D51A60AA2744160B0021EE7E /* PhoneNumber+Codable.swift in Sources */,
 				34F26FBF2517DCB700B6AF4D /* Bundle+Resources.swift in Sources */,
 				C6DF6C591D1B09DD00259F4B /* MetadataTypes.swift in Sources */,
 				C5639CDD25B91283009637AF /* CountryCodePickerViewController.swift in Sources */,
@@ -559,6 +571,7 @@
 				C6DF6CBA1D1B159A00259F4B /* PhoneNumber.swift in Sources */,
 				C5639CD625B9127D009637AF /* PhoneNumberTextField.swift in Sources */,
 				C6DF6CB21D1B159A00259F4B /* Constants.swift in Sources */,
+				D51A60AB2744160B0021EE7E /* PhoneNumber+Codable.swift in Sources */,
 				34F26FC02517DCB700B6AF4D /* Bundle+Resources.swift in Sources */,
 				C6DF6CB71D1B159A00259F4B /* MetadataTypes.swift in Sources */,
 				C5639CE325B91284009637AF /* CountryCodePickerViewController.swift in Sources */,
@@ -582,6 +595,7 @@
 				1B8090502300B4DD006AE849 /* MetadataParsing.swift in Sources */,
 				C5639CD725B9127E009637AF /* PhoneNumberTextField.swift in Sources */,
 				C6DF6CDA1D1B18D800259F4B /* MetadataTypes.swift in Sources */,
+				D51A60AC2744160C0021EE7E /* PhoneNumber+Codable.swift in Sources */,
 				34F26FC12517DCB700B6AF4D /* Bundle+Resources.swift in Sources */,
 				C6DF6CE01D1B18D800259F4B /* RegexManager.swift in Sources */,
 				C5639CE425B91284009637AF /* CountryCodePickerViewController.swift in Sources */,
