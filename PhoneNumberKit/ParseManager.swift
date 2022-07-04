@@ -97,30 +97,23 @@ final class ParseManager {
      */
     func parseMultiple(_ numberStrings: [String], withRegion region: String, ignoreType: Bool, shouldReturnFailedEmptyNumbers: Bool = false, testCallback: (() -> Void)? = nil) -> [PhoneNumber] {
         var multiParseArray = [PhoneNumber]()
-        let group = DispatchGroup()
-        let queue = DispatchQueue(label: "com.phonenumberkit.multipleparse", qos: .default)
-        for (index, numberString) in numberStrings.enumerated() {
-            group.enter()
-            queue.async(group: group) {
-                [weak self] in
-                do {
-                    if let phoneNumber = try self?.parse(numberString, withRegion: region, ignoreType: ignoreType) {
-                        multiParseArray.append(phoneNumber)
-                    } else if shouldReturnFailedEmptyNumbers {
-                        multiParseArray.append(PhoneNumber.notPhoneNumber())
-                    }
-                } catch {
-                    if shouldReturnFailedEmptyNumbers {
-                        multiParseArray.append(PhoneNumber.notPhoneNumber())
-                    }
+        let queue = DispatchQueue(label: "com.phonenumberkit.parsemanagerpool", target: .global())
+
+        DispatchQueue.concurrentPerform(iterations: numberStrings.count) { index in
+            do {
+                let numberString = queue.sync { numberStrings[index] }
+                let phoneNumber = try self.parse(numberString, withRegion: region, ignoreType: ignoreType)
+                queue.sync { multiParseArray.append(phoneNumber) }
+            } catch {
+                if shouldReturnFailedEmptyNumbers {
+                    queue.sync { multiParseArray.append(PhoneNumber.notPhoneNumber()) }
                 }
-                group.leave()
             }
+
             if index == numberStrings.count / 2 {
                 testCallback?()
             }
         }
-        group.wait()
         return multiParseArray
     }
 
