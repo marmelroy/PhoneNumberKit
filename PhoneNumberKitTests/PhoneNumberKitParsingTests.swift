@@ -451,9 +451,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
         for _ in 0..<numberOfParses {
             numberArray.append("+5491187654321")
         }
-        let phoneNumbers = self.phoneNumberKit.parseManager.parseMultiple(numberArray, withRegion: "AR", ignoreType: true) {
-            numberArray.remove(at: 100)
-        }
+        let phoneNumbers = self.phoneNumberKit.parseManager.parseMultiple(numberArray, withRegion: "AR", ignoreType: true)
         XCTAssertTrue(phoneNumbers.count == numberOfParses)
         endTime = Date()
         let timeInterval = endTime.timeIntervalSince(startTime)
