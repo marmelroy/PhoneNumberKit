@@ -92,35 +92,30 @@ final class ParseManager {
      Fastest way to parse an array of phone numbers. Uses custom region code.
      - Parameter numberStrings: An array of raw number strings.
      - Parameter region: ISO 639 compliant region code.
-     - parameter ignoreType:   Avoids number type checking for faster performance.
+     - parameter ignoreType: Avoids number type checking for faster performance.
      - Returns: An array of valid PhoneNumber objects.
      */
-    func parseMultiple(_ numberStrings: [String], withRegion region: String, ignoreType: Bool, shouldReturnFailedEmptyNumbers: Bool = false, testCallback: (() -> Void)? = nil) -> [PhoneNumber] {
-        var multiParseArray = [PhoneNumber]()
-        let group = DispatchGroup()
-        let queue = DispatchQueue(label: "com.phonenumberkit.multipleparse", qos: .default)
-        for (index, numberString) in numberStrings.enumerated() {
-            group.enter()
-            queue.async(group: group) {
-                [weak self] in
+    func parseMultiple(_ numberStrings: [String], withRegion region: String, ignoreType: Bool, shouldReturnFailedEmptyNumbers: Bool = false) -> [PhoneNumber] {
+        var hasError = false
+        
+        var multiParseArray = [PhoneNumber](unsafeUninitializedCapacity: numberStrings.count) { buffer, initializedCount in
+            DispatchQueue.concurrentPerform(iterations: numberStrings.count) { index in
+                let numberString = numberStrings[index]
                 do {
-                    if let phoneNumber = try self?.parse(numberString, withRegion: region, ignoreType: ignoreType) {
-                        multiParseArray.append(phoneNumber)
-                    } else if shouldReturnFailedEmptyNumbers {
-                        multiParseArray.append(PhoneNumber.notPhoneNumber())
-                    }
+                    let phoneNumber = try self.parse(numberString, withRegion: region, ignoreType: ignoreType)
+                    buffer.baseAddress!.advanced(by: index).initialize(to: phoneNumber)
                 } catch {
-                    if shouldReturnFailedEmptyNumbers {
-                        multiParseArray.append(PhoneNumber.notPhoneNumber())
-                    }
+                    buffer.baseAddress!.advanced(by: index).initialize(to: PhoneNumber.notPhoneNumber())
+                    hasError = true
                 }
-                group.leave()
             }
-            if index == numberStrings.count / 2 {
-                testCallback?()
-            }
+            initializedCount = numberStrings.count
         }
-        group.wait()
+
+        if hasError && !shouldReturnFailedEmptyNumbers {
+            multiParseArray = multiParseArray.filter { $0.type != .notParsed }
+        }
+
         return multiParseArray
     }
 
