@@ -442,6 +442,47 @@ class PhoneNumberKitParsingTests: XCTestCase {
         print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
         XCTAssertTrue(timeInterval < 5)
     }
+    
+    func testPerformanceNonOptimizedSimple() {
+        let numberOfParses = 2000
+        let startTime = Date()
+        var endTime = Date()
+        for _ in 0..<numberOfParses {
+            _ = try? self.phoneNumberKit.parse("+5491187654321", ignoreType: true)
+        }
+        endTime = Date()
+        let timeInterval = endTime.timeIntervalSince(startTime)
+        print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
+        XCTAssertTrue(timeInterval < 1)
+    }
+    
+    func testPerformanceWithoutSupplyingDefaultRegion() {
+        let numberOfParses = 2000
+        let startTime = Date()
+        var endTime = Date()
+        var numberArray: [String] = []
+        for _ in 0..<numberOfParses {
+            numberArray.append("+5491187654321")
+        }
+        _ = self.phoneNumberKit.parse(numberArray, ignoreType: true)
+        endTime = Date()
+        let timeInterval = endTime.timeIntervalSince(startTime)
+        print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
+        XCTAssertTrue(timeInterval < 1)
+    }
+    
+    func testPerformanceNonOptimizedParsingUsageWithoutDefaultRegion() {
+        let numberOfParses = 2000
+        let startTime = Date()
+        var endTime = Date()
+        for _ in 0..<numberOfParses {
+            _ = try? self.phoneNumberKit.parse("+5491187654321", ignoreType: true)
+        }
+        endTime = Date()
+        let timeInterval = endTime.timeIntervalSince(startTime)
+        print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
+        XCTAssertTrue(timeInterval < 1)
+    }
 
     func testMultipleMutated() {
         let numberOfParses = 500
