@@ -7,9 +7,7 @@
 //
 
 import Foundation
-#if os(iOS)
-import CoreTelephony
-#endif
+import Contacts
 
 public typealias MetadataCallback = (() throws -> Data?)
 
@@ -18,10 +16,6 @@ public final class PhoneNumberKit: NSObject {
     let metadataManager: MetadataManager
     let parseManager: ParseManager
     let regexManager = RegexManager()
-
-    #if os(iOS) && !targetEnvironment(simulator) && !targetEnvironment(macCatalyst)
-    private static let networkInfo = CTTelephonyNetworkInfo()
-    #endif
 
     // MARK: Lifecycle
 
@@ -298,28 +292,7 @@ public final class PhoneNumberKit: NSObject {
     ///
     /// - returns: A computed value for the user's current region - based on the iPhone's carrier and if not available, the device region.
     public class func defaultRegionCode() -> String {
-        #if os(iOS) && !targetEnvironment(simulator) && !targetEnvironment(macCatalyst)
-        var carrier: CTCarrier?
-        if #available(iOS 12.0, *) {
-            carrier = networkInfo.serviceSubscriberCellularProviders?.values.compactMap({ $0 }).first
-        } else {
-            carrier = networkInfo.subscriberCellularProvider
-        }
-
-        if let isoCountryCode = carrier?.isoCountryCode {
-            return isoCountryCode.uppercased()
-        }
-        #endif
-
-        let currentLocale = Locale.current
-        if #available(iOS 10.0, *), let countryCode = currentLocale.regionCode {
-            return countryCode.uppercased()
-        } else {
-            if let countryCode = (currentLocale as NSLocale).object(forKey: .countryCode) as? String {
-                return countryCode.uppercased()
-            }
-        }
-        return PhoneNumberConstants.defaultCountry
+        return CNContactsUserDefaults.shared().countryCode
     }
 
     /// Default metadata callback, reads metadata from PhoneNumberMetadata.json file in bundle
