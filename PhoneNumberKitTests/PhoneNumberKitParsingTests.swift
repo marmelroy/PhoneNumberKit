@@ -32,7 +32,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
     }
 
     func testUSMetadata() {
-        let sut = self.phoneNumberKit.metadataManager.territoriesByCountry["US"]!
+        let sut = self.phoneNumberKit.metadataManager.filterTerritories(byCountry: "US")!
         XCTAssertEqual(sut.codeID, "US")
         XCTAssertEqual(sut.countryCode, 1)
         XCTAssertEqual(sut.internationalPrefix, "011")

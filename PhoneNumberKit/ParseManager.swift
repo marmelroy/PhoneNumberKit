@@ -45,7 +45,7 @@ final class ParseManager {
             numberExtension = self.parser.normalizePhoneNumber(rawExtension)
         }
         // Country code parse (4)
-        guard var regionMetadata = metadataManager.territoriesByCountry[region] else {
+        guard var regionMetadata = metadataManager.filterTerritories(byCountry: region) else {
             throw PhoneNumberError.invalidCountryCode
         }
         let countryCode: UInt64
@@ -66,7 +66,7 @@ final class ParseManager {
         }
         
         // If country code is not default, grab correct metadata (6)
-        if countryCode != regionMetadata.countryCode, let countryMetadata = metadataManager.mainTerritoryByCode[countryCode] {
+        if countryCode != regionMetadata.countryCode, let countryMetadata = metadataManager.mainTerritory(forCode: countryCode) {
             regionMetadata = countryMetadata
         }
 
@@ -127,7 +127,7 @@ final class ParseManager {
     ///   - leadingZero: whether or not the number has a leading zero.
     /// - Returns: ISO 639 compliant region code.
     func getRegionCode(of nationalNumber: UInt64, countryCode: UInt64, leadingZero: Bool) -> String? {
-        guard let regexManager = regexManager, let metadataManager = metadataManager, let regions = metadataManager.territoriesByCode[countryCode] else { return nil }
+        guard let regexManager = regexManager, let metadataManager = metadataManager, let regions = metadataManager.filterTerritories(byCode: countryCode) else { return nil }
 
         if regions.count == 1 {
             return regions[0].codeID
@@ -176,7 +176,7 @@ final class ParseManager {
         // Check if the number if of a known type (4)
         var type: PhoneNumberType = .unknown
         if ignoreType == false {
-            if let regionCode = getRegionCode(of: finalNationalNumber, countryCode: countryCode, leadingZero: leadingZero), let foundMetadata = metadataManager.territoriesByCountry[regionCode] {
+            if let regionCode = getRegionCode(of: finalNationalNumber, countryCode: countryCode, leadingZero: leadingZero), let foundMetadata = metadataManager.filterTerritories(byCountry: regionCode){
                 regionMetadata = foundMetadata
             }
             type = self.parser.checkNumberType(String(nationalNumber), metadata: regionMetadata, leadingZero: leadingZero)
