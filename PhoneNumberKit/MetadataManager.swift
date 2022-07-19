@@ -9,10 +9,11 @@
 import Foundation
 
 final class MetadataManager {
-    var territories = [MetadataTerritory]()
-    var territoriesByCode = [UInt64: [MetadataTerritory]]()
-    var mainTerritoryByCode = [UInt64: MetadataTerritory]()
-    var territoriesByCountry = [String: MetadataTerritory]()
+    private(set) var territories = [MetadataTerritory]()
+    
+    private var territoriesByCode = [UInt64: [MetadataTerritory]]()
+    private var mainTerritoryByCode = [UInt64: MetadataTerritory]()
+    private var territoriesByCountry = [String: MetadataTerritory]()
 
     // MARK: Lifecycle
 
