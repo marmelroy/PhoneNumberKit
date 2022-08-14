@@ -515,6 +515,17 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             self.updatePlaceholder()
         }
     }
+    
+    public func setPhoneNumber(phone: String) {
+        text = phone
+        guard let phoneNumber = self.phoneNumber else { return }
+        guard let regionCode = phoneNumberKit.getRegionCode(of: phoneNumber) else { return }
+        _defaultRegion = regionCode
+        partialFormatter.defaultRegion = regionCode
+        updateFlag()
+        updatePlaceholder()
+    }
+    
 }
 
 @available(iOS 11.0, *)
