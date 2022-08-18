@@ -1,0 +1,20 @@
+name: Update metadata
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: */2 * * * *
+    # - cron: '*/60 */2 * * *' # Every 2 hours
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Authorize
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+
+      - name: Update
+        run: cd PhoneNumberKit/Resources && sh ./update_metadata.sh
