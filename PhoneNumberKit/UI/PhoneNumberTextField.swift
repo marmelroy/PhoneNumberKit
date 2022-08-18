@@ -277,6 +277,11 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
 
     open func updateFlag() {
         guard self.withFlag else { return }
+        if let phoneNumber = phoneNumber, let regionCode = phoneNumberKit.getRegionCode(of: phoneNumber) {
+            _defaultRegion = regionCode
+            partialFormatter.defaultRegion = regionCode
+        }
+
         let flagBase = UnicodeScalar("🇦").value - UnicodeScalar("A").value
 
         let flag = self.currentRegion
