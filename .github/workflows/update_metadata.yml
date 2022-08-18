@@ -1,0 +1,27 @@
+name: Update metadata
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/60 */2 * * *' # Every 2 hours
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Configure Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      
+      - name: Install XML to JSON converter
+        run: pip install xmljson
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Authorize
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+
+      - name: Update Metadata
+        run: cd PhoneNumberKit/Resources && sh ./update_metadata.sh

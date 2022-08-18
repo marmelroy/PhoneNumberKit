@@ -44,7 +44,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
         XCTAssertNil(sut.preferredExtnPrefix)
         let fixedLine = sut.fixedLine!
         XCTAssertEqual(fixedLine.exampleNumber, "2015550123")
-        XCTAssertEqual(fixedLine.nationalNumberPattern, "5(?:05(?:[2-57-9]\\d\\d|6(?:[0-35-9]\\d|44))|82(?:2(?:0[0-3]|[268]2)|3(?:0[02]|22|33)|4(?:00|4[24]|65|82)|5(?:00|29|58|83)|6(?:00|66|82)|7(?:58|77)|8(?:00|42|88)|9(?:00|9[89])))\\d{4}|(?:2(?:0[1-35-9]|1[02-9]|2[03-589]|3[149]|4[08]|5[1-46]|6[0279]|7[0269]|8[13])|3(?:0[1-57-9]|1[02-9]|2[01356]|3[0-24679]|4[167]|5[12]|6[014]|8[056])|4(?:0[124-9]|1[02-579]|2[3-5]|3[0245]|4[023578]|58|6[349]|7[0589]|8[04])|5(?:0[1-47-9]|1[0235-8]|20|3[0149]|4[01]|5[19]|6[1-47]|7[0-5]|8[056])|6(?:0[1-35-9]|1[024-9]|2[03689]|[34][016]|5[01679]|6[0-279]|78|8[0-29])|7(?:0[1-46-8]|1[2-9]|2[04-7]|3[1247]|4[037]|5[47]|6[02359]|7[0-59]|8[156])|8(?:0[1-68]|1[02-8]|2[068]|3[0-289]|4[03578]|5[046-9]|6[02-5]|7[028])|9(?:0[1346-9]|1[02-9]|2[0589]|3[0146-8]|4[0157-9]|5[12469]|7[0-389]|8[04-69]))[2-9]\\d{6}")
+        XCTAssertEqual(fixedLine.nationalNumberPattern, "5(?:05(?:[2-57-9]\\d\\d|6(?:[0-35-9]\\d|44))|82(?:2(?:0[0-3]|[268]2)|3(?:0[02]|22|33)|4(?:00|4[24]|65|82)|5(?:00|29|58|83)|6(?:00|66|82)|7(?:58|77)|8(?:00|42|88)|9(?:00|9[89])))\\d{4}|(?:2(?:0[1-35-9]|1[02-9]|2[03-589]|3[149]|4[08]|5[1-46]|6[0279]|7[0269]|8[13])|3(?:0[1-57-9]|1[02-9]|2[01356]|3[0-24679]|4[167]|5[12]|6[014]|8[056])|4(?:0[124-9]|1[02-579]|2[3-5]|3[0245]|4[023578]|58|6[349]|7[0589]|8[04])|5(?:0[1-47-9]|1[0235-8]|20|3[0149]|4[01]|5[19]|6[1-47]|7[0-5]|8[056])|6(?:0[1-35-9]|1[024-9]|2[03689]|[34][016]|5[01679]|6[0-279]|78|8[0-29])|7(?:0[1-46-8]|1[2-9]|2[04-7]|3[1247]|4[037]|5[47]|6[02359]|7[0-59]|8[156])|8(?:0[1-68]|1[02-8]|2[068]|3[0-289]|4[03578]|5[046-9]|6[02-5]|7[028])|9(?:0[1346-9]|1[02-9]|2[0589]|3[0146-8]|4[01357-9]|5[12469]|7[0-389]|8[04-69]))[2-9]\\d{6}")
         XCTAssertNil(fixedLine.possibleNumberPattern)
         let generalDesc = sut.generalDesc!
         XCTAssertNil(generalDesc.exampleNumber)
@@ -52,7 +52,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
         XCTAssertNil(generalDesc.possibleNumberPattern)
         let mobile = sut.mobile!
         XCTAssertEqual(mobile.exampleNumber, "2015550123")
-        XCTAssertEqual(mobile.nationalNumberPattern, "5(?:05(?:[2-57-9]\\d\\d|6(?:[0-35-9]\\d|44))|82(?:2(?:0[0-3]|[268]2)|3(?:0[02]|22|33)|4(?:00|4[24]|65|82)|5(?:00|29|58|83)|6(?:00|66|82)|7(?:58|77)|8(?:00|42|88)|9(?:00|9[89])))\\d{4}|(?:2(?:0[1-35-9]|1[02-9]|2[03-589]|3[149]|4[08]|5[1-46]|6[0279]|7[0269]|8[13])|3(?:0[1-57-9]|1[02-9]|2[01356]|3[0-24679]|4[167]|5[12]|6[014]|8[056])|4(?:0[124-9]|1[02-579]|2[3-5]|3[0245]|4[023578]|58|6[349]|7[0589]|8[04])|5(?:0[1-47-9]|1[0235-8]|20|3[0149]|4[01]|5[19]|6[1-47]|7[0-5]|8[056])|6(?:0[1-35-9]|1[024-9]|2[03689]|[34][016]|5[01679]|6[0-279]|78|8[0-29])|7(?:0[1-46-8]|1[2-9]|2[04-7]|3[1247]|4[037]|5[47]|6[02359]|7[0-59]|8[156])|8(?:0[1-68]|1[02-8]|2[068]|3[0-289]|4[03578]|5[046-9]|6[02-5]|7[028])|9(?:0[1346-9]|1[02-9]|2[0589]|3[0146-8]|4[0157-9]|5[12469]|7[0-389]|8[04-69]))[2-9]\\d{6}")
+        XCTAssertEqual(mobile.nationalNumberPattern, "5(?:05(?:[2-57-9]\\d\\d|6(?:[0-35-9]\\d|44))|82(?:2(?:0[0-3]|[268]2)|3(?:0[02]|22|33)|4(?:00|4[24]|65|82)|5(?:00|29|58|83)|6(?:00|66|82)|7(?:58|77)|8(?:00|42|88)|9(?:00|9[89])))\\d{4}|(?:2(?:0[1-35-9]|1[02-9]|2[03-589]|3[149]|4[08]|5[1-46]|6[0279]|7[0269]|8[13])|3(?:0[1-57-9]|1[02-9]|2[01356]|3[0-24679]|4[167]|5[12]|6[014]|8[056])|4(?:0[124-9]|1[02-579]|2[3-5]|3[0245]|4[023578]|58|6[349]|7[0589]|8[04])|5(?:0[1-47-9]|1[0235-8]|20|3[0149]|4[01]|5[19]|6[1-47]|7[0-5]|8[056])|6(?:0[1-35-9]|1[024-9]|2[03689]|[34][016]|5[01679]|6[0-279]|78|8[0-29])|7(?:0[1-46-8]|1[2-9]|2[04-7]|3[1247]|4[037]|5[47]|6[02359]|7[0-59]|8[156])|8(?:0[1-68]|1[02-8]|2[068]|3[0-289]|4[03578]|5[046-9]|6[02-5]|7[028])|9(?:0[1346-9]|1[02-9]|2[0589]|3[0146-8]|4[01357-9]|5[12469]|7[0-389]|8[04-69]))[2-9]\\d{6}")
         XCTAssertNil(mobile.possibleNumberPattern)
         let personalNumber = sut.personalNumber!
         XCTAssertEqual(personalNumber.exampleNumber, "5002345678")
@@ -440,10 +440,10 @@ class PhoneNumberKitParsingTests: XCTestCase {
         endTime = Date()
         let timeInterval = endTime.timeIntervalSince(startTime)
         print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
-        XCTAssertTrue(timeInterval < 5)
+        XCTAssertLessThan(timeInterval, 1)
     }
     
-    func testPerformanceNonOptimizedSimple() {
+    func testPerformanceNonOptimizedSample() {
         let numberOfParses = 2000
         let startTime = Date()
         var endTime = Date()
@@ -453,7 +453,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
         endTime = Date()
         let timeInterval = endTime.timeIntervalSince(startTime)
         print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
-        XCTAssertTrue(timeInterval < 1)
+        XCTAssertLessThan(timeInterval, 2)
     }
     
     func testPerformanceWithoutSupplyingDefaultRegion() {
@@ -468,7 +468,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
         endTime = Date()
         let timeInterval = endTime.timeIntervalSince(startTime)
         print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
-        XCTAssertTrue(timeInterval < 1)
+        XCTAssertLessThan(timeInterval, 2)
     }
     
     func testPerformanceNonOptimizedParsingUsageWithoutDefaultRegion() {
@@ -481,7 +481,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
         endTime = Date()
         let timeInterval = endTime.timeIntervalSince(startTime)
         print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
-        XCTAssertTrue(timeInterval < 1)
+        XCTAssertLessThan(timeInterval, 2)
     }
 
     func testMultipleMutated() {
@@ -497,6 +497,7 @@ class PhoneNumberKitParsingTests: XCTestCase {
         endTime = Date()
         let timeInterval = endTime.timeIntervalSince(startTime)
         print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
+        XCTAssertLessThan(timeInterval, 1)
     }
 
     func testUANumber() {

@@ -16,7 +16,7 @@ let package = Package(
                 path: "PhoneNumberKit",
                 exclude: ["Resources/Original",
                           "Resources/README.md",
-                          "Resources/update.sh",
+                          "Resources/update_metadata.sh",
                           "Info.plist"],
                 resources: [
                     .process("Resources/PhoneNumberMetadata.json")
