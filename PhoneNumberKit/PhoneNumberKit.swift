@@ -292,7 +292,15 @@ public final class PhoneNumberKit: NSObject {
     ///
     /// - returns: A computed value for the user's current region - based on the iPhone's carrier and if not available, the device region.
     public class func defaultRegionCode() -> String {
-        return CNContactsUserDefaults.shared().countryCode
+        if #available(iOS 9, macOS 10.11, macCatalyst 13.1, watchOS 2.0, *) {
+            return CNContactsUserDefaults.shared().countryCode
+        } else {
+            let currentLocale = Locale.current
+            if let countryCode = (currentLocale as NSLocale).object(forKey: .countryCode) as? String {
+                return countryCode.uppercased()
+            }
+            return PhoneNumberConstants.defaultCountry
+        }
     }
 
     /// Default metadata callback, reads metadata from PhoneNumberMetadata.json file in bundle
