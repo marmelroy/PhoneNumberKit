@@ -80,7 +80,7 @@ if [[ $latest != $current ]]; then
 
     echo "Testing new metadata..."
     cd ../..
-    swift test --parallel
+    swift test --parallel -c release
     rm -rf .build
 
     # Skips deploy
