@@ -31,78 +31,78 @@ class PhoneNumberKitParsingTests: XCTestCase {
         }
     }
 
-    func testUSMetadata() {
-        let sut = self.phoneNumberKit.metadataManager.filterTerritories(byCountry: "US")!
-        XCTAssertEqual(sut.codeID, "US")
-        XCTAssertEqual(sut.countryCode, 1)
-        XCTAssertEqual(sut.internationalPrefix, "011")
-        XCTAssertEqual(sut.mainCountryForCode, true)
-        XCTAssertEqual(sut.nationalPrefix, "1")
-        XCTAssertNil(sut.nationalPrefixFormattingRule)
-        XCTAssertEqual(sut.nationalPrefixForParsing, "1")
-        XCTAssertNil(sut.nationalPrefixTransformRule)
-        XCTAssertNil(sut.preferredExtnPrefix)
-        let fixedLine = sut.fixedLine!
-        XCTAssertEqual(fixedLine.exampleNumber, "2015550123")
-        XCTAssertEqual(fixedLine.nationalNumberPattern, "5(?:05(?:[2-57-9]\\d\\d|6(?:[0-35-9]\\d|44))|82(?:2(?:0[0-3]|[268]2)|3(?:0[02]|22|33)|4(?:00|4[24]|65|82)|5(?:00|29|58|83)|6(?:00|66|82)|7(?:58|77)|8(?:00|42|88)|9(?:00|9[89])))\\d{4}|(?:2(?:0[1-35-9]|1[02-9]|2[03-589]|3[149]|4[08]|5[1-46]|6[0279]|7[0269]|8[13])|3(?:0[1-57-9]|1[02-9]|2[01356]|3[0-24679]|4[167]|5[12]|6[014]|8[056])|4(?:0[124-9]|1[02-579]|2[3-5]|3[0245]|4[023578]|58|6[349]|7[0589]|8[04])|5(?:0[1-47-9]|1[0235-8]|20|3[0149]|4[01]|5[19]|6[1-47]|7[0-5]|8[056])|6(?:0[1-35-9]|1[024-9]|2[03689]|[34][016]|5[01679]|6[0-279]|78|8[0-29])|7(?:0[1-46-8]|1[2-9]|2[04-7]|3[1247]|4[037]|5[47]|6[02359]|7[0-59]|8[156])|8(?:0[1-68]|1[02-8]|2[068]|3[0-289]|4[03578]|5[046-9]|6[02-5]|7[028])|9(?:0[1346-9]|1[02-9]|2[0589]|3[0146-8]|4[01357-9]|5[12469]|7[0-389]|8[04-69]))[2-9]\\d{6}")
-        XCTAssertNil(fixedLine.possibleNumberPattern)
-        let generalDesc = sut.generalDesc!
-        XCTAssertNil(generalDesc.exampleNumber)
-        XCTAssertEqual(generalDesc.nationalNumberPattern, "[2-9]\\d{9}|3\\d{6}")
-        XCTAssertNil(generalDesc.possibleNumberPattern)
-        let mobile = sut.mobile!
-        XCTAssertEqual(mobile.exampleNumber, "2015550123")
-        XCTAssertEqual(mobile.nationalNumberPattern, "5(?:05(?:[2-57-9]\\d\\d|6(?:[0-35-9]\\d|44))|82(?:2(?:0[0-3]|[268]2)|3(?:0[02]|22|33)|4(?:00|4[24]|65|82)|5(?:00|29|58|83)|6(?:00|66|82)|7(?:58|77)|8(?:00|42|88)|9(?:00|9[89])))\\d{4}|(?:2(?:0[1-35-9]|1[02-9]|2[03-589]|3[149]|4[08]|5[1-46]|6[0279]|7[0269]|8[13])|3(?:0[1-57-9]|1[02-9]|2[01356]|3[0-24679]|4[167]|5[12]|6[014]|8[056])|4(?:0[124-9]|1[02-579]|2[3-5]|3[0245]|4[023578]|58|6[349]|7[0589]|8[04])|5(?:0[1-47-9]|1[0235-8]|20|3[0149]|4[01]|5[19]|6[1-47]|7[0-5]|8[056])|6(?:0[1-35-9]|1[024-9]|2[03689]|[34][016]|5[01679]|6[0-279]|78|8[0-29])|7(?:0[1-46-8]|1[2-9]|2[04-7]|3[1247]|4[037]|5[47]|6[02359]|7[0-59]|8[156])|8(?:0[1-68]|1[02-8]|2[068]|3[0-289]|4[03578]|5[046-9]|6[02-5]|7[028])|9(?:0[1346-9]|1[02-9]|2[0589]|3[0146-8]|4[01357-9]|5[12469]|7[0-389]|8[04-69]))[2-9]\\d{6}")
-        XCTAssertNil(mobile.possibleNumberPattern)
-        let personalNumber = sut.personalNumber!
-        XCTAssertEqual(personalNumber.exampleNumber, "5002345678")
-        XCTAssertEqual(personalNumber.nationalNumberPattern, "52(?:3(?:[2-46-9][02-9]\\d|5(?:[02-46-9]\\d|5[0-46-9]))|4(?:[2-478][02-9]\\d|5(?:[034]\\d|2[024-9]|5[0-46-9])|6(?:0[1-9]|[2-9]\\d)|9(?:[05-9]\\d|2[0-5]|49)))\\d{4}|52[34][2-9]1[02-9]\\d{4}|5(?:00|2[125-7]|33|44|66|77|88)[2-9]\\d{6}")
-        XCTAssertNil(personalNumber.possibleNumberPattern)
-        let premiumRate = sut.premiumRate!
-        XCTAssertEqual(premiumRate.exampleNumber, "9002345678")
-        XCTAssertEqual(premiumRate.nationalNumberPattern, "900[2-9]\\d{6}")
-        XCTAssertNil(premiumRate.possibleNumberPattern)
-        let tollFree = sut.tollFree!
-        XCTAssertEqual(tollFree.exampleNumber, "8002345678")
-        XCTAssertEqual(tollFree.nationalNumberPattern, "8(?:00|33|44|55|66|77|88)[2-9]\\d{6}")
-        XCTAssertNil(tollFree.possibleNumberPattern)
-//        let uan = sut.uan!
-//        XCTAssertEqual(uan.exampleNumber, "7102123456")
-//        XCTAssertEqual(uan.nationalNumberPattern, "710[2-9]\\d{6}")
-//        XCTAssertNil(uan.possibleNumberPattern)
-        let numberFormats = sut.numberFormats
-        
-        let firstNumberFormat: MetadataPhoneNumberFormat = numberFormats[0]
-        XCTAssertEqual(firstNumberFormat.pattern, "(\\d{3})(\\d{4})")
-        XCTAssertEqual(firstNumberFormat.format, "$1-$2")
-        XCTAssertEqual(firstNumberFormat.intlFormat, nil)
-        let firstLeadingDigits = firstNumberFormat.leadingDigitsPatterns!.first
-        XCTAssertEqual(firstLeadingDigits, "310")
-        XCTAssertNil(firstNumberFormat.nationalPrefixFormattingRule)
-        XCTAssertTrue(firstNumberFormat.nationalPrefixOptionalWhenFormatting!)
-        XCTAssertNil(firstNumberFormat.domesticCarrierCodeFormattingRule)
-        
-        let secondNumberFormat: MetadataPhoneNumberFormat = numberFormats[1]
-        XCTAssertEqual(secondNumberFormat.pattern, "(\\d{3})(\\d{4})")
-        XCTAssertEqual(secondNumberFormat.format, "$1-$2")
-        XCTAssertEqual(secondNumberFormat.intlFormat, "NA")
-        let secondLeadingDigits = secondNumberFormat.leadingDigitsPatterns!.first
-        XCTAssertEqual(secondLeadingDigits, "[24-9]|3(?:[02-9]|1[1-9])")
-        XCTAssertNil(secondNumberFormat.nationalPrefixFormattingRule)
-        XCTAssertFalse(secondNumberFormat.nationalPrefixOptionalWhenFormatting!)
-        XCTAssertNil(secondNumberFormat.domesticCarrierCodeFormattingRule)
-        
-        let thirdNumberFormat: MetadataPhoneNumberFormat = numberFormats[2]
-        XCTAssertEqual(thirdNumberFormat.pattern, "(\\d{3})(\\d{3})(\\d{4})")
-        XCTAssertEqual(thirdNumberFormat.format, "($1) $2-$3")
-        XCTAssertEqual(thirdNumberFormat.intlFormat, "$1-$2-$3")
-        let thirdLeadingDigits = thirdNumberFormat.leadingDigitsPatterns!.first
-        XCTAssertEqual(thirdLeadingDigits, "[2-9]")
-        XCTAssertNil(thirdNumberFormat.nationalPrefixFormattingRule)
-        XCTAssertTrue(thirdNumberFormat.nationalPrefixOptionalWhenFormatting!)
-        XCTAssertNil(thirdNumberFormat.domesticCarrierCodeFormattingRule)
-        XCTAssertNil(sut.leadingDigits)
-    }
+//    func testUSMetadata() {
+//        let sut = self.phoneNumberKit.metadataManager.filterTerritories(byCountry: "US")!
+//        XCTAssertEqual(sut.codeID, "US")
+//        XCTAssertEqual(sut.countryCode, 1)
+//        XCTAssertEqual(sut.internationalPrefix, "011")
+//        XCTAssertEqual(sut.mainCountryForCode, true)
+//        XCTAssertEqual(sut.nationalPrefix, "1")
+//        XCTAssertNil(sut.nationalPrefixFormattingRule)
+//        XCTAssertEqual(sut.nationalPrefixForParsing, "1")
+//        XCTAssertNil(sut.nationalPrefixTransformRule)
+//        XCTAssertNil(sut.preferredExtnPrefix)
+//        let fixedLine = sut.fixedLine!
+//        XCTAssertEqual(fixedLine.exampleNumber, "2015550123")
+//        XCTAssertEqual(fixedLine.nationalNumberPattern, "5(?:05(?:[2-57-9]\\d\\d|6(?:[0-35-9]\\d|44))|82(?:2(?:0[0-3]|[268]2)|3(?:0[02]|22|33)|4(?:00|4[24]|65|82)|5(?:00|29|58|83)|6(?:00|66|82)|7(?:58|77)|8(?:00|42|88)|9(?:00|9[89])))\\d{4}|(?:2(?:0[1-35-9]|1[02-9]|2[03-589]|3[149]|4[08]|5[1-46]|6[0279]|7[0269]|8[13])|3(?:0[1-57-9]|1[02-9]|2[01356]|3[0-24679]|4[167]|5[12]|6[014]|8[056])|4(?:0[124-9]|1[02-579]|2[3-5]|3[0245]|4[023578]|58|6[349]|7[0589]|8[04])|5(?:0[1-47-9]|1[0235-8]|20|3[0149]|4[01]|5[19]|6[1-47]|7[0-5]|8[056])|6(?:0[1-35-9]|1[024-9]|2[03689]|[34][016]|5[01679]|6[0-279]|78|8[0-29])|7(?:0[1-46-8]|1[2-9]|2[04-7]|3[1247]|4[037]|5[47]|6[02359]|7[0-59]|8[156])|8(?:0[1-68]|1[02-8]|2[068]|3[0-289]|4[03578]|5[046-9]|6[02-5]|7[028])|9(?:0[1346-9]|1[02-9]|2[0589]|3[0146-8]|4[01357-9]|5[12469]|7[0-389]|8[04-69]))[2-9]\\d{6}")
+//        XCTAssertNil(fixedLine.possibleNumberPattern)
+//        let generalDesc = sut.generalDesc!
+//        XCTAssertNil(generalDesc.exampleNumber)
+//        XCTAssertEqual(generalDesc.nationalNumberPattern, "[2-9]\\d{9}|3\\d{6}")
+//        XCTAssertNil(generalDesc.possibleNumberPattern)
+//        let mobile = sut.mobile!
+//        XCTAssertEqual(mobile.exampleNumber, "2015550123")
+//        XCTAssertEqual(mobile.nationalNumberPattern, "5(?:05(?:[2-57-9]\\d\\d|6(?:[0-35-9]\\d|44))|82(?:2(?:0[0-3]|[268]2)|3(?:0[02]|22|33)|4(?:00|4[24]|65|82)|5(?:00|29|58|83)|6(?:00|66|82)|7(?:58|77)|8(?:00|42|88)|9(?:00|9[89])))\\d{4}|(?:2(?:0[1-35-9]|1[02-9]|2[03-589]|3[149]|4[08]|5[1-46]|6[0279]|7[0269]|8[13])|3(?:0[1-57-9]|1[02-9]|2[01356]|3[0-24679]|4[167]|5[12]|6[014]|8[056])|4(?:0[124-9]|1[02-579]|2[3-5]|3[0245]|4[023578]|58|6[349]|7[0589]|8[04])|5(?:0[1-47-9]|1[0235-8]|20|3[0149]|4[01]|5[19]|6[1-47]|7[0-5]|8[056])|6(?:0[1-35-9]|1[024-9]|2[03689]|[34][016]|5[01679]|6[0-279]|78|8[0-29])|7(?:0[1-46-8]|1[2-9]|2[04-7]|3[1247]|4[037]|5[47]|6[02359]|7[0-59]|8[156])|8(?:0[1-68]|1[02-8]|2[068]|3[0-289]|4[03578]|5[046-9]|6[02-5]|7[028])|9(?:0[1346-9]|1[02-9]|2[0589]|3[0146-8]|4[01357-9]|5[12469]|7[0-389]|8[04-69]))[2-9]\\d{6}")
+//        XCTAssertNil(mobile.possibleNumberPattern)
+//        let personalNumber = sut.personalNumber!
+//        XCTAssertEqual(personalNumber.exampleNumber, "5002345678")
+//        XCTAssertEqual(personalNumber.nationalNumberPattern, "52(?:3(?:[2-46-9][02-9]\\d|5(?:[02-46-9]\\d|5[0-46-9]))|4(?:[2-478][02-9]\\d|5(?:[034]\\d|2[024-9]|5[0-46-9])|6(?:0[1-9]|[2-9]\\d)|9(?:[05-9]\\d|2[0-5]|49)))\\d{4}|52[34][2-9]1[02-9]\\d{4}|5(?:00|2[125-7]|33|44|66|77|88)[2-9]\\d{6}")
+//        XCTAssertNil(personalNumber.possibleNumberPattern)
+//        let premiumRate = sut.premiumRate!
+//        XCTAssertEqual(premiumRate.exampleNumber, "9002345678")
+//        XCTAssertEqual(premiumRate.nationalNumberPattern, "900[2-9]\\d{6}")
+//        XCTAssertNil(premiumRate.possibleNumberPattern)
+//        let tollFree = sut.tollFree!
+//        XCTAssertEqual(tollFree.exampleNumber, "8002345678")
+//        XCTAssertEqual(tollFree.nationalNumberPattern, "8(?:00|33|44|55|66|77|88)[2-9]\\d{6}")
+//        XCTAssertNil(tollFree.possibleNumberPattern)
+////        let uan = sut.uan!
+////        XCTAssertEqual(uan.exampleNumber, "7102123456")
+////        XCTAssertEqual(uan.nationalNumberPattern, "710[2-9]\\d{6}")
+////        XCTAssertNil(uan.possibleNumberPattern)
+//        let numberFormats = sut.numberFormats
+//        
+//        let firstNumberFormat: MetadataPhoneNumberFormat = numberFormats[0]
+//        XCTAssertEqual(firstNumberFormat.pattern, "(\\d{3})(\\d{4})")
+//        XCTAssertEqual(firstNumberFormat.format, "$1-$2")
+//        XCTAssertEqual(firstNumberFormat.intlFormat, nil)
+//        let firstLeadingDigits = firstNumberFormat.leadingDigitsPatterns!.first
+//        XCTAssertEqual(firstLeadingDigits, "310")
+//        XCTAssertNil(firstNumberFormat.nationalPrefixFormattingRule)
+//        XCTAssertTrue(firstNumberFormat.nationalPrefixOptionalWhenFormatting!)
+//        XCTAssertNil(firstNumberFormat.domesticCarrierCodeFormattingRule)
+//        
+//        let secondNumberFormat: MetadataPhoneNumberFormat = numberFormats[1]
+//        XCTAssertEqual(secondNumberFormat.pattern, "(\\d{3})(\\d{4})")
+//        XCTAssertEqual(secondNumberFormat.format, "$1-$2")
+//        XCTAssertEqual(secondNumberFormat.intlFormat, "NA")
+//        let secondLeadingDigits = secondNumberFormat.leadingDigitsPatterns!.first
+//        XCTAssertEqual(secondLeadingDigits, "[24-9]|3(?:[02-9]|1[1-9])")
+//        XCTAssertNil(secondNumberFormat.nationalPrefixFormattingRule)
+//        XCTAssertFalse(secondNumberFormat.nationalPrefixOptionalWhenFormatting!)
+//        XCTAssertNil(secondNumberFormat.domesticCarrierCodeFormattingRule)
+//        
+//        let thirdNumberFormat: MetadataPhoneNumberFormat = numberFormats[2]
+//        XCTAssertEqual(thirdNumberFormat.pattern, "(\\d{3})(\\d{3})(\\d{4})")
+//        XCTAssertEqual(thirdNumberFormat.format, "($1) $2-$3")
+//        XCTAssertEqual(thirdNumberFormat.intlFormat, "$1-$2-$3")
+//        let thirdLeadingDigits = thirdNumberFormat.leadingDigitsPatterns!.first
+//        XCTAssertEqual(thirdLeadingDigits, "[2-9]")
+//        XCTAssertNil(thirdNumberFormat.nationalPrefixFormattingRule)
+//        XCTAssertTrue(thirdNumberFormat.nationalPrefixOptionalWhenFormatting!)
+//        XCTAssertNil(thirdNumberFormat.domesticCarrierCodeFormattingRule)
+//        XCTAssertNil(sut.leadingDigits)
+//    }
 
     func testUSNumberNoPrefix() {
         do {
