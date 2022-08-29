@@ -6,7 +6,7 @@
 //  Copyright © 2019 Roy Marmelstein. All rights reserved.
 //
 
-#if canImport(UIKit)
+#if os(iOS)
 
 @testable import PhoneNumberKit
 import UIKit
