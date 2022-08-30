@@ -40,27 +40,6 @@ class PhoneNumberTextFieldTests: XCTestCase {
 		tf.text = ""
 		XCTAssertNil(tf.phoneNumber)
 	}
-
-
-    func testUSPhoneNumberWithFlag() {
-        let pnk = PhoneNumberKit()
-        let tf = PhoneNumberTextField(withPhoneNumberKit: pnk)
-        tf.partialFormatter.defaultRegion = "US"
-        tf.withFlag = true
-        tf.text = "4125551212"
-        XCTAssertNotNil(tf.flagButton)
-        XCTAssertEqual(tf.flagButton.titleLabel?.text, "🇺🇸 ")
-    }
-
-    func testNonUSPhoneNumberWithFlag() {
-        let pnk = PhoneNumberKit()
-        let tf = PhoneNumberTextField(withPhoneNumberKit: pnk)
-        tf.partialFormatter.defaultRegion = "US"
-        tf.withFlag = true
-        tf.text = "5872170177"
-        XCTAssertNotNil(tf.flagButton)
-        XCTAssertEqual(tf.flagButton.titleLabel?.text, "🇨🇦 ")
-    }
 }
 
 #endif
