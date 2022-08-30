@@ -75,8 +75,17 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
 
     public var withFlag: Bool = false {
         didSet {
-            leftView = self.withFlag ? self.flagButton : nil
-            leftViewMode = self.withFlag ? .always : .never
+            if isRightToLeft{
+                rightView = self.withFlag ? self.flagButton : nil
+                rightViewMode = self.withFlag ? .always : .never
+                leftView = nil
+                leftViewMode = .never
+            }else{
+                leftView = self.withFlag ? self.flagButton : nil
+                leftViewMode = self.withFlag ? .always : .never
+                rightView = nil
+                rightViewMode = .never
+            }
             self.updateFlag()
         }
     }
@@ -539,6 +548,22 @@ extension String {
   var isBlank: Bool {
     return allSatisfy({ $0.isWhitespace })
   }
+}
+
+var isRightToLeft: Bool {
+    if let languageArray = UserDefaults.standard.value(forKey: "AppleLanguages") as? Array<String>,
+       let languageObj = languageArray.first {
+        let direction = Locale.characterDirection(forLanguage: languageObj)
+        switch direction {
+        case .leftToRight:
+            return false
+        case .rightToLeft:
+            return true
+        default:
+            return false
+        }
+    }
+    return false
 }
 
 #endif
