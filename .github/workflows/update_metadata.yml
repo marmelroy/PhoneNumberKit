@@ -3,7 +3,7 @@ name: Update metadata
 on:
   workflow_dispatch:
   schedule:
-    - cron: '*/60 */2 * * *' # Every 2 hours
+    - cron: '0 */12 * * *' # Every 12 hours
 
 jobs:
   build:
