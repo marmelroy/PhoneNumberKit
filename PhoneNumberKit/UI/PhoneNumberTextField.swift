@@ -75,7 +75,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
 
     public var withFlag: Bool = false {
         didSet {
-            if isRightToLeft{
+            if NSLocale.isRightAlignLocalize{
                 rightView = self.withFlag ? self.flagButton : nil
                 rightViewMode = self.withFlag ? .always : .never
                 leftView = nil
@@ -550,20 +550,13 @@ extension String {
   }
 }
 
-var isRightToLeft: Bool {
-    if let languageArray = UserDefaults.standard.value(forKey: "AppleLanguages") as? Array<String>,
-       let languageObj = languageArray.first {
-        let direction = Locale.characterDirection(forLanguage: languageObj)
-        switch direction {
-        case .leftToRight:
-            return false
-        case .rightToLeft:
-            return true
-        default:
-            return false
+extension NSLocale{
+    static var isRightAlignLocalize: Bool{
+        if let lang = preferredLanguages.first{
+            return characterDirection(forLanguage: lang) == .rightToLeft
         }
+        return false
     }
-    return false
 }
 
 #endif
