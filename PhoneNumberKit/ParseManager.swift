@@ -25,7 +25,7 @@ final class ParseManager {
     /**
      Parse a string into a phone number object with a custom region. Can throw.
      - Parameter numberString: String to be parsed to phone number struct.
-     - Parameter region: ISO 639 compliant region code.
+     - Parameter region: ISO 3166 compliant region code.
      - parameter ignoreType:   Avoids number type checking for faster performance.
      */
     func parse(_ numberString: String, withRegion region: String, ignoreType: Bool) throws -> PhoneNumber {
@@ -91,7 +91,7 @@ final class ParseManager {
     /**
      Fastest way to parse an array of phone numbers. Uses custom region code.
      - Parameter numberStrings: An array of raw number strings.
-     - Parameter region: ISO 639 compliant region code.
+     - Parameter region: ISO 3166 compliant region code.
      - parameter ignoreType: Avoids number type checking for faster performance.
      - Returns: An array of valid PhoneNumber objects.
      */
@@ -119,13 +119,13 @@ final class ParseManager {
         return multiParseArray
     }
 
-    /// Get correct ISO 639 compliant region code for a number.
+    /// Get correct ISO 3166 compliant region code for a number.
     ///
     /// - Parameters:
     ///   - nationalNumber: national number.
     ///   - countryCode: country code.
     ///   - leadingZero: whether or not the number has a leading zero.
-    /// - Returns: ISO 639 compliant region code.
+    /// - Returns: ISO 3166 compliant region code.
     func getRegionCode(of nationalNumber: UInt64, countryCode: UInt64, leadingZero: Bool) -> String? {
         guard let regexManager = regexManager, let metadataManager = metadataManager, let regions = metadataManager.filterTerritories(byCode: countryCode) else { return nil }
 

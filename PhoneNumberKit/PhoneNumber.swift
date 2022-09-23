@@ -85,7 +85,7 @@ public extension PhoneNumber {
      DEPRECATED.
      Parse a string into a phone number object using custom region. Can throw.
      - Parameter rawNumber: String to be parsed to phone number struct.
-     - Parameter region: ISO 639 compliant region code.
+     - Parameter region: ISO 3166 compliant region code.
      */
     @available(*, unavailable, message: "use PhoneNumberKit instead to produce PhoneNumbers")
     init(rawNumber: String, region: String) throws {
