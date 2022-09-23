@@ -74,9 +74,9 @@ final class MetadataManager {
         return self.territoriesByCode[code]
     }
 
-    /// Get the MetadataTerritory objects for an ISO 639 compliant region code.
+    /// Get the MetadataTerritory objects for an ISO 3166 compliant region code.
     ///
-    /// - parameter country: ISO 639 compliant region code (e.g "GB" for the UK).
+    /// - parameter country: ISO 3166 compliant region code (e.g "GB" for the UK).
     ///
     /// - returns: A MetadataTerritory object.
     internal func filterTerritories(byCountry country: String) -> MetadataTerritory? {
