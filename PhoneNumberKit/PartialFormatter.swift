@@ -44,10 +44,11 @@ public final class PartialFormatter {
         guard let metadataManager = metadataManager else { return }
         if let regionMetadata = metadataManager.filterTerritories(byCountry: defaultRegion) {
             self.defaultMetadata = metadataManager.mainTerritory(forCode: regionMetadata.countryCode)
+            self.currentMetadata = regionMetadata
         } else {
             self.defaultMetadata = nil
+            self.currentMetadata = nil
         }
-        self.currentMetadata = self.defaultMetadata
     }
 
     var defaultMetadata: MetadataTerritory?
@@ -142,7 +143,9 @@ public final class PartialFormatter {
     // MARK: Formatting Functions
 
     internal func resetVariables() {
-        self.currentMetadata = self.defaultMetadata
+        if currentMetadata?.countryCode != self.defaultMetadata?.countryCode {
+            self.currentMetadata = self.defaultMetadata
+        }
         self.prefixBeforeNationalNumber = String()
         self.shouldAddSpaceAfterNationalPrefix = false
     }
@@ -242,7 +245,9 @@ public final class PartialFormatter {
         }
         if let potentialCountryCode = parser?.extractPotentialCountryCode(rawNumber, nationalNumber: &numberWithoutCountryCallingCode), potentialCountryCode != 0 {
             processedNumber = numberWithoutCountryCallingCode
-            self.currentMetadata = self.metadataManager?.mainTerritory(forCode: potentialCountryCode)
+            if potentialCountryCode != currentMetadata?.countryCode {
+                self.currentMetadata = self.metadataManager?.mainTerritory(forCode: potentialCountryCode)
+            }
             let potentialCountryCodeString = String(potentialCountryCode)
             prefixBeforeNationalNumber.append(potentialCountryCodeString)
             self.prefixBeforeNationalNumber.append(" ")
@@ -279,7 +284,11 @@ public final class PartialFormatter {
         guard let regexManager = regexManager else { return nil }
         var tempPossibleFormats = [MetadataPhoneNumberFormat]()
         var possibleFormats = [MetadataPhoneNumberFormat]()
-        if let metadata = currentMetadata {
+        var metadata: MetadataTerritory? = defaultMetadata
+        if currentMetadata?.numberFormats.count ?? 0 > 0 {
+            metadata = currentMetadata
+        }
+        if let metadata = metadata {
             let formatList = metadata.numberFormats
             for format in formatList {
                 if self.isFormatEligible(format) {
