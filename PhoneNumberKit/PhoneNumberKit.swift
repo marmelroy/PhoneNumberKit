@@ -296,7 +296,17 @@ public final class PhoneNumberKit: NSObject {
     public class func defaultRegionCode() -> String {
         #if canImport(Contacts)
         if #available(iOS 9, macOS 10.11, macCatalyst 13.1, watchOS 2.0, *) {
-            return CNContactsUserDefaults.shared().countryCode
+            // macCatalyst OS bug if language is set to Korean
+            //CNContactsUserDefaults.shared().countryCode will return ko instead of kr
+            // Failed parsing any phone number.
+            let countryCode = CNContactsUserDefaults.shared().countryCode
+            #if targetEnvironment(macCatalyst)
+                if "ko".caseInsensitiveCompare(countryCode) == .orderedSame {
+                    return "kr"
+                }
+            #endif
+            return countryCode
+            
         }
         #endif
         
