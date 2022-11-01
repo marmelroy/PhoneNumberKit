@@ -75,7 +75,7 @@ public final class PhoneNumberKit: NSObject {
 
     // MARK: Formatting
 
-    /// Formats a PhoneNumber object for dispaly.
+    /// Formats a PhoneNumber object for display.
     ///
     /// - parameter phoneNumber: PhoneNumber object.
     /// - parameter formatType:  PhoneNumberFormat enum.
