@@ -39,6 +39,7 @@ public enum PhoneNumberError: Error {
     case tooShort
     case deprecated
     case metadataNotFound
+    case ambiguousNumber(phoneNumbers: [PhoneNumber])
 }
 
 extension PhoneNumberError: LocalizedError {
@@ -52,6 +53,7 @@ extension PhoneNumberError: LocalizedError {
         case .tooShort: return NSLocalizedString("The number provided is too short.", comment: "")
         case .deprecated: return NSLocalizedString("This function is deprecated.", comment: "")
         case .metadataNotFound: return NSLocalizedString("Valid metadata is missing.", comment: "")
+        case .ambiguousNumber: return NSLocalizedString("Phone number is ambiguous.", comment: "")
         }
     }
 }
