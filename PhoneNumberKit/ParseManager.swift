@@ -75,15 +75,20 @@ final class ParseManager {
         }
 
         // If everything fails, iterate through other territories with the same country code (7)
+        var possibleResults = [PhoneNumber]()
         if let metadataList = metadataManager.filterTerritories(byCode: countryCode) {
             for metadata in metadataList where regionMetadata.codeID != metadata.codeID {
                 if let result = try validPhoneNumber(from: nationalNumber, using: metadata, countryCode: countryCode, ignoreType: ignoreType, numberString: numberString, numberExtension: numberExtension) {
-                    return result
+                    possibleResults.append(result)
                 }
             }
         }
-            
-        throw PhoneNumberError.notANumber
+        
+        switch possibleResults.count {
+        case 0: throw PhoneNumberError.notANumber
+        case 1: return possibleResults[0]
+        default: throw PhoneNumberError.ambiguousNumber(phoneNumbers: possibleResults)
+        }
     }
 
     // Parse task
