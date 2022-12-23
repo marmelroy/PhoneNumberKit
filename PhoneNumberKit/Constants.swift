@@ -31,7 +31,7 @@ enum PhoneNumberCountryCodeSource {
  - metadataNotFound: PhoneNumberKit was unable to read the included metadata
  - ambiguousNumber: The string could not be resolved to a single valid number
  */
-public enum PhoneNumberError: Error {
+public enum PhoneNumberError: Error, Equatable {
     case generalError
     case invalidCountryCode
     case notANumber
