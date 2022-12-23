@@ -29,8 +29,9 @@ enum PhoneNumberCountryCodeSource {
  - TooShort: The string provided is too short to be a valid number
  - Deprecated: The method used was deprecated
  - metadataNotFound: PhoneNumberKit was unable to read the included metadata
+ - ambiguousNumber: The string could not be resolved to a single valid number
  */
-public enum PhoneNumberError: Error {
+public enum PhoneNumberError: Error, Equatable {
     case generalError
     case invalidCountryCode
     case notANumber
