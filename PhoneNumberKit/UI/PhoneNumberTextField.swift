@@ -286,13 +286,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             partialFormatter.defaultRegion = regionCode
         }
         
-        let flagBase = UnicodeScalar("🇦").value - UnicodeScalar("A").value
-
-        let flag = self.currentRegion
-            .uppercased()
-            .unicodeScalars
-            .compactMap { UnicodeScalar(flagBase + $0.value)?.description }
-            .joined()
+        let flag = String(String.UnicodeScalarView(currentRegion.uppercased().unicodeScalars.compactMap { UnicodeScalar(127397 + $0.value) }))
 
         self.flagButton.setTitle(flag + " ", for: .normal)
         self.flagButton.accessibilityLabel = NSLocalizedString(
