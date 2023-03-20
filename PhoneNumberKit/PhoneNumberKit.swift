@@ -299,10 +299,10 @@ public final class PhoneNumberKit: NSObject {
             // macCatalyst OS bug if language is set to Korean
             //CNContactsUserDefaults.shared().countryCode will return ko instead of kr
             // Failed parsing any phone number.
-            let countryCode = CNContactsUserDefaults.shared().countryCode
+            let countryCode = CNContactsUserDefaults.shared().countryCode.uppercased()
             #if targetEnvironment(macCatalyst)
                 if "ko".caseInsensitiveCompare(countryCode) == .orderedSame {
-                    return "kr"
+                    return "KR"
                 }
             #endif
             return countryCode
@@ -316,6 +316,8 @@ public final class PhoneNumberKit: NSObject {
         }
         return PhoneNumberConstants.defaultCountry
     }
+    
+    
 
     /// Default metadata callback, reads metadata from PhoneNumberMetadata.json file in bundle
     ///
