@@ -67,6 +67,10 @@ public final class PartialFormatter {
                 : self.currentMetadata?.codeID ?? self.defaultRegion
         }
     }
+    
+    public var currentCountryCode: UInt64 {
+        self.currentMetadata?.countryCode ?? 1
+    }
 
     public func nationalNumber(from rawNumber: String) -> String {
         guard let parser = parser else { return rawNumber }

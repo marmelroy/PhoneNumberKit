@@ -173,6 +173,10 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     public var currentRegion: String {
         return self.partialFormatter.currentRegion
     }
+    
+    public var currentCountryCode: UInt64 {
+        self.partialFormatter.currentCountryCode
+    }
 
     public var nationalNumber: String {
         let rawNumber = self.text ?? String()
