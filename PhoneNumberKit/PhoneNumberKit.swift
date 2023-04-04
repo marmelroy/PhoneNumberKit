@@ -327,8 +327,14 @@ public final class PhoneNumberKit: NSObject {
         guard let jsonPath = frameworkBundle.path(forResource: "PhoneNumberMetadata", ofType: "json") else {
             throw PhoneNumberError.metadataNotFound
         }
-        let data = try Data(contentsOf: URL(fileURLWithPath: jsonPath))
-        return data
+//        let data = try Data(contentsOf: URL(fileURLWithPath: jsonPath))
+//        return data
+        if let nsData = NSData(contentsOfFile: jsonPath) {
+            let data = Data(referencing: nsData)
+            return data
+        } else {
+            throw PhoneNumberError.metadataNotFound
+        }
     }
 }
 
