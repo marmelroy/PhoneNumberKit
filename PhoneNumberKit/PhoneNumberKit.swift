@@ -331,7 +331,7 @@ public final class PhoneNumberKit: NSObject {
         }
         
         defer {
-            if #available(iOS 13.0, *) {
+            if #available(iOS 13.0, macOS 10.15, macCatalyst 13.1, tvOS 13.0, watchOS 6.0, *) {
                 try? handle.close()
             } else {
                 handle.closeFile()
