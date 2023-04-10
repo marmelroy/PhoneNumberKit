@@ -38,6 +38,8 @@ public final class PartialFormatter {
         }
     }
 
+    public var nationalFormattingRequired: Bool = true
+
     public var maxDigits: Int?
 
     func updateMetadataForDefaultRegion() {
@@ -214,7 +216,7 @@ public final class PartialFormatter {
     func extractNationalPrefix(_ rawNumber: String) -> String {
         var processedNumber = rawNumber
         var startOfNationalNumber: Int = 0
-        if self.isNanpaNumberWithNationalPrefix(rawNumber) {
+        if self.isNanpaNumberWithNationalPrefix(rawNumber) || !nationalFormattingRequired {
             self.prefixBeforeNationalNumber.append("1 ")
         } else {
             do {

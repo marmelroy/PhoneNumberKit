@@ -83,6 +83,12 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         }
     }
 
+    public var nationalFormattingRequired: Bool = true {
+      didSet {
+        partialFormatter.nationalFormattingRequired = nationalFormattingRequired
+      }
+    }
+
     public var withExamplePlaceholder: Bool = false {
         didSet {
             if self.withExamplePlaceholder {
