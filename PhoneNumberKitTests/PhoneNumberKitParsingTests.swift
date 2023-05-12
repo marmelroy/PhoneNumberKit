@@ -547,4 +547,10 @@ class PhoneNumberKitParsingTests: XCTestCase {
         XCTAssertEqual(number.type, PhoneNumberType.mobile)
         XCTAssertEqual(number.numberExtension, "22")
     }
+
+    func testNonAmbiguousPhoneNumber() {
+        // This phone number was incorrectly identified as ambiguous.
+        let address = "+1 345 916 1234"
+        try XCTAssertNotNil(phoneNumberKit.parse(address, withRegion: "JM"))
+    }
 }
