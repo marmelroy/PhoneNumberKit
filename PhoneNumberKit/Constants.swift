@@ -40,7 +40,7 @@ public enum PhoneNumberError: Error, Equatable {
     case tooShort
     case deprecated
     case metadataNotFound
-    case ambiguousNumber(phoneNumbers: [PhoneNumber])
+    case ambiguousNumber(phoneNumbers: Set<PhoneNumber>)
 }
 
 extension PhoneNumberError: LocalizedError {
