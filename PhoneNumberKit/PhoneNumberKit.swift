@@ -324,10 +324,21 @@ public final class PhoneNumberKit: NSObject {
     /// - returns: an optional Data representation of the metadata.
     public static func defaultMetadataCallback() throws -> Data? {
         let frameworkBundle = Bundle.phoneNumberKit
-        guard let jsonPath = frameworkBundle.path(forResource: "PhoneNumberMetadata", ofType: "json") else {
+        guard
+            let jsonPath = frameworkBundle.path(forResource: "PhoneNumberMetadata", ofType: "json"),
+            let handle = FileHandle(forReadingAtPath: jsonPath) else {
             throw PhoneNumberError.metadataNotFound
         }
-        let data = try Data(contentsOf: URL(fileURLWithPath: jsonPath))
+        
+        defer {
+            if #available(iOS 13.0, macOS 10.15, macCatalyst 13.1, tvOS 13.0, watchOS 6.0, *) {
+                try? handle.close()
+            } else {
+                handle.closeFile()
+            }
+        }
+        
+        let data = handle.readDataToEndOfFile()
         return data
     }
 }
