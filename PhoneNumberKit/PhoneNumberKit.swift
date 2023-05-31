@@ -36,17 +36,7 @@ public final class PhoneNumberKit: NSObject {
     ///   - ignoreType: Avoids number type checking for faster performance.
     /// - Returns: PhoneNumber object.
     public func parse(_ numberString: String, withRegion region: String = PhoneNumberKit.defaultRegionCode(), ignoreType: Bool = false) throws -> PhoneNumber {
-        var numberStringWithPlus = numberString
-
-        do {
-            return try self.parseManager.parse(numberString, withRegion: region, ignoreType: ignoreType)
-        } catch {
-            if numberStringWithPlus.first != "+" {
-                numberStringWithPlus = "+" + numberStringWithPlus
-            }
-        }
-
-        return try self.parseManager.parse(numberStringWithPlus, withRegion: region, ignoreType: ignoreType)
+        return try self.parseManager.parse(numberString, withRegion: region, ignoreType: ignoreType)
     }
 
     /// Parses an array of number strings. Optimised for performance. Invalid numbers are ignored in the resulting array

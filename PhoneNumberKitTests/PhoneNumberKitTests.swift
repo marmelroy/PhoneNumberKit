@@ -370,15 +370,8 @@ class PhoneNumberKitTests: XCTestCase {
 
     //  Invalid number invalid format
     func testInvalidNumberNotANumberInvalidFormat() {
-        let testNumber = "+33(02)689555555"
-        do {
-            let phoneNumber = try phoneNumberKit.parse(testNumber)
-            _ = self.phoneNumberKit.format(phoneNumber, toType: .e164)
-            XCTFail()
-        } catch PhoneNumberError.notANumber {
-            XCTAssert(true)
-        } catch {
-            XCTAssert(false)
+        XCTAssertThrowsError(try phoneNumberKit.parse("+33(02)689555555")) { error in
+            XCTAssertEqual(error as? PhoneNumberError, PhoneNumberError.invalidNumber)
         }
     }
 
