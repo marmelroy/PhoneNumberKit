@@ -62,7 +62,7 @@ final class ParseManager {
             if let result = try validPhoneNumber(from: nationalNumber, using: regionMetadata, countryCode: regionMetadata.countryCode, ignoreType: ignoreType, numberString: numberString, numberExtension: numberExtension) {
                 return result
             }
-            throw PhoneNumberError.notANumber
+            throw PhoneNumberError.invalidNumber
         }
         
         // If country code is not default, grab correct metadata (6)
@@ -85,7 +85,7 @@ final class ParseManager {
         }
         
         switch possibleResults.count {
-        case 0: throw PhoneNumberError.notANumber
+        case 0: throw PhoneNumberError.invalidNumber
         case 1: return possibleResults.first!
         default: throw PhoneNumberError.ambiguousNumber(phoneNumbers: possibleResults)
         }
@@ -169,13 +169,14 @@ final class ParseManager {
         self.parser.stripNationalPrefix(&nationalNumber, metadata: regionMetadata)
 
         // Test number against general number description for correct metadata (2)
-        if let generalNumberDesc = regionMetadata.generalDesc, regexManager.hasValue(generalNumberDesc.nationalNumberPattern) == false || parser.isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc) == false {
+        if let generalNumberDesc = regionMetadata.generalDesc,
+            regexManager.hasValue(generalNumberDesc.nationalNumberPattern) == false || parser.isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc) == false {
             return nil
         }
         // Finalize remaining parameters and create phone number object (3)
         let leadingZero = nationalNumber.hasPrefix("0")
         guard let finalNationalNumber = UInt64(nationalNumber) else {
-            throw PhoneNumberError.notANumber
+            throw PhoneNumberError.invalidNumber
         }
 
         // Check if the number if of a known type (4)
@@ -186,7 +187,7 @@ final class ParseManager {
             }
             type = self.parser.checkNumberType(String(nationalNumber), metadata: regionMetadata, leadingZero: leadingZero)
             if type == .unknown {
-                throw PhoneNumberError.unknownType
+                throw PhoneNumberError.invalidNumber
             }
         }
 

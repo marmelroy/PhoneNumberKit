@@ -64,7 +64,7 @@ final class RegexManager {
         if let firstMatch = fallBackMatches.first {
             return firstMatch
         } else {
-            throw PhoneNumberError.notANumber
+            throw PhoneNumberError.invalidNumber
         }
     }
 
