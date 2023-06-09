@@ -146,7 +146,8 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     public private(set) lazy var partialFormatter: PartialFormatter = PartialFormatter(
         phoneNumberKit: phoneNumberKit,
         defaultRegion: defaultRegion,
-        withPrefix: withPrefix
+        withPrefix: withPrefix,
+        ignoreIntlNumbers: true
     )
 
     let nonNumericSet: CharacterSet = {
