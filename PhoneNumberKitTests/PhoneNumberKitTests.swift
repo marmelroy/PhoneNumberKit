@@ -457,4 +457,9 @@ class PhoneNumberKitTests: XCTestCase {
             }
         }
     }
+    
+    func testValidCZNumbers() {
+        let numbers = ["420734593819", "+420734593819", "734593819"]
+        numbers.forEach { XCTAssertTrue(phoneNumberKit.isValidPhoneNumber($0, withRegion: "CZ")) }
+    }
 }
