@@ -13,7 +13,7 @@ import Contacts
 
 public typealias MetadataCallback = (() throws -> Data?)
 
-public final class PhoneNumberKit: NSObject {
+public final class PhoneNumberKit {
     // Manager objects
     let metadataManager: MetadataManager
     let parseManager: ParseManager
