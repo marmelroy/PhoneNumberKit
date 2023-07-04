@@ -608,7 +608,7 @@ extension PhoneNumberTextField {
            let clearButtonPadding = self.clearButtonPadding {
             return super.clearButtonRect(forBounds: bounds.insetBy(dx: insets.left - clearButtonPadding, dy: 0))
         } else {
-            return clearButtonRect(forBounds: bounds)
+            return super.clearButtonRect(forBounds: bounds)
         }
     }
 }
