@@ -1,4 +1,3 @@
-
 #if os(iOS)
 
 import UIKit
@@ -101,10 +100,9 @@ public class CountryCodePickerViewController: UITableViewController {
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.backgroundColor = .clear
-      
-        #if os(iOS) || os(macOS) || os(watchOS)
+
         navigationItem.searchController = searchController
-        #endif
+        navigationItem.hidesSearchBarWhenScrolling = !PhoneNumberKit.CountryCodePicker.alwaysShowsSearchBar
 
         definesPresentationContext = true
     }

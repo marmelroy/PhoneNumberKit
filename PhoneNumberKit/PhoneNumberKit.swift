@@ -355,6 +355,9 @@ extension PhoneNumberKit {
 
         /// When the Picker is shown from the textfield it is presented modally
         public static var forceModalPresentation: Bool = false
+        
+        /// Set the search bar of the Picker to always visible
+        public static var alwaysShowsSearchBar: Bool = false
     }
 }
 #endif
