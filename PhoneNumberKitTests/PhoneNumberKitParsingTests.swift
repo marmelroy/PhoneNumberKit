@@ -25,7 +25,6 @@ final class PhoneNumberKitParsingTests: XCTestCase {
     }
 
     func testFailingNumber() {
-        NSLog("msrutek, failing test")
         XCTAssertThrowsError(try self.phoneNumberKit.parse("+5491187654321 ABC123", withRegion: "AR")) { error in
             XCTAssertEqual(error as? PhoneNumberError, .invalidNumber)
         }
