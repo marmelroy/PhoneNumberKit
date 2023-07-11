@@ -12,17 +12,20 @@ import Foundation
 import XCTest
 
 final class PhoneNumberKitParsingTests: XCTestCase {
-    let phoneNumberKit = PhoneNumberKit()
+    private var phoneNumberKit: PhoneNumberKit!
 
     override func setUp() {
         super.setUp()
+        phoneNumberKit = PhoneNumberKit()
     }
 
     override func tearDown() {
+        phoneNumberKit = nil
         super.tearDown()
     }
 
     func testFailingNumber() {
+        NSLog("msrutek, failing test")
         XCTAssertThrowsError(try self.phoneNumberKit.parse("+5491187654321 ABC123", withRegion: "AR")) { error in
             XCTAssertEqual(error as? PhoneNumberError, .invalidNumber)
         }

@@ -12,19 +12,29 @@
 import UIKit
 import XCTest
 
-class PhoneNumberTextFieldTests: XCTestCase {
+final class PhoneNumberTextFieldTests: XCTestCase {
+    private var phoneNumberKit: PhoneNumberKit!
+
+    override func setUp() {
+        super.setUp()
+        phoneNumberKit = PhoneNumberKit()
+    }
+
+    override func tearDown() {
+        phoneNumberKit = nil
+        super.tearDown()
+    }
+
     func testWorksWithPhoneNumberKitInstance() {
-        let pnk = PhoneNumberKit()
-        let tf = PhoneNumberTextField(withPhoneNumberKit: pnk)
+        let tf = PhoneNumberTextField(withPhoneNumberKit: phoneNumberKit)
         tf.partialFormatter.defaultRegion = "US"
         tf.text = "4125551212"
         XCTAssertEqual(tf.text, "(412) 555-1212")
     }
 
     func testWorksWithFrameAndPhoneNumberKitInstance() {
-        let pnk = PhoneNumberKit()
         let frame = CGRect(x: 10.0, y: 20.0, width: 400.0, height: 250.0)
-        let tf = PhoneNumberTextField(frame: frame, phoneNumberKit: pnk)
+        let tf = PhoneNumberTextField(frame: frame, phoneNumberKit: phoneNumberKit)
         tf.partialFormatter.defaultRegion = "US"
         XCTAssertEqual(tf.frame, frame)
         tf.text = "4125551212"
@@ -32,8 +42,7 @@ class PhoneNumberTextFieldTests: XCTestCase {
     }
 
     func testPhoneNumberProperty() {
-        let pnk = PhoneNumberKit()
-        let tf = PhoneNumberTextField(withPhoneNumberKit: pnk)
+        let tf = PhoneNumberTextField(withPhoneNumberKit: phoneNumberKit)
         tf.partialFormatter.defaultRegion = "US"
         tf.text = "4125551212"
         XCTAssertNotNil(tf.phoneNumber)
@@ -42,8 +51,7 @@ class PhoneNumberTextFieldTests: XCTestCase {
     }
 
     func testUSPhoneNumberWithFlag() {
-        let pnk = PhoneNumberKit()
-        let tf = PhoneNumberTextField(withPhoneNumberKit: pnk)
+        let tf = PhoneNumberTextField(withPhoneNumberKit: phoneNumberKit)
         tf.partialFormatter.defaultRegion = "US"
         tf.withFlag = true
         tf.text = "4125551212"
@@ -52,8 +60,7 @@ class PhoneNumberTextFieldTests: XCTestCase {
     }
 
     func testNonUSPhoneNumberWithFlag() {
-        let pnk = PhoneNumberKit()
-        let tf = PhoneNumberTextField(withPhoneNumberKit: pnk)
+        let tf = PhoneNumberTextField(withPhoneNumberKit: phoneNumberKit)
         tf.partialFormatter.defaultRegion = "US"
         tf.withFlag = true
         tf.text = "5872170177"

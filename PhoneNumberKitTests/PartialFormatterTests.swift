@@ -10,11 +10,19 @@
 @testable import PhoneNumberKit
 import XCTest
 
-import PhoneNumberKit
-
 /// Testing partial formatter. Goal is to replicate formatting behaviour of Apple's dialer.
-class PartialFormatterTests: XCTestCase {
-    let phoneNumberKit = PhoneNumberKit()
+final class PartialFormatterTests: XCTestCase {
+    private var phoneNumberKit: PhoneNumberKit!
+
+    override func setUp() {
+        super.setUp()
+        phoneNumberKit = PhoneNumberKit()
+    }
+
+    override func tearDown() {
+        phoneNumberKit = nil
+        super.tearDown()
+    }
 
     // +33689555555
     func testFrenchNumberFromFrenchRegion() {

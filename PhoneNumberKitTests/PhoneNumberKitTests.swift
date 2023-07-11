@@ -9,16 +9,16 @@
 @testable import PhoneNumberKit
 import XCTest
 
-import PhoneNumberKit
-
-class PhoneNumberKitTests: XCTestCase {
-    let phoneNumberKit = PhoneNumberKit()
+final class PhoneNumberKitTests: XCTestCase {
+    private var phoneNumberKit: PhoneNumberKit!
 
     override func setUp() {
         super.setUp()
+        phoneNumberKit = PhoneNumberKit()
     }
 
     override func tearDown() {
+        phoneNumberKit = nil
         super.tearDown()
     }
 
