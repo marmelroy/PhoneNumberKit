@@ -12,13 +12,15 @@ import Foundation
 import XCTest
 
 final class PhoneNumberKitParsingTests: XCTestCase {
-    let phoneNumberKit = PhoneNumberKit()
+    private var phoneNumberKit: PhoneNumberKit!
 
     override func setUp() {
         super.setUp()
+        phoneNumberKit = PhoneNumberKit()
     }
 
     override func tearDown() {
+        phoneNumberKit = nil
         super.tearDown()
     }
 
