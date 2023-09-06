@@ -1,4 +1,4 @@
-#if os(iOS)
+#if os(iOS) || os(visionOS)
 
 import UIKit
 
@@ -7,7 +7,7 @@ public protocol CountryCodePickerDelegate: AnyObject {
     func countryCodePickerViewControllerDidPickCountry(_ country: CountryCodePickerViewController.Country)
 }
 
-@available(iOS 11.0, *)
+@available(iOS 11.0, visionOS 1.0, *)
 public class CountryCodePickerViewController: UITableViewController {
 
     lazy var searchController: UISearchController = {
