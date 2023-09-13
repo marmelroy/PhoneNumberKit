@@ -19,7 +19,7 @@ import Foundation
  - type: Computed phone number type on access. Returns from an enumeration - PNPhoneNumberType.
  */
 
-public struct PhoneNumber: Codable {
+public struct PhoneNumber {
     public let numberString: String
     public let countryCode: UInt64
     public let leadingZero: Bool
