@@ -45,6 +45,12 @@
 		A863BC9B23801ABC00088460 /* PhoneNumberMetadata.json in Resources */ = {isa = PBXBuildFile; fileRef = A863BC9923801ABC00088460 /* PhoneNumberMetadata.json */; };
 		A863BC9C23801ABC00088460 /* PhoneNumberMetadata.json in Resources */ = {isa = PBXBuildFile; fileRef = A863BC9923801ABC00088460 /* PhoneNumberMetadata.json */; };
 		A863BC9D23801ABC00088460 /* PhoneNumberMetadata.json in Resources */ = {isa = PBXBuildFile; fileRef = A863BC9923801ABC00088460 /* PhoneNumberMetadata.json */; };
+		C5639CD025B9127D009637AF /* PhoneNumberTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343B850B1C62A25600918E46 /* PhoneNumberTextField.swift */; };
+		C5639CD625B9127D009637AF /* PhoneNumberTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343B850B1C62A25600918E46 /* PhoneNumberTextField.swift */; };
+		C5639CD725B9127E009637AF /* PhoneNumberTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343B850B1C62A25600918E46 /* PhoneNumberTextField.swift */; };
+		C5639CDD25B91283009637AF /* CountryCodePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D14267C238F5842002DD197 /* CountryCodePickerViewController.swift */; };
+		C5639CE325B91284009637AF /* CountryCodePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D14267C238F5842002DD197 /* CountryCodePickerViewController.swift */; };
+		C5639CE425B91284009637AF /* CountryCodePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D14267C238F5842002DD197 /* CountryCodePickerViewController.swift */; };
 		C6B53DA51D944F8000E607DD /* NSRegularExpression+Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C2EF381D62BC3200052D44 /* NSRegularExpression+Swift.swift */; };
 		C6B53DA61D944F8000E607DD /* NSRegularExpression+Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C2EF381D62BC3200052D44 /* NSRegularExpression+Swift.swift */; };
 		C6B53DA71D94508400E607DD /* NSRegularExpression+Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11C2EF381D62BC3200052D44 /* NSRegularExpression+Swift.swift */; };
@@ -81,6 +87,11 @@
 		C6DF6CDF1D1B18D800259F4B /* PhoneNumberParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342418811BB70F5200EE70E7 /* PhoneNumberParser.swift */; };
 		C6DF6CE01D1B18D800259F4B /* RegexManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34566C991BC112C500715E6B /* RegexManager.swift */; };
 		C9D81F822348025700B75AB7 /* PhoneNumberTextFieldTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9D81F812348025700B75AB7 /* PhoneNumberTextFieldTests.swift */; };
+		D51A60A9274416050021EE7E /* PhoneNumber+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51A60A8274416050021EE7E /* PhoneNumber+Codable.swift */; };
+		D51A60AA2744160B0021EE7E /* PhoneNumber+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51A60A8274416050021EE7E /* PhoneNumber+Codable.swift */; };
+		D51A60AB2744160B0021EE7E /* PhoneNumber+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51A60A8274416050021EE7E /* PhoneNumber+Codable.swift */; };
+		D51A60AC2744160C0021EE7E /* PhoneNumber+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51A60A8274416050021EE7E /* PhoneNumber+Codable.swift */; };
+		D51A60AE27442EF50021EE7E /* PhoneNumber+CodableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51A60AD27442EF50021EE7E /* PhoneNumber+CodableTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -126,6 +137,8 @@
 		C6DF6CA71D1B145300259F4B /* PhoneNumberKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhoneNumberKit.h; sourceTree = "<group>"; };
 		C6DF6CCC1D1B18B000259F4B /* PhoneNumberKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PhoneNumberKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C9D81F812348025700B75AB7 /* PhoneNumberTextFieldTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumberTextFieldTests.swift; sourceTree = "<group>"; };
+		D51A60A8274416050021EE7E /* PhoneNumber+Codable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhoneNumber+Codable.swift"; sourceTree = "<group>"; };
+		D51A60AD27442EF50021EE7E /* PhoneNumber+CodableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhoneNumber+CodableTests.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -222,6 +235,7 @@
 				34566C991BC112C500715E6B /* RegexManager.swift */,
 				34F26FBD2517DCB700B6AF4D /* Bundle+Resources.swift */,
 				3424187F1BB705B500EE70E7 /* PhoneNumber.swift */,
+				D51A60A8274416050021EE7E /* PhoneNumber+Codable.swift */,
 				34AA66011BDD160B00467912 /* Constants.swift */,
 				3420CF5D1BE8959F00FAE34F /* Formatter.swift */,
 				343B850A1C62A25600918E46 /* PartialFormatter.swift */,
@@ -240,6 +254,7 @@
 			isa = PBXGroup;
 			children = (
 				342418731BB6E5A000EE70E7 /* PhoneNumberKitTests.swift */,
+				D51A60AD27442EF50021EE7E /* PhoneNumber+CodableTests.swift */,
 				346EF14D1C69C688008C7306 /* PartialFormatterTests.swift */,
 				34776AA71BE2BF1100400790 /* PhoneNumberKitParsingTests.swift */,
 				342418751BB6E5A000EE70E7 /* Info.plist */,
@@ -391,7 +406,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 1210;
+				LastUpgradeCheck = 1320;
 				ORGANIZATIONNAME = "Roy Marmelstein";
 				TargetAttributes = {
 					342418631BB6E5A000EE70E7 = {
@@ -496,6 +511,7 @@
 				3417BD6B2210AC4900477EE7 /* MetadataParsing.swift in Sources */,
 				346922691BC023A60023482F /* PhoneNumberKit.swift in Sources */,
 				343B850C1C62A25600918E46 /* PartialFormatter.swift in Sources */,
+				D51A60A9274416050021EE7E /* PhoneNumber+Codable.swift in Sources */,
 				3422D9BA1BE6A2D500867D02 /* ParseManager.swift in Sources */,
 				34566C9A1BC112C500715E6B /* RegexManager.swift in Sources */,
 				342418801BB705B500EE70E7 /* PhoneNumber.swift in Sources */,
@@ -509,6 +525,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D51A60AE27442EF50021EE7E /* PhoneNumber+CodableTests.swift in Sources */,
 				34776AA81BE2BF1100400790 /* PhoneNumberKitParsingTests.swift in Sources */,
 				342418741BB6E5A000EE70E7 /* PhoneNumberKitTests.swift in Sources */,
 				346EF14E1C69C688008C7306 /* PartialFormatterTests.swift in Sources */,
@@ -528,9 +545,12 @@
 				C6DF6C551D1B09DD00259F4B /* Formatter.swift in Sources */,
 				1B80904E2300B4DC006AE849 /* MetadataParsing.swift in Sources */,
 				C6DF6C5C1D1B09DD00259F4B /* PhoneNumber.swift in Sources */,
+				C5639CD025B9127D009637AF /* PhoneNumberTextField.swift in Sources */,
 				C6DF6C541D1B09DD00259F4B /* Constants.swift in Sources */,
+				D51A60AA2744160B0021EE7E /* PhoneNumber+Codable.swift in Sources */,
 				34F26FBF2517DCB700B6AF4D /* Bundle+Resources.swift in Sources */,
 				C6DF6C591D1B09DD00259F4B /* MetadataTypes.swift in Sources */,
+				C5639CDD25B91283009637AF /* CountryCodePickerViewController.swift in Sources */,
 				C6DF6C5F1D1B09DD00259F4B /* RegexManager.swift in Sources */,
 				C6DF6C581D1B09DD00259F4B /* MetadataManager.swift in Sources */,
 				C6DF6C561D1B09DD00259F4B /* PartialFormatter.swift in Sources */,
@@ -549,9 +569,12 @@
 				C6DF6CB31D1B159A00259F4B /* Formatter.swift in Sources */,
 				1B80904F2300B4DC006AE849 /* MetadataParsing.swift in Sources */,
 				C6DF6CBA1D1B159A00259F4B /* PhoneNumber.swift in Sources */,
+				C5639CD625B9127D009637AF /* PhoneNumberTextField.swift in Sources */,
 				C6DF6CB21D1B159A00259F4B /* Constants.swift in Sources */,
+				D51A60AB2744160B0021EE7E /* PhoneNumber+Codable.swift in Sources */,
 				34F26FC02517DCB700B6AF4D /* Bundle+Resources.swift in Sources */,
 				C6DF6CB71D1B159A00259F4B /* MetadataTypes.swift in Sources */,
+				C5639CE325B91284009637AF /* CountryCodePickerViewController.swift in Sources */,
 				C6DF6CBD1D1B159A00259F4B /* RegexManager.swift in Sources */,
 				C6DF6CB61D1B159A00259F4B /* MetadataManager.swift in Sources */,
 				C6DF6CB41D1B159A00259F4B /* PartialFormatter.swift in Sources */,
@@ -570,9 +593,12 @@
 				C6DF6CDD1D1B18D800259F4B /* PhoneNumber.swift in Sources */,
 				C6DF6CD51D1B18D800259F4B /* Constants.swift in Sources */,
 				1B8090502300B4DD006AE849 /* MetadataParsing.swift in Sources */,
+				C5639CD725B9127E009637AF /* PhoneNumberTextField.swift in Sources */,
 				C6DF6CDA1D1B18D800259F4B /* MetadataTypes.swift in Sources */,
+				D51A60AC2744160C0021EE7E /* PhoneNumber+Codable.swift in Sources */,
 				34F26FC12517DCB700B6AF4D /* Bundle+Resources.swift in Sources */,
 				C6DF6CE01D1B18D800259F4B /* RegexManager.swift in Sources */,
+				C5639CE425B91284009637AF /* CountryCodePickerViewController.swift in Sources */,
 				C6DF6CD91D1B18D800259F4B /* MetadataManager.swift in Sources */,
 				1B1A4DD82300759E006AE849 /* PhoneNumberFormatter.swift in Sources */,
 				C6DF6CD71D1B18D800259F4B /* PartialFormatter.swift in Sources */,
@@ -621,7 +647,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 27;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -641,15 +667,18 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TVOS_DEPLOYMENT_TARGET = 11.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
+				WATCHOS_DEPLOYMENT_TARGET = 4.0;
 			};
 			name = Debug;
 		};
@@ -684,7 +713,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 27;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -698,15 +727,18 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				TVOS_DEPLOYMENT_TARGET = 11.0;
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
+				WATCHOS_DEPLOYMENT_TARGET = 4.0;
 			};
 			name = Release;
 		};
@@ -718,11 +750,10 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 26;
+				DYLIB_CURRENT_VERSION = 27;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = PhoneNumberKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.roymarmelstein.PhoneNumberKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -741,11 +772,10 @@
 				"DEBUG_INFORMATION_FORMAT[sdk=macosx*]" = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 26;
+				DYLIB_CURRENT_VERSION = 27;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = PhoneNumberKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.roymarmelstein.PhoneNumberKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -782,16 +812,15 @@
 				CLANG_ANALYZER_NONNULL = YES;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 27;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 26;
+				DYLIB_CURRENT_VERSION = 27;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = "$(SRCROOT)/PhoneNumberKit/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = com.roymarmelstein.PhoneNumberKit.PhoneNumberKit;
 				PRODUCT_NAME = PhoneNumberKit;
 				SDKROOT = macosx;
@@ -805,16 +834,15 @@
 				CLANG_ANALYZER_NONNULL = YES;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 27;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 26;
+				DYLIB_CURRENT_VERSION = 27;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
 				INFOPLIST_FILE = "$(SRCROOT)/PhoneNumberKit/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_BUNDLE_IDENTIFIER = com.roymarmelstein.PhoneNumberKit.PhoneNumberKit;
 				PRODUCT_NAME = PhoneNumberKit;
 				SDKROOT = macosx;
@@ -828,10 +856,10 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 27;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 26;
+				DYLIB_CURRENT_VERSION = 27;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = PhoneNumberKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -841,7 +869,6 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 2.2;
 			};
 			name = Debug;
 		};
@@ -851,10 +878,10 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 27;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 26;
+				DYLIB_CURRENT_VERSION = 27;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = PhoneNumberKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -864,7 +891,6 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 2.2;
 			};
 			name = Release;
 		};
@@ -873,10 +899,10 @@
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 27;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 26;
+				DYLIB_CURRENT_VERSION = 27;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = "$(SRCROOT)/PhoneNumberKit/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -886,7 +912,6 @@
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
 			};
 			name = Debug;
 		};
@@ -895,10 +920,10 @@
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				CURRENT_PROJECT_VERSION = 26;
+				CURRENT_PROJECT_VERSION = 27;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 26;
+				DYLIB_CURRENT_VERSION = 27;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = "$(SRCROOT)/PhoneNumberKit/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -908,7 +933,6 @@
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 3;
-				TVOS_DEPLOYMENT_TARGET = 9.2;
 			};
 			name = Release;
 		};

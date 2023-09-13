@@ -24,21 +24,22 @@ enum PhoneNumberCountryCodeSource {
 
  - GeneralError: A general error occured.
  - InvalidCountryCode: A country code could not be found or the one found was invalid
- - NotANumber: The string provided is not a number
+ - InvalidNumber: The string provided is not a number
  - TooLong: The string provided is too long to be a valid number
  - TooShort: The string provided is too short to be a valid number
  - Deprecated: The method used was deprecated
  - metadataNotFound: PhoneNumberKit was unable to read the included metadata
+ - ambiguousNumber: The string could not be resolved to a single valid number
  */
-public enum PhoneNumberError: Error {
+public enum PhoneNumberError: Error, Equatable {
     case generalError
     case invalidCountryCode
-    case notANumber
-    case unknownType
+    case invalidNumber
     case tooLong
     case tooShort
     case deprecated
     case metadataNotFound
+    case ambiguousNumber(phoneNumbers: Set<PhoneNumber>)
 }
 
 extension PhoneNumberError: LocalizedError {
@@ -46,12 +47,12 @@ extension PhoneNumberError: LocalizedError {
         switch self {
         case .generalError: return NSLocalizedString("An error occured whilst validating the phone number.", comment: "")
         case .invalidCountryCode: return NSLocalizedString("The country code is invalid.", comment: "")
-        case .notANumber: return NSLocalizedString("The number provided is invalid.", comment: "")
-        case .unknownType: return NSLocalizedString("Phone number type is unknown.", comment: "")
+        case .invalidNumber: return NSLocalizedString("The number provided is invalid.", comment: "")
         case .tooLong: return NSLocalizedString("The number provided is too long.", comment: "")
         case .tooShort: return NSLocalizedString("The number provided is too short.", comment: "")
         case .deprecated: return NSLocalizedString("This function is deprecated.", comment: "")
         case .metadataNotFound: return NSLocalizedString("Valid metadata is missing.", comment: "")
+        case .ambiguousNumber: return NSLocalizedString("Phone number is ambiguous.", comment: "")
         }
     }
 }

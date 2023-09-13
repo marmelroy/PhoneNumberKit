@@ -17,11 +17,28 @@ public final class PartialFormatter {
     weak var parser: PhoneNumberParser?
     weak var regexManager: RegexManager?
 
-    public convenience init(phoneNumberKit: PhoneNumberKit = PhoneNumberKit(), defaultRegion: String = PhoneNumberKit.defaultRegionCode(), withPrefix: Bool = true, maxDigits: Int? = nil) {
-        self.init(phoneNumberKit: phoneNumberKit, regexManager: phoneNumberKit.regexManager, metadataManager: phoneNumberKit.metadataManager, parser: phoneNumberKit.parseManager.parser, defaultRegion: defaultRegion, withPrefix: withPrefix, maxDigits: maxDigits)
+    public convenience init(phoneNumberKit: PhoneNumberKit = PhoneNumberKit(),
+                            defaultRegion: String = PhoneNumberKit.defaultRegionCode(),
+                            withPrefix: Bool = true,
+                            maxDigits: Int? = nil,
+                            ignoreIntlNumbers: Bool = false) {
+        self.init(phoneNumberKit: phoneNumberKit,
+                  regexManager: phoneNumberKit.regexManager,
+                  metadataManager: phoneNumberKit.metadataManager,
+                  parser: phoneNumberKit.parseManager.parser,
+                  defaultRegion: defaultRegion,
+                  withPrefix: withPrefix,
+                  maxDigits: maxDigits,
+                  ignoreIntlNumbers: ignoreIntlNumbers)
     }
 
-    init(phoneNumberKit: PhoneNumberKit, regexManager: RegexManager, metadataManager: MetadataManager, parser: PhoneNumberParser, defaultRegion: String, withPrefix: Bool = true, maxDigits: Int? = nil) {
+    init(phoneNumberKit: PhoneNumberKit,
+         regexManager: RegexManager,
+         metadataManager: MetadataManager,
+         parser: PhoneNumberParser, defaultRegion: String,
+         withPrefix: Bool = true,
+         maxDigits: Int? = nil,
+         ignoreIntlNumbers: Bool = false) {
         self.phoneNumberKit = phoneNumberKit
         self.regexManager = regexManager
         self.metadataManager = metadataManager
@@ -30,6 +47,7 @@ public final class PartialFormatter {
         self.updateMetadataForDefaultRegion()
         self.withPrefix = withPrefix
         self.maxDigits = maxDigits
+        self.ignoreIntlNumbers = ignoreIntlNumbers
     }
 
     public var defaultRegion: String {
@@ -42,7 +60,7 @@ public final class PartialFormatter {
 
     func updateMetadataForDefaultRegion() {
         guard let metadataManager = metadataManager else { return }
-        if let regionMetadata = metadataManager.territoriesByCountry[defaultRegion] {
+        if let regionMetadata = metadataManager.filterTerritories(byCountry: defaultRegion) {
             self.defaultMetadata = metadataManager.mainTerritory(forCode: regionMetadata.countryCode)
         } else {
             self.defaultMetadata = nil
@@ -55,16 +73,22 @@ public final class PartialFormatter {
     var prefixBeforeNationalNumber = String()
     var shouldAddSpaceAfterNationalPrefix = false
     var withPrefix = true
+    var ignoreIntlNumbers = false
 
     // MARK: Status
 
     public var currentRegion: String {
-        if self.phoneNumberKit.countryCode(for: self.defaultRegion) != 1 {
-            return currentMetadata?.codeID ?? "US"
+        if ignoreIntlNumbers, currentMetadata?.codeID == "001" {
+            return defaultRegion
         } else {
-            return self.currentMetadata?.countryCode == 1
+            let countryCode = self.phoneNumberKit.countryCode(for: self.defaultRegion)
+            if countryCode != 1, countryCode != 7 {
+                return currentMetadata?.codeID ?? "US"
+            } else {
+                return self.currentMetadata?.countryCode == 1 || self.currentMetadata?.countryCode == 7
                 ? self.defaultRegion
                 : self.currentMetadata?.codeID ?? self.defaultRegion
+            }
         }
     }
 

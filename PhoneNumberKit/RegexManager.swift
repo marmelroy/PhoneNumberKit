@@ -9,25 +9,26 @@
 import Foundation
 
 final class RegexManager {
+    public init() {
+        var characterSet = CharacterSet(charactersIn: PhoneNumberConstants.nonBreakingSpace)
+        characterSet.formUnion(.whitespacesAndNewlines)
+        spaceCharacterSet = characterSet
+    }
+
     // MARK: Regular expression pool
 
-    var regularExpresionPool = [String: NSRegularExpression]()
+    var regularExpressionPool = [String: NSRegularExpression]()
 
-    private let regularExpressionPoolQueue = DispatchQueue(label: "com.phonenumberkit.regexpool", attributes: .concurrent)
+    private let regularExpressionPoolQueue = DispatchQueue(label: "com.phonenumberkit.regexpool", target: .global())
 
-    var spaceCharacterSet: CharacterSet = {
-        let characterSet = NSMutableCharacterSet(charactersIn: "\u{00a0}")
-        characterSet.formUnion(with: CharacterSet.whitespacesAndNewlines)
-        return characterSet as CharacterSet
-    }()
+    var spaceCharacterSet: CharacterSet
 
     // MARK: Regular expression
 
     func regexWithPattern(_ pattern: String) throws -> NSRegularExpression {
         var cached: NSRegularExpression?
-
-        self.regularExpressionPoolQueue.sync {
-            cached = self.regularExpresionPool[pattern]
+        cached = regularExpressionPoolQueue.sync {
+            regularExpressionPool[pattern]
         }
 
         if let cached = cached {
@@ -37,8 +38,8 @@ final class RegexManager {
         do {
             let regex = try NSRegularExpression(pattern: pattern, options: .caseInsensitive)
 
-            regularExpressionPoolQueue.async(flags: .barrier) {
-                self.regularExpresionPool[pattern] = regex
+            regularExpressionPoolQueue.sync {
+                regularExpressionPool[pattern] = regex
             }
 
             return regex
@@ -63,7 +64,7 @@ final class RegexManager {
         if let firstMatch = fallBackMatches.first {
             return firstMatch
         } else {
-            throw PhoneNumberError.notANumber
+            throw PhoneNumberError.invalidNumber
         }
     }
 
@@ -110,7 +111,7 @@ final class RegexManager {
             return false
         }
         pattern = "^(\(pattern))$"
-        return self.matchesExist(pattern, string: string)
+        return matchesExist(pattern, string: string)
     }
 
     func matchedStringByRegex(_ pattern: String, string: String) throws -> [String] {
@@ -128,27 +129,7 @@ final class RegexManager {
 
     // MARK: String and replace
 
-    func replaceStringByRegex(_ pattern: String, string: String) -> String {
-        do {
-            var replacementResult = string
-            let regex = try regexWithPattern(pattern)
-            let matches = regex.matches(in: string)
-            if matches.count == 1 {
-                let range = regex.rangeOfFirstMatch(in: string)
-                if range != nil {
-                    replacementResult = regex.stringByReplacingMatches(in: string, options: [], range: range, withTemplate: "")
-                }
-                return replacementResult
-            } else if matches.count > 1 {
-                replacementResult = regex.stringByReplacingMatches(in: string, withTemplate: "")
-            }
-            return replacementResult
-        } catch {
-            return string
-        }
-    }
-
-    func replaceStringByRegex(_ pattern: String, string: String, template: String) -> String {
+    func replaceStringByRegex(_ pattern: String, string: String, template: String = "") -> String {
         do {
             var replacementResult = string
             let regex = try regexWithPattern(pattern)
@@ -183,7 +164,7 @@ final class RegexManager {
 
     func stringByReplacingOccurrences(_ string: String, map: [String: String], keepUnmapped: Bool = false) -> String {
         var targetString = String()
-        for i in 0..<string.count {
+        for i in 0 ..< string.count {
             let oneChar = string[string.index(string.startIndex, offsetBy: i)]
             let keyString = String(oneChar).uppercased()
             if let mappedValue = map[keyString] {
@@ -199,7 +180,7 @@ final class RegexManager {
 
     func hasValue(_ value: String?) -> Bool {
         if let valueString = value {
-            if valueString.trimmingCharacters(in: self.spaceCharacterSet).count == 0 {
+            if valueString.trimmingCharacters(in: spaceCharacterSet).count == 0 {
                 return false
             }
             return true
@@ -209,7 +190,7 @@ final class RegexManager {
     }
 
     func testStringLengthAgainstPattern(_ pattern: String, string: String) -> Bool {
-        if self.matchesEntirely(pattern, string: string) {
+        if matchesEntirely(pattern, string: string) {
             return true
         } else {
             return false

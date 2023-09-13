@@ -9,10 +9,11 @@
 import Foundation
 
 final class MetadataManager {
-    var territories = [MetadataTerritory]()
-    var territoriesByCode = [UInt64: [MetadataTerritory]]()
-    var mainTerritoryByCode = [UInt64: MetadataTerritory]()
-    var territoriesByCountry = [String: MetadataTerritory]()
+    private(set) var territories = [MetadataTerritory]()
+    
+    private var territoriesByCode = [UInt64: [MetadataTerritory]]()
+    private var mainTerritoryByCode = [UInt64: MetadataTerritory]()
+    private var territoriesByCountry = [String: MetadataTerritory]()
 
     // MARK: Lifecycle
 
@@ -73,9 +74,9 @@ final class MetadataManager {
         return self.territoriesByCode[code]
     }
 
-    /// Get the MetadataTerritory objects for an ISO 639 compliant region code.
+    /// Get the MetadataTerritory objects for an ISO 3166 compliant region code.
     ///
-    /// - parameter country: ISO 639 compliant region code (e.g "GB" for the UK).
+    /// - parameter country: ISO 3166 compliant region code (e.g "GB" for the UK).
     ///
     /// - returns: A MetadataTerritory object.
     internal func filterTerritories(byCountry country: String) -> MetadataTerritory? {
