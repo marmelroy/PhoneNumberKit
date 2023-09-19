@@ -6,6 +6,7 @@
 //  Copyright © 2021 Roy Marmelstein. All rights reserved.
 //
 
+#if os(iOS)
 import UIKit
 
 /**
