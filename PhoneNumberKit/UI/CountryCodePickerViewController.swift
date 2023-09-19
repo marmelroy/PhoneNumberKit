@@ -80,12 +80,12 @@ public class CountryCodePickerViewController: UITableViewController {
      */
     public init(
         phoneNumberKit: PhoneNumberKit,
-        options: CountryCodePickerOptions,
+        options: CountryCodePickerOptions?,
         commonCountryCodes: [String] = PhoneNumberKit.CountryCodePicker.commonCountryCodes)
     {
         self.phoneNumberKit = phoneNumberKit
         self.commonCountryCodes = commonCountryCodes
-        self.options = options
+        self.options = options ?? CountryCodePickerOptions()
         super.init(style: .grouped)
         self.commonInit()
     }
