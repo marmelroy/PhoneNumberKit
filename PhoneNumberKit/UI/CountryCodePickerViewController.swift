@@ -111,7 +111,6 @@ public class CountryCodePickerViewController: UITableViewController {
 
         definesPresentationContext = true
 
-        view.backgroundColor = options.backgroundColor
         view.tintColor = options.tintColor
         navigationController?.navigationBar.tintColor = options.tintColor
         tableView.backgroundColor = options.backgroundColor
