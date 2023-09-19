@@ -2,12 +2,10 @@
 
 import UIKit
 
-@available(iOS 11.0, *)
 public protocol CountryCodePickerDelegate: AnyObject {
     func countryCodePickerViewControllerDidPickCountry(_ country: CountryCodePickerViewController.Country)
 }
 
-@available(iOS 11.0, *)
 public class CountryCodePickerViewController: UITableViewController {
 
     lazy var searchController: UISearchController = {
@@ -232,7 +230,6 @@ public class CountryCodePickerViewController: UITableViewController {
     }
 }
 
-@available(iOS 11.0, *)
 extension CountryCodePickerViewController: UISearchResultsUpdating {
 
     var isFiltering: Bool {
@@ -257,7 +254,6 @@ extension CountryCodePickerViewController: UISearchResultsUpdating {
 
 // MARK: Types
 
-@available(iOS 11.0, *)
 public extension CountryCodePickerViewController {
 
     struct Country {

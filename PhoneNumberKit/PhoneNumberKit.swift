@@ -297,9 +297,9 @@ public final class PhoneNumberKit {
     /// - returns: A computed value for the user's current region - based on the iPhone's carrier and if not available, the device region.
     public class func defaultRegionCode() -> String {
         #if canImport(Contacts)
-        if #available(iOS 9, macOS 10.11, macCatalyst 13.1, watchOS 2.0, *) {
+        if #available(iOS 12.0, macOS 10.13, macCatalyst 13.1, watchOS 4.0, *) {
             // macCatalyst OS bug if language is set to Korean
-            //CNContactsUserDefaults.shared().countryCode will return ko instead of kr
+            // CNContactsUserDefaults.shared().countryCode will return ko instead of kr
             // Failed parsing any phone number.
             let countryCode = CNContactsUserDefaults.shared().countryCode.uppercased()
             #if targetEnvironment(macCatalyst)
@@ -308,7 +308,6 @@ public final class PhoneNumberKit {
                 }
             #endif
             return countryCode
-            
         }
         #endif
         
