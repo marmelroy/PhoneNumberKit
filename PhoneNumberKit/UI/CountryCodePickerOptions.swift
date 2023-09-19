@@ -21,10 +21,12 @@ import UIKit
  */
 public struct CountryCodePickerOptions {
 
+    public init() {}
+
     public var backgroundColor: UIColor?
     public var separatorColor: UIColor?
     public var textLabelColor: UIColor?
-    public var textLabelFont: UIFont?
+    public var textLabelFont: UIFont?   
     public var detailTextLabelColor: UIColor?
     public var detailTextLabelFont: UIFont?
     public var tintColor: UIColor?
