@@ -21,6 +21,8 @@ public class CountryCodePickerViewController: UITableViewController {
     }()
 
     public let phoneNumberKit: PhoneNumberKit
+    
+    public let options: CountryCodePickerOptions
 
     let commonCountryCodes: [String]
 
@@ -78,10 +80,12 @@ public class CountryCodePickerViewController: UITableViewController {
      */
     public init(
         phoneNumberKit: PhoneNumberKit,
+        options: CountryCodePickerOptions?,
         commonCountryCodes: [String] = PhoneNumberKit.CountryCodePicker.commonCountryCodes)
     {
         self.phoneNumberKit = phoneNumberKit
         self.commonCountryCodes = commonCountryCodes
+        self.options = options ?? CountryCodePickerOptions()
         super.init(style: .grouped)
         self.commonInit()
     }
@@ -89,6 +93,7 @@ public class CountryCodePickerViewController: UITableViewController {
     required init?(coder aDecoder: NSCoder) {
         self.phoneNumberKit = PhoneNumberKit()
         self.commonCountryCodes = PhoneNumberKit.CountryCodePicker.commonCountryCodes
+        self.options = CountryCodePickerOptions()
         super.init(coder: aDecoder)
         self.commonInit()
     }
@@ -105,6 +110,19 @@ public class CountryCodePickerViewController: UITableViewController {
         navigationItem.hidesSearchBarWhenScrolling = !PhoneNumberKit.CountryCodePicker.alwaysShowsSearchBar
 
         definesPresentationContext = true
+
+        if let tintColor = options.tintColor {
+            view.tintColor = tintColor
+            navigationController?.navigationBar.tintColor = tintColor
+        }
+
+        if let backgroundColor = options.backgroundColor {
+            tableView.backgroundColor = backgroundColor
+        }
+
+        if let separator = options.separatorColor {
+            tableView.separatorColor = separator
+        }
     }
 
     public override func viewWillAppear(_ animated: Bool) {
@@ -143,11 +161,35 @@ public class CountryCodePickerViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: Cell.reuseIdentifier, for: indexPath)
         let country = self.country(for: indexPath)
 
+        if let cellBackgroundColor = options.cellBackgroundColor {
+            cell.backgroundColor = cellBackgroundColor
+        }
+
         cell.textLabel?.text = country.prefix + " " + country.flag
+
+        if let textLabelColor = options.textLabelColor {
+            cell.textLabel?.textColor = textLabelColor
+        }
+
+        if let detailTextLabelColor = options.detailTextLabelColor {
+            cell.detailTextLabel?.textColor = detailTextLabelColor
+        }
+
         cell.detailTextLabel?.text = country.name
 
-        cell.textLabel?.font = .preferredFont(forTextStyle: .callout)
-        cell.detailTextLabel?.font = .preferredFont(forTextStyle: .body)
+        if let textLabelFont = options.textLabelFont {
+            cell.textLabel?.font = textLabelFont
+        }
+
+        if let detailTextLabelFont = options.detailTextLabelFont {
+            cell.detailTextLabel?.font = detailTextLabelFont
+        }
+
+        if let cellBackgroundColorSelection = options.cellBackgroundColorSelection {
+            let view = UIView()
+            view.backgroundColor = cellBackgroundColorSelection
+            cell.selectedBackgroundView = view
+        }
 
         return cell
     }

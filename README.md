@@ -110,7 +110,34 @@ You can also query countries for a dialing code or the dialing code for a given 
 ```swift
 phoneNumberKit.countries(withCode: 33)
 phoneNumberKit.countryCode(for: "FR")
+
+## Customize Country Picker
+
+You can customize colors and fonts on the Country Picker View Controller by overriding the property "withDefaultPickerUIOptions"
+
+```swift
+let options = CountryCodePickerOptions(
+    backgroundColor: UIColor.systemGroupedBackground
+    separatorColor: UIColor.opaqueSeparator
+    textLabelColor: UIColor.label
+    textLabelFont: .preferredFont(forTextStyle: .callout)
+    detailTextLabelColor: UIColor.secondaryLabel
+    detailTextLabelFont: .preferredFont(forTextStyle: .body)
+    tintColor: UIView().tintColor
+    cellBackgroundColor: UIColor.secondarySystemGroupedBackground
+    cellBackgroundColorSelection: UIColor.tertiarySystemGroupedBackground
+)
+textField.withDefaultPickerUIOptions = options
 ```
+
+Or you can change it directly:
+
+```swift
+textField.withDefaultPickerUIOptions.backgroundColor = .red
+```
+
+Please refer to `CountryCodePickerOptions` for more information about usage and how it affects the view. 
+
 
 ## Need more customization?
 
