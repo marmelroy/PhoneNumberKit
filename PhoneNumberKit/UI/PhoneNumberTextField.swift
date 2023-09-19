@@ -132,7 +132,15 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         get { _withDefaultPickerUI }
         set { _withDefaultPickerUI = newValue }
     }
-    
+
+    private var _withDefaultPickerUIOptions: CountryCodePickerOptions = CountryCodePickerOptions()
+
+    @available(iOS 11.0, *)
+    public var withDefaultPickerUIOptions: CountryCodePickerOptions {
+        get { _withDefaultPickerUIOptions }
+        set { _withDefaultPickerUIOptions = newValue }
+    }
+
     public var modalPresentationStyle: UIModalPresentationStyle?
 
     public var isPartialFormatterEnabled = true
@@ -367,7 +375,8 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     @available(iOS 11.0, *)
     @objc func didPressFlagButton() {
         guard withDefaultPickerUI else { return }
-        let vc = CountryCodePickerViewController(phoneNumberKit: phoneNumberKit)
+        let vc = CountryCodePickerViewController(phoneNumberKit: phoneNumberKit,
+                                                 options: withDefaultPickerUIOptions)
         vc.delegate = self
         if let nav = containingViewController?.navigationController, !PhoneNumberKit.CountryCodePicker.forceModalPresentation {
             nav.pushViewController(vc, animated: true)

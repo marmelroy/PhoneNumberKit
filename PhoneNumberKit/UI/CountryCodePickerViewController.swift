@@ -21,6 +21,8 @@ public class CountryCodePickerViewController: UITableViewController {
     }()
 
     public let phoneNumberKit: PhoneNumberKit
+    
+    public let options: CountryCodePickerOptions
 
     let commonCountryCodes: [String]
 
@@ -78,10 +80,12 @@ public class CountryCodePickerViewController: UITableViewController {
      */
     public init(
         phoneNumberKit: PhoneNumberKit,
+        options: CountryCodePickerOptions,
         commonCountryCodes: [String] = PhoneNumberKit.CountryCodePicker.commonCountryCodes)
     {
         self.phoneNumberKit = phoneNumberKit
         self.commonCountryCodes = commonCountryCodes
+        self.options = options
         super.init(style: .grouped)
         self.commonInit()
     }
@@ -89,6 +93,7 @@ public class CountryCodePickerViewController: UITableViewController {
     required init?(coder aDecoder: NSCoder) {
         self.phoneNumberKit = PhoneNumberKit()
         self.commonCountryCodes = PhoneNumberKit.CountryCodePicker.commonCountryCodes
+        self.options = CountryCodePickerOptions()
         super.init(coder: aDecoder)
         self.commonInit()
     }
@@ -105,6 +110,12 @@ public class CountryCodePickerViewController: UITableViewController {
         navigationItem.hidesSearchBarWhenScrolling = !PhoneNumberKit.CountryCodePicker.alwaysShowsSearchBar
 
         definesPresentationContext = true
+
+        view.backgroundColor = options.backgroundColor
+        view.tintColor = options.tintColor
+        navigationController?.navigationBar.tintColor = options.tintColor
+        tableView.backgroundColor = options.backgroundColor
+        tableView.separatorColor = options.separatorColor
     }
 
     public override func viewWillAppear(_ animated: Bool) {
@@ -143,11 +154,19 @@ public class CountryCodePickerViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: Cell.reuseIdentifier, for: indexPath)
         let country = self.country(for: indexPath)
 
+        cell.backgroundColor = options.cellBackgroundColor
         cell.textLabel?.text = country.prefix + " " + country.flag
+        cell.textLabel?.textColor = options.textLabelColor
+        cell.detailTextLabel?.textColor = options.detailTextLabelColor
+
         cell.detailTextLabel?.text = country.name
 
-        cell.textLabel?.font = .preferredFont(forTextStyle: .callout)
-        cell.detailTextLabel?.font = .preferredFont(forTextStyle: .body)
+        cell.textLabel?.font = options.textLabelFont
+        cell.detailTextLabel?.font = options.detailTextLabelFont
+
+        let view = UIView()
+        view.backgroundColor = options.cellBackgroundColorSelection
+        cell.selectedBackgroundView = view
 
         return cell
     }
