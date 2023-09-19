@@ -110,6 +110,7 @@ You can also query countries for a dialing code or the dialing code for a given 
 ```swift
 phoneNumberKit.countries(withCode: 33)
 phoneNumberKit.countryCode(for: "FR")
+```
 
 ## Customize Country Picker
 
