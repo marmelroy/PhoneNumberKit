@@ -111,10 +111,18 @@ public class CountryCodePickerViewController: UITableViewController {
 
         definesPresentationContext = true
 
-        view.tintColor = options.tintColor
-        navigationController?.navigationBar.tintColor = options.tintColor
-        tableView.backgroundColor = options.backgroundColor
-        tableView.separatorColor = options.separatorColor
+        if let tintColor = options.tintColor {
+            view.tintColor = tintColor
+            navigationController?.navigationBar.tintColor = tintColor
+        }
+
+        if let backgroundColor = options.backgroundColor {
+            tableView.backgroundColor = backgroundColor
+        }
+
+        if let separator = options.separatorColor {
+            tableView.separatorColor = separator
+        }
     }
 
     public override func viewWillAppear(_ animated: Bool) {
@@ -153,19 +161,35 @@ public class CountryCodePickerViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: Cell.reuseIdentifier, for: indexPath)
         let country = self.country(for: indexPath)
 
-        cell.backgroundColor = options.cellBackgroundColor
+        if let cellBackgroundColor = options.cellBackgroundColor {
+            cell.backgroundColor = cellBackgroundColor
+        }
+
         cell.textLabel?.text = country.prefix + " " + country.flag
-        cell.textLabel?.textColor = options.textLabelColor
-        cell.detailTextLabel?.textColor = options.detailTextLabelColor
+
+        if let textLabelColor = options.textLabelColor {
+            cell.textLabel?.textColor = textLabelColor
+        }
+
+        if let detailTextLabelColor = options.detailTextLabelColor {
+            cell.detailTextLabel?.textColor = detailTextLabelColor
+        }
 
         cell.detailTextLabel?.text = country.name
 
-        cell.textLabel?.font = options.textLabelFont
-        cell.detailTextLabel?.font = options.detailTextLabelFont
+        if let textLabelFont = options.textLabelFont {
+            cell.textLabel?.font = textLabelFont
+        }
 
-        let view = UIView()
-        view.backgroundColor = options.cellBackgroundColorSelection
-        cell.selectedBackgroundView = view
+        if let detailTextLabelFont = options.detailTextLabelFont {
+            cell.detailTextLabel?.font = detailTextLabelFont
+        }
+
+        if let cellBackgroundColorSelection = options.cellBackgroundColorSelection {
+            let view = UIView()
+            view.backgroundColor = cellBackgroundColorSelection
+            cell.selectedBackgroundView = view
+        }
 
         return cell
     }

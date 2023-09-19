@@ -21,13 +21,13 @@ import UIKit
  */
 public struct CountryCodePickerOptions {
 
-    public var backgroundColor: UIColor = UIColor.systemGroupedBackground
-    public var separatorColor: UIColor = UIColor.opaqueSeparator
-    public var textLabelColor: UIColor = UIColor.label
-    public var textLabelFont: UIFont = .preferredFont(forTextStyle: .callout)
-    public var detailTextLabelColor: UIColor = UIColor.secondaryLabel
-    public var detailTextLabelFont: UIFont = .preferredFont(forTextStyle: .body)
-    public var tintColor: UIColor = UIView().tintColor!
-    public var cellBackgroundColor: UIColor = UIColor.secondarySystemGroupedBackground
-    public var cellBackgroundColorSelection: UIColor = UIColor.tertiarySystemGroupedBackground
+    public var backgroundColor: UIColor?
+    public var separatorColor: UIColor?
+    public var textLabelColor: UIColor?
+    public var textLabelFont: UIFont?
+    public var detailTextLabelColor: UIColor?
+    public var detailTextLabelFont: UIFont?
+    public var tintColor: UIColor?
+    public var cellBackgroundColor: UIColor?
+    public var cellBackgroundColorSelection: UIColor?
 }
