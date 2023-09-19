@@ -23,15 +23,15 @@ public struct CountryCodePickerOptions {
 
     public init() { }
     
-    public init(backgroundColor: UIColor?,
-                separatorColor: UIColor?,
-                textLabelColor: UIColor?,
-                textLabelFont: UIFont?,
-                detailTextLabelColor: UIColor?,
-                detailTextLabelFont: UIFont?,
-                tintColor: UIColor?,
-                cellBackgroundColor: UIColor?,
-                cellBackgroundColorSelection: UIColor?) {
+    public init(backgroundColor: UIColor? = nil,
+                separatorColor: UIColor? = nil,
+                textLabelColor: UIColor? = nil,
+                textLabelFont: UIFont? = nil,
+                detailTextLabelColor: UIColor? = nil,
+                detailTextLabelFont: UIFont? = nil,
+                tintColor: UIColor? = nil,
+                cellBackgroundColor: UIColor? = nil,
+                cellBackgroundColorSelection: UIColor? = nil) {
 
         self.backgroundColor = backgroundColor
         self.separatorColor = separatorColor
