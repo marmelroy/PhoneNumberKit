@@ -133,14 +133,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         set { _withDefaultPickerUI = newValue }
     }
 
-    @available(iOS 11.0, *)
-    private var _withDefaultPickerUIOptions: CountryCodePickerOptions = CountryCodePickerOptions()
-
-    @available(iOS 11.0, *)
-    public var withDefaultPickerUIOptions: CountryCodePickerOptions {
-        get { _withDefaultPickerUIOptions }
-        set { _withDefaultPickerUIOptions = newValue }
-    }
+    private var withDefaultPickerUIOptions: CountryCodePickerOptions = CountryCodePickerOptions()
 
     public var modalPresentationStyle: UIModalPresentationStyle?
 

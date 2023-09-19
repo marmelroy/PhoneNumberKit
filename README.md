@@ -136,7 +136,7 @@ Or you can change it directly:
 textField.withDefaultPickerUIOptions.backgroundColor = .red
 ```
 
-Please refer to "CountryCodePickerOptions" for more information about usage and how it affects the view. 
+Please refer to `CountryCodePickerOptions` for more information about usage and how it affects the view. 
 
 
 ## Need more customization?

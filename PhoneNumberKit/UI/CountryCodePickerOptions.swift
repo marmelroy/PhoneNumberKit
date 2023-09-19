@@ -1,8 +1,9 @@
 //
 //  CountryCodePickerOptions.swift
-//  ForkDoBruno
+//  PhoneNumberKit
 //
 //  Created by Joao Vitor Molinari on 19/09/23.
+//  Copyright © 2021 Roy Marmelstein. All rights reserved.
 //
 
 import UIKit
@@ -54,3 +55,4 @@ public struct CountryCodePickerOptions {
     public var cellBackgroundColor: UIColor?
     public var cellBackgroundColorSelection: UIColor?
 }
+#endif
