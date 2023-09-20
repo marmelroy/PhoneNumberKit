@@ -132,7 +132,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         set { _withDefaultPickerUI = newValue }
     }
 
-    private var withDefaultPickerUIOptions: CountryCodePickerOptions = CountryCodePickerOptions()
+    public var withDefaultPickerUIOptions: CountryCodePickerOptions = CountryCodePickerOptions()
 
     public var modalPresentationStyle: UIModalPresentationStyle?
 
