@@ -458,8 +458,25 @@ final class PhoneNumberKitTests: XCTestCase {
         }
     }
     
-    func testValidCZNumbers() {
+    func testValidCZNumbers() throws {
         let numbers = ["420734593819", "+420734593819", "734593819"]
-        numbers.forEach { XCTAssertTrue(phoneNumberKit.isValidPhoneNumber($0, withRegion: "CZ")) }
+        try numbers.forEach {
+            let phoneNumber = try phoneNumberKit.parse($0, withRegion: "CZ")
+            XCTAssertNotNil(phoneNumber)
+            
+            let formatted = phoneNumberKit.format(phoneNumber, toType: .e164)
+            XCTAssertEqual(formatted, "+420734593819")
+        }
+    }
+    
+    func testValidDENumbers() throws {
+        let numbers = ["491713369876", "+491713369876", "01713369876", "1713369876"]
+        try numbers.forEach {
+            let phoneNumber = try phoneNumberKit.parse($0, withRegion: "DE")
+            XCTAssertNotNil(phoneNumber)
+            
+            let formatted = phoneNumberKit.format(phoneNumber, toType: .e164)
+            XCTAssertEqual(formatted, "+491713369876")
+        }
     }
 }
