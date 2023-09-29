@@ -59,6 +59,13 @@ final class ParseManager {
         // Normalized number (5)
         nationalNumber = self.parser.normalizePhoneNumber(nationalNumber)
         if countryCode == 0 {
+            if nationalNumber.hasPrefix(String(regionMetadata.countryCode)) {
+                let potentialNationalNumber = String(nationalNumber.dropFirst(String(regionMetadata.countryCode).count))
+                if let result = try? parse(potentialNationalNumber, withRegion: regionMetadata.codeID, ignoreType: ignoreType) {
+                    return result
+                }
+            }
+            
             if let result = try validPhoneNumber(from: nationalNumber, using: regionMetadata, countryCode: regionMetadata.countryCode, ignoreType: ignoreType, numberString: numberString, numberExtension: numberExtension) {
                 return result
             }
