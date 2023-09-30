@@ -284,7 +284,10 @@ public final class PhoneNumberKit {
     ///
     /// - returns: A computed value for the user's current region - based on the iPhone's carrier and if not available, the device region.
     public class func defaultRegionCode() -> String {
-        #if canImport(Contacts) && !targetEnvironment(simulator)
+        guard let regex = try? NSRegularExpression(pattern: PhoneNumberPatterns.countryCodePatten) else {
+            return PhoneNumberConstants.defaultCountry
+        }
+        #if canImport(Contacts)
         if #available(iOS 12.0, macOS 10.13, macCatalyst 13.1, watchOS 4.0, *) {
             // macCatalyst OS bug if language is set to Korean
             // CNContactsUserDefaults.shared().countryCode will return ko instead of kr
@@ -295,23 +298,24 @@ public final class PhoneNumberKit {
                 return "KR"
             }
             #endif
-            return countryCode
+
+            if regex.firstMatch(in: countryCode) != nil {
+                return countryCode
+            }
         }
         #endif
 
         let locale = Locale.current
-        let regex = try? NSRegularExpression(pattern: "^[a-zA-Z]{2}$", options: [])
-
         #if !os(Linux)
         if #available(iOS 17.0, macOS 14.0, macCatalyst 17.0, watchOS 10.0, *),
            let regionCode = locale.region?.identifier,
-           regex?.firstMatch(in: regionCode, options: [], range: NSRange(location: 0, length: regionCode.count)) != nil {
+           regex.firstMatch(in: regionCode) != nil {
             return regionCode.uppercased()
         }
         #endif
 
         if let countryCode = (locale as NSLocale).object(forKey: .countryCode) as? String,
-           regex?.firstMatch(in: countryCode, options: [], range: NSRange(location: 0, length: countryCode.count)) != nil {
+           regex.firstMatch(in: countryCode) != nil {
             return countryCode.uppercased()
         }
 
