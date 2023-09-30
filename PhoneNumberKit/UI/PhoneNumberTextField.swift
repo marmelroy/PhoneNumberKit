@@ -515,10 +515,11 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
 
     open func textFieldDidBeginEditing(_ textField: UITextField) {
-        defer { self._delegate?.textFieldDidBeginEditing?(textField) }
-        guard self.withExamplePlaceholder, self.withPrefix, self.withPrefixPrefill, (text ?? "").isEmpty else { return }
-        guard let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description else { return }
-        text = "+" + countryCode + " "
+        if self.withExamplePlaceholder, self.withPrefix, self.withPrefixPrefill, (text ?? "").isEmpty,
+           let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description {
+            text = "+" + countryCode + " "
+        }
+        self._delegate?.textFieldDidBeginEditing?(textField)
     }
 
     open func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
