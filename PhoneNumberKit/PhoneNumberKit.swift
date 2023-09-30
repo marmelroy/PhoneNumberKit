@@ -300,16 +300,18 @@ public final class PhoneNumberKit {
         #endif
 
         let locale = Locale.current
+        let regex = try? NSRegularExpression(pattern: "^[a-zA-Z]{2}$", options: [])
+
         #if !os(Linux)
         if #available(iOS 17.0, macOS 14.0, macCatalyst 17.0, watchOS 10.0, *),
            let regionCode = locale.region?.identifier,
-           regionCode.count == 2 {
+           regex?.firstMatch(in: regionCode, options: [], range: NSRange(location: 0, length: regionCode.count)) != nil {
             return regionCode.uppercased()
         }
         #endif
 
         if let countryCode = (locale as NSLocale).object(forKey: .countryCode) as? String,
-           countryCode.count == 2 {
+           regex?.firstMatch(in: countryCode, options: [], range: NSRange(location: 0, length: countryCode.count)) != nil {
             return countryCode.uppercased()
         }
 
