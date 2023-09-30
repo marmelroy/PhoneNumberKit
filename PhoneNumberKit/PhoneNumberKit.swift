@@ -291,22 +291,23 @@ public final class PhoneNumberKit {
             // Failed parsing any phone number.
             let countryCode = CNContactsUserDefaults.shared().countryCode.uppercased()
             #if targetEnvironment(macCatalyst)
-                if "ko".caseInsensitiveCompare(countryCode) == .orderedSame {
-                    return "KR"
-                }
+            if "ko".caseInsensitiveCompare(countryCode) == .orderedSame {
+                return "KR"
+            }
             #endif
             return countryCode
         }
         #endif
-        
-        let currentLocale = Locale.current
-        if let countryCode = (currentLocale as NSLocale).object(forKey: .countryCode) as? String {
+
+        let currentLocale = Locale.current as NSLocale
+        if #available(iOS 17.0, macOS 14.0, macCatalyst 17.0, watchOS 10.0, *),
+           let regionCode = currentLocale.regionCode {
+            return regionCode.uppercased()
+        } else if let countryCode = currentLocale.countryCode {
             return countryCode.uppercased()
         }
         return PhoneNumberConstants.defaultCountry
     }
-    
-    
 
     /// Default metadata callback, reads metadata from PhoneNumberMetadata.json file in bundle
     ///
