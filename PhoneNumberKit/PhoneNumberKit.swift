@@ -300,14 +300,19 @@ public final class PhoneNumberKit {
         #endif
 
         let locale = Locale.current
+        #if !os(Linux)
         if #available(iOS 17.0, macOS 14.0, macCatalyst 17.0, watchOS 10.0, *),
            let regionCode = locale.region?.identifier,
            regionCode.count == 2 {
             return regionCode.uppercased()
-        } else if let countryCode = (locale as NSLocale).object(forKey: .countryCode) as? String,
-                  countryCode.count == 2 {
+        }
+        #endif
+
+        if let countryCode = (locale as NSLocale).object(forKey: .countryCode) as? String,
+           countryCode.count == 2 {
             return countryCode.uppercased()
         }
+
         return PhoneNumberConstants.defaultCountry
     }
 
