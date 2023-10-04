@@ -307,7 +307,7 @@ public final class PhoneNumberKit {
 
         let locale = Locale.current
         #if !os(Linux)
-        if #available(iOS 17.0, macOS 14.0, macCatalyst 17.0, watchOS 10.0, *),
+        if #available(iOS 17.0, tvOS 17.0, macOS 14.0, macCatalyst 17.0, watchOS 10.0, *),
            let regionCode = locale.region?.identifier,
            regex.firstMatch(in: regionCode) != nil {
             return regionCode.uppercased()
