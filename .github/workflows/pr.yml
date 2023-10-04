@@ -40,3 +40,26 @@ jobs:
       - name: Run tests
         run: |
           set -o pipefail && swift test
+
+  macos-carthage-build:
+    name: Carthage Build
+    runs-on: macos-latest
+    needs:
+      - linux-tests
+      - macos-tests
+
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-macos-carthage-build
+      cancel-in-progress: true
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Build - iOS
+        run: |
+          set -o pipefail && xcodebuild -project "PhoneNumberKit.xcodeproj" -scheme "PhoneNumberKit" -destination "generic/platform=iOS" build
+      
+      - name: Build - macOS
+        run: |
+          set -o pipefail && xcodebuild -project "PhoneNumberKit.xcodeproj" -scheme "PhoneNumberKit-macOS" -destination "generic/platform=macOS" build

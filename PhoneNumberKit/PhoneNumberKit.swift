@@ -284,6 +284,9 @@ public final class PhoneNumberKit {
     ///
     /// - returns: A computed value for the user's current region - based on the iPhone's carrier and if not available, the device region.
     public class func defaultRegionCode() -> String {
+        guard let regex = try? NSRegularExpression(pattern: PhoneNumberPatterns.countryCodePatten) else {
+            return PhoneNumberConstants.defaultCountry
+        }
         #if canImport(Contacts)
         if #available(iOS 12.0, macOS 10.13, macCatalyst 13.1, watchOS 4.0, *) {
             // macCatalyst OS bug if language is set to Korean
@@ -291,22 +294,33 @@ public final class PhoneNumberKit {
             // Failed parsing any phone number.
             let countryCode = CNContactsUserDefaults.shared().countryCode.uppercased()
             #if targetEnvironment(macCatalyst)
-                if "ko".caseInsensitiveCompare(countryCode) == .orderedSame {
-                    return "KR"
-                }
+            if "ko".caseInsensitiveCompare(countryCode) == .orderedSame {
+                return "KR"
+            }
             #endif
-            return countryCode
+
+            if regex.firstMatch(in: countryCode) != nil {
+                return countryCode
+            }
         }
         #endif
-        
-        let currentLocale = Locale.current
-        if let countryCode = (currentLocale as NSLocale).object(forKey: .countryCode) as? String {
+
+        let locale = Locale.current
+        #if !os(Linux)
+        if #available(iOS 17.0, macOS 14.0, macCatalyst 17.0, watchOS 10.0, *),
+           let regionCode = locale.region?.identifier,
+           regex.firstMatch(in: regionCode) != nil {
+            return regionCode.uppercased()
+        }
+        #endif
+
+        if let countryCode = (locale as NSLocale).object(forKey: .countryCode) as? String,
+           regex.firstMatch(in: countryCode) != nil {
             return countryCode.uppercased()
         }
+
         return PhoneNumberConstants.defaultCountry
     }
-    
-    
 
     /// Default metadata callback, reads metadata from PhoneNumberMetadata.json file in bundle
     ///
