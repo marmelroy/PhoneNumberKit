@@ -218,8 +218,7 @@ public class CountryCodePickerViewController: UITableViewController {
         }
         return titles + countries.suffix(countries.count - titles.count).map { group in
             group.first?.name.first
-                .map(String.init)?
-                .folding(options: .diacriticInsensitive, locale: nil) ?? ""
+                .map(String.init) ?? ""
         }
     }
 
