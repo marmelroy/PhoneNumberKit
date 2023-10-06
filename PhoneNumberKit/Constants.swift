@@ -24,7 +24,7 @@ enum PhoneNumberCountryCodeSource {
 
  - GeneralError: A general error occured.
  - InvalidCountryCode: A country code could not be found or the one found was invalid
- - NotANumber: The string provided is not a number
+ - InvalidNumber: The string provided is not a number
  - TooLong: The string provided is too long to be a valid number
  - TooShort: The string provided is too short to be a valid number
  - Deprecated: The method used was deprecated
@@ -34,13 +34,12 @@ enum PhoneNumberCountryCodeSource {
 public enum PhoneNumberError: Error, Equatable {
     case generalError
     case invalidCountryCode
-    case notANumber
-    case unknownType
+    case invalidNumber
     case tooLong
     case tooShort
     case deprecated
     case metadataNotFound
-    case ambiguousNumber(phoneNumbers: [PhoneNumber])
+    case ambiguousNumber(phoneNumbers: Set<PhoneNumber>)
 }
 
 extension PhoneNumberError: LocalizedError {
@@ -48,8 +47,7 @@ extension PhoneNumberError: LocalizedError {
         switch self {
         case .generalError: return NSLocalizedString("An error occured whilst validating the phone number.", comment: "")
         case .invalidCountryCode: return NSLocalizedString("The country code is invalid.", comment: "")
-        case .notANumber: return NSLocalizedString("The number provided is invalid.", comment: "")
-        case .unknownType: return NSLocalizedString("Phone number type is unknown.", comment: "")
+        case .invalidNumber: return NSLocalizedString("The number provided is invalid.", comment: "")
         case .tooLong: return NSLocalizedString("The number provided is too long.", comment: "")
         case .tooShort: return NSLocalizedString("The number provided is too short.", comment: "")
         case .deprecated: return NSLocalizedString("This function is deprecated.", comment: "")
@@ -155,4 +153,6 @@ struct PhoneNumberPatterns {
     static let validStartPattern = "[+＋0-9０-９٠-٩۰-۹]"
 
     static let validPhoneNumberPattern = "^[0-9０-９٠-٩۰-۹]{2}$|^[+＋]*(?:[-x\u{2010}-\u{2015}\u{2212}\u{30FC}\u{FF0D}-\u{FF0F} \u{00A0}\u{00AD}\u{200B}\u{2060}\u{3000}()\u{FF08}\u{FF09}\u{FF3B}\u{FF3D}.\\[\\]/~\u{2053}\u{223C}\u{FF5E}*]*[0-9\u{FF10}-\u{FF19}\u{0660}-\u{0669}\u{06F0}-\u{06F9}]){3,}[-x\u{2010}-\u{2015}\u{2212}\u{30FC}\u{FF0D}-\u{FF0F} \u{00A0}\u{00AD}\u{200B}\u{2060}\u{3000}()\u{FF08}\u{FF09}\u{FF3B}\u{FF3D}.\\[\\]/~\u{2053}\u{223C}\u{FF5E}*A-Za-z0-9\u{FF10}-\u{FF19}\u{0660}-\u{0669}\u{06F0}-\u{06F9}]*(?:(?:;ext=([0-9０-９٠-٩۰-۹]{1,7})|[  \\t,]*(?:e?xt(?:ensi(?:ó?|ó))?n?|ｅ?ｘｔｎ?|[,xｘX#＃~～;]|int|anexo|ｉｎｔ)[:\\.．]?[  \\t,-]*([0-9０-９٠-٩۰-۹]{1,7})#?|[- ]+([0-9０-９٠-٩۰-۹]{1,5})#)?$)?[,;]*$"
+    
+    static let countryCodePatten = "^[a-zA-Z]{2}$"
 }

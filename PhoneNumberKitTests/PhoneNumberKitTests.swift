@@ -9,16 +9,16 @@
 @testable import PhoneNumberKit
 import XCTest
 
-import PhoneNumberKit
-
-class PhoneNumberKitTests: XCTestCase {
-    let phoneNumberKit = PhoneNumberKit()
+final class PhoneNumberKitTests: XCTestCase {
+    private var phoneNumberKit: PhoneNumberKit!
 
     override func setUp() {
         super.setUp()
+        phoneNumberKit = PhoneNumberKit()
     }
 
     override func tearDown() {
+        phoneNumberKit = nil
         super.tearDown()
     }
 
@@ -370,15 +370,8 @@ class PhoneNumberKitTests: XCTestCase {
 
     //  Invalid number invalid format
     func testInvalidNumberNotANumberInvalidFormat() {
-        let testNumber = "+33(02)689555555"
-        do {
-            let phoneNumber = try phoneNumberKit.parse(testNumber)
-            _ = self.phoneNumberKit.format(phoneNumber, toType: .e164)
-            XCTFail()
-        } catch PhoneNumberError.notANumber {
-            XCTAssert(true)
-        } catch {
-            XCTAssert(false)
+        XCTAssertThrowsError(try phoneNumberKit.parse("+33(02)689555555")) { error in
+            XCTAssertEqual(error as? PhoneNumberError, PhoneNumberError.invalidNumber)
         }
     }
 
@@ -462,6 +455,28 @@ class PhoneNumberKitTests: XCTestCase {
             } catch {
                 XCTFail()
             }
+        }
+    }
+    
+    func testValidCZNumbers() throws {
+        let numbers = ["420734593819", "+420734593819", "734593819"]
+        try numbers.forEach {
+            let phoneNumber = try phoneNumberKit.parse($0, withRegion: "CZ")
+            XCTAssertNotNil(phoneNumber)
+            
+            let formatted = phoneNumberKit.format(phoneNumber, toType: .e164)
+            XCTAssertEqual(formatted, "+420734593819")
+        }
+    }
+    
+    func testValidDENumbers() throws {
+        let numbers = ["491713369876", "+491713369876", "01713369876", "1713369876"]
+        try numbers.forEach {
+            let phoneNumber = try phoneNumberKit.parse($0, withRegion: "DE")
+            XCTAssertNotNil(phoneNumber)
+            
+            let formatted = phoneNumberKit.format(phoneNumber, toType: .e164)
+            XCTAssertEqual(formatted, "+491713369876")
         }
     }
 }

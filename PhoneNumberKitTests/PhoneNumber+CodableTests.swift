@@ -10,7 +10,17 @@ import PhoneNumberKit
 import XCTest
 
 final class PhoneNumberCodableTests: XCTestCase {
-    let phoneNumberKit = PhoneNumberKit()
+    private var phoneNumberKit: PhoneNumberKit!
+
+    override func setUp() {
+        super.setUp()
+        phoneNumberKit = PhoneNumberKit()
+    }
+
+    override func tearDown() {
+        phoneNumberKit = nil
+        super.tearDown()
+    }
 }
 
 extension PhoneNumberCodableTests {
@@ -220,7 +230,7 @@ private extension PhoneNumberCodableTests {
         line: UInt = #line
     ) throws {
         let decoder = JSONDecoder()
-        if let strategy = strategy {
+        if let strategy {
             decoder.phoneNumberDecodingStrategy = strategy
         }
         let data = try XCTUnwrap(json.data(using: .utf8))
@@ -236,26 +246,12 @@ private extension PhoneNumberCodableTests {
         line: UInt = #line
     ) throws {
         let encoder = JSONEncoder()
-        if let strategy = strategy {
+        if let strategy {
             encoder.phoneNumberEncodingStrategy = strategy
         }
-        if #available(iOS 11.0, *) {
-            encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
-            let data = try encoder.encode(phoneNumber)
-            let json = String(decoding: data, as: UTF8.self)
-            XCTAssertEqual(json, expectedJSON, file: file, line: line)
-        } else {
-            let data = try encoder.encode(phoneNumber)
-            let jsonObject = try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
-            switch jsonObject {
-            case let json as String:
-                XCTAssertEqual("\"" + json + "\"", expectedJSON, file: file, line: line)
-            case let json as [String: AnyHashable]:
-                let expectedJSON = try JSONSerialization.jsonObject(with: Data(expectedJSON.utf8)) as? [String: AnyHashable]
-                XCTAssertEqual(json, expectedJSON, file: file, line: line)
-            default:
-                XCTFail("JSON parsing failed", file: file, line: line)
-            }
-        }
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        let data = try encoder.encode(phoneNumber)
+        let json = String(decoding: data, as: UTF8.self)
+        XCTAssertEqual(json, expectedJSON, file: file, line: line)
     }
 }

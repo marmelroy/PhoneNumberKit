@@ -59,8 +59,7 @@ final class PhoneNumberParser {
         } else {
             let defaultCountryCode = String(metadata.countryCode)
             if fullNumber.hasPrefix(defaultCountryCode) {
-                let nsFullNumber = fullNumber as NSString
-                var potentialNationalNumber = nsFullNumber.substring(from: defaultCountryCode.count)
+                var potentialNationalNumber = String(fullNumber.dropFirst(defaultCountryCode.count))
                 guard let validNumberPattern = metadata.generalDesc?.nationalNumberPattern, let possibleNumberPattern = metadata.generalDesc?.possibleNumberPattern else {
                     return 0
                 }
