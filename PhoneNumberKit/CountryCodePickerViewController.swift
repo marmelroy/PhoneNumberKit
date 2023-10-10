@@ -3,7 +3,7 @@
 import UIKit
 
 public protocol CountryCodePickerDelegate: AnyObject {
-    func countryCodePickerViewControllerDidPickCountry(_ country: CountryCodePickerViewController.Country)
+    func countryCodePickerViewControllerDidPickCountry(_ country: Country)
 }
 
 public class CountryCodePickerViewController: UITableViewController {
@@ -18,51 +18,25 @@ public class CountryCodePickerViewController: UITableViewController {
         return searchController
     }()
 
-    public let phoneNumberKit: PhoneNumberKit
-    
-    public let options: CountryCodePickerOptions
+		public let dataStore: CountryCodeDataStore
 
-    let commonCountryCodes: [String]
+    public let options: CountryCodePickerOptions
 
     var shouldRestoreNavigationBarToHidden = false
 
-    var hasCurrent = true
-    var hasCommon = true
+		var hasCurrent: Bool {
+			get { dataStore.hasCurrent }
+			set { dataStore.hasCurrent = newValue }
+		}
 
-    lazy var allCountries = phoneNumberKit
-        .allCountries()
-        .compactMap({ Country(for: $0, with: self.phoneNumberKit) })
-        .sorted(by: { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending })
+		var hasCommon: Bool {
+			get { dataStore.hasCommon }
+			set { dataStore.hasCommon = newValue }
+		}
 
-    lazy var countries: [[Country]] = {
-        let countries = allCountries
-            .reduce([[Country]]()) { collection, country in
-                var collection = collection
-                guard var lastGroup = collection.last else { return [[country]] }
-                let lhs = lastGroup.first?.name.folding(options: .diacriticInsensitive, locale: nil)
-                let rhs = country.name.folding(options: .diacriticInsensitive, locale: nil)
-                if lhs?.first == rhs.first {
-                    lastGroup.append(country)
-                    collection[collection.count - 1] = lastGroup
-                } else {
-                    collection.append([country])
-                }
-                return collection
-            }
+		lazy var allCountries = dataStore.allCountries
 
-        let popular = commonCountryCodes.compactMap({ Country(for: $0, with: phoneNumberKit) })
-
-        var result: [[Country]] = []
-        // Note we should maybe use the user's current carrier's country code?
-        if hasCurrent, let current = Country(for: PhoneNumberKit.defaultRegionCode(), with: phoneNumberKit) {
-            result.append([current])
-        }
-        hasCommon = hasCommon && !popular.isEmpty
-        if hasCommon {
-            result.append(popular)
-        }
-        return result + countries
-    }()
+		lazy var countries = dataStore.countries
 
     var filteredCountries: [Country] = []
 
@@ -70,27 +44,43 @@ public class CountryCodePickerViewController: UITableViewController {
 
     lazy var cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(dismissAnimated))
 
-    /**
-     Init with a phone number kit instance. Because a PhoneNumberKit initialization is expensive you can must pass a pre-initialized instance to avoid incurring perf penalties.
-
-     - parameter phoneNumberKit: A PhoneNumberKit instance to be used by the text field.
-     - parameter commonCountryCodes: An array of country codes to display in the section below the current region section. defaults to `PhoneNumberKit.CountryCodePicker.commonCountryCodes`
-     */
+	/**
+	 Init with a phone number kit instance. Because a PhoneNumberKit initialization is expensive you can must pass a pre-initialized instance to avoid incurring perf penalties.
+	 
+	 - parameter phoneNumberKit: A PhoneNumberKit instance to be used by the text field.
+	 - parameter options: An object that describes the color theme for the country code list.
+	 - parameter commonCountryCodes: An array of country codes to display in the section below the current region section. defaults to `PhoneNumberKit.CountryCodePicker.commonCountryCodes`
+	 */
     public init(
         phoneNumberKit: PhoneNumberKit,
-        options: CountryCodePickerOptions?,
+        options: CountryCodePickerOptions? = nil,
         commonCountryCodes: [String] = PhoneNumberKit.CountryCodePicker.commonCountryCodes)
     {
-        self.phoneNumberKit = phoneNumberKit
-        self.commonCountryCodes = commonCountryCodes
+				self.dataStore = CountryCodeDataStore(phoneNumberKit: phoneNumberKit, commonCountryCodes: commonCountryCodes)
         self.options = options ?? CountryCodePickerOptions()
-        super.init(style: .grouped)
-        self.commonInit()
+				super.init(style: .grouped)
+				self.commonInit()
     }
 
+	/**
+	 Init with a phone number kit instance. Because a PhoneNumberKit initialization is expensive you can must pass a pre-initialized instance to avoid incurring perf penalties.
+	 
+	 - parameter phoneNumberKit: A PhoneNumberKit instance to be used by the text field.
+	 - parameter options: An object that describes the color theme for the country code list.
+	 - parameter dataStore: A data source that provides data for the view.
+	 */
+		public init(
+				dataStore: CountryCodeDataStore,
+				options: CountryCodePickerOptions? = nil
+		) {
+				self.dataStore = dataStore
+				self.options = options ?? CountryCodePickerOptions()
+				super.init(style: .grouped)
+				self.commonInit()
+		}
+
     required init?(coder aDecoder: NSCoder) {
-        self.phoneNumberKit = PhoneNumberKit()
-        self.commonCountryCodes = PhoneNumberKit.CountryCodePicker.commonCountryCodes
+				self.dataStore = CountryCodeDataStore(phoneNumberKit: PhoneNumberKit())
         self.options = CountryCodePickerOptions()
         super.init(coder: aDecoder)
         self.commonInit()
@@ -144,7 +134,7 @@ public class CountryCodePickerViewController: UITableViewController {
     }
 
     func country(for indexPath: IndexPath) -> Country {
-        isFiltering ? filteredCountries[indexPath.row] : countries[indexPath.section][indexPath.row]
+				isFiltering ? filteredCountries[indexPath.row] : countries[indexPath.section].countries[indexPath.row]
     }
 
     public override func numberOfSections(in tableView: UITableView) -> Int {
@@ -152,7 +142,7 @@ public class CountryCodePickerViewController: UITableViewController {
     }
 
     public override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        isFiltering ? filteredCountries.count : countries[section].count
+				isFiltering ? filteredCountries.count : countries[section].countries.count
     }
 
     public override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -195,32 +185,15 @@ public class CountryCodePickerViewController: UITableViewController {
     public override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if isFiltering {
             return nil
-        } else if section == 0, hasCurrent {
-            return NSLocalizedString("PhoneNumberKit.CountryCodePicker.Current", value: "Current", comment: "Name of \"Current\" section")
-        } else if section == 0, !hasCurrent, hasCommon {
-            return NSLocalizedString("PhoneNumberKit.CountryCodePicker.Common", value: "Common", comment: "Name of \"Common\" section")
-        } else if section == 1, hasCurrent, hasCommon {
-            return NSLocalizedString("PhoneNumberKit.CountryCodePicker.Common", value: "Common", comment: "Name of \"Common\" section")
         }
-        return countries[section].first?.name.first.map(String.init)
+				return countries[section].title
     }
 
     public override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
         guard !isFiltering else {
             return nil
         }
-        var titles: [String] = []
-        if hasCurrent {
-            titles.append("•") // NOTE: SFSymbols are not supported otherwise we would use 􀋑
-        }
-        if hasCommon {
-            titles.append("★") // This is a classic unicode star
-        }
-        return titles + countries.suffix(countries.count - titles.count).map { group in
-            group.first?.name.first
-                .map(String.init)?
-                .folding(options: .diacriticInsensitive, locale: nil) ?? ""
-        }
+				return dataStore.countries.map { $0.indexTitle }
     }
 
     public override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -242,62 +215,55 @@ extension CountryCodePickerViewController: UISearchResultsUpdating {
 
     public func updateSearchResults(for searchController: UISearchController) {
         let searchText = searchController.searchBar.text ?? ""
-        filteredCountries = allCountries.filter { country in
-            country.name.lowercased().contains(searchText.lowercased()) ||
-                country.code.lowercased().contains(searchText.lowercased()) ||
-                country.prefix.lowercased().contains(searchText.lowercased())
-        }
+				filteredCountries = dataStore.search(for: searchText)
         tableView.reloadData()
     }
 }
 
-
-// MARK: Types
-
 public extension CountryCodePickerViewController {
 
-    struct Country {
-        public var code: String
-        public var flag: String
-        public var name: String
-        public var prefix: String
+		class Cell: UITableViewCell {
 
-        public init?(for countryCode: String, with phoneNumberKit: PhoneNumberKit) {
-            let flagBase = UnicodeScalar("🇦").value - UnicodeScalar("A").value
-            guard
-                let name = (Locale.current as NSLocale).localizedString(forCountryCode: countryCode),
-                let prefix = phoneNumberKit.countryCode(for: countryCode)?.description
-            else {
-                return nil
-            }
+				static let reuseIdentifier = "Cell"
 
-            self.code = countryCode
-            self.name = name
-            self.prefix = "+" + prefix
-            self.flag = ""
-            countryCode.uppercased().unicodeScalars.forEach {
-                if let scaler = UnicodeScalar(flagBase + $0.value) {
-                    flag.append(String(describing: scaler))
-                }
-            }
-            if flag.count != 1 { // Failed to initialize a flag ... use an empty string
-                return nil
-            }
-        }
-    }
+				override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+						super.init(style: .value2, reuseIdentifier: Self.reuseIdentifier)
+				}
 
-    class Cell: UITableViewCell {
-
-        static let reuseIdentifier = "Cell"
-
-        override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-            super.init(style: .value2, reuseIdentifier: Self.reuseIdentifier)
-        }
-
-        required init?(coder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
-    }
+				required init?(coder: NSCoder) {
+						fatalError("init(coder:) has not been implemented")
+				}
+		}
 }
 
 #endif
+
+import SwiftUI
+
+/// https://github.com/theoriginalbit/PreviewView
+public struct ViewControllerPreview: UIViewControllerRepresentable {
+		/// The view controller being previewed.
+		public let viewController: UIViewController
+
+		/// Creates a view controller preview.
+		///
+		/// - Returns: The initialized preview object.
+		public init(_ viewController: UIViewController) {
+				self.viewController = viewController
+		}
+
+		public func makeUIViewController(context: Context) -> some UIViewController { viewController }
+		public func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {}
+}
+
+struct ViewController_Previews: PreviewProvider {
+		static var previews: some View {
+			let viewController = CountryCodePickerViewController(
+				dataStore: CountryCodeDataStore(
+					phoneNumberKit: PhoneNumberKit()
+				)
+			)
+
+			return ViewControllerPreview(UINavigationController(rootViewController: viewController))
+		}
+}

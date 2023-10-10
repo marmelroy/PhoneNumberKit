@@ -9,6 +9,24 @@
 #if os(iOS)
 import UIKit
 
+#if canImport(SwiftUI)
+import SwiftUI
+
+@available(iOS 16.0, *)
+extension UIColor {
+	var swiftUIColor: Color {
+		return Color(uiColor: self)
+	}
+}
+
+@available(iOS 16.0, *)
+extension UIFont {
+	var swiftUIFont: Font {
+		return Font(self)
+	}
+}
+#endif
+
 /**
  CountryCodePickerOptions object
  - Parameter backgroundColor: UIColor used for background
