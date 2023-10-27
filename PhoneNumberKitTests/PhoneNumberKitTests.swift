@@ -224,7 +224,7 @@ final class PhoneNumberKitTests: XCTestCase {
         }
     }
 
-    // English number with an American IDD (default region for testing enivronment)
+    // English number with an American IDD (default region for testing environment)
     func testValidNumberWithAmericanIDDNoWhiteSpace() {
         let testNumber = "011447739555555"
         do {
@@ -238,7 +238,7 @@ final class PhoneNumberKitTests: XCTestCase {
         }
     }
 
-    // 'Noisy' Brazilian number with an American IDD (default region for testing enivronment)
+    // 'Noisy' Brazilian number with an American IDD (default region for testing environment)
     func testValidNumberWithAmericanIDDWhiteSpace() {
         let testNumber = "01155 11 9 6 555 55 55"
         do {
@@ -252,7 +252,7 @@ final class PhoneNumberKitTests: XCTestCase {
         }
     }
 
-    //  American number with no prefix from an American phone (default region for testing enivronment)
+    //  American number with no prefix from an American phone (default region for testing environment)
     func testValidLocalNumberWithNoPrefixNoWhiteSpace() {
         let testNumber = "2015555555"
         do {
@@ -266,7 +266,7 @@ final class PhoneNumberKitTests: XCTestCase {
         }
     }
 
-    //  'Noisy' American number with no prefix from an American phone (default region for testing enivronment)
+    //  'Noisy' American number with no prefix from an American phone (default region for testing environment)
     func testValidLocalNumberWithNoPrefixWhiteSpace() {
         let testNumber = "500-2-55-555-5"
         do {
