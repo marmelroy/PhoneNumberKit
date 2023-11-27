@@ -31,7 +31,7 @@ final class RegexManager {
             regularExpressionPool[pattern]
         }
 
-        if let cached = cached {
+        if let cached {
             return cached
         }
 
@@ -71,22 +71,19 @@ final class RegexManager {
     // MARK: Match helpers
 
     func matchesAtStart(_ pattern: String, string: String) -> Bool {
-        do {
-            let matches = try regexMatches(pattern, string: string)
-            for match in matches {
-                if match.range.location == 0 {
-                    return true
-                }
-            }
-        } catch {}
-        return false
+        guard
+            let matches = try? regexMatches(pattern, string: string),
+            matches.first(where: { $0.range.location == 0 }) != nil else {
+            return false
+        }
+        return true
     }
 
     func stringPositionByRegex(_ pattern: String, string: String) -> Int {
         do {
             let matches = try regexMatches(pattern, string: string)
             if let match = matches.first {
-                return (match.range.location)
+                return match.range.location
             }
             return -1
         } catch {
@@ -95,19 +92,19 @@ final class RegexManager {
     }
 
     func matchesExist(_ pattern: String?, string: String) -> Bool {
-        guard let pattern = pattern else {
+        guard let pattern else {
             return false
         }
         do {
             let matches = try regexMatches(pattern, string: string)
-            return matches.count > 0
+            return !matches.isEmpty
         } catch {
             return false
         }
     }
 
     func matchesEntirely(_ pattern: String?, string: String) -> Bool {
-        guard var pattern = pattern else {
+        guard var pattern else {
             return false
         }
         pattern = "^(\(pattern))$"
@@ -115,16 +112,10 @@ final class RegexManager {
     }
 
     func matchedStringByRegex(_ pattern: String, string: String) throws -> [String] {
-        do {
-            let matches = try regexMatches(pattern, string: string)
-            var matchedStrings = [String]()
-            for match in matches {
-                let processedString = string.substring(with: match.range)
-                matchedStrings.append(processedString)
-            }
-            return matchedStrings
-        } catch {}
-        return []
+        guard let matches = try? regexMatches(pattern, string: string) else {
+            return []
+        }
+        return matches.map { string.substring(with: $0.range) }
     }
 
     // MARK: String and replace
@@ -137,7 +128,12 @@ final class RegexManager {
             if matches.count == 1 {
                 let range = regex.rangeOfFirstMatch(in: string)
                 if range != nil {
-                    replacementResult = regex.stringByReplacingMatches(in: string, options: [], range: range, withTemplate: template)
+                    replacementResult = regex.stringByReplacingMatches(
+                        in: string,
+                        options: [],
+                        range: range,
+                        withTemplate: template
+                    )
                 }
                 return replacementResult
             } else if matches.count > 1 {
@@ -154,7 +150,12 @@ final class RegexManager {
             let regex = try regexWithPattern(pattern)
             let range = regex.rangeOfFirstMatch(in: string)
             if range != nil {
-                return regex.stringByReplacingMatches(in: string, options: [], range: range, withTemplate: templateString)
+                return regex.stringByReplacingMatches(
+                    in: string,
+                    options: [],
+                    range: range,
+                    withTemplate: templateString
+                )
             }
             return string
         } catch {
@@ -164,7 +165,7 @@ final class RegexManager {
 
     func stringByReplacingOccurrences(_ string: String, map: [String: String], keepUnmapped: Bool = false) -> String {
         var targetString = String()
-        for i in 0 ..< string.count {
+        for i in 0..<string.count {
             let oneChar = string[string.index(string.startIndex, offsetBy: i)]
             let keyString = String(oneChar).uppercased()
             if let mappedValue = map[keyString] {
@@ -180,7 +181,7 @@ final class RegexManager {
 
     func hasValue(_ value: String?) -> Bool {
         if let valueString = value {
-            if valueString.trimmingCharacters(in: spaceCharacterSet).count == 0 {
+            if valueString.trimmingCharacters(in: spaceCharacterSet).isEmpty {
                 return false
             }
             return true

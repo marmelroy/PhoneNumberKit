@@ -38,9 +38,9 @@ public enum PhoneNumberEncodingUtils {
     public static var defaultPhoneNumberKit: () -> PhoneNumberKit = { .init() }
 }
 
-extension JSONDecoder {
+public extension JSONDecoder {
     /// The strategy used to decode a `PhoneNumber` value.
-    public var phoneNumberDecodingStrategy: PhoneNumberDecodingStrategy {
+    var phoneNumberDecodingStrategy: PhoneNumberDecodingStrategy {
         get {
             return userInfo[.phoneNumberDecodingStrategy] as? PhoneNumberDecodingStrategy ?? .default
         }
@@ -50,7 +50,7 @@ extension JSONDecoder {
     }
 
     /// The `PhoneNumberKit` instance used for parsing when decoding, if needed.
-    public var phoneNumberKit: () -> PhoneNumberKit {
+    var phoneNumberKit: () -> PhoneNumberKit {
         get {
             return userInfo[.phoneNumberKit] as? () -> PhoneNumberKit ?? PhoneNumberDecodingUtils.defaultPhoneNumberKit
         }
@@ -60,9 +60,9 @@ extension JSONDecoder {
     }
 }
 
-extension JSONEncoder {
+public extension JSONEncoder {
     /// The strategy used to encode a `PhoneNumber` value.
-    public var phoneNumberEncodingStrategy: PhoneNumberEncodingStrategy {
+    var phoneNumberEncodingStrategy: PhoneNumberEncodingStrategy {
         get {
             return userInfo[.phoneNumberEncodingStrategy] as? PhoneNumberEncodingStrategy ?? .default
         }
@@ -72,7 +72,7 @@ extension JSONEncoder {
     }
 
     /// The `PhoneNumberKit` instance used for formatting when encoding, if needed.
-    public var phoneNumberKit: () -> PhoneNumberKit {
+    var phoneNumberKit: () -> PhoneNumberKit {
         get {
             return userInfo[.phoneNumberKit] as? () -> PhoneNumberKit ?? PhoneNumberEncodingUtils.defaultPhoneNumberKit
         }

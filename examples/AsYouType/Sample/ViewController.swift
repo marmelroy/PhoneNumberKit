@@ -29,7 +29,7 @@ final class ViewController: UIViewController, CNContactPickerDelegate {
         self.withFlagSwitch.isOn = self.textField.withFlag
         self.withExamplePlaceholderSwitch.isOn = self.textField.withExamplePlaceholder
         self.withDefaultPickerUISwitch.isOn = self.textField.withDefaultPickerUI
-        
+
         if #available(iOS 13.0, *) {
             self.view.backgroundColor = .systemBackground
         }
