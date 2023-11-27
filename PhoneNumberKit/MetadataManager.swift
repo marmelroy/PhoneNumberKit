@@ -1,5 +1,5 @@
 //
-//  Metadata.swift
+//  MetadataManager.swift
 //  PhoneNumberKit
 //
 //  Created by Roy Marmelstein on 03/10/2015.
@@ -10,7 +10,7 @@ import Foundation
 
 final class MetadataManager {
     private(set) var territories = [MetadataTerritory]()
-    
+
     private var territoriesByCode = [UInt64: [MetadataTerritory]]()
     private var mainTerritoryByCode = [UInt64: MetadataTerritory]()
     private var territoriesByCountry = [String: MetadataTerritory]()
@@ -70,7 +70,7 @@ final class MetadataManager {
     /// - parameter code:  international country code (e.g 44 for the UK).
     ///
     /// - returns: optional array of MetadataTerritory objects.
-    internal func filterTerritories(byCode code: UInt64) -> [MetadataTerritory]? {
+    func filterTerritories(byCode code: UInt64) -> [MetadataTerritory]? {
         return self.territoriesByCode[code]
     }
 
@@ -79,7 +79,7 @@ final class MetadataManager {
     /// - parameter country: ISO 3166 compliant region code (e.g "GB" for the UK).
     ///
     /// - returns: A MetadataTerritory object.
-    internal func filterTerritories(byCountry country: String) -> MetadataTerritory? {
+    func filterTerritories(byCountry country: String) -> MetadataTerritory? {
         return self.territoriesByCountry[country.uppercased()]
     }
 
@@ -88,7 +88,7 @@ final class MetadataManager {
     /// - parameter code: An international country code (e.g 1 for the US).
     ///
     /// - returns: A MetadataTerritory object.
-    internal func mainTerritory(forCode code: UInt64) -> MetadataTerritory? {
+    func mainTerritory(forCode code: UInt64) -> MetadataTerritory? {
         return self.mainTerritoryByCode[code]
     }
 }

@@ -30,7 +30,7 @@ final class PhoneNumberKitTests: XCTestCase {
     func testMetadataMainCountryFunction() {
         let countryName = self.phoneNumberKit.mainCountry(forCode: 1)!
         XCTAssertEqual(countryName, "US")
-        let invalidCountry = self.phoneNumberKit.mainCountry(forCode: 992322)
+        let invalidCountry = self.phoneNumberKit.mainCountry(forCode: 992_322)
         XCTAssertNil(invalidCountry)
     }
 
@@ -55,7 +55,7 @@ final class PhoneNumberKitTests: XCTestCase {
             XCTFail()
         }
     }
-    
+
     // Bool checker, GitHub issue #325
     func testValidNumberBool() {
         XCTAssert(phoneNumberKit.isValidPhoneNumber("6297062979", withRegion: "IN"))
@@ -159,7 +159,7 @@ final class PhoneNumberKitTests: XCTestCase {
             let phoneNumber = try phoneNumberKit.parse(testNumber)
 //            XCTAssertEqual(phoneNumber.toInternational(), testNumber)
             XCTAssertEqual(phoneNumber.countryCode, 39)
-            XCTAssertEqual(phoneNumber.nationalNumber, 549555555)
+            XCTAssertEqual(phoneNumber.nationalNumber, 549_555_555)
             XCTAssertEqual(phoneNumber.leadingZero, true)
         } catch {
             XCTFail()
@@ -173,7 +173,7 @@ final class PhoneNumberKitTests: XCTestCase {
             let phoneNumber = try phoneNumberKit.parse(testNumber)
             XCTAssertEqual(phoneNumber.countryCode, 33)
             XCTAssertEqual(phoneNumber.numberExtension, "84")
-            XCTAssertEqual(phoneNumber.nationalNumber, 689555555)
+            XCTAssertEqual(phoneNumber.nationalNumber, 689_555_555)
             XCTAssertEqual(phoneNumber.leadingZero, false)
         } catch {
             XCTFail()
@@ -187,7 +187,7 @@ final class PhoneNumberKitTests: XCTestCase {
             let phoneNumber = try phoneNumberKit.parse(testNumber, withRegion: "US", ignoreType: false)
             XCTAssertEqual(phoneNumber.countryCode, 1)
             XCTAssertEqual(phoneNumber.numberExtension, "28")
-            XCTAssertEqual(phoneNumber.nationalNumber, 2129316760)
+            XCTAssertEqual(phoneNumber.nationalNumber, 2_129_316_760)
             XCTAssertEqual(phoneNumber.leadingZero, false)
         } catch {
             XCTFail()
@@ -202,7 +202,7 @@ final class PhoneNumberKitTests: XCTestCase {
             XCTAssertEqual(self.phoneNumberKit.format(phoneNumber, toType: .e164), testNumber)
             XCTAssertEqual(self.phoneNumberKit.format(phoneNumber, toType: .international, withPrefix: false), "6 89 55 55 55")
             XCTAssertEqual(phoneNumber.countryCode, 33)
-            XCTAssertEqual(phoneNumber.nationalNumber, 689555555)
+            XCTAssertEqual(phoneNumber.nationalNumber, 689_555_555)
             XCTAssertEqual(phoneNumber.leadingZero, false)
             // XCTAssertEqual(phoneNumber.type, PhoneNumberType.mobile)
         } catch {
@@ -217,7 +217,7 @@ final class PhoneNumberKitTests: XCTestCase {
             let phoneNumber = try phoneNumberKit.parse(testNumber)
             XCTAssertEqual(self.phoneNumberKit.format(phoneNumber, toType: .e164), "+81601555555")
             XCTAssertEqual(phoneNumber.countryCode, 81)
-            XCTAssertEqual(phoneNumber.nationalNumber, 601555555)
+            XCTAssertEqual(phoneNumber.nationalNumber, 601_555_555)
             XCTAssertEqual(phoneNumber.leadingZero, false)
         } catch {
             XCTFail()
@@ -231,7 +231,7 @@ final class PhoneNumberKitTests: XCTestCase {
             let phoneNumber = try phoneNumberKit.parse(testNumber, withRegion: "US")
             XCTAssertEqual(self.phoneNumberKit.format(phoneNumber, toType: .e164), "+447739555555")
             XCTAssertEqual(phoneNumber.countryCode, 44)
-            XCTAssertEqual(phoneNumber.nationalNumber, 7739555555)
+            XCTAssertEqual(phoneNumber.nationalNumber, 7_739_555_555)
             XCTAssertEqual(phoneNumber.leadingZero, false)
         } catch {
             XCTFail()
@@ -245,7 +245,7 @@ final class PhoneNumberKitTests: XCTestCase {
             let phoneNumber = try phoneNumberKit.parse(testNumber, withRegion: "US")
             XCTAssertEqual(self.phoneNumberKit.format(phoneNumber, toType: .e164), "+5511965555555")
             XCTAssertEqual(phoneNumber.countryCode, 55)
-            XCTAssertEqual(phoneNumber.nationalNumber, 11965555555)
+            XCTAssertEqual(phoneNumber.nationalNumber, 11_965_555_555)
             XCTAssertEqual(phoneNumber.leadingZero, false)
         } catch {
             XCTFail()
@@ -259,7 +259,7 @@ final class PhoneNumberKitTests: XCTestCase {
             let phoneNumber = try phoneNumberKit.parse(testNumber, withRegion: "US")
             XCTAssertEqual(self.phoneNumberKit.format(phoneNumber, toType: .e164), "+12015555555")
             XCTAssertEqual(phoneNumber.countryCode, 1)
-            XCTAssertEqual(phoneNumber.nationalNumber, 2015555555)
+            XCTAssertEqual(phoneNumber.nationalNumber, 2_015_555_555)
             XCTAssertEqual(phoneNumber.leadingZero, false)
         } catch {
             XCTFail()
@@ -273,20 +273,20 @@ final class PhoneNumberKitTests: XCTestCase {
             let phoneNumber = try phoneNumberKit.parse(testNumber, withRegion: "US")
             XCTAssertEqual(self.phoneNumberKit.format(phoneNumber, toType: .e164), "+15002555555")
             XCTAssertEqual(phoneNumber.countryCode, 1)
-            XCTAssertEqual(phoneNumber.nationalNumber, 5002555555)
+            XCTAssertEqual(phoneNumber.nationalNumber, 5_002_555_555)
             XCTAssertEqual(phoneNumber.leadingZero, false)
         } catch {
             XCTFail()
         }
     }
-    
+
     func testValidAENumberWithHinduArabicNumerals() {
         let testNumber = "+٩٧١٥٠٠٥٠٠٥٥٠"
         do {
             let phoneNumber = try phoneNumberKit.parse(testNumber, withRegion: "AE")
             XCTAssertEqual(self.phoneNumberKit.format(phoneNumber, toType: .e164), "+971500500550")
             XCTAssertEqual(phoneNumber.countryCode, 971)
-            XCTAssertEqual(phoneNumber.nationalNumber, 500500550)
+            XCTAssertEqual(phoneNumber.nationalNumber, 500_500_550)
             XCTAssertEqual(phoneNumber.leadingZero, false)
         } catch {
             XCTFail()
@@ -299,7 +299,7 @@ final class PhoneNumberKitTests: XCTestCase {
             let phoneNumber = try phoneNumberKit.parse(testNumber, withRegion: "AE")
             XCTAssertEqual(self.phoneNumberKit.format(phoneNumber, toType: .e164), "+971500500550")
             XCTAssertEqual(phoneNumber.countryCode, 971)
-            XCTAssertEqual(phoneNumber.nationalNumber, 500500550)
+            XCTAssertEqual(phoneNumber.nationalNumber, 500_500_550)
             XCTAssertEqual(phoneNumber.leadingZero, false)
         } catch {
             XCTFail()
@@ -312,7 +312,7 @@ final class PhoneNumberKitTests: XCTestCase {
             let phoneNumber = try phoneNumberKit.parse(testNumber, withRegion: "AE")
             XCTAssertEqual(self.phoneNumberKit.format(phoneNumber, toType: .e164), "+971500500550")
             XCTAssertEqual(phoneNumber.countryCode, 971)
-            XCTAssertEqual(phoneNumber.nationalNumber, 500500550)
+            XCTAssertEqual(phoneNumber.nationalNumber, 500_500_550)
             XCTAssertEqual(phoneNumber.leadingZero, false)
         } catch {
             XCTFail()
@@ -325,7 +325,7 @@ final class PhoneNumberKitTests: XCTestCase {
             let phoneNumber = try phoneNumberKit.parse(testNumber, withRegion: "AE")
             XCTAssertEqual(self.phoneNumberKit.format(phoneNumber, toType: .e164), "+971500500550")
             XCTAssertEqual(phoneNumber.countryCode, 971)
-            XCTAssertEqual(phoneNumber.nationalNumber, 500500550)
+            XCTAssertEqual(phoneNumber.nationalNumber, 500_500_550)
             XCTAssertEqual(phoneNumber.leadingZero, false)
         } catch {
             XCTFail()
@@ -378,7 +378,7 @@ final class PhoneNumberKitTests: XCTestCase {
     //  Test that metadata initiates correctly by checking all countries
     func testAllCountries() {
         let allCountries = self.phoneNumberKit.allCountries()
-        XCTAssert(allCountries.count > 0)
+        XCTAssert(!allCountries.isEmpty)
     }
 
     //  Test code for country function -  valid country
@@ -399,7 +399,7 @@ final class PhoneNumberKitTests: XCTestCase {
     //  Test countries for code function
     func testCountriesForCodeInvalid() {
         let phoneNumberKit = PhoneNumberKit()
-        XCTAssertEqual(phoneNumberKit.countries(withCode: 424242)?.count, nil)
+        XCTAssertEqual(phoneNumberKit.countries(withCode: 424_242)?.count, nil)
     }
 
     //  Test region code for number function
@@ -410,7 +410,7 @@ final class PhoneNumberKitTests: XCTestCase {
         }
         XCTAssertEqual(self.phoneNumberKit.getRegionCode(of: phoneNumber), "IT")
     }
-    
+
     // In the case of multiple
     // countries sharing a calling code, the one
     // indicated with "isMainCountryForCode" in the metadata should be first.
@@ -421,7 +421,7 @@ final class PhoneNumberKitTests: XCTestCase {
         }
         XCTAssertEqual(self.phoneNumberKit.getRegionCode(of: phoneNumber), "US")
     }
-    
+
     // RU number with KZ country code
     func testValidRUNumberWithKZRegion() {
         let testNumber = "+7 916 195 55 58"
@@ -429,14 +429,14 @@ final class PhoneNumberKitTests: XCTestCase {
             let phoneNumber = try phoneNumberKit.parse(testNumber, withRegion: "KZ")
             XCTAssertEqual(self.phoneNumberKit.format(phoneNumber, toType: .e164), "+79161955558")
             XCTAssertEqual(phoneNumber.countryCode, 7)
-            XCTAssertEqual(phoneNumber.nationalNumber, 9161955558)
+            XCTAssertEqual(phoneNumber.nationalNumber, 9_161_955_558)
             XCTAssertEqual(phoneNumber.leadingZero, false)
             XCTAssertEqual(phoneNumber.regionID, "RU")
         } catch {
             XCTFail()
         }
     }
-    
+
     func testValidKZNumbersWithInternationalPrefix() {
         let numbers = ["+7 (777)110-85-31", "+77777056982", "+7(701)977-75-05"]
         numbers.forEach { XCTAssertTrue(phoneNumberKit.isValidPhoneNumber($0, withRegion: "KZ")) }
@@ -457,24 +457,24 @@ final class PhoneNumberKitTests: XCTestCase {
             }
         }
     }
-    
+
     func testValidCZNumbers() throws {
         let numbers = ["420734593819", "+420734593819", "734593819"]
         try numbers.forEach {
             let phoneNumber = try phoneNumberKit.parse($0, withRegion: "CZ")
             XCTAssertNotNil(phoneNumber)
-            
+
             let formatted = phoneNumberKit.format(phoneNumber, toType: .e164)
             XCTAssertEqual(formatted, "+420734593819")
         }
     }
-    
+
     func testValidDENumbers() throws {
         let numbers = ["491713369876", "+491713369876", "01713369876", "1713369876"]
         try numbers.forEach {
             let phoneNumber = try phoneNumberKit.parse($0, withRegion: "DE")
             XCTAssertNotNil(phoneNumber)
-            
+
             let formatted = phoneNumberKit.format(phoneNumber, toType: .e164)
             XCTAssertEqual(formatted, "+491713369876")
         }

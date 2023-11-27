@@ -187,7 +187,7 @@ final class PhoneNumberKitParsingTests: XCTestCase {
                                     XCTAssertEqual(phoneNumber.type, type, "Expected type \(type) for number \(phoneNumber)")
                                 }
                             }
-                        } catch (let e) {
+                        } catch let e {
                             XCTFail("Failed to create PhoneNumber for \(exampleNumber): \(e)")
                         }
                     }
@@ -279,7 +279,7 @@ final class PhoneNumberKitParsingTests: XCTestCase {
         let phoneNumberE164Format1 = self.phoneNumberKit.format(phoneNumber1, toType: .e164)
         XCTAssertEqual(phoneNumberE164Format1, "+971500500550")
     }
-    
+
     func testPerformanceSimple() {
         let numberOfParses = 1000
         let startTime = Date()
@@ -294,7 +294,7 @@ final class PhoneNumberKitParsingTests: XCTestCase {
         print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
         XCTAssertLessThan(timeInterval, 1)
     }
-    
+
     func testPerformanceNonOptimizedSample() {
         let numberOfParses = 2000
         let startTime = Date()
@@ -307,7 +307,7 @@ final class PhoneNumberKitParsingTests: XCTestCase {
         print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
         XCTAssertLessThan(timeInterval, 2)
     }
-    
+
     func testPerformanceWithoutSupplyingDefaultRegion() {
         let numberOfParses = 2000
         let startTime = Date()
@@ -322,7 +322,7 @@ final class PhoneNumberKitParsingTests: XCTestCase {
         print("time to parse \(numberOfParses) phone numbers, \(timeInterval) seconds")
         XCTAssertLessThan(timeInterval, 2)
     }
-    
+
     func testPerformanceNonOptimizedParsingUsageWithoutDefaultRegion() throws {
         let numberOfParses = 2000
         let startTime = Date()
@@ -361,7 +361,7 @@ final class PhoneNumberKitParsingTests: XCTestCase {
         XCTAssertTrue(phoneNumberNationalFormat1 == "050 188 7766")
         let phoneNumberE164Format1 = self.phoneNumberKit.format(phoneNumber1, toType: .e164)
         XCTAssertTrue(phoneNumberE164Format1 == "+380501887766")
-        
+
         let phoneNumber2 = try phoneNumberKit.parse("050 188 7766", withRegion: "UA")
         XCTAssertNotNil(phoneNumber2)
         let phoneNumberInternationalFormat2 = self.phoneNumberKit.format(phoneNumber2, toType: .international)
@@ -371,13 +371,13 @@ final class PhoneNumberKitParsingTests: XCTestCase {
         let phoneNumberE164Format2 = self.phoneNumberKit.format(phoneNumber2, toType: .e164)
         XCTAssertTrue(phoneNumberE164Format2 == "+380501887766")
     }
-    
+
     func testExtensionWithCommaParsing() throws {
         let number = try phoneNumberKit.parse("+33 612-345-678,22")
         XCTAssertEqual(number.type, .mobile)
         XCTAssertEqual(number.numberExtension, "22")
     }
-    
+
     func testExtensionWithSemiColonParsing() throws {
         let number = try phoneNumberKit.parse("+33 612-345-678;22")
         XCTAssertEqual(number.type, .mobile)
@@ -389,7 +389,7 @@ final class PhoneNumberKitParsingTests: XCTestCase {
         let address = "+1 345 916 1234"
         try XCTAssertNotNil(phoneNumberKit.parse(address, withRegion: "JM"))
     }
-    
+
     func testRegionCountryCodeConflict() {
         XCTAssertThrowsError(try phoneNumberKit.parse("212-2344", withRegion: "US")) { error in
             XCTAssertEqual(error as? PhoneNumberError, .invalidNumber)
