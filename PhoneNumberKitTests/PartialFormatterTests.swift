@@ -36,7 +36,7 @@ final class PartialFormatterTests: XCTestCase {
         testNumber = "+336"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+33 6")
         testNumber = "+3368"
-        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+33 6 8")
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+33 68")
         testNumber = "+33689"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+33 6 89")
         testNumber = "+336895"
@@ -66,7 +66,7 @@ final class PartialFormatterTests: XCTestCase {
         testNumber = "00336"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "00 33 6")
         testNumber = "003368"
-        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "00 33 6 8")
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "00 33 68")
         testNumber = "0033689"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "00 33 6 89")
         testNumber = "00336895"
@@ -114,13 +114,13 @@ final class PartialFormatterTests: XCTestCase {
         var testNumber = "+"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+")
         testNumber = "+3"
-        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+(3")
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+3")
         testNumber = "+33"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+33")
         testNumber = "+336"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+33 6")
         testNumber = "+3368"
-        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+33 6 8")
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+33 68")
         testNumber = "+33689"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+33 6 89")
         testNumber = "+336895"
@@ -146,13 +146,13 @@ final class PartialFormatterTests: XCTestCase {
         testNumber = "011"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "011")
         testNumber = "0113"
-        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "011 (3")
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "011 3")
         testNumber = "01133"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "011 33")
         testNumber = "011336"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "011 33 6")
         testNumber = "0113368"
-        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "011 33 6 8")
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "011 33 68")
         testNumber = "01133689"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "011 33 6 89")
         testNumber = "011336895"
@@ -181,7 +181,7 @@ final class PartialFormatterTests: XCTestCase {
         var testNumber = "+"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+")
         testNumber = "+3"
-        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+(3")
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+3")
         testNumber = "+39"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+39")
         testNumber = "+390"
@@ -213,7 +213,7 @@ final class PartialFormatterTests: XCTestCase {
         testNumber = "06"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "06")
         testNumber = "068"
-        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "06 8")
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "068")
         testNumber = "0689"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "06 89")
         testNumber = "06895"
@@ -252,6 +252,32 @@ final class PartialFormatterTests: XCTestCase {
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "(800) 253-000")
         testNumber = "8002530000"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "(800) 253-0000")
+    }
+
+    // Issue: https://github.com/marmelroy/PhoneNumberKit/issues/714
+    func testUSNumberStartingWithThree() {
+        // 3148525477
+        let partialFormatter = PartialFormatter(phoneNumberKit: phoneNumberKit, defaultRegion: "US")
+        var testNumber = "3"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "3")
+        testNumber = "31"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "31")
+        testNumber = "314"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "314")
+        testNumber = "3148"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "314-8")
+        testNumber = "31485"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "314-85")
+        testNumber = "314852"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "314-852")
+        testNumber = "3148525"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "314-8525")
+        testNumber = "31485254"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "(314) 852-54")
+        testNumber = "314852547"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "(314) 852-547")
+        testNumber = "3148525477"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "(314) 852-5477")
     }
 
     // 07739555555
@@ -332,7 +358,7 @@ final class PartialFormatterTests: XCTestCase {
         testNumber = "+٩"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+9")
         testNumber = "+٩٧"
-        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+9 7")
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+97")
         testNumber = "+٩٧١"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971")
         testNumber = "+٩٧١٥"
@@ -363,7 +389,7 @@ final class PartialFormatterTests: XCTestCase {
         testNumber = "+٩"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+9")
         testNumber = "+٩٧"
-        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+9 7")
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+97")
         testNumber = "+٩٧١"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971")
         testNumber = "+٩٧١5"
@@ -394,7 +420,7 @@ final class PartialFormatterTests: XCTestCase {
         testNumber = "+۹"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+9")
         testNumber = "+۹۷"
-        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+9 7")
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+97")
         testNumber = "+۹۷١"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971")
         testNumber = "+۹۷۱۵"
@@ -425,7 +451,7 @@ final class PartialFormatterTests: XCTestCase {
         testNumber = "+۹"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+9")
         testNumber = "+۹۷"
-        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+9 7")
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+97")
         testNumber = "+۹۷١"
         XCTAssertEqual(partialFormatter.formatPartial(testNumber), "+971")
         testNumber = "+۹۷۱5"

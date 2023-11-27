@@ -415,6 +415,7 @@ public final class PartialFormatter {
     }
 
     func applyFormattingTemplate(_ template: String, rawNumber: String) -> String {
+        guard rawNumber.count > PhoneNumberConstants.minLengthForNSN else { return rawNumber }
         var rebuiltString = String()
         var rebuiltIndex = 0
         for character in template {
