@@ -284,7 +284,7 @@ public final class PhoneNumberKit {
     ///
     /// - returns: A computed value for the user's current region - based on the iPhone's carrier and if not available, the device region.
     public class func defaultRegionCode() -> String {
-        guard let regex = try? NSRegularExpression(pattern: PhoneNumberPatterns.countryCodePatten) else {
+        guard let regex = try? NSRegularExpression(pattern: PhoneNumberPatterns.countryCodePattern) else {
             return PhoneNumberConstants.defaultCountry
         }
         #if canImport(Contacts)
