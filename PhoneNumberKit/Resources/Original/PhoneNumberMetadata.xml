@@ -2285,14 +2285,14 @@
         </nationalNumberPattern>
       </fixedLine>
       <mobile>
-        <possibleLengths national="[7-13]"/>
-        <exampleNumber>664123456</exampleNumber>
+        <possibleLengths national="[7-14]"/>
+        <exampleNumber>6641234567</exampleNumber>
         <nationalNumberPattern>
           6(?:
             5[0-3579]|
             6[013-9]|
             [7-9]\d
-          )\d{4,10}
+          )\d{4,11}
         </nationalNumberPattern>
       </mobile>
       <tollFree>
