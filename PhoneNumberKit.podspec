@@ -26,7 +26,10 @@ Pod::Spec.new do |s|
     core.tvos.deployment_target = '12.0'
     core.watchos.deployment_target = '4.0'
     core.source_files = 'PhoneNumberKit/*.{swift}'
-    core.resources = 'PhoneNumberKit/Resources/PhoneNumberMetadata.json'
+    core.resources = [
+      'PhoneNumberKit/Resources/PhoneNumberMetadata.json', 
+      'PhoneNumberKit/Resources/PrivacyInfo.xcprivacy'
+    ]
   end
 
   s.subspec 'UIKit' do |ui|
