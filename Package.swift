@@ -19,7 +19,8 @@ let package = Package(
                           "Resources/update_metadata.sh",
                           "Info.plist"],
                 resources: [
-                    .process("Resources/PhoneNumberMetadata.json")
+                    .process("Resources/PhoneNumberMetadata.json"),
+                    .copy("Resources/PrivacyInfo.xcprivacy")
                 ]),
         .testTarget(name: "PhoneNumberKitTests",
                     dependencies: ["PhoneNumberKit"],
