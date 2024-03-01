@@ -27,9 +27,9 @@ Pod::Spec.new do |s|
     core.watchos.deployment_target = '4.0'
     core.source_files = 'PhoneNumberKit/*.{swift}'
     core.resources = [
-      'PhoneNumberKit/Resources/PhoneNumberMetadata.json', 
-      'PhoneNumberKit/Resources/PrivacyInfo.xcprivacy'
+      'PhoneNumberKit/Resources/PhoneNumberMetadata.json'
     ]
+    core.resource_bundles = {'PhoneNumberKitPrivacy' => ['PhoneNumberKit/Resources/PrivacyInfo.xcprivacy']}
   end
 
   s.subspec 'UIKit' do |ui|
