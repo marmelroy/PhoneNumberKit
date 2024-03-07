@@ -133,24 +133,28 @@ final class ParseManager {
     ///   - leadingZero: whether or not the number has a leading zero.
     /// - Returns: ISO 3166 compliant region code.
     func getRegionCode(of nationalNumber: UInt64, countryCode: UInt64, leadingZero: Bool) -> String? {
+        getRegion(of: nationalNumber, countryCode: countryCode, leadingZero: leadingZero)?.codeID
+    }
+    
+    func getRegion(of nationalNumber: UInt64, countryCode: UInt64, leadingZero: Bool) -> MetadataTerritory? {
         guard let regexManager = regexManager, let metadataManager = metadataManager, let regions = metadataManager.filterTerritories(byCode: countryCode) else { return nil }
 
         if regions.count == 1 {
-            return regions[0].codeID
+            return regions[0]
         }
 
         let nationalNumberString = String(nationalNumber)
         for region in regions {
             if let leadingDigits = region.leadingDigits {
                 if regexManager.matchesAtStart(leadingDigits, string: nationalNumberString) {
-                    return region.codeID
+                    return region
                 }
             }
             if leadingZero, self.parser.checkNumberType("0" + nationalNumberString, metadata: region) != .unknown {
-                return region.codeID
+                return region
             }
             if self.parser.checkNumberType(nationalNumberString, metadata: region) != .unknown {
-                return region.codeID
+                return region
             }
         }
         return nil

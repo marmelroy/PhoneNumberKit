@@ -272,7 +272,16 @@ public final class PartialFormatter {
             potentialCountryCode != 0 {
             processedNumber = numberWithoutCountryCallingCode
             if potentialCountryCode != currentMetadata?.countryCode {
-                self.currentMetadata = self.metadataManager?.mainTerritory(forCode: potentialCountryCode)
+                if let nationalNumber = UInt64(numberWithoutCountryCallingCode) {
+                    let hasLeadingZero = numberWithoutCountryCallingCode.hasPrefix("0")
+                    self.currentMetadata = phoneNumberKit.parseManager.getRegion(
+                        of: nationalNumber,
+                        countryCode: potentialCountryCode,
+                        leadingZero: hasLeadingZero
+                    )
+                } else {
+                    self.currentMetadata = self.metadataManager?.mainTerritory(forCode: potentialCountryCode)
+                }
             }
             let potentialCountryCodeString = String(potentialCountryCode)
             prefixBeforeNationalNumber.append(potentialCountryCodeString)
