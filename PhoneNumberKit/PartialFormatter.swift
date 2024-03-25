@@ -61,7 +61,7 @@ public final class PartialFormatter {
     func updateMetadataForDefaultRegion() {
         guard let metadataManager else { return }
         if let regionMetadata = metadataManager.filterTerritories(byCountry: defaultRegion) {
-            self.defaultMetadata = metadataManager.mainTerritory(forCode: regionMetadata.countryCode)
+            self.defaultMetadata = regionMetadata
         } else {
             self.defaultMetadata = nil
         }
@@ -80,15 +80,12 @@ public final class PartialFormatter {
     public var currentRegion: String {
         if ignoreIntlNumbers, currentMetadata?.codeID == "001" {
             return defaultRegion
+        } else if self.phoneNumberKit.countryCode(for: self.defaultRegion) != 1 {
+            return currentMetadata?.codeID ?? "US"
         } else {
-            let countryCode = self.phoneNumberKit.countryCode(for: self.defaultRegion)
-            if countryCode != 1, countryCode != 7 {
-                return currentMetadata?.codeID ?? "US"
-            } else {
-                return self.currentMetadata?.countryCode == 1 || self.currentMetadata?.countryCode == 7
-                    ? self.defaultRegion
-                    : self.currentMetadata?.codeID ?? self.defaultRegion
-            }
+            return self.currentMetadata?.countryCode == 1 ?
+                self.defaultRegion :
+                self.currentMetadata?.codeID ?? self.defaultRegion
         }
     }
 
@@ -305,7 +302,10 @@ public final class PartialFormatter {
         var tempPossibleFormats = [MetadataPhoneNumberFormat]()
         var possibleFormats = [MetadataPhoneNumberFormat]()
         if let metadata = currentMetadata {
-            let formatList = metadata.numberFormats
+            var formatList = metadata.numberFormats
+            if formatList.isEmpty {
+                formatList = metadataManager?.mainTerritory(forCode: metadata.countryCode)?.numberFormats ?? []
+            }
             for format in formatList {
                 if self.isFormatEligible(format) {
                     tempPossibleFormats.append(format)
