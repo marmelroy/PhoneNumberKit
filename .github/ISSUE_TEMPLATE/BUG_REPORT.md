@@ -11,6 +11,7 @@ about: If something isn't working as expected 🤔
 - [ ] Updated PhoneNumberKit to the latest version
 - [ ] Phone number formatted correctly on [JavaScript version](https://htmlpreview.github.io/?https://github.com/google/libphonenumber/blob/master/javascript/i18n/phonenumbers/demo-compiled.html)
 - [ ] I searched for [existing GitHub issues](https://github.com/marmelroy/PhoneNumberKit)
+- [ ] I am aware that this library is not responsible of adding/removing/changing phone number formats and any request should be done at [libphonenumber repo](https://github.com/google/libphonenumber)
 
 ### Steps to reproduce
 <!-- Please include the steps to reproduce the issue -->
