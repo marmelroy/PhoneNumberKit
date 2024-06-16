@@ -12,13 +12,13 @@ jobs:
       - name: Configure Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: '3.12'
       
       - name: Install XML to JSON converter
         run: pip install xmljson
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Authorize
         run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token

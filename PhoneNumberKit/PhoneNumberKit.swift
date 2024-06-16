@@ -11,9 +11,9 @@ import Foundation
 import Contacts
 #endif
 
-public typealias MetadataCallback = (() throws -> Data?)
+public typealias MetadataCallback = () throws -> Data?
 
-public final class PhoneNumberKit: NSObject {
+public final class PhoneNumberKit {
     // Manager objects
     let metadataManager: MetadataManager
     let parseManager: ParseManager
@@ -36,17 +36,7 @@ public final class PhoneNumberKit: NSObject {
     ///   - ignoreType: Avoids number type checking for faster performance.
     /// - Returns: PhoneNumber object.
     public func parse(_ numberString: String, withRegion region: String = PhoneNumberKit.defaultRegionCode(), ignoreType: Bool = false) throws -> PhoneNumber {
-        var numberStringWithPlus = numberString
-
-        do {
-            return try self.parseManager.parse(numberString, withRegion: region, ignoreType: ignoreType)
-        } catch {
-            if numberStringWithPlus.first != "+" {
-                numberStringWithPlus = "+" + numberStringWithPlus
-            }
-        }
-
-        return try self.parseManager.parse(numberStringWithPlus, withRegion: region, ignoreType: ignoreType)
+        try self.parseManager.parse(numberString, withRegion: region, ignoreType: ignoreType)
     }
 
     /// Parses an array of number strings. Optimised for performance. Invalid numbers are ignored in the resulting array
@@ -59,9 +49,9 @@ public final class PhoneNumberKit: NSObject {
     public func parse(_ numberStrings: [String], withRegion region: String = PhoneNumberKit.defaultRegionCode(), ignoreType: Bool = false, shouldReturnFailedEmptyNumbers: Bool = false) -> [PhoneNumber] {
         return self.parseManager.parseMultiple(numberStrings, withRegion: region, ignoreType: ignoreType, shouldReturnFailedEmptyNumbers: shouldReturnFailedEmptyNumbers)
     }
-    
+
     // MARK: Checking
-    
+
     /// Checks if a number string is a valid PhoneNumber object
     ///
     /// - Parameters:
@@ -107,7 +97,7 @@ public final class PhoneNumberKit: NSObject {
     ///
     /// - returns: An array of ISO 3166 compliant region codes.
     public func allCountries() -> [String] {
-        let results = self.metadataManager.territories.map { $0.codeID }
+        let results = self.metadataManager.territories.map(\.codeID)
         return results
     }
 
@@ -117,7 +107,7 @@ public final class PhoneNumberKit: NSObject {
     ///
     /// - returns: optional array of ISO 3166 compliant region codes.
     public func countries(withCode countryCode: UInt64) -> [String]? {
-        let results = self.metadataManager.filterTerritories(byCode: countryCode)?.map { $0.codeID }
+        let results = self.metadataManager.filterTerritories(byCode: countryCode)?.map(\.codeID)
         return results
     }
 
@@ -237,26 +227,26 @@ public final class PhoneNumberKit: NSObject {
         let possibleLengths = possiblePhoneNumberLengths(forTerritory: territory, phoneNumberType: phoneNumberType)
 
         switch lengthType {
-        case .national:     return possibleLengths?.national.flatMap { self.parsePossibleLengths($0) } ?? []
-        case .localOnly:    return possibleLengths?.localOnly.flatMap { self.parsePossibleLengths($0) } ?? []
+        case .national: return possibleLengths?.national.flatMap { self.parsePossibleLengths($0) } ?? []
+        case .localOnly: return possibleLengths?.localOnly.flatMap { self.parsePossibleLengths($0) } ?? []
         }
     }
 
     private func possiblePhoneNumberLengths(forTerritory territory: MetadataTerritory, phoneNumberType: PhoneNumberType) -> MetadataPossibleLengths? {
         switch phoneNumberType {
-        case .fixedLine:        return territory.fixedLine?.possibleLengths
-        case .mobile:           return territory.mobile?.possibleLengths
-        case .pager:            return territory.pager?.possibleLengths
-        case .personalNumber:   return territory.personalNumber?.possibleLengths
-        case .premiumRate:      return territory.premiumRate?.possibleLengths
-        case .sharedCost:       return territory.sharedCost?.possibleLengths
-        case .tollFree:         return territory.tollFree?.possibleLengths
-        case .voicemail:        return territory.voicemail?.possibleLengths
-        case .voip:             return territory.voip?.possibleLengths
-        case .uan:              return territory.uan?.possibleLengths
-        case .fixedOrMobile:    return nil // caller needs to combine results for .fixedLine and .mobile
-        case .unknown:          return nil
-        case .notParsed:        return nil
+        case .fixedLine: return territory.fixedLine?.possibleLengths
+        case .mobile: return territory.mobile?.possibleLengths
+        case .pager: return territory.pager?.possibleLengths
+        case .personalNumber: return territory.personalNumber?.possibleLengths
+        case .premiumRate: return territory.premiumRate?.possibleLengths
+        case .sharedCost: return territory.sharedCost?.possibleLengths
+        case .tollFree: return territory.tollFree?.possibleLengths
+        case .voicemail: return territory.voicemail?.possibleLengths
+        case .voip: return territory.voip?.possibleLengths
+        case .uan: return territory.uan?.possibleLengths
+        case .fixedOrMobile: return nil // caller needs to combine results for .fixedLine and .mobile
+        case .unknown: return nil
+        case .notParsed: return nil
         }
     }
 
@@ -280,9 +270,9 @@ public final class PhoneNumberKit: NSObject {
             let rangeLimits = trimmedComponent.components(separatedBy: "-").compactMap { Int($0) }
 
             guard rangeLimits.count == 2,
-                let rangeStart = rangeLimits.first,
-                let rangeEnd = rangeLimits.last
-                else { return [] }
+                  let rangeStart = rangeLimits.first,
+                  let rangeEnd = rangeLimits.last
+            else { return [] }
 
             return Array(rangeStart...rangeEnd)
         }
@@ -294,60 +284,80 @@ public final class PhoneNumberKit: NSObject {
     ///
     /// - returns: A computed value for the user's current region - based on the iPhone's carrier and if not available, the device region.
     public class func defaultRegionCode() -> String {
+        guard let regex = try? NSRegularExpression(pattern: PhoneNumberPatterns.countryCodePattern) else {
+            return PhoneNumberConstants.defaultCountry
+        }
         #if canImport(Contacts)
-        if #available(iOS 9, macOS 10.11, macCatalyst 13.1, watchOS 2.0, *) {
+        if #available(iOS 12.0, macOS 10.13, macCatalyst 13.1, watchOS 4.0, *) {
             // macCatalyst OS bug if language is set to Korean
-            //CNContactsUserDefaults.shared().countryCode will return ko instead of kr
+            // CNContactsUserDefaults.shared().countryCode will return ko instead of kr
             // Failed parsing any phone number.
             let countryCode = CNContactsUserDefaults.shared().countryCode.uppercased()
             #if targetEnvironment(macCatalyst)
-                if "ko".caseInsensitiveCompare(countryCode) == .orderedSame {
-                    return "KR"
-                }
+            if "ko".caseInsensitiveCompare(countryCode) == .orderedSame {
+                return "KR"
+            }
             #endif
-            return countryCode
-            
+
+            if regex.firstMatch(in: countryCode) != nil {
+                return countryCode
+            }
         }
         #endif
-        
-        let currentLocale = Locale.current
-        if let countryCode = (currentLocale as NSLocale).object(forKey: .countryCode) as? String {
+
+        let locale = Locale.current
+        #if !os(Linux)
+        if #available(iOS 17.0, tvOS 17.0, macOS 14.0, macCatalyst 17.0, watchOS 10.0, *),
+           let regionCode = locale.region?.identifier,
+           regex.firstMatch(in: regionCode) != nil {
+            return regionCode.uppercased()
+        }
+        #endif
+
+        if let countryCode = (locale as NSLocale).object(forKey: .countryCode) as? String,
+           regex.firstMatch(in: countryCode) != nil {
             return countryCode.uppercased()
         }
+
         return PhoneNumberConstants.defaultCountry
     }
-    
-    
 
     /// Default metadata callback, reads metadata from PhoneNumberMetadata.json file in bundle
     ///
     /// - returns: an optional Data representation of the metadata.
     public static func defaultMetadataCallback() throws -> Data? {
         let frameworkBundle = Bundle.phoneNumberKit
-        guard let jsonPath = frameworkBundle.path(forResource: "PhoneNumberMetadata", ofType: "json") else {
+        guard
+            let jsonPath = frameworkBundle.path(forResource: "PhoneNumberMetadata", ofType: "json"),
+            let handle = FileHandle(forReadingAtPath: jsonPath) else {
             throw PhoneNumberError.metadataNotFound
         }
-//        let data = try Data(contentsOf: URL(fileURLWithPath: jsonPath))
-//        return data
-        if let nsData = NSData(contentsOfFile: jsonPath) {
-            let data = Data(referencing: nsData)
-            return data
-        } else {
-            throw PhoneNumberError.metadataNotFound
+
+        defer {
+            if #available(iOS 13.0, macOS 10.15, macCatalyst 13.1, tvOS 13.0, watchOS 6.0, *) {
+                try? handle.close()
+            } else {
+                handle.closeFile()
+            }
         }
+
+        let data = handle.readDataToEndOfFile()
+        return data
     }
 }
 
 #if canImport(UIKit)
-extension PhoneNumberKit {
-
+public extension PhoneNumberKit {
     /// Configuration for the CountryCodePicker presented from PhoneNumberTextField if `withDefaultPickerUI` is `true`
-    public enum CountryCodePicker {
+    enum CountryCodePicker {
         /// Common Country Codes are shown below the Current section in the CountryCodePicker by default
         public static var commonCountryCodes: [String] = []
 
         /// When the Picker is shown from the textfield it is presented modally
         public static var forceModalPresentation: Bool = false
+
+        /// Set the search bar of the Picker to always visible
+        public static var alwaysShowsSearchBar: Bool = false
     }
 }
 #endif
