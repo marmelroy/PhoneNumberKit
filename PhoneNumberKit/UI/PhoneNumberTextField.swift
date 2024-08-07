@@ -73,6 +73,8 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         }
     }
 
+    public var withPrefixPrefill: Bool = true
+
     public var withFlag: Bool = false {
         didSet {
             leftView = self.withFlag ? self.flagButton : nil
@@ -497,7 +499,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
 
     open func textFieldDidBeginEditing(_ textField: UITextField) {
-        if self.withExamplePlaceholder, self.withPrefix, let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description, (text ?? "").isEmpty {
+        if self.withExamplePlaceholder, self.withPrefixPrefill, self.withPrefix, let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description, (text ?? "").isEmpty {
             text = "+" + countryCode + " "
         }
         self._delegate?.textFieldDidBeginEditing?(textField)
