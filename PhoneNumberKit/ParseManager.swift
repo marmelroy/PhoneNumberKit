@@ -105,7 +105,7 @@ final class ParseManager {
         var hasError = false
 
         var multiParseArray = [PhoneNumber](unsafeUninitializedCapacity: numberStrings.count) { buffer, initializedCount in
-            DispatchQueue.concurrentPerform(iterations: numberStrings.count) { index in
+            DispatchQueue.concurrentPerform(iterations: numberStrings.count) { [buffer] index in
                 let numberString = numberStrings[index]
                 do {
                     let phoneNumber = try self.parse(numberString, withRegion: region, ignoreType: ignoreType)
