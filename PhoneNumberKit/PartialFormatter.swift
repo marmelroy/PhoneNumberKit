@@ -11,35 +11,35 @@ import Foundation
 
 /// Partial formatter
 public final class PartialFormatter {
-    private let phoneNumberKit: PhoneNumberKit
+    private let utility: PhoneNumberUtility
 
     weak var metadataManager: MetadataManager?
     weak var parser: PhoneNumberParser?
     weak var regexManager: RegexManager?
 
-    public convenience init(phoneNumberKit: PhoneNumberKit = PhoneNumberKit(),
-                            defaultRegion: String = PhoneNumberKit.defaultRegionCode(),
+    public convenience init(utility: PhoneNumberUtility = PhoneNumberUtility(),
+                            defaultRegion: String = PhoneNumberUtility.defaultRegionCode(),
                             withPrefix: Bool = true,
                             maxDigits: Int? = nil,
                             ignoreIntlNumbers: Bool = false) {
-        self.init(phoneNumberKit: phoneNumberKit,
-                  regexManager: phoneNumberKit.regexManager,
-                  metadataManager: phoneNumberKit.metadataManager,
-                  parser: phoneNumberKit.parseManager.parser,
+        self.init(utility: utility,
+                  regexManager: utility.regexManager,
+                  metadataManager: utility.metadataManager,
+                  parser: utility.parseManager.parser,
                   defaultRegion: defaultRegion,
                   withPrefix: withPrefix,
                   maxDigits: maxDigits,
                   ignoreIntlNumbers: ignoreIntlNumbers)
     }
 
-    init(phoneNumberKit: PhoneNumberKit,
+    init(utility: PhoneNumberUtility,
          regexManager: RegexManager,
          metadataManager: MetadataManager,
          parser: PhoneNumberParser, defaultRegion: String,
          withPrefix: Bool = true,
          maxDigits: Int? = nil,
          ignoreIntlNumbers: Bool = false) {
-        self.phoneNumberKit = phoneNumberKit
+        self.utility = utility
         self.regexManager = regexManager
         self.metadataManager = metadataManager
         self.parser = parser
@@ -80,7 +80,7 @@ public final class PartialFormatter {
     public var currentRegion: String {
         if ignoreIntlNumbers, currentMetadata?.codeID == "001" {
             return defaultRegion
-        } else if self.phoneNumberKit.countryCode(for: self.defaultRegion) != 1 {
+        } else if self.utility.countryCode(for: self.defaultRegion) != 1 {
             return currentMetadata?.codeID ?? "US"
         } else {
             return self.currentMetadata?.countryCode == 1 ?
