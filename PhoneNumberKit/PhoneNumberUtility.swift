@@ -80,7 +80,7 @@ public final class PhoneNumberUtility {
             }
             return "+\(phoneNumber.countryCode)\(formattedNationalNumber)"
         } else {
-            let formatter = Formatter(phoneNumberKit: self)
+            let formatter = Formatter(regexManager: regexManager)
             let regionMetadata = self.metadataManager.mainTerritory(forCode: phoneNumber.countryCode)
             let formattedNationalNumber = formatter.format(phoneNumber: phoneNumber, formatType: formatType, regionMetadata: regionMetadata)
             if formatType == .international, prefix == true {

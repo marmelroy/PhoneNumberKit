@@ -11,10 +11,6 @@ import Foundation
 final class Formatter {
     weak var regexManager: RegexManager?
 
-    init(phoneNumberKit: PhoneNumberKit) {
-        self.regexManager = phoneNumberKit.regexManager
-    }
-
     init(regexManager: RegexManager) {
         self.regexManager = regexManager
     }
