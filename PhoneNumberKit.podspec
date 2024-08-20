@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'PhoneNumberKit'
-  s.version          = '3.8.0'
+  s.version          = '4.0.0'
   s.summary          = 'Swift framework for working with phone numbers'
   s.description      = <<-DESC
                         A Swift framework for parsing, formatting and validating international phone numbers. Inspired by Google's libphonenumber.
@@ -29,7 +29,7 @@ Pod::Spec.new do |s|
     core.resources = [
       'PhoneNumberKit/Resources/PhoneNumberMetadata.json'
     ]
-    core.resource_bundles = {'PhoneNumberKitPrivacy' => ['PhoneNumberKit/Resources/PrivacyInfo.xcprivacy']}
+    core.resource_bundles = { 'PhoneNumberKitPrivacy' => ['PhoneNumberKit/Resources/PrivacyInfo.xcprivacy'] }
   end
 
   s.subspec 'UIKit' do |ui|
