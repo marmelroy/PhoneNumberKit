@@ -12,7 +12,7 @@ import PhoneNumberKit
 import UIKit
 
 class ViewController: UIViewController, CNContactPickerDelegate {
-    let phoneNumberKit = PhoneNumberKit()
+    let phoneNumberUtility = PhoneNumberUtility()
 
     @IBOutlet var parsedNumberLabel: UILabel!
     @IBOutlet var parsedCountryCodeLabel: UILabel!
@@ -54,10 +54,10 @@ class ViewController: UIViewController, CNContactPickerDelegate {
 
     func parseNumber(_ number: String) {
         do {
-            let phoneNumber = try phoneNumberKit.parse(number, ignoreType: true)
-            self.parsedNumberLabel.text = self.phoneNumberKit.format(phoneNumber, toType: .international)
+            let phoneNumber = try phoneNumberUtility.parse(number, ignoreType: true)
+            self.parsedNumberLabel.text = phoneNumberUtility.format(phoneNumber, toType: .international)
             self.parsedCountryCodeLabel.text = String(phoneNumber.countryCode)
-            if let regionCode = phoneNumberKit.mainCountry(forCode: phoneNumber.countryCode) {
+            if let regionCode = phoneNumberUtility.mainCountry(forCode: phoneNumber.countryCode) {
                 let country = Locale.current.localizedString(forRegionCode: regionCode)
                 self.parsedCountryLabel.text = country
             }

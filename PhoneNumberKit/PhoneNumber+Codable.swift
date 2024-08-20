@@ -29,13 +29,13 @@ public enum PhoneNumberEncodingStrategy {
 }
 
 public enum PhoneNumberDecodingUtils {
-    /// The default `PhoneNumberKit` instance used for parsing when decoding, if needed.
-    public static var defaultPhoneNumberKit: () -> PhoneNumberKit = { .init() }
+    /// The default `PhoneNumberUtility` instance used for parsing when decoding, if needed.
+    public static var defaultUtility: () -> PhoneNumberUtility = { .init() }
 }
 
 public enum PhoneNumberEncodingUtils {
-    /// The default `PhoneNumberKit` instance used for formatting when encoding, if needed.
-    public static var defaultPhoneNumberKit: () -> PhoneNumberKit = { .init() }
+    /// The default `PhoneNumberUtility` instance used for formatting when encoding, if needed.
+    public static var defaultUtility: () -> PhoneNumberUtility = { .init() }
 }
 
 public extension JSONDecoder {
@@ -49,13 +49,13 @@ public extension JSONDecoder {
         }
     }
 
-    /// The `PhoneNumberKit` instance used for parsing when decoding, if needed.
-    var phoneNumberKit: () -> PhoneNumberKit {
+    /// The `PhoneNumberUtility` instance used for parsing when decoding, if needed.
+    var phoneNumberUtility: () -> PhoneNumberUtility {
         get {
-            return userInfo[.phoneNumberKit] as? () -> PhoneNumberKit ?? PhoneNumberDecodingUtils.defaultPhoneNumberKit
+            return userInfo[.phoneNumberUtility] as? () -> PhoneNumberUtility ?? PhoneNumberDecodingUtils.defaultUtility
         }
         set {
-            userInfo[.phoneNumberKit] = newValue
+            userInfo[.phoneNumberUtility] = newValue
         }
     }
 }
@@ -71,13 +71,13 @@ public extension JSONEncoder {
         }
     }
 
-    /// The `PhoneNumberKit` instance used for formatting when encoding, if needed.
-    var phoneNumberKit: () -> PhoneNumberKit {
+    /// The `PhoneNumberUtility` instance used for formatting when encoding, if needed.
+    var phoneNumberUtility: () -> PhoneNumberUtility {
         get {
-            return userInfo[.phoneNumberKit] as? () -> PhoneNumberKit ?? PhoneNumberEncodingUtils.defaultPhoneNumberKit
+            return userInfo[.phoneNumberUtility] as? () -> PhoneNumberUtility ?? PhoneNumberEncodingUtils.defaultUtility
         }
         set {
-            userInfo[.phoneNumberKit] = newValue
+            userInfo[.phoneNumberUtility] = newValue
         }
     }
 }
@@ -100,8 +100,8 @@ extension PhoneNumber: Codable {
         case .e164:
             let container = try decoder.singleValueContainer()
             let e164String = try container.decode(String.self)
-            let phoneNumberKit = decoder.userInfo[.phoneNumberKit] as? () -> PhoneNumberKit ?? PhoneNumberDecodingUtils.defaultPhoneNumberKit
-            self = try phoneNumberKit().parse(e164String, ignoreType: true)
+            let utility = decoder.userInfo[.phoneNumberUtility] as? () -> PhoneNumberUtility ?? PhoneNumberDecodingUtils.defaultUtility
+            self = try utility().parse(e164String, ignoreType: true)
         }
     }
 
@@ -119,8 +119,8 @@ extension PhoneNumber: Codable {
             try container.encode(regionID, forKey: .regionID)
         case .e164:
             var container = encoder.singleValueContainer()
-            let phoneNumberKit = encoder.userInfo[.phoneNumberKit] as? () -> PhoneNumberKit ?? PhoneNumberEncodingUtils.defaultPhoneNumberKit
-            let e164String = phoneNumberKit().format(self, toType: .e164)
+            let utility = encoder.userInfo[.phoneNumberUtility] as? () -> PhoneNumberUtility ?? PhoneNumberEncodingUtils.defaultUtility
+            let e164String = utility().format(self, toType: .e164)
             try container.encode(e164String)
         }
     }
@@ -140,5 +140,5 @@ extension CodingUserInfoKey {
     static let phoneNumberDecodingStrategy = Self(rawValue: "com.roymarmelstein.PhoneNumberKit.decoding-strategy")!
     static let phoneNumberEncodingStrategy = Self(rawValue: "com.roymarmelstein.PhoneNumberKit.encoding-strategy")!
 
-    static let phoneNumberKit = Self(rawValue: "com.roymarmelstein.PhoneNumberKit.instance")!
+    static let phoneNumberUtility = Self(rawValue: "com.roymarmelstein.PhoneNumberKit.instance")!
 }

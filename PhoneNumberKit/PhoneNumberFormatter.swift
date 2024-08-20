@@ -10,7 +10,7 @@
 import Foundation
 
 open class PhoneNumberFormatter: Foundation.Formatter {
-    public let phoneNumberKit: PhoneNumberKit
+    public let utility: PhoneNumberUtility
 
     private let partialFormatter: PartialFormatter
 
@@ -20,7 +20,7 @@ open class PhoneNumberFormatter: Foundation.Formatter {
 
     /// Override region to set a custom region. Automatically uses the default region code.
     @objc public dynamic
-    var defaultRegion = PhoneNumberKit.defaultRegionCode() {
+    var defaultRegion = PhoneNumberUtility.defaultRegionCode() {
         didSet {
             self.partialFormatter.defaultRegion = self.defaultRegion
         }
@@ -40,15 +40,15 @@ open class PhoneNumberFormatter: Foundation.Formatter {
 
     // MARK: Lifecycle
 
-    public init(phoneNumberKit pnk: PhoneNumberKit = PhoneNumberKit(), defaultRegion: String = PhoneNumberKit.defaultRegionCode(), withPrefix: Bool = true) {
-        self.phoneNumberKit = pnk
-        self.partialFormatter = PartialFormatter(phoneNumberKit: self.phoneNumberKit, defaultRegion: defaultRegion, withPrefix: withPrefix)
+    public init(utility: PhoneNumberUtility = PhoneNumberUtility(), defaultRegion: String = PhoneNumberUtility.defaultRegionCode(), withPrefix: Bool = true) {
+        self.utility = utility
+        self.partialFormatter = PartialFormatter(utility: self.utility, defaultRegion: defaultRegion, withPrefix: withPrefix)
         super.init()
     }
 
     public required init?(coder aDecoder: NSCoder) {
-        self.phoneNumberKit = PhoneNumberKit()
-        self.partialFormatter = PartialFormatter(phoneNumberKit: self.phoneNumberKit, defaultRegion: self.defaultRegion, withPrefix: self.withPrefix)
+        self.utility = PhoneNumberUtility()
+        self.partialFormatter = PartialFormatter(utility: self.utility, defaultRegion: self.defaultRegion, withPrefix: self.withPrefix)
         super.init(coder: aDecoder)
     }
 }
@@ -60,7 +60,7 @@ open class PhoneNumberFormatter: Foundation.Formatter {
 extension PhoneNumberFormatter {
     override open func string(for obj: Any?) -> String? {
         if let pn = obj as? PhoneNumber {
-            return self.phoneNumberKit.format(pn, toType: self.withPrefix ? .international : .national)
+            return self.utility.format(pn, toType: self.withPrefix ? .international : .national)
         }
         if let str = obj as? String {
             return self.partialFormatter.formatPartial(str)
@@ -71,7 +71,7 @@ extension PhoneNumberFormatter {
     override open func getObjectValue(_ obj: AutoreleasingUnsafeMutablePointer<AnyObject?>?, for string: String, errorDescription error: AutoreleasingUnsafeMutablePointer<NSString?>?) -> Bool {
         if self.generatesPhoneNumber {
             do {
-                obj?.pointee = try self.phoneNumberKit.parse(string) as AnyObject?
+                obj?.pointee = try self.utility.parse(string) as AnyObject?
                 return true
             } catch let e {
                 error?.pointee = e.localizedDescription as NSString

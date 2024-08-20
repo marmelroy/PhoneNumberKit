@@ -64,12 +64,12 @@ public extension PhoneNumber {
     }
 }
 
-/// In past versions of PhoneNumberKit you were able to initialize a PhoneNumber object to parse a String. Please use a PhoneNumberKit object's methods.
+/// In past versions of PhoneNumberKit you were able to initialize a PhoneNumber object to parse a String. Please use a PhoneNumberUtility object's methods.
 public extension PhoneNumber {
     /// DEPRECATED.
     /// Parse a string into a phone number object using default region. Can throw.
     /// - Parameter rawNumber: String to be parsed to phone number struct.
-    @available(*, unavailable, message: "use PhoneNumberKit instead to produce PhoneNumbers")
+    @available(*, unavailable, message: "use PhoneNumberUtility instead to produce PhoneNumbers")
     init(rawNumber: String) throws {
         assertionFailure(PhoneNumberError.deprecated.localizedDescription)
         throw PhoneNumberError.deprecated
@@ -79,7 +79,7 @@ public extension PhoneNumber {
     /// Parse a string into a phone number object using custom region. Can throw.
     /// - Parameter rawNumber: String to be parsed to phone number struct.
     /// - Parameter region: ISO 3166 compliant region code.
-    @available(*, unavailable, message: "use PhoneNumberKit instead to produce PhoneNumbers")
+    @available(*, unavailable, message: "use PhoneNumberUtility instead to produce PhoneNumbers")
     init(rawNumber: String, region: String) throws {
         throw PhoneNumberError.deprecated
     }
