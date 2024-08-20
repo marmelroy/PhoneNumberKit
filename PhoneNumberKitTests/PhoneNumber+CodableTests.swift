@@ -10,15 +10,15 @@ import PhoneNumberKit
 import XCTest
 
 final class PhoneNumberCodableTests: XCTestCase {
-    private var phoneNumberKit: PhoneNumberKit!
+    private var utility: PhoneNumberUtility!
 
     override func setUp() {
         super.setUp()
-        phoneNumberKit = PhoneNumberKit()
+        utility = PhoneNumberUtility()
     }
 
     override func tearDown() {
-        phoneNumberKit = nil
+        utility = nil
         super.tearDown()
     }
 }
@@ -37,7 +37,7 @@ extension PhoneNumberCodableTests {
               "type" : "unknown"
             }
             """,
-            phoneNumberKit.parse("+441632960015", ignoreType: true),
+            utility.parse("+441632960015", ignoreType: true),
             strategy: nil
         )
         try assertDecode(
@@ -52,7 +52,7 @@ extension PhoneNumberCodableTests {
               "type" : "unknown"
             }
             """,
-            phoneNumberKit.parse("+34646990213", ignoreType: true),
+            utility.parse("+34646990213", ignoreType: true),
             strategy: nil
         )
     }
@@ -70,7 +70,7 @@ extension PhoneNumberCodableTests {
               "type" : "unknown"
             }
             """,
-            phoneNumberKit.parse("+441632960015", ignoreType: true),
+            utility.parse("+441632960015", ignoreType: true),
             strategy: .properties
         )
         try assertDecode(
@@ -85,7 +85,7 @@ extension PhoneNumberCodableTests {
               "type" : "unknown"
             }
             """,
-            phoneNumberKit.parse("+34646990213", ignoreType: true),
+            utility.parse("+34646990213", ignoreType: true),
             strategy: .properties
         )
     }
@@ -95,28 +95,28 @@ extension PhoneNumberCodableTests {
             """
             "+441632960015"
             """,
-            phoneNumberKit.parse("+441632960015", ignoreType: true),
+            utility.parse("+441632960015", ignoreType: true),
             strategy: .e164
         )
         try assertDecode(
             """
             "+441632960015"
             """,
-            phoneNumberKit.parse("01632960015", withRegion: "GB", ignoreType: true),
+            utility.parse("01632960015", withRegion: "GB", ignoreType: true),
             strategy: .e164
         )
         try assertDecode(
             """
             "+34646990213"
             """,
-            phoneNumberKit.parse("+34646990213", ignoreType: true),
+            utility.parse("+34646990213", ignoreType: true),
             strategy: .e164
         )
         try assertDecode(
             """
             "+34646990213"
             """,
-            phoneNumberKit.parse("646990213", withRegion: "ES", ignoreType: true),
+            utility.parse("646990213", withRegion: "ES", ignoreType: true),
             strategy: .e164
         )
     }
@@ -125,7 +125,7 @@ extension PhoneNumberCodableTests {
 extension PhoneNumberCodableTests {
     func testEncode_defaultStrategy() throws {
         try assertEncode(
-            phoneNumberKit.parse("+441632960015", ignoreType: true),
+            utility.parse("+441632960015", ignoreType: true),
             """
             {
               "countryCode" : 44,
@@ -140,7 +140,7 @@ extension PhoneNumberCodableTests {
             strategy: nil
         )
         try assertEncode(
-            phoneNumberKit.parse("+34646990213", ignoreType: true),
+            utility.parse("+34646990213", ignoreType: true),
             """
             {
               "countryCode" : 34,
@@ -158,7 +158,7 @@ extension PhoneNumberCodableTests {
 
     func testEncode_propertiesStrategy() throws {
         try assertEncode(
-            phoneNumberKit.parse("+441632960015", ignoreType: true),
+            utility.parse("+441632960015", ignoreType: true),
             """
             {
               "countryCode" : 44,
@@ -173,7 +173,7 @@ extension PhoneNumberCodableTests {
             strategy: .properties
         )
         try assertEncode(
-            phoneNumberKit.parse("+34646990213", ignoreType: true),
+            utility.parse("+34646990213", ignoreType: true),
             """
             {
               "countryCode" : 34,
@@ -191,28 +191,28 @@ extension PhoneNumberCodableTests {
 
     func testEncode_e164Strategy() throws {
         try assertEncode(
-            phoneNumberKit.parse("+441632960015", ignoreType: true),
+            utility.parse("+441632960015", ignoreType: true),
             """
             "+441632960015"
             """,
             strategy: .e164
         )
         try assertEncode(
-            phoneNumberKit.parse("01632960015", withRegion: "GB", ignoreType: true),
+            utility.parse("01632960015", withRegion: "GB", ignoreType: true),
             """
             "+441632960015"
             """,
             strategy: .e164
         )
         try assertEncode(
-            phoneNumberKit.parse("+34646990213", ignoreType: true),
+            utility.parse("+34646990213", ignoreType: true),
             """
             "+34646990213"
             """,
             strategy: .e164
         )
         try assertEncode(
-            phoneNumberKit.parse("646990213", withRegion: "ES", ignoreType: true),
+            utility.parse("646990213", withRegion: "ES", ignoreType: true),
             """
             "+34646990213"
             """,
