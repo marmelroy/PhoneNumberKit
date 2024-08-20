@@ -13,7 +13,7 @@ import UIKit
 
 /// Custom text field that formats phone numbers
 open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
-    public let phoneNumberKit: PhoneNumberKit
+    public let utility: PhoneNumberUtility
 
     public lazy var flagButton = UIButton()
 
@@ -39,7 +39,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         super.text = newValue
     }
 
-    private lazy var _defaultRegion: String = PhoneNumberKit.defaultRegionCode()
+    private lazy var _defaultRegion: String = PhoneNumberUtility.defaultRegionCode()
 
     /// Override region to set a custom region. Automatically uses the default region code.
     open var defaultRegion: String {
@@ -147,7 +147,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
 
     public private(set) lazy var partialFormatter: PartialFormatter = .init(
-        phoneNumberKit: phoneNumberKit,
+        utility: utility,
         defaultRegion: defaultRegion,
         withPrefix: withPrefix,
         ignoreIntlNumbers: true
@@ -186,7 +186,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     public var isValidNumber: Bool {
         let rawNumber = self.text ?? String()
         do {
-            _ = try phoneNumberKit.parse(rawNumber, withRegion: currentRegion)
+            _ = try utility.parse(rawNumber, withRegion: currentRegion)
             return true
         } catch {
             return false
@@ -198,7 +198,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     public var phoneNumber: PhoneNumber? {
         guard let rawNumber = self.text else { return nil }
         do {
-            return try phoneNumberKit.parse(rawNumber, withRegion: currentRegion)
+            return try utility.parse(rawNumber, withRegion: currentRegion)
         } catch {
             return nil
         }
@@ -219,24 +219,24 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
 
     // MARK: Lifecycle
 
-    /// Init with a phone number kit instance. Because a PhoneNumberKit initialization is expensive,
+    /// Init with a phone number kit instance. Because a `PhoneNumberUtility` initialization is expensive,
     /// you can pass a pre-initialized instance to avoid incurring perf penalties.
     ///
-    /// - parameter phoneNumberKit: A PhoneNumberKit instance to be used by the text field.
+    /// - parameter utility: A `PhoneNumberUtility` instance to be used by the text field.
     ///
     /// - returns: UITextfield
-    public convenience init(withPhoneNumberKit phoneNumberKit: PhoneNumberKit) {
-        self.init(frame: .zero, phoneNumberKit: phoneNumberKit)
+    public convenience init(utility: PhoneNumberUtility) {
+        self.init(frame: .zero, utility: utility)
     }
 
     /// Init with frame and phone number kit instance.
     ///
     /// - parameter frame: UITextfield frame
-    /// - parameter phoneNumberKit: A PhoneNumberKit instance to be used by the text field.
+    /// - parameter utility: A `PhoneNumberUtility` instance to be used by the text field.
     ///
     /// - returns: UITextfield
-    public init(frame: CGRect, phoneNumberKit: PhoneNumberKit) {
-        self.phoneNumberKit = phoneNumberKit
+    public init(frame: CGRect, utility: PhoneNumberUtility) {
+        self.utility = utility
         super.init(frame: frame)
         self.setup()
     }
@@ -247,7 +247,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     ///
     /// - returns: UITextfield
     override public init(frame: CGRect) {
-        self.phoneNumberKit = PhoneNumberKit()
+        self.utility = PhoneNumberUtility()
         super.init(frame: frame)
         self.setup()
     }
@@ -266,7 +266,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     ///     button and the edges of the text field. A positive value increases the distance between the clear button and the
     ///     text field's edges, and a negative value decreases this distance.
     public init(insets: UIEdgeInsets, clearButtonPadding: CGFloat) {
-        self.phoneNumberKit = PhoneNumberKit()
+        self.utility = PhoneNumberUtility()
         self.insets = insets
         self.clearButtonPadding = clearButtonPadding
         super.init(frame: .zero)
@@ -279,7 +279,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     ///
     /// - returns: UITextfield
     public required init(coder aDecoder: NSCoder) {
-        self.phoneNumberKit = PhoneNumberKit()
+        self.utility = PhoneNumberUtility()
         super.init(coder: aDecoder)!
         self.setup()
     }
@@ -291,7 +291,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
 
     func internationalPrefix(for countryCode: String) -> String? {
-        guard let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description else { return nil }
+        guard let countryCode = utility.countryCode(for: currentRegion)?.description else { return nil }
         return "+" + countryCode
     }
 
@@ -301,7 +301,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         if let phoneNumber = phoneNumber,
            let regionCode = phoneNumber.regionID,
            regionCode != currentRegion,
-           phoneNumber.countryCode == phoneNumberKit.countryCode(for: currentRegion) {
+           phoneNumber.countryCode == utility.countryCode(for: currentRegion) {
             _defaultRegion = regionCode
             partialFormatter.defaultRegion = regionCode
         }
@@ -336,7 +336,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         if isEditing, !(self.text ?? "").isEmpty { return } // No need to update a placeholder while the placeholder isn't showing
 
         let format = self.withPrefix ? PhoneNumberFormat.international : .national
-        let example = self.phoneNumberKit.getFormattedExampleNumber(forCountry: self.currentRegion, withFormat: format, withPrefix: self.withPrefix) ?? "12345678"
+        let example = self.utility.getFormattedExampleNumber(forCountry: self.currentRegion, withFormat: format, withPrefix: self.withPrefix) ?? "12345678"
         let font = self.font ?? UIFont.preferredFont(forTextStyle: .body)
         let ph = NSMutableAttributedString(string: example, attributes: [.font: font])
 
@@ -357,10 +357,10 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
 
     @objc func didPressFlagButton() {
         guard withDefaultPickerUI else { return }
-        let vc = CountryCodePickerViewController(phoneNumberKit: phoneNumberKit,
+        let vc = CountryCodePickerViewController(utility: utility,
                                                  options: withDefaultPickerUIOptions)
         vc.delegate = self
-        if let nav = containingViewController?.navigationController, !PhoneNumberKit.CountryCodePicker.forceModalPresentation {
+        if let nav = containingViewController?.navigationController, !CountryCodePicker.forceModalPresentation {
             nav.pushViewController(vc, animated: true)
         } else {
             let nav = UINavigationController(rootViewController: vc)
@@ -499,7 +499,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
 
     open func textFieldDidBeginEditing(_ textField: UITextField) {
-        if self.withExamplePlaceholder, self.withPrefixPrefill, self.withPrefix, let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description, (text ?? "").isEmpty {
+        if self.withExamplePlaceholder, self.withPrefixPrefill, self.withPrefix, let countryCode = utility.countryCode(for: currentRegion)?.description, (text ?? "").isEmpty {
             text = "+" + countryCode + " "
         }
         self._delegate?.textFieldDidBeginEditing?(textField)
@@ -539,7 +539,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
 
     private func updateTextFieldDidEndEditing(_ textField: UITextField) {
-        if self.withExamplePlaceholder, self.withPrefix, let countryCode = phoneNumberKit.countryCode(for: currentRegion)?.description,
+        if self.withExamplePlaceholder, self.withPrefix, let countryCode = utility.countryCode(for: currentRegion)?.description,
            let text = textField.text,
            text == internationalPrefix(for: countryCode) {
             textField.text = ""
@@ -558,7 +558,7 @@ extension PhoneNumberTextField: CountryCodePickerDelegate {
         updateFlag()
         updatePlaceholder()
 
-        if let nav = containingViewController?.navigationController, !PhoneNumberKit.CountryCodePicker.forceModalPresentation {
+        if let nav = containingViewController?.navigationController, !CountryCodePicker.forceModalPresentation {
             nav.popViewController(animated: true)
         } else {
             containingViewController?.dismiss(animated: true)
