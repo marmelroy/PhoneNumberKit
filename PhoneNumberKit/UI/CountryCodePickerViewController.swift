@@ -17,7 +17,7 @@ public class CountryCodePickerViewController: UITableViewController {
         return searchController
     }()
 
-    public let phoneNumberKit: PhoneNumberKit
+    public let utility: PhoneNumberUtility
 
     public let options: CountryCodePickerOptions
 
@@ -28,9 +28,9 @@ public class CountryCodePickerViewController: UITableViewController {
     var hasCurrent = true
     var hasCommon = true
 
-    lazy var allCountries = phoneNumberKit
+    lazy var allCountries = utility
         .allCountries()
-        .compactMap({ Country(for: $0, with: self.phoneNumberKit) })
+        .compactMap({ Country(for: $0, with: self.utility) })
         .sorted(by: { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending })
 
     lazy var countries: [[Country]] = {
@@ -49,11 +49,11 @@ public class CountryCodePickerViewController: UITableViewController {
                 return collection
             }
 
-        let popular = commonCountryCodes.compactMap({ Country(for: $0, with: phoneNumberKit) })
+        let popular = commonCountryCodes.compactMap({ Country(for: $0, with: utility) })
 
         var result: [[Country]] = []
         // Note we should maybe use the user's current carrier's country code?
-        if hasCurrent, let current = Country(for: PhoneNumberKit.defaultRegionCode(), with: phoneNumberKit) {
+        if hasCurrent, let current = Country(for: PhoneNumberUtility.defaultRegionCode(), with: utility) {
             result.append([current])
         }
         hasCommon = hasCommon && !popular.isEmpty
@@ -69,15 +69,15 @@ public class CountryCodePickerViewController: UITableViewController {
 
     lazy var cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(dismissAnimated))
 
-    /// Init with a phone number kit instance. Because a PhoneNumberKit initialization is expensive you can must pass a pre-initialized instance to avoid incurring perf penalties.
+    /// Init with a phone number kit instance. Because a `PhoneNumberUtility` initialization is expensive you can must pass a pre-initialized instance to avoid incurring perf penalties.
     ///
-    /// - parameter phoneNumberKit: A PhoneNumberKit instance to be used by the text field.
-    /// - parameter commonCountryCodes: An array of country codes to display in the section below the current region section. defaults to `PhoneNumberKit.CountryCodePicker.commonCountryCodes`
+    /// - parameter utility: A `PhoneNumberUtility` instance to be used by the text field.
+    /// - parameter commonCountryCodes: An array of country codes to display in the section below the current region section. defaults to `PhoneNumberUtility.CountryCodePicker.commonCountryCodes`
     public init(
-        phoneNumberKit: PhoneNumberKit,
+        utility: PhoneNumberUtility,
         options: CountryCodePickerOptions?,
-        commonCountryCodes: [String] = PhoneNumberKit.CountryCodePicker.commonCountryCodes) {
-        self.phoneNumberKit = phoneNumberKit
+        commonCountryCodes: [String] = CountryCodePicker.commonCountryCodes) {
+        self.utility = utility
         self.commonCountryCodes = commonCountryCodes
         self.options = options ?? CountryCodePickerOptions()
         super.init(style: .grouped)
@@ -85,8 +85,8 @@ public class CountryCodePickerViewController: UITableViewController {
     }
 
     required init?(coder aDecoder: NSCoder) {
-        self.phoneNumberKit = PhoneNumberKit()
-        self.commonCountryCodes = PhoneNumberKit.CountryCodePicker.commonCountryCodes
+        self.utility = PhoneNumberUtility()
+        self.commonCountryCodes = CountryCodePicker.commonCountryCodes
         self.options = CountryCodePickerOptions()
         super.init(coder: aDecoder)
         self.commonInit()
@@ -101,7 +101,7 @@ public class CountryCodePickerViewController: UITableViewController {
         searchController.searchBar.backgroundColor = .clear
 
         navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = !PhoneNumberKit.CountryCodePicker.alwaysShowsSearchBar
+        navigationItem.hidesSearchBarWhenScrolling = !CountryCodePicker.alwaysShowsSearchBar
 
         definesPresentationContext = true
 
@@ -255,11 +255,11 @@ public extension CountryCodePickerViewController {
         public var name: String
         public var prefix: String
 
-        public init?(for countryCode: String, with phoneNumberKit: PhoneNumberKit) {
+        public init?(for countryCode: String, with utility: PhoneNumberUtility) {
             let flagBase = UnicodeScalar("🇦").value - UnicodeScalar("A").value
             guard
                 let name = (Locale.current as NSLocale).localizedString(forCountryCode: countryCode),
-                let prefix = phoneNumberKit.countryCode(for: countryCode)?.description
+                let prefix = utility.countryCode(for: countryCode)?.description
             else {
                 return nil
             }
