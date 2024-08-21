@@ -692,5 +692,11 @@ final class PartialFormatterTests: XCTestCase {
         _ = partialFormatter.formatPartial("+7")
         XCTAssertEqual(partialFormatter.currentRegion, "RU")
     }
+    
+    func testJerseyPhoneNumberWithoutPrefix() {
+        let partialFormatter = PartialFormatter(utility: utility, defaultRegion: "JE", withPrefix: false)
+        let testNumber = "078297"
+        XCTAssertEqual(partialFormatter.formatPartial(testNumber), "7829 7")
+    }
 }
 #endif
