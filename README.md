@@ -29,20 +29,20 @@ Import PhoneNumberKit at the top of the Swift file that will interact with a pho
 import PhoneNumberKit
 ```
 
-All of your interactions with PhoneNumberKit happen through a PhoneNumberUtility object. The first step you should take is to allocate one.
+All of your interactions with PhoneNumberKit happen through a PhoneNumberKit object. The first step you should take is to allocate one.
 
-A PhoneNumberUtility instance is relatively expensive to allocate (it parses the metadata and keeps it in memory for the object's lifecycle), you should try and make sure PhoneNumberUtility is allocated once and deallocated when no longer needed.
+A PhoneNumberKit instance is relatively expensive to allocate (it parses the metadata and keeps it in memory for the object's lifecycle), you should try and make sure PhoneNumberKit is allocated once and deallocated when no longer needed.
 
 ```swift
-let phoneNumberUtility = PhoneNumberUtility()
+let phoneNumberKit() = PhoneNumberKit()
 ```
 
 To parse a string, use the parse function. The region code is automatically computed but can be overridden if needed. PhoneNumberKit automatically does a hard type validation to ensure that the object created is valid, this can be quite costly performance-wise and can be turned off if needed.
 
 ```swift
 do {
-    let phoneNumber = try phoneNumberUtility.parse("+33 6 89 017383")
-    let phoneNumberCustomDefaultRegion = try phoneNumberUtility.parse("+44 20 7031 3000", withRegion: "GB", ignoreType: true)
+    let phoneNumber = try phoneNumberKit.parse("+33 6 89 017383")
+    let phoneNumberCustomDefaultRegion = try phoneNumberKit.parse("+44 20 7031 3000", withRegion: "GB", ignoreType: true)
 }
 catch {
     print("Generic parser error")
@@ -53,8 +53,8 @@ If you need to parse and validate a large amount of numbers at once, PhoneNumber
 
 ```swift
 let rawNumberArray = ["0291 12345678", "+49 291 12345678", "04134 1234", "09123 12345"]
-let phoneNumbers = phoneNumberUtility.parse(rawNumberArray)
-let phoneNumbersCustomDefaultRegion = phoneNumberUtility.parse(rawNumberArray, withRegion: "DE",  ignoreType: true)
+let phoneNumbers = phoneNumberKit.parse(rawNumberArray)
+let phoneNumbersCustomDefaultRegion = phoneNumberKit.parse(rawNumberArray, withRegion: "DE",  ignoreType: true)
 ```
 
 PhoneNumber objects are immutable Swift structs with the following properties:
@@ -70,9 +70,9 @@ phoneNumber.type // e.g Mobile or Fixed
 Formatting a PhoneNumber object into a string is also very easy
 
 ```swift
-phoneNumberUtility.format(phoneNumber, toType: .e164) // +61236618300
-phoneNumberUtility.format(phoneNumber, toType: .international) // +61 2 3661 8300
-phoneNumberUtility.format(phoneNumber, toType: .national) // (02) 3661 8300
+phoneNumberKit.format(phoneNumber, toType: .e164) // +61236618300
+phoneNumberKit.format(phoneNumber, toType: .international) // +61 2 3661 8300
+phoneNumberKit.format(phoneNumber, toType: .national) // (02) 3661 8300
 ```
 
 ## PhoneNumberTextField
@@ -108,8 +108,8 @@ PartialFormatter().formatPartial("+336895555") // +33 6 89 55 55
 You can also query countries for a dialing code or the dialing code for a given country
 
 ```swift
-phoneNumberUtility.countries(withCode: 33)
-phoneNumberUtility.countryCode(for: "FR")
+phoneNumberKit.countries(withCode: 33)
+phoneNumberKit.countryCode(for: "FR")
 ```
 
 ## Customize Country Picker
@@ -145,7 +145,7 @@ Please refer to `CountryCodePickerOptions` for more information about usage and 
 You can access the metadata powering PhoneNumberKit yourself, this enables you to program any behaviours as they may be implemented in PhoneNumberKit itself. It does mean you are exposed to the less polished interface of the underlying file format. If you program something you find useful please push it upstream!
 
 ```swift
-phoneNumberUtility.metadata(for: "AU")?.mobile?.exampleNumber // 412345678
+phoneNumberKit.metadata(for: "AU")?.mobile?.exampleNumber // 412345678
 ```
 
 ### [Preferred] Setting up with [Swift Package Manager](https://swiftpm.co/?query=PhoneNumberKit)
