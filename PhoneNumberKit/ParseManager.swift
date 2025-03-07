@@ -104,25 +104,20 @@ final class ParseManager {
     func parseMultiple(_ numberStrings: [String], withRegion region: String, ignoreType: Bool, shouldReturnFailedEmptyNumbers: Bool = false) -> [PhoneNumber] {
         var hasError = false
 
-        var multiParseArray = [PhoneNumber](unsafeUninitializedCapacity: numberStrings.count) { buffer, initializedCount in
-            DispatchQueue.concurrentPerform(iterations: numberStrings.count) { [buffer] index in
-                let numberString = numberStrings[index]
-                do {
-                    let phoneNumber = try self.parse(numberString, withRegion: region, ignoreType: ignoreType)
-                    buffer.baseAddress!.advanced(by: index).initialize(to: phoneNumber)
-                } catch {
-                    buffer.baseAddress!.advanced(by: index).initialize(to: PhoneNumber.notPhoneNumber())
-                    hasError = true
-                }
+        let results = numberStrings.enumerated().map { index, numberString -> PhoneNumber in
+            do {
+                return try self.parse(numberString, withRegion: region, ignoreType: ignoreType)
+            } catch {
+                hasError = true
+                return PhoneNumber.notPhoneNumber()
             }
-            initializedCount = numberStrings.count
         }
 
-        if hasError, !shouldReturnFailedEmptyNumbers {
-            multiParseArray = multiParseArray.filter { $0.type != .notParsed }
+        if hasError && !shouldReturnFailedEmptyNumbers {
+            return results.filter { $0.type != .notParsed }
         }
 
-        return multiParseArray
+        return results
     }
 
     /// Get correct ISO 3166 compliant region code for a number.
