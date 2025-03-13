@@ -1,5 +1,5 @@
 //
-//  PhoneNumberKit.swift
+//  PhoneNumberUtility.swift
 //  PhoneNumberKit
 //
 //  Created by Roy Marmelstein on 03/10/2015.

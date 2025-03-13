@@ -1,5 +1,5 @@
 //
-//  PhoneNumberKitParsingTests.swift
+//  PhoneNumberUtilityParsingTests.swift
 //  PhoneNumberKit
 //
 //  Created by Roy Marmelstein on 29/10/2015.
