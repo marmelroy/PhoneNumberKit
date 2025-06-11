@@ -207,15 +207,7 @@ final class ParseManager {
         // Test number against general number description for correct metadata (2)
         if let generalNumberDesc = regionMetadata.generalDesc,
            regexManager.hasValue(generalNumberDesc.nationalNumberPattern) == false || parser.isNumberMatchingDesc(nationalNumber, numberDesc: generalNumberDesc) == false {
-            // If the number doesn't match the pattern, try with the country code prefix
-            if nationalNumber.hasPrefix(String(countryCode)),
-               let fullNumberDesc = regionMetadata.generalDesc,
-               regexManager.hasValue(fullNumberDesc.nationalNumberPattern),
-               parser.isNumberMatchingDesc(nationalNumber, numberDesc: fullNumberDesc) {
-                // Keep the number as is since it matches the pattern with country code
-            } else {
-                return nil
-            }
+            return nil
         }
 
         // Finalize remaining parameters and create phone number object (3)
