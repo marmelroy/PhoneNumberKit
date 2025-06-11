@@ -74,7 +74,7 @@ public enum PhoneNumberFormat {
 /// - vOIP: Voip numbers
 /// - uan: UAN numbers
 /// - unknown: Unknown number type
-public enum PhoneNumberType: String, Codable {
+public enum PhoneNumberType: String, Codable, Sendable {
     case fixedLine
     case mobile
     case fixedOrMobile
