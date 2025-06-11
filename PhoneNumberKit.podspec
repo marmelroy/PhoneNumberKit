@@ -17,8 +17,8 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = '12.0'
   s.watchos.deployment_target = '4.0'
 
-  s.pod_target_xcconfig = { 'SWIFT_VERSION' => '5.0' }
-  s.swift_version = '5.0'
+  s.pod_target_xcconfig = { 'SWIFT_VERSION' => '5.5' }
+  s.swift_version = '5.5'
 
   s.subspec 'PhoneNumberKitCore' do |core|
     core.ios.deployment_target = '12.0'
