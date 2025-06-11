@@ -352,6 +352,50 @@ final class PhoneNumberUtilityParsingTests: XCTestCase {
         XCTAssertLessThan(timeInterval, 1)
     }
 
+    func testParseMultipleWithValidNumbers() {
+        let numbers = ["+5491187654321", "+5491187654322", "+5491187654323"]
+        let result = sut.parseManager.parseMultiple(numbers, withRegion: "AR", ignoreType: true)
+        XCTAssertEqual(result.count, 3)
+        XCTAssertTrue(result.allSatisfy { $0.type != .notParsed })
+    }
+
+    func testParseMultipleWithInvalidNumbers() {
+        let numbers = ["invalid", "12345", "abc"]
+        let result = sut.parseManager.parseMultiple(numbers, withRegion: "AR", ignoreType: true)
+        XCTAssertEqual(result.count, 0)
+    }
+
+    func testParseMultipleWithMixedNumbers() {
+        let numbers = ["+5491187654321", "invalid", "+5491187654322"]
+        let result = sut.parseManager.parseMultiple(numbers, withRegion: "AR", ignoreType: true)
+        XCTAssertEqual(result.count, 2)
+    }
+
+    func testParseMultipleWithEmptyArray() {
+        let result = sut.parseManager.parseMultiple([], withRegion: "AR", ignoreType: true)
+        XCTAssertEqual(result.count, 0)
+    }
+
+    func testParseMultipleWithReturnFailedNumbers() {
+        let numbers = ["+5491187654321", "invalid", "+5491187654322"]
+        let result = sut.parseManager.parseMultiple(numbers, withRegion: "AR", ignoreType: true, shouldReturnFailedEmptyNumbers: true)
+        XCTAssertEqual(result.count, 3)
+        XCTAssertEqual(result[1].type, .notParsed)
+    }
+
+    func testParseMultipleWithDifferentRegions() {
+        let numbers = ["+5491187654321", "+14155552671"]
+        let result = sut.parseManager.parseMultiple(numbers, withRegion: "US", ignoreType: true)
+        XCTAssertEqual(result.count, 2)
+    }
+
+    func testParseMultiplePerformance() {
+        measure {
+            let numbers = Array(repeating: "+5491187654321", count: 1000)
+            _ = sut.parseManager.parseMultiple(numbers, withRegion: "AR", ignoreType: true)
+        }
+    }
+
     func testUANumber() throws {
         let phoneNumber1 = try sut.parse("501887766", withRegion: "UA")
         XCTAssertNotNil(phoneNumber1)
