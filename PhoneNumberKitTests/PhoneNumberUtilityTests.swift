@@ -478,4 +478,15 @@ final class PhoneNumberUtilityTests: XCTestCase {
             XCTAssertEqual(formatted, "+491713369876")
         }
     }
+
+    func testValidITNumbers() throws {
+        let numbers = ["3939035695","00393939035695", "+393939035695", "393939035695"]
+        try numbers.forEach {
+            let phoneNumber = try sut.parse($0, withRegion: "IT")
+            XCTAssertNotNil(phoneNumber)
+
+            let formatted = sut.format(phoneNumber, toType: .e164)
+            XCTAssertEqual(formatted, "+393939035695")
+        }
+    }
 }
