@@ -8,21 +8,21 @@
 
 import Foundation
 
-/// Parsed phone number object
-///
-/// - numberString: String used to generate phone number struct
-/// - countryCode: Country dialing code as an unsigned. Int.
-/// - leadingZero: Some countries (e.g. Italy) require leading zeros. Bool.
-/// - nationalNumber: National number as an unsigned. Int.
-/// - numberExtension: Extension if available. String. Optional
-/// - type: Computed phone number type on access. Returns from an enumeration - PNPhoneNumberType.
+/// A parsed phone number representation.
 public struct PhoneNumber: Sendable {
+    /// The original string used to generate this phone number.
     public let numberString: String
+    /// The international dialing code (e.g., 1 for US/Canada, 44 for UK).
     public let countryCode: UInt64
+    /// Indicates whether the phone number includes a leading zero, as required by some countries (e.g., Italy).
     public let leadingZero: Bool
+    /// The national portion of the phone number, excluding the country code.
     public let nationalNumber: UInt64
+    /// An optional phone number extension, if available.
     public let numberExtension: String?
+    /// The type of phone number (e.g., mobile, fixed line), as determined during parsing.
     public let type: PhoneNumberType
+    /// The region identifier associated with the phone number (e.g., "US", "GB").
     public let regionID: String?
 }
 

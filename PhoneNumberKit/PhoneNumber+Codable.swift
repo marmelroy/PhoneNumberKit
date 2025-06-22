@@ -8,38 +8,43 @@
 
 import Foundation
 
-/// The strategy used to decode a `PhoneNumber` value.
+/// The strategy used to decode a ``PhoneNumber`` value.
 public enum PhoneNumberDecodingStrategy {
-    /// Decode `PhoneNumber` properties as key-value pairs. This is the default strategy.
+    /// Decode ``PhoneNumber`` properties as key-value pairs. This is the default strategy.
     case properties
-    /// Decode `PhoneNumber` as a E164 formatted string.
+    /// Decode ``PhoneNumber`` as a E164 formatted string.
     case e164
-    /// The default `PhoneNumber` encoding strategy.
+    /// The default ``PhoneNumber`` encoding strategy.
     public static var `default` = properties
 }
 
-/// The strategy used to encode a `PhoneNumber` value.
+/// The strategy used to encode a ``PhoneNumber`` value.
 public enum PhoneNumberEncodingStrategy {
-    /// Encode `PhoneNumber` properties as key-value pairs. This is the default strategy.
+    /// Encode ``PhoneNumber`` properties as key-value pairs. This is the default strategy.
     case properties
-    /// Encode `PhoneNumber` as a E164 formatted string.
+    /// Encode ``PhoneNumber`` as a E164 formatted string.
     case e164
-    /// The default `PhoneNumber` encoding strategy.
+    /// The default ``PhoneNumber`` encoding strategy.
     public static var `default` = properties
 }
+
+/// A closure that returns a ``PhoneNumberUtility`` instance.
+///
+/// Used for customizing phone number parsing and formatting behavior during encoding and decoding.
+public typealias PhoneNumberUtilityProvider = () -> PhoneNumberUtility
 
 public enum PhoneNumberDecodingUtils {
-    /// The default `PhoneNumberUtility` instance used for parsing when decoding, if needed.
-    public static var defaultUtility: () -> PhoneNumberUtility = { .init() }
+    /// The default ``PhoneNumberUtility`` instance used for parsing when decoding, if needed.
+    public static var defaultUtility: PhoneNumberUtilityProvider = { .init() }
 }
 
 public enum PhoneNumberEncodingUtils {
-    /// The default `PhoneNumberUtility` instance used for formatting when encoding, if needed.
-    public static var defaultUtility: () -> PhoneNumberUtility = { .init() }
+    /// The default ``PhoneNumberUtility`` instance used for formatting when encoding, if needed.
+    public static var defaultUtility: PhoneNumberUtilityProvider = { .init() }
 }
 
 public extension JSONDecoder {
-    /// The strategy used to decode a `PhoneNumber` value.
+    /// The strategy used to decode a ``PhoneNumber`` value.
     var phoneNumberDecodingStrategy: PhoneNumberDecodingStrategy {
         get {
             return userInfo[.phoneNumberDecodingStrategy] as? PhoneNumberDecodingStrategy ?? .default
@@ -49,10 +54,10 @@ public extension JSONDecoder {
         }
     }
 
-    /// The `PhoneNumberUtility` instance used for parsing when decoding, if needed.
-    var phoneNumberUtility: () -> PhoneNumberUtility {
+    /// The ``PhoneNumberUtility`` instance used for parsing when decoding, if needed.
+    var phoneNumberUtility: PhoneNumberUtilityProvider {
         get {
-            return userInfo[.phoneNumberUtility] as? () -> PhoneNumberUtility ?? PhoneNumberDecodingUtils.defaultUtility
+            return userInfo[.phoneNumberUtility] as? PhoneNumberUtilityProvider ?? PhoneNumberDecodingUtils.defaultUtility
         }
         set {
             userInfo[.phoneNumberUtility] = newValue
@@ -61,7 +66,7 @@ public extension JSONDecoder {
 }
 
 public extension JSONEncoder {
-    /// The strategy used to encode a `PhoneNumber` value.
+    /// The strategy used to encode a ``PhoneNumber`` value.
     var phoneNumberEncodingStrategy: PhoneNumberEncodingStrategy {
         get {
             return userInfo[.phoneNumberEncodingStrategy] as? PhoneNumberEncodingStrategy ?? .default
@@ -71,10 +76,10 @@ public extension JSONEncoder {
         }
     }
 
-    /// The `PhoneNumberUtility` instance used for formatting when encoding, if needed.
-    var phoneNumberUtility: () -> PhoneNumberUtility {
+    /// The ``PhoneNumberUtility`` instance used for formatting when encoding, if needed.
+    var phoneNumberUtility: PhoneNumberUtilityProvider {
         get {
-            return userInfo[.phoneNumberUtility] as? () -> PhoneNumberUtility ?? PhoneNumberEncodingUtils.defaultUtility
+            return userInfo[.phoneNumberUtility] as? PhoneNumberUtilityProvider ?? PhoneNumberEncodingUtils.defaultUtility
         }
         set {
             userInfo[.phoneNumberUtility] = newValue
@@ -100,7 +105,7 @@ extension PhoneNumber: Codable {
         case .e164:
             let container = try decoder.singleValueContainer()
             let e164String = try container.decode(String.self)
-            let utility = decoder.userInfo[.phoneNumberUtility] as? () -> PhoneNumberUtility ?? PhoneNumberDecodingUtils.defaultUtility
+            let utility = decoder.userInfo[.phoneNumberUtility] as? PhoneNumberUtilityProvider ?? PhoneNumberDecodingUtils.defaultUtility
             self = try utility().parse(e164String, ignoreType: true)
         }
     }
@@ -119,7 +124,7 @@ extension PhoneNumber: Codable {
             try container.encode(regionID, forKey: .regionID)
         case .e164:
             var container = encoder.singleValueContainer()
-            let utility = encoder.userInfo[.phoneNumberUtility] as? () -> PhoneNumberUtility ?? PhoneNumberEncodingUtils.defaultUtility
+            let utility = encoder.userInfo[.phoneNumberUtility] as? PhoneNumberUtilityProvider ?? PhoneNumberEncodingUtils.defaultUtility
             let e164String = utility().format(self, toType: .e164)
             try container.encode(e164String)
         }
@@ -136,9 +141,34 @@ extension PhoneNumber: Codable {
     }
 }
 
-extension CodingUserInfoKey {
+public extension CodingUserInfoKey {
+    /// A key used to specify the decoding strategy for ``PhoneNumber`` values.
+    ///
+    /// Use this key in a decoder’s `userInfo` dictionary to determine how a ``PhoneNumber`` should be decoded.
+    /// This enables contextual, user-defined decoding strategies when decoding from formats like JSON.
+    ///
+    /// The associated value should be of type ``PhoneNumberDecodingStrategy``.
+    ///
+    /// Supported by types such as `JSONDecoder`, and any custom decoder that provides a `userInfo` dictionary.
     static let phoneNumberDecodingStrategy = Self(rawValue: "com.roymarmelstein.PhoneNumberKit.decoding-strategy")!
+
+    /// A key used to specify the encoding strategy for ``PhoneNumber`` values.
+    ///
+    /// Use this key in an encoder’s `userInfo` dictionary to determine how a ``PhoneNumber`` should be encoded.
+    /// This allows for customization of the output format (e.g., dictionary vs. E164 string).
+    ///
+    /// The associated value should be of type ``PhoneNumberEncodingStrategy``.
+    ///
+    /// Supported by types such as `JSONEncoder`, and any custom encoder that provides a `userInfo` dictionary.
     static let phoneNumberEncodingStrategy = Self(rawValue: "com.roymarmelstein.PhoneNumberKit.encoding-strategy")!
 
+    /// A key used to provide a custom ``PhoneNumberUtility`` instance for encoding and decoding ``PhoneNumber`` values.
+    ///
+    /// Use this key in an encoder or decoder’s `userInfo` dictionary to override the default behavior for parsing
+    /// and formatting phone numbers. This enables dependency injection of shared or preconfigured utility instances.
+    ///
+    /// The associated value should be of type ``PhoneNumberUtilityProvider``.
+    ///
+    /// Supported by types such as `JSONDecoder` and `JSONEncoder`, or any encoder/decoder that supports contextual configuration via `userInfo`.
     static let phoneNumberUtility = Self(rawValue: "com.roymarmelstein.PhoneNumberKit.instance")!
 }

@@ -8,91 +8,95 @@
 
 import Foundation
 
-/// MetadataTerritory object
-/// - Parameter codeID: ISO 3166 compliant region code
-/// - Parameter countryCode: International country code
-/// - Parameter internationalPrefix: International prefix. Optional.
-/// - Parameter mainCountryForCode: Whether the current metadata is the main country for its country code.
-/// - Parameter nationalPrefix: National prefix
-/// - Parameter nationalPrefixFormattingRule: National prefix formatting rule
-/// - Parameter nationalPrefixForParsing: National prefix for parsing
-/// - Parameter nationalPrefixTransformRule: National prefix transform rule
-/// - Parameter emergency: MetadataPhoneNumberDesc for emergency numbers
-/// - Parameter fixedLine: MetadataPhoneNumberDesc for fixed line numbers
-/// - Parameter generalDesc: MetadataPhoneNumberDesc for general numbers
-/// - Parameter mobile: MetadataPhoneNumberDesc for mobile numbers
-/// - Parameter pager: MetadataPhoneNumberDesc for pager numbers
-/// - Parameter personalNumber: MetadataPhoneNumberDesc for personal number numbers
-/// - Parameter premiumRate: MetadataPhoneNumberDesc for premium rate numbers
-/// - Parameter sharedCost: MetadataPhoneNumberDesc for shared cost numbers
-/// - Parameter tollFree: MetadataPhoneNumberDesc for toll free numbers
-/// - Parameter voicemail: MetadataPhoneNumberDesc for voice mail numbers
-/// - Parameter voip: MetadataPhoneNumberDesc for voip numbers
-/// - Parameter uan: MetadataPhoneNumberDesc for uan numbers
-/// - Parameter leadingDigits: Optional leading digits for the territory
+/// Represents metadata for a specific geographical territory used in phone number parsing.
 public struct MetadataTerritory: Decodable {
+    /// ISO 3166-compliant region code.
     public let codeID: String
+    /// International dialing country code.
     public let countryCode: UInt64
+    /// International dialing prefix (e.g., "011").
     public let internationalPrefix: String?
+    /// Indicates whether this is the primary country for the associated country code.
     public let mainCountryForCode: Bool
+    /// National dialing prefix (e.g., "0").
     public let nationalPrefix: String?
+    /// Rule for formatting the national prefix in numbers.
     public let nationalPrefixFormattingRule: String?
+    /// Alternate national prefix used for parsing.
     public let nationalPrefixForParsing: String?
+    /// Rule to transform the national prefix before parsing.
     public let nationalPrefixTransformRule: String?
+    /// Preferred extension prefix (e.g., " ext. ").
     public let preferredExtnPrefix: String?
+    /// Metadata description for emergency numbers.
     public let emergency: MetadataPhoneNumberDesc?
+    /// Metadata description for fixed-line numbers.
     public let fixedLine: MetadataPhoneNumberDesc?
+    /// Metadata description for general numbers.
     public let generalDesc: MetadataPhoneNumberDesc?
+    /// Metadata description for mobile numbers.
     public let mobile: MetadataPhoneNumberDesc?
+    /// Metadata description for pager numbers.
     public let pager: MetadataPhoneNumberDesc?
+    /// Metadata description for personal numbers.
     public let personalNumber: MetadataPhoneNumberDesc?
+    /// Metadata description for premium-rate numbers.
     public let premiumRate: MetadataPhoneNumberDesc?
+    /// Metadata description for shared-cost numbers.
     public let sharedCost: MetadataPhoneNumberDesc?
+    /// Metadata description for toll-free numbers.
     public let tollFree: MetadataPhoneNumberDesc?
+    /// Metadata description for voicemail numbers.
     public let voicemail: MetadataPhoneNumberDesc?
+    /// Metadata description for VoIP numbers.
     public let voip: MetadataPhoneNumberDesc?
+    /// Metadata description for UAN numbers.
     public let uan: MetadataPhoneNumberDesc?
+    /// List of formatting patterns used within this territory.
     public let numberFormats: [MetadataPhoneNumberFormat]
+    /// Optional leading digits used to narrow down matching within the territory.
     public let leadingDigits: String?
 }
 
-/// MetadataPhoneNumberDesc object
-/// - Parameter exampleNumber: An example phone number for the given type. Optional.
-/// - Parameter nationalNumberPattern:  National number regex pattern. Optional.
-/// - Parameter possibleNumberPattern:  Possible number regex pattern. Optional.
-/// - Parameter possibleLengths: Possible phone number lengths. Optional.
+/// Describes a specific type of phone number (e.g., mobile, fixed-line) using metadata.
 public struct MetadataPhoneNumberDesc: Decodable {
+    /// Example number demonstrating a valid format for this type.
     public let exampleNumber: String?
+    /// Regular expression pattern for national numbers of this type.
     public let nationalNumberPattern: String?
+    /// Regular expression pattern for possible numbers of this type.
     public let possibleNumberPattern: String?
+    /// Valid number lengths for this type.
     public let possibleLengths: MetadataPossibleLengths?
 }
 
+/// Describes valid lengths for a phone number, either nationally or locally.
 public struct MetadataPossibleLengths: Decodable {
+    /// Valid national number lengths (as a comma-separated string).
     let national: String?
+    /// Valid local-only number lengths (as a comma-separated string).
     let localOnly: String?
 }
 
-/// MetadataPhoneNumberFormat object
-/// - Parameter pattern: Regex pattern. Optional.
-/// - Parameter format: Formatting template. Optional.
-/// - Parameter intlFormat: International formatting template. Optional.
-///
-/// - Parameter leadingDigitsPatterns: Leading digits regex pattern. Optional.
-/// - Parameter nationalPrefixFormattingRule: National prefix formatting rule. Optional.
-/// - Parameter nationalPrefixOptionalWhenFormatting: National prefix optional bool. Optional.
-/// - Parameter domesticCarrierCodeFormattingRule: Domestic carrier code formatting rule. Optional.
+/// Describes how a phone number should be formatted within a specific context.
 public struct MetadataPhoneNumberFormat: Decodable {
+    /// Regular expression pattern that matches numbers this format applies to.
     public let pattern: String?
+    /// Format string used to output the number.
     public let format: String?
+    /// International version of the format string.
     public let intlFormat: String?
+    /// List of regular expressions for leading digits to match before applying the format.
     public let leadingDigitsPatterns: [String]?
+    /// Rule for inserting the national prefix when formatting.
     public var nationalPrefixFormattingRule: String?
+    /// Indicates whether the national prefix is optional during formatting.
     public let nationalPrefixOptionalWhenFormatting: Bool?
+    /// Rule for formatting the domestic carrier code.
     public let domesticCarrierCodeFormattingRule: String?
 }
 
-/// Internal object for metadata parsing
+/// Internal structure used for decoding metadata from bundled resources.
 struct PhoneNumberMetadata: Decodable {
     var territories: [MetadataTerritory]
 }
