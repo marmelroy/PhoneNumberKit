@@ -19,31 +19,30 @@ enum PhoneNumberCountryCodeSource {
 
 // MARK: Public Enums
 
-/// Enumeration for parsing error types
-///
-/// - GeneralError: A general error occured.
-/// - InvalidCountryCode: A country code could not be found or the one found was invalid
-/// - InvalidNumber: The string provided is not a number
-/// - TooLong: The string provided is too long to be a valid number
-/// - TooShort: The string provided is too short to be a valid number
-/// - Deprecated: The method used was deprecated
-/// - metadataNotFound: PhoneNumberKit was unable to read the included metadata
-/// - ambiguousNumber: The string could not be resolved to a single valid number
-public enum PhoneNumberError: Error, Equatable {
+/// An error type representing failures that may occur during phone number parsing or validation.
+public enum PhoneNumberError: Error, Equatable, Sendable {
+    /// A general or unknown error occurred.
     case generalError
+    /// The provided country code is missing or invalid.
     case invalidCountryCode
+    /// The provided input is not a valid number.
     case invalidNumber
+    /// The input number is too long to be considered valid.
     case tooLong
+    /// The input number is too short to be considered valid.
     case tooShort
+    /// A deprecated method was used and is no longer supported.
     case deprecated
+    /// Required metadata could not be found during parsing.
     case metadataNotFound
+    /// The input could be interpreted as more than one valid phone number.
     case ambiguousNumber(phoneNumbers: Set<PhoneNumber>)
 }
 
 extension PhoneNumberError: LocalizedError {
     public var errorDescription: String? {
         switch self {
-        case .generalError: return NSLocalizedString("An error occured while validating the phone number.", comment: "")
+        case .generalError: return NSLocalizedString("An error occurred while validating the phone number.", comment: "")
         case .invalidCountryCode: return NSLocalizedString("The country code is invalid.", comment: "")
         case .invalidNumber: return NSLocalizedString("The number provided is invalid.", comment: "")
         case .tooLong: return NSLocalizedString("The number provided is too long.", comment: "")
@@ -55,43 +54,51 @@ extension PhoneNumberError: LocalizedError {
     }
 }
 
-public enum PhoneNumberFormat {
-    case e164 // +33689123456
-    case international // +33 6 89 12 34 56
-    case national // 06 89 12 34 56
+/// Formatting options for displaying a phone number.
+public enum PhoneNumberFormat: String, Codable, Sendable {
+    /// Format: +33689123456
+    case e164
+    /// Format: +33 6 89 12 34 56
+    case international
+    /// Format: 06 89 12 34 56
+    case national
 }
 
-/// Phone number type enumeration
-/// - fixedLine: Fixed line numbers
-/// - mobile: Mobile numbers
-/// - fixedOrMobile: Either fixed or mobile numbers if we can't tell conclusively.
-/// - pager: Pager numbers
-/// - personalNumber: Personal number numbers
-/// - premiumRate: Premium rate numbers
-/// - sharedCost: Shared cost numbers
-/// - tollFree: Toll free numbers
-/// - voicemail: Voice mail numbers
-/// - vOIP: Voip numbers
-/// - uan: UAN numbers
-/// - unknown: Unknown number type
+/// The type of a phone number, determined after parsing.
 public enum PhoneNumberType: String, Codable, Sendable {
+    /// A fixed line (landline) number.
     case fixedLine
+    /// A mobile number.
     case mobile
+    /// A number that could be either fixed line or mobile.
     case fixedOrMobile
+    /// A pager number.
     case pager
+    /// A personal number assigned to a person (not a device).
     case personalNumber
+    /// A premium-rate number.
     case premiumRate
+    /// A shared-cost number.
     case sharedCost
+    /// A toll-free number.
     case tollFree
+    /// A voicemail number.
     case voicemail
+    /// A voice-over-IP (VoIP) number.
     case voip
+    /// A UAN (Universal Access Number).
     case uan
+    /// A number that could not be classified.
     case unknown
+    /// The number has not been parsed and its type is unknown.
     case notParsed
 }
 
-public enum PossibleLengthType: String, Codable {
+/// Indicates the scope or context in which a number length is valid.
+public enum PossibleLengthType: String, Codable, Sendable {
+    /// The number length is valid for national dialing.
     case national
+    /// The number length is valid only for local dialing.
     case localOnly
 }
 
