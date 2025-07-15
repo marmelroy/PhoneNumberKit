@@ -2,6 +2,7 @@
 
 import UIKit
 
+@MainActor
 public protocol CountryCodePickerDelegate: AnyObject {
     func countryCodePickerViewControllerDidPickCountry(_ country: CountryCodePickerViewController.Country)
 }
