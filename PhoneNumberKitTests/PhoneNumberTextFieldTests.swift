@@ -67,6 +67,37 @@ final class PhoneNumberTextFieldTests: XCTestCase {
         XCTAssertNotNil(textField.flagButton)
         XCTAssertEqual(textField.flagButton.titleLabel?.text, "🇨🇦 ")
     }
+    
+    func testOfTypePropertyUpdatesPlaceholder() {
+        let textField = PhoneNumberTextField(utility: utility)
+        textField.partialFormatter.defaultRegion = "US"
+        textField.withExamplePlaceholder = true
+        textField.withPrefix = true
+        
+        textField.ofType = .mobile
+        textField.updatePlaceholder()
+        let mobilePlaceholder = textField.attributedPlaceholder?.string
+        XCTAssertNotNil(mobilePlaceholder)
+        
+        textField.ofType = .fixedLine
+        textField.updatePlaceholder()
+        let fixedLinePlaceholder = textField.attributedPlaceholder?.string
+        XCTAssertNotNil(fixedLinePlaceholder)
+        
+        if let mobile = mobilePlaceholder, let fixedLine = fixedLinePlaceholder {
+            let mobileExample = utility.getFormattedExampleNumber(forCountry: "US", ofType: .mobile, withFormat: .international, withPrefix: true)
+            let fixedLineExample = utility.getFormattedExampleNumber(forCountry: "US", ofType: .fixedLine, withFormat: .international, withPrefix: true)
+            
+            if mobileExample != fixedLineExample {
+                XCTAssertNotEqual(mobile, fixedLine, "Different phone number types should have different placeholder examples")
+            }
+        }
+    }
+    
+    func testOfTypePropertyDefaultValue() {
+        let textField = PhoneNumberTextField(utility: utility)
+        XCTAssertEqual(textField.ofType, .mobile, "Default ofType should be .mobile")
+    }
 }
 
 #endif
