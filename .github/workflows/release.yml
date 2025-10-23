@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
+    inputs:
+      commit_hash:
+        description: 'Commit hash to check for metadata changes'
+        required: true
+        type: string
 
 jobs:
   release:
@@ -19,8 +25,20 @@ jobs:
       - name: Check if metadata version changed
         id: check_metadata
         run: |
-          # Check if .metadata-version was modified in this push
-          if git diff HEAD^ HEAD --name-only | grep -q "PhoneNumberKit/Resources/.metadata-version"; then
+          # Determine which commit to check
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            commit_hash="${{ inputs.commit_hash }}"
+            echo "Manual trigger: checking commit $commit_hash"
+            compare_with="${commit_hash}^"
+            compare_to="${commit_hash}"
+          else
+            echo "Push trigger: checking HEAD"
+            compare_with="HEAD^"
+            compare_to="HEAD"
+          fi
+
+          # Check if .metadata-version was modified
+          if git diff $compare_with $compare_to --name-only | grep -q "PhoneNumberKit/Resources/.metadata-version"; then
             echo "changed=true" >> $GITHUB_OUTPUT
           else
             echo "changed=false" >> $GITHUB_OUTPUT
