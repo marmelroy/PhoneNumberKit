@@ -12,11 +12,11 @@ jobs:
   publish:
     runs-on: macos-latest
     steps:
-      - name: Mask sensitive input
-        run: |
-          TOKEN="${{ github.event.inputs.cocoapods_trunk_token }}"
-          echo "::add-mask::$TOKEN"
-          echo "COCOAPODS_TRUNK_TOKEN=$TOKEN" >> $GITHUB_ENV
+      - name: Hide sensitive inputs
+        uses: levibostian/action-hide-sensitive-inputs@v1
+
+      - name: Set token to environment
+        run: echo "COCOAPODS_TRUNK_TOKEN=${{ inputs.cocoapods_trunk_token }}" >> $GITHUB_ENV
 
       - name: Checkout
         uses: actions/checkout@v4
