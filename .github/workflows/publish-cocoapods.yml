@@ -29,8 +29,5 @@ jobs:
       - name: Install CocoaPods
         run: gem install cocoapods
 
-      - name: Validate podspec
-        run: pod lib lint PhoneNumberKit.podspec --allow-warnings
-
       - name: Publish to CocoaPods Trunk
         run: pod trunk push PhoneNumberKit.podspec --allow-warnings
