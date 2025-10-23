@@ -12,8 +12,11 @@ jobs:
   publish:
     runs-on: macos-latest
     steps:
-      - name: Mask sensitive token
-        run: echo "::add-mask::${{ inputs.cocoapods_trunk_token }}"
+      - name: Mask sensitive input
+        run: |
+          TOKEN="${{ github.event.inputs.cocoapods_trunk_token }}"
+          echo "::add-mask::$TOKEN"
+          echo "COCOAPODS_TRUNK_TOKEN=$TOKEN" >> $GITHUB_ENV
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -30,6 +33,4 @@ jobs:
         run: pod lib lint PhoneNumberKit.podspec --allow-warnings
 
       - name: Publish to CocoaPods Trunk
-        env:
-          COCOAPODS_TRUNK_TOKEN: ${{ inputs.cocoapods_trunk_token }}
         run: pod trunk push PhoneNumberKit.podspec --allow-warnings
