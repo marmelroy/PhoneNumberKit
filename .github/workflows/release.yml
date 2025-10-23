@@ -1,0 +1,96 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check if metadata version changed
+        id: check_metadata
+        run: |
+          # Check if .metadata-version was modified in this push
+          if git diff HEAD^ HEAD --name-only | grep -q "PhoneNumberKit/Resources/.metadata-version"; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No metadata version change detected, skipping release"
+          fi
+
+      - name: Extract and bump version
+        if: steps.check_metadata.outputs.changed == 'true'
+        id: bump_version
+        run: |
+          # Extract current version from podspec
+          current_version=$(grep "s.version" PhoneNumberKit.podspec | sed -E "s/.*'([0-9]+\.[0-9]+\.[0-9]+)'.*/\1/")
+          echo "Current version: $current_version"
+
+          # Parse version components
+          major=$(echo $current_version | cut -d. -f1)
+          minor=$(echo $current_version | cut -d. -f2)
+          patch=$(echo $current_version | cut -d. -f3)
+
+          # Bump patch version
+          new_patch=$((patch + 1))
+          new_version="${major}.${minor}.${new_patch}"
+          echo "New version: $new_version"
+
+          # Save to output
+          echo "version=$new_version" >> $GITHUB_OUTPUT
+
+      - name: Update podspec
+        if: steps.check_metadata.outputs.changed == 'true'
+        run: |
+          new_version="${{ steps.bump_version.outputs.version }}"
+
+          # Update version in podspec
+          sed -i "s/s.version.*=.*/s.version          = '$new_version'/" PhoneNumberKit.podspec
+
+          # Verify the change
+          echo "Updated podspec:"
+          grep "s.version" PhoneNumberKit.podspec
+
+      - name: Commit and push
+        if: steps.check_metadata.outputs.changed == 'true'
+        run: |
+          new_version="${{ steps.bump_version.outputs.version }}"
+
+          # Configure git
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Commit and push
+          git add PhoneNumberKit.podspec
+          git commit -m "Release $new_version"
+          git push origin master
+
+      - name: Create and push tag
+        if: steps.check_metadata.outputs.changed == 'true'
+        run: |
+          new_version="${{ steps.bump_version.outputs.version }}"
+
+          # Create annotated tag
+          git tag -a "$new_version" -m "Release $new_version"
+          git push origin "$new_version"
+
+      - name: Create GitHub release
+        if: steps.check_metadata.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          new_version="${{ steps.bump_version.outputs.version }}"
+
+          # Create release with auto-generated notes
+          gh release create "$new_version" \
+            --generate-notes \
+            --title "$new_version"
