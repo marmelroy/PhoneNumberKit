@@ -1,0 +1,32 @@
+name: Publish to CocoaPods
+
+on:
+  workflow_dispatch:
+    inputs:
+      cocoapods_trunk_token:
+        description: 'CocoaPods Trunk Token'
+        required: true
+        type: string
+
+jobs:
+  publish:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      - name: Install CocoaPods
+        run: gem install cocoapods
+
+      - name: Validate podspec
+        run: pod lib lint PhoneNumberKit.podspec --allow-warnings
+
+      - name: Publish to CocoaPods Trunk
+        env:
+          COCOAPODS_TRUNK_TOKEN: ${{ inputs.cocoapods_trunk_token }}
+        run: pod trunk push PhoneNumberKit.podspec --allow-warnings
