@@ -50,8 +50,14 @@ jobs:
         id: bump_version
         run: |
           # Extract current version from podspec
-          current_version=$(grep "s.version" PhoneNumberKit.podspec | grep -oP "'\K[0-9]+\.[0-9]+\.[0-9]+(?=')")
+          current_version=$(grep "s.version" PhoneNumberKit.podspec | sed -n "s/.*'\([0-9]*\.[0-9]*\.[0-9]*\)'.*/\1/p")
           echo "Current version: $current_version"
+
+          # Validate version was extracted
+          if [ -z "$current_version" ]; then
+            echo "Error: Could not extract version from podspec"
+            exit 1
+          fi
 
           # Parse version components
           major=$(echo $current_version | cut -d. -f1)
