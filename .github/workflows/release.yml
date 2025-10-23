@@ -116,5 +116,5 @@ jobs:
 
           # Create release with auto-generated notes
           gh release create "$new_version" \
-            --generate-notes \
-            --title "$new_version"
+            --verify-tag \
+            --generate-notes
