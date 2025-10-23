@@ -12,6 +12,9 @@ jobs:
   publish:
     runs-on: macos-latest
     steps:
+      - name: Mask sensitive token
+        run: echo "::add-mask::${{ inputs.cocoapods_trunk_token }}"
+
       - name: Checkout
         uses: actions/checkout@v4
 
