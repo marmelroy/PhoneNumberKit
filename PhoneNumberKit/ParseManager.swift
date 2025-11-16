@@ -93,8 +93,29 @@ final class ParseManager {
                 return result
             }
 
-            // If all attempts fail, the number is invalid
-            throw PhoneNumberError.invalidNumber
+            // Final fallback for countryCode == 0: try all territories with the same country code as the region
+            // This handles cases where a number from one NANP territory (e.g., US) is parsed with another NANP region (e.g., AS, PR)
+            var possibleResults: Set<PhoneNumber> = []
+            if let metadataList = metadataManager.filterTerritories(byCode: regionMetadata.countryCode) {
+                for metadata in metadataList where regionMetadata.codeID != metadata.codeID {
+                    if let result = try validPhoneNumber(from: nationalNumber, using: metadata, countryCode: regionMetadata.countryCode, ignoreType: ignoreType, numberString: numberString, numberExtension: numberExtension) {
+                        possibleResults.insert(result)
+                    }
+                }
+            }
+
+            // Return results based on how many valid interpretations were found
+            switch possibleResults.count {
+            case 0:
+                // No valid interpretation found
+                throw PhoneNumberError.invalidNumber
+            case 1:
+                // Exactly one valid interpretation - return it
+                return possibleResults.first!
+            default:
+                // Multiple valid interpretations - ambiguous number
+                throw PhoneNumberError.ambiguousNumber(phoneNumbers: possibleResults)
+            }
         }
 
         // STEP 6: Update metadata if extracted country code differs from region's default
