@@ -5,6 +5,8 @@ import UIKit
 @MainActor
 public protocol CountryCodePickerDelegate: AnyObject {
     func countryCodePickerViewControllerDidPickCountry(_ country: CountryCodePickerViewController.Country)
+    func countryCodePickerViewControllerWillDissmiss(_ controller: CountryCodePickerViewController)
+    func countryCodePickerViewControllerDidDissmiss()
 }
 
 public class CountryCodePickerViewController: UITableViewController {
@@ -72,7 +74,7 @@ public class CountryCodePickerViewController: UITableViewController {
 
     func commonInit() {
         // Configure Header
-        self.title = NSLocalizedString("PhoneNumberKit.CountryCodePicker.Title", value: "Choose your country", comment: "Title of CountryCodePicker ViewController")
+        self.title = Self.Constants.screenTitle
 
         // Configure Cells
         switch options.cellOptions.cellType {
@@ -199,10 +201,15 @@ public class CountryCodePickerViewController: UITableViewController {
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(shouldRestoreNavigationBarToHidden, animated: true)
+        if isMovingToParent {
+            delegate?.countryCodePickerViewControllerWillDissmiss(self)
+        }
     }
 
     @objc func dismissAnimated() {
-        dismiss(animated: true)
+        dismiss(animated: true, completion: { [delegate] in
+            delegate?.countryCodePickerViewControllerDidDissmiss()
+        })
     }
 
     func country(for indexPath: IndexPath) -> Country {
@@ -269,8 +276,8 @@ public class CountryCodePickerViewController: UITableViewController {
 
     override public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let country = self.country(for: indexPath)
-        delegate?.countryCodePickerViewControllerDidPickCountry(country)
         tableView.deselectRow(at: indexPath, animated: true)
+        delegate?.countryCodePickerViewControllerDidPickCountry(country)
     }
 }
 
@@ -346,5 +353,13 @@ public extension CountryCodePickerViewController {
         }
     }
 }
+
+// ******************************* MARK: - Constants
+
+public extension CountryCodePickerViewController { enum Constants {} }
+public extension CountryCodePickerViewController.Constants {
+    static let screenTitle: String = NSLocalizedString("PhoneNumberKit.CountryCodePicker.Title", value: "Choose your country", comment: "Title of CountryCodePicker ViewController")
+}
+
 
 #endif

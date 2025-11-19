@@ -40,11 +40,6 @@ public extension CountryCodePickerViewController {
                 titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
                 titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
             ])
-
-            // Customize appearance
-            titleLabel.font = UIFont.boldSystemFont(ofSize: 18)
-            titleLabel.textColor = .darkGray
-            contentView.backgroundColor = .lightGray // Set background directly on contentView
         }
         
         public func configure(with title: String?) {

@@ -179,6 +179,10 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             self._delegate = newValue
         }
     }
+    
+    public weak var stateDelegate: PhoneNumberTextFieldDelegate?
+    
+    private weak var hostNavigationBarDelegate: UINavigationBarDelegate?
 
     // MARK: Status
 
@@ -365,19 +369,29 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
 
     @objc func didPressFlagButton() {
         guard withDefaultPickerUI else { return }
-        // Close keyboard
-        resignFirstResponder()
         let vc = CountryCodePickerViewController(utility: utility,
                                                  options: withDefaultPickerUIOptions)
         vc.delegate = self
+        stateDelegate?.countryCodePickerViewControllerWillPresent(self, controller: vc)
         if let nav = containingViewController?.navigationController, !CountryCodePicker.forceModalPresentation {
+            hostNavigationBarDelegate = nav.navigationBar.delegate
+            nav.navigationBar.delegate = self
+            CATransaction.begin()
+            CATransaction.setCompletionBlock({ [weak self, weak vc] in
+                guard let self, let vc else { return }
+                stateDelegate?.countryCodePickerViewControllerDidPresent(self, controller: vc)
+            })
             nav.pushViewController(vc, animated: true)
+            CATransaction.commit()
         } else {
             let nav = UINavigationController(rootViewController: vc)
             if modalPresentationStyle != nil {
                 nav.modalPresentationStyle = modalPresentationStyle!
             }
-            containingViewController?.present(nav, animated: true)
+            containingViewController?.present(nav, animated: true, completion: { [weak self, weak vc] in
+                guard let self, let vc else { return }
+                stateDelegate?.countryCodePickerViewControllerDidPresent(self, controller: vc)
+            })
         }
     }
 
@@ -560,6 +574,8 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
 }
 
+// MARK: - UINavigationControllerDelegate
+
 extension PhoneNumberTextField: CountryCodePickerDelegate {
     public func countryCodePickerViewControllerDidPickCountry(_ country: CountryCodePickerViewController.Country) {
         text = isEditing ? "+" + country.prefix : ""
@@ -567,18 +583,30 @@ extension PhoneNumberTextField: CountryCodePickerDelegate {
         partialFormatter.defaultRegion = country.code
         updateFlag()
         updatePlaceholder()
-
         if let nav = containingViewController?.navigationController, !CountryCodePicker.forceModalPresentation {
-            CATransaction.begin()
-            CATransaction.setCompletionBlock({ [weak self] in
-                self?.becomeFirstResponder()
-            })
             nav.popViewController(animated: true)
-            CATransaction.commit()
         } else {
             containingViewController?.dismiss(animated: true, completion: { [weak self] in
-                self?.becomeFirstResponder()
+                guard let self else { return }
+                stateDelegate?.countryCodePickerViewControllerDidDismiss(self)
             })
+        }
+    }
+    
+    public func countryCodePickerViewControllerWillDissmiss(_ controller: CountryCodePickerViewController) {
+        stateDelegate?.countryCodePickerViewControllerWillDismiss(self, controller: controller)
+    }
+    
+    public func countryCodePickerViewControllerDidDissmiss() {
+        stateDelegate?.countryCodePickerViewControllerDidDismiss(self)
+    }
+}
+
+extension PhoneNumberTextField: UINavigationBarDelegate {
+    public func navigationBar(_ navigationBar: UINavigationBar, didPop item: UINavigationItem) {
+        if item.title == CountryCodePickerViewController.Constants.screenTitle {
+            stateDelegate?.countryCodePickerViewControllerDidDismiss(self)
+            containingViewController?.navigationController?.navigationBar.delegate = hostNavigationBarDelegate
         }
     }
 }
