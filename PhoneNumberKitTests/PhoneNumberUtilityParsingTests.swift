@@ -442,4 +442,13 @@ final class PhoneNumberUtilityParsingTests: XCTestCase {
             XCTAssertEqual(error as? PhoneNumberError, .invalidNumber)
         }
     }
+
+    func testValidUSNumberInOtherNANPRegion() {
+        // A valid US number when parsed in another NANP region (e.g. AS or PR or CA) should still be valid.
+        let number = "(212)222-8688"
+        XCTAssertNoThrow(try sut.parse(number, withRegion: "AS"))
+        XCTAssertNoThrow(try sut.parse(number, withRegion: "PR"))
+        XCTAssertNoThrow(try sut.parse(number, withRegion: "CA"))
+        XCTAssertNoThrow(try sut.parse(number, withRegion: "US"))
+    }
 }
