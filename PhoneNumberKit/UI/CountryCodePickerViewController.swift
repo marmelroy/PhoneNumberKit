@@ -31,6 +31,7 @@ public class CountryCodePickerViewController: UITableViewController {
     
     var allCountries: [Country] = []
     var countries: [[Country]] = []
+    private var sectionIndexTitles: [String] = []
 
     var filteredCountries: [Country] = []
     private var searchWorkItem: DispatchWorkItem?
@@ -144,25 +145,41 @@ public class CountryCodePickerViewController: UITableViewController {
 
             let popular = self.commonCountryCodes.compactMap({ Country(for: $0, with: self.utility) })
 
-            var result: [[Country]] = []
+            var countrySections: [[Country]] = []
             
             var hasCurrent = self.hasCurrent
             if hasCurrent, let current = Country(for: PhoneNumberUtility.defaultRegionCode(), with: self.utility) {
-                result.append([current])
+                countrySections.append([current])
             } else {
                 hasCurrent = false
             }
             
             let hasCommon = self.hasCommon && !popular.isEmpty
             if hasCommon {
-                result.append(popular)
+                countrySections.append(popular)
+            }
+            countrySections.append(contentsOf: countries)
+            
+            var sectionTitles: [String] = []
+            if hasCurrent {
+                sectionTitles.append("•") // NOTE: SFSymbols are not supported otherwise we would use 􀋑
+            }
+            if hasCommon {
+                sectionTitles.append("★") // This is a classic unicode star
+            }
+            
+            sectionTitles = sectionTitles + countrySections.suffix(countrySections.count - sectionTitles.count).map { group in
+                group.first?.name.first
+                    .map(String.init)?
+                    .folding(options: .diacriticInsensitive, locale: nil) ?? ""
             }
 
             DispatchQueue.main.async {
                 self.allCountries = allCountries
-                self.countries = result + countries
+                self.countries = countrySections
                 self.hasCurrent = hasCurrent
                 self.hasCommon = hasCommon
+                self.sectionIndexTitles = sectionTitles
                 self.tableView.reloadData()
             }
         }
@@ -247,18 +264,7 @@ public class CountryCodePickerViewController: UITableViewController {
         guard !isFiltering else {
             return nil
         }
-        var titles: [String] = []
-        if hasCurrent {
-            titles.append("•") // NOTE: SFSymbols are not supported otherwise we would use 􀋑
-        }
-        if hasCommon {
-            titles.append("★") // This is a classic unicode star
-        }
-        return titles + countries.suffix(countries.count - titles.count).map { group in
-            group.first?.name.first
-                .map(String.init)?
-                .folding(options: .diacriticInsensitive, locale: nil) ?? ""
-        }
+        return sectionIndexTitles.isEmpty ? nil : sectionIndexTitles
     }
 
     override public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -310,7 +316,7 @@ extension CountryCodePickerViewController: UISearchResultsUpdating {
 // MARK: Types
 
 public extension CountryCodePickerViewController {
-    struct Country: Equatable, Hashable {
+    struct Country: Sendable, Equatable, Hashable {
         public var code: String
         public var flag: String
         public var name: String
