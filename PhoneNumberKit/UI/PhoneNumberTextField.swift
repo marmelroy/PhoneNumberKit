@@ -134,7 +134,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         set { _withDefaultPickerUI = newValue }
     }
 
-    public var withDefaultPickerUIOptions: CountryCodePickerOptions = .init()
+    public var withDefaultPickerUIOptions: CountryCodePickerOptions = .default
 
     public var modalPresentationStyle: UIModalPresentationStyle?
 
@@ -365,6 +365,8 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
 
     @objc func didPressFlagButton() {
         guard withDefaultPickerUI else { return }
+        // Close keyboard
+        resignFirstResponder()
         let vc = CountryCodePickerViewController(utility: utility,
                                                  options: withDefaultPickerUIOptions)
         vc.delegate = self
@@ -567,9 +569,16 @@ extension PhoneNumberTextField: CountryCodePickerDelegate {
         updatePlaceholder()
 
         if let nav = containingViewController?.navigationController, !CountryCodePicker.forceModalPresentation {
+            CATransaction.begin()
+            CATransaction.setCompletionBlock({ [weak self] in
+                self?.becomeFirstResponder()
+            })
             nav.popViewController(animated: true)
+            CATransaction.commit()
         } else {
-            containingViewController?.dismiss(animated: true)
+            containingViewController?.dismiss(animated: true, completion: { [weak self] in
+                self?.becomeFirstResponder()
+            })
         }
     }
 }
