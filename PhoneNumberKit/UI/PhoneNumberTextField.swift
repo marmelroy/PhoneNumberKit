@@ -181,8 +181,6 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
     
     public weak var stateDelegate: PhoneNumberTextFieldDelegate?
-    
-    private weak var hostNavigationBarDelegate: UINavigationBarDelegate?
 
     // MARK: Status
 
@@ -374,8 +372,6 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         vc.delegate = self
         stateDelegate?.countryCodePickerViewControllerWillPresent(self, controller: vc)
         if let nav = containingViewController?.navigationController, !CountryCodePicker.forceModalPresentation {
-            hostNavigationBarDelegate = nav.navigationBar.delegate
-            nav.navigationBar.delegate = self
             CATransaction.begin()
             CATransaction.setCompletionBlock({ [weak self, weak vc] in
                 guard let self, let vc else { return }
@@ -599,15 +595,6 @@ extension PhoneNumberTextField: CountryCodePickerDelegate {
     
     public func countryCodePickerViewControllerDidDissmiss() {
         stateDelegate?.countryCodePickerViewControllerDidDismiss(self)
-    }
-}
-
-extension PhoneNumberTextField: UINavigationBarDelegate {
-    public func navigationBar(_ navigationBar: UINavigationBar, didPop item: UINavigationItem) {
-        if item.title == CountryCodePickerViewController.Constants.screenTitle {
-            stateDelegate?.countryCodePickerViewControllerDidDismiss(self)
-            containingViewController?.navigationController?.navigationBar.delegate = hostNavigationBarDelegate
-        }
     }
 }
 
