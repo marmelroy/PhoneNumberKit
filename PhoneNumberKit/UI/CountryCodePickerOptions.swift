@@ -126,6 +126,8 @@ public extension CountryCodePickerOptions {
         
         /// Creates a new `CountryCodePickerHeaderOptions` instance with all properties set to `nil`.
         public init() {
+            self.textLabelColor = CountryCodePickerViewController.CountryCodePickerSectionHeader.Constants.titleColor
+            self.textLabelFont = CountryCodePickerViewController.CountryCodePickerSectionHeader.Constants.titleFont
             self.height = CountryCodePickerViewController.CountryCodePickerSectionHeader.defaultHeight
             self.cellType = .defaultHeader
         }
@@ -136,8 +138,8 @@ public extension CountryCodePickerOptions {
         ///  - textLabelColor: The color of the header text label.
         ///  - textLabelFont: The font used for the header text label.
         ///  - backgroundColor: The background color of the header view.
-        public init(textLabelColor: UIColor? = nil,
-                    textLabelFont: UIFont? = nil,
+        public init(textLabelColor: UIColor? = CountryCodePickerViewController.CountryCodePickerSectionHeader.Constants.titleColor,
+                    textLabelFont: UIFont? = CountryCodePickerViewController.CountryCodePickerSectionHeader.Constants.titleFont,
                     backgroundColor: UIColor? = nil,
                     cellType: CountryCodePickerCellOptions.ReusableCellType = .defaultHeader,
                     height: CGFloat = CountryCodePickerViewController.CountryCodePickerSectionHeader.defaultHeight) {

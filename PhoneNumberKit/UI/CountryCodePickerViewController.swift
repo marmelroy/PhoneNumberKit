@@ -39,7 +39,6 @@ public class CountryCodePickerViewController: UITableViewController {
     private var searchWorkItem: DispatchWorkItem?
 
     public weak var delegate: CountryCodePickerDelegate?
-    private weak var hostNavigationBarDelegate: UINavigationBarDelegate?
     
     private let cellIdentifier: String
     private let headerIdentifier: String
@@ -102,7 +101,6 @@ public class CountryCodePickerViewController: UITableViewController {
 
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = !CountryCodePicker.alwaysShowsSearchBar
-        navigationController?.navigationBar.delegate = self
 
         // Ensure that the search bar does not remain on the screen if the user navigates to another view controller while the UISearchController is active.
         definesPresentationContext = true
@@ -203,12 +201,10 @@ public class CountryCodePickerViewController: UITableViewController {
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(shouldRestoreNavigationBarToHidden, animated: true)
-        if isMovingToParent {
-            delegate?.countryCodePickerViewControllerWillDissmiss(self)
-        }
     }
 
     @objc func dismissAnimated() {
+        delegate?.countryCodePickerViewControllerWillDissmiss(self)
         dismiss(animated: true, completion: { [delegate] in
             delegate?.countryCodePickerViewControllerDidDissmiss()
         })
@@ -240,23 +236,20 @@ public class CountryCodePickerViewController: UITableViewController {
         return cell
     }
 
-    override public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if isFiltering {
-            return nil
-        } else if section == 0, hasCurrent {
-            return NSLocalizedString("PhoneNumberKit.CountryCodePicker.Current", value: "Current", comment: "Name of \"Current\" section")
-        } else if section == 0, !hasCurrent, hasCommon {
-            return NSLocalizedString("PhoneNumberKit.CountryCodePicker.Common", value: "Common", comment: "Name of \"Common\" section")
-        } else if section == 1, hasCurrent, hasCommon {
-            return NSLocalizedString("PhoneNumberKit.CountryCodePicker.Common", value: "Common", comment: "Name of \"Common\" section")
-        }
-        return countries[section].first?.name.first.map(String.init)
-    }
-    
     override public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard let headerTitle = self.tableView(tableView, titleForHeaderInSection: section) else {
-            return nil
+        guard !isFiltering else { return nil }
+        
+        let headerTitle: String?
+        if section == 0, hasCurrent {
+            headerTitle = NSLocalizedString("PhoneNumberKit.CountryCodePicker.Current", value: "Current", comment: "Name of \"Current\" section")
+        } else if section == 0, !hasCurrent, hasCommon {
+            headerTitle = NSLocalizedString("PhoneNumberKit.CountryCodePicker.Common", value: "Common", comment: "Name of \"Common\" section")
+        } else if section == 1, hasCurrent, hasCommon {
+            headerTitle = NSLocalizedString("PhoneNumberKit.CountryCodePicker.Common", value: "Common", comment: "Name of \"Common\" section")
+        } else {
+            headerTitle = countries[section].first?.name.first.map(String.init)
         }
+        guard let headerTitle else { return nil }
         
         let header: CountryCodePickerSectionHeaderViewProtocol
         if let _herader = tableView.dequeueReusableHeaderFooterView(withIdentifier: headerIdentifier) as? CountryCodePickerSectionHeaderViewProtocol {
@@ -280,16 +273,6 @@ public class CountryCodePickerViewController: UITableViewController {
         let country = self.country(for: indexPath)
         tableView.deselectRow(at: indexPath, animated: true)
         delegate?.countryCodePickerViewControllerDidPickCountry(country)
-    }
-}
-
-
-extension CountryCodePickerViewController: UINavigationBarDelegate {
-    public func navigationBar(_ navigationBar: UINavigationBar, didPop item: UINavigationItem) {
-        if item.title == CountryCodePickerViewController.Constants.screenTitle {
-            delegate?.countryCodePickerViewControllerDidDissmiss()
-            navigationBar.delegate = hostNavigationBarDelegate
-        }
     }
 }
 
@@ -366,7 +349,7 @@ public extension CountryCodePickerViewController {
     }
 }
 
-// ******************************* MARK: - Constants
+// MARK: Constants
 
 public extension CountryCodePickerViewController { enum Constants {} }
 public extension CountryCodePickerViewController.Constants {

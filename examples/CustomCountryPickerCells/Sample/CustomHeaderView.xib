@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="6kv-qb-RlW" customClass="CustomHeaderView" customModule="Sample" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="393" height="61"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DkO-Ll-PjV">
+                    <rect key="frame" x="16" y="8" width="361" height="45"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="V21-5P-U0E"/>
+            <constraints>
+                <constraint firstItem="V21-5P-U0E" firstAttribute="trailing" secondItem="DkO-Ll-PjV" secondAttribute="trailing" constant="16" id="CPZ-fQ-9OF"/>
+                <constraint firstItem="DkO-Ll-PjV" firstAttribute="top" secondItem="6kv-qb-RlW" secondAttribute="top" constant="8" id="jc9-6x-B5j"/>
+                <constraint firstItem="DkO-Ll-PjV" firstAttribute="leading" secondItem="V21-5P-U0E" secondAttribute="leading" constant="16" id="m9H-vq-uEG"/>
+                <constraint firstAttribute="bottom" secondItem="DkO-Ll-PjV" secondAttribute="bottom" constant="8" id="z7e-m6-Sxt"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <connections>
+                <outlet property="titleLabel" destination="DkO-Ll-PjV" id="NEm-6n-X1d"/>
+            </connections>
+            <point key="canvasLocation" x="101.5267175572519" y="10.211267605633804"/>
+        </view>
+    </objects>
+</document>

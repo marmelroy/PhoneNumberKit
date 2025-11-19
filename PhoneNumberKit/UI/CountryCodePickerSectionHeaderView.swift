@@ -9,7 +9,7 @@ public extension CountryCodePickerViewController {
     
     class CountryCodePickerSectionHeader: UITableViewHeaderFooterView, CountryCodePickerSectionHeaderViewProtocol {
         public static let reuseIdentifier = "CountryCodePickerSectionHeader"
-        public  static let defaultHeight: CGFloat = 38.0
+        public static let defaultHeight: CGFloat = 38.0
         
         let titleLabel = UILabel()
         
@@ -37,27 +37,44 @@ public extension CountryCodePickerViewController {
             NSLayoutConstraint.activate([
                 titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
                 titleLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-                titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
-                titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -8)
+                titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
+                titleLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -4)
             ])
+            
+            configureOptions()
         }
         
         public func configure(with title: String?) {
-            titleLabel.text = title
+            titleLabel.text = title?.uppercased()
         }
         
         private func configureOptions() {
             if let textLabelColor = options.textLabelColor {
-                self.textLabel?.textColor = textLabelColor
+                self.titleLabel.textColor = textLabelColor
             }
             if let textLabelFont = options.textLabelFont {
-                self.textLabel?.font = textLabelFont
+                self.titleLabel.font = textLabelFont
             }
             if let backgroundColor = options.backgroundColor {
-                self.backgroundColor = backgroundColor
+                self.contentView.backgroundColor = backgroundColor
             }
         }
     }
+}
+
+// MARK: Constants
+
+public extension CountryCodePickerViewController.CountryCodePickerSectionHeader { enum Constants {} }
+public extension CountryCodePickerViewController.CountryCodePickerSectionHeader.Constants {
+    static let titleColor: UIColor = {
+       if #available(iOS 13.0, *) {
+           return UIColor.secondaryLabel
+        } else {
+            return UIColor.darkGray
+        }
+    }()
+    
+    static let titleFont: UIFont = .systemFont(ofSize: 13)
 }
 
 #endif

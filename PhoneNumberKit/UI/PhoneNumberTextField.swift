@@ -59,7 +59,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         }
     }
 
-    public var withPrefix: Bool = true {
+    @IBInspectable public var withPrefix: Bool = true {
         didSet {
             self.partialFormatter.withPrefix = self.withPrefix
             if self.withPrefix == false {
@@ -75,7 +75,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
 
     public var withPrefixPrefill: Bool = true
 
-    public var withFlag: Bool = false {
+    @IBInspectable public var withFlag: Bool = false {
         didSet {
             leftView = self.withFlag ? self.flagButton : nil
             leftViewMode = self.withFlag ? .always : .never
@@ -83,7 +83,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         }
     }
 
-    public var withExamplePlaceholder: Bool = false {
+    @IBInspectable public var withExamplePlaceholder: Bool = false {
         didSet {
             if self.withExamplePlaceholder {
                 self.updatePlaceholder()
@@ -129,7 +129,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         }
     }
 
-    public var withDefaultPickerUI: Bool {
+    @IBInspectable public var withDefaultPickerUI: Bool {
         get { _withDefaultPickerUI }
         set { _withDefaultPickerUI = newValue }
     }
@@ -181,6 +181,8 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
     
     public weak var stateDelegate: PhoneNumberTextFieldDelegate?
+    private weak var hostNavigationControllerDelegate: UINavigationControllerDelegate?
+    private weak var countryCodePickerViewController: CountryCodePickerViewController?
 
     // MARK: Status
 
@@ -369,9 +371,12 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         guard withDefaultPickerUI else { return }
         let vc = CountryCodePickerViewController(utility: utility,
                                                  options: withDefaultPickerUIOptions)
+        countryCodePickerViewController = vc
         vc.delegate = self
         stateDelegate?.countryCodePickerViewControllerWillPresent(self, controller: vc)
         if let nav = containingViewController?.navigationController, !CountryCodePicker.forceModalPresentation {
+            hostNavigationControllerDelegate = nav.delegate
+            nav.delegate = self
             CATransaction.begin()
             CATransaction.setCompletionBlock({ [weak self, weak vc] in
                 guard let self, let vc else { return }
@@ -582,8 +587,12 @@ extension PhoneNumberTextField: CountryCodePickerDelegate {
         if let nav = containingViewController?.navigationController, !CountryCodePicker.forceModalPresentation {
             nav.popViewController(animated: true)
         } else {
+            if let countryCodePickerViewController {
+                stateDelegate?.countryCodePickerViewControllerWillDismiss(self, controller: countryCodePickerViewController)
+            }
             containingViewController?.dismiss(animated: true, completion: { [weak self] in
                 guard let self else { return }
+                countryCodePickerViewController = nil
                 stateDelegate?.countryCodePickerViewControllerDidDismiss(self)
             })
         }
@@ -596,6 +605,46 @@ extension PhoneNumberTextField: CountryCodePickerDelegate {
     public func countryCodePickerViewControllerDidDissmiss() {
         stateDelegate?.countryCodePickerViewControllerDidDismiss(self)
     }
+}
+// MARK: - UINavigationControllerDelegate
+extension PhoneNumberTextField: UINavigationControllerDelegate {
+    public func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        if let countryCodePickerViewController,
+           !viewController.isKind(of: CountryCodePickerViewController.self) {
+            stateDelegate?.countryCodePickerViewControllerWillDismiss(self, controller: countryCodePickerViewController)
+        }
+        hostNavigationControllerDelegate?.navigationController?(navigationController, willShow: viewController, animated: animated)
+    }
+
+    public func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+        if !viewController.isKind(of: CountryCodePickerViewController.self) {
+            hostNavigationControllerDelegate?.navigationController?(navigationController, didShow: viewController, animated: animated)
+            containingViewController?.navigationController?.delegate = hostNavigationControllerDelegate
+            countryCodePickerViewController = nil
+            hostNavigationControllerDelegate = nil
+            stateDelegate?.countryCodePickerViewControllerDidDismiss(self)
+        } else {
+            hostNavigationControllerDelegate?.navigationController?(navigationController, didShow: viewController, animated: animated)
+        }
+    }
+    
+    
+    public func navigationControllerSupportedInterfaceOrientations(_ navigationController: UINavigationController) -> UIInterfaceOrientationMask {
+        return hostNavigationControllerDelegate?.navigationControllerSupportedInterfaceOrientations?(navigationController) ?? .all
+    }
+    
+    public func navigationControllerPreferredInterfaceOrientationForPresentation(_ navigationController: UINavigationController) -> UIInterfaceOrientation {
+        return hostNavigationControllerDelegate?.navigationControllerPreferredInterfaceOrientationForPresentation?(navigationController) ?? .portrait
+    }
+    
+    public func navigationController(_ navigationController: UINavigationController, interactionControllerFor animationController: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        return hostNavigationControllerDelegate?.navigationController?(navigationController, interactionControllerFor: animationController)
+    }
+    
+    public func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return hostNavigationControllerDelegate?.navigationController?(navigationController, animationControllerFor: operation, from: fromVC, to: toVC)
+    }
+    
 }
 
 // MARK: - Insets
