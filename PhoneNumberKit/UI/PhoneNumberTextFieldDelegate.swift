@@ -24,4 +24,11 @@ public protocol PhoneNumberTextFieldDelegate: AnyObject {
     func countryCodePickerViewControllerDidDismiss(_ textField: PhoneNumberTextField)
 }
 
+public extension PhoneNumberTextFieldDelegate {
+    func countryCodePickerViewControllerWillPresent(_ textField: PhoneNumberTextField, controller: CountryCodePickerViewController) {}
+    func countryCodePickerViewControllerDidPresent(_ textField: PhoneNumberTextField, controller: CountryCodePickerViewController) {}
+    func countryCodePickerViewControllerWillDismiss(_ textField: PhoneNumberTextField, controller: CountryCodePickerViewController) {}
+    func countryCodePickerViewControllerDidDismiss(_ textField: PhoneNumberTextField) {}
+}
+
 #endif
