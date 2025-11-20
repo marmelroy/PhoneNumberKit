@@ -24,6 +24,7 @@ final class ViewController: UIViewController, CNContactPickerDelegate {
         PhoneNumberKit.CountryCodePicker.commonCountryCodes = ["US", "CA", "MX", "AU", "GB", "DE"]
         PhoneNumberKit.CountryCodePicker.alwaysShowsSearchBar = true
 
+        self.textField.stateDelegate = self
         self.textField.becomeFirstResponder()
         self.withPrefixSwitch.isOn = self.textField.withPrefix
         self.withFlagSwitch.isOn = self.textField.withFlag
@@ -56,5 +57,22 @@ final class ViewController: UIViewController, CNContactPickerDelegate {
 
     @IBAction func withDefaultPickerUIDidChange(_ sender: Any) {
         self.textField.withDefaultPickerUI = self.withDefaultPickerUISwitch.isOn
+    }
+}
+
+extension ViewController: PhoneNumberTextFieldDelegate {
+    func countryCodePickerViewControllerWillPresent(_ textField: PhoneNumberTextField, controller: CountryCodePickerViewController) {
+        print("Will present country code picker")
+        textField.resignFirstResponder()
+    }
+    func countryCodePickerViewControllerDidPresent(_ textField: PhoneNumberTextField, controller: CountryCodePickerViewController) {
+        print("Did present country code picker")
+    }
+    func countryCodePickerViewControllerWillDismiss(_ textField: PhoneNumberTextField, controller: CountryCodePickerViewController) {
+        print("Will dismiss country code picker")
+    }
+    func countryCodePickerViewControllerDidDismiss(_ textField: PhoneNumberTextField) {
+        print("Did dismiss country code picker")
+        textField.becomeFirstResponder()
     }
 }

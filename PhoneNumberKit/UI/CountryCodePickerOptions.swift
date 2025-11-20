@@ -53,6 +53,7 @@ public struct CountryCodePickerOptions: Sendable, Equatable, Hashable {
         self.headerOptions = headerOptions
     }
     
+    /// The default `CountryCodePickerOptions` instance.
     public static let `default` = CountryCodePickerOptions()
 }
 
@@ -150,12 +151,14 @@ public extension CountryCodePickerOptions {
             self.height = height
         }
         
+        /// The default `CountryCodePickerHeaderOptions` instance.
         public static let `default` = CountryCodePickerHeaderOptions()
     }
     
 }
 
 public extension CountryCodePickerOptions.CountryCodePickerCellOptions {
+    /// Defines the type of reusable cell used in the country code picker.
     enum ReusableCellType: Sendable, Equatable, Hashable {
         case cellNib(_ nib: UINib?, identifier: String)
         case cellClass(_ cellClass: AnyClass?, identifier: String)
@@ -168,9 +171,6 @@ public extension CountryCodePickerOptions.CountryCodePickerCellOptions {
                 return identifier
             }
         }
-        
-        public static let `defaultCell` = ReusableCellType.cellClass(CountryCodePickerViewController.CountryCodePickerTableViewCell.self, identifier: CountryCodePickerViewController.CountryCodePickerTableViewCell.reuseIdentifier)
-        public static let `defaultHeader` = ReusableCellType.cellClass(CountryCodePickerViewController.CountryCodePickerSectionHeader.self, identifier: CountryCodePickerViewController.CountryCodePickerSectionHeader.reuseIdentifier)
         
         // Equatable conformance
         public static func == (lhs: CountryCodePickerOptions.CountryCodePickerCellOptions.ReusableCellType, rhs: CountryCodePickerOptions.CountryCodePickerCellOptions.ReusableCellType) -> Bool {
@@ -195,6 +195,9 @@ public extension CountryCodePickerOptions.CountryCodePickerCellOptions {
                 hasher.combine(identifier)
             }
         }
+        
+        public static let `defaultCell` = ReusableCellType.cellClass(CountryCodePickerViewController.CountryCodePickerTableViewCell.self, identifier: CountryCodePickerViewController.CountryCodePickerTableViewCell.reuseIdentifier)
+        public static let `defaultHeader` = ReusableCellType.cellClass(CountryCodePickerViewController.CountryCodePickerSectionHeader.self, identifier: CountryCodePickerViewController.CountryCodePickerSectionHeader.reuseIdentifier)
     }
 }
 

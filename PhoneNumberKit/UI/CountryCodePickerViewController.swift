@@ -45,6 +45,8 @@ public class CountryCodePickerViewController: UITableViewController {
 
     lazy var cancelButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(dismissAnimated))
 
+    // MARK: - Initializers
+    
     /// Init with a phone number kit instance. Because a `PhoneNumberUtility` initialization is expensive you can must pass a pre-initialized instance to avoid incurring perf penalties.
     ///
     /// - parameter utility: A `PhoneNumberUtility` instance to be used by the text field.
@@ -59,7 +61,6 @@ public class CountryCodePickerViewController: UITableViewController {
             self.cellIdentifier = self.options.cellOptions.cellType.identifier
             self.headerIdentifier = self.options.headerOptions.cellType.identifier
             super.init(style: .grouped)
-            self.commonInit()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -69,10 +70,40 @@ public class CountryCodePickerViewController: UITableViewController {
         self.cellIdentifier = self.options.cellOptions.cellType.identifier
         self.headerIdentifier = self.options.headerOptions.cellType.identifier
         super.init(coder: aDecoder)
+    }
+    
+    // MARK: - View Lifecycle
+    public override func viewDidLoad() {
+        super.viewDidLoad()
         self.commonInit()
+        loadCountries()
     }
 
-    func commonInit() {
+    override public func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if let nav = navigationController {
+            shouldRestoreNavigationBarToHidden = nav.isNavigationBarHidden
+            nav.setNavigationBarHidden(false, animated: true)
+        }
+        if let nav = navigationController, nav.isBeingPresented, nav.viewControllers.count == 1 {
+            navigationItem.setRightBarButton(cancelButton, animated: true)
+        }
+    }
+
+    override public func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(shouldRestoreNavigationBarToHidden, animated: true)
+    }
+
+    @objc func dismissAnimated() {
+        delegate?.countryCodePickerViewControllerWillDissmiss(self)
+        dismiss(animated: true, completion: { [delegate] in
+            delegate?.countryCodePickerViewControllerDidDissmiss()
+        })
+    }
+    
+    // MARK: - Initialization Methods
+    private func commonInit() {
         // Configure Header
         self.title = Self.Constants.screenTitle
         
@@ -104,7 +135,6 @@ public class CountryCodePickerViewController: UITableViewController {
 
         // Ensure that the search bar does not remain on the screen if the user navigates to another view controller while the UISearchController is active.
         definesPresentationContext = true
-
         
         if let tintColor = options.tintColor {
             view.tintColor = tintColor
@@ -119,8 +149,6 @@ public class CountryCodePickerViewController: UITableViewController {
         if let separator = options.separatorColor {
             tableView.separatorColor = separator
         }
-        
-        loadCountries()
     }
     
     func loadCountries() {
@@ -186,29 +214,8 @@ public class CountryCodePickerViewController: UITableViewController {
             }
         }
     }
-
-    override public func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        if let nav = navigationController {
-            shouldRestoreNavigationBarToHidden = nav.isNavigationBarHidden
-            nav.setNavigationBarHidden(false, animated: true)
-        }
-        if let nav = navigationController, nav.isBeingPresented, nav.viewControllers.count == 1 {
-            navigationItem.setRightBarButton(cancelButton, animated: true)
-        }
-    }
-
-    override public func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        navigationController?.setNavigationBarHidden(shouldRestoreNavigationBarToHidden, animated: true)
-    }
-
-    @objc func dismissAnimated() {
-        delegate?.countryCodePickerViewControllerWillDissmiss(self)
-        dismiss(animated: true, completion: { [delegate] in
-            delegate?.countryCodePickerViewControllerDidDissmiss()
-        })
-    }
+    
+    // MARK: - Table view data source
 
     func country(for indexPath: IndexPath) -> Country {
         isFiltering ? filteredCountries[indexPath.row] : countries[indexPath.section][indexPath.row]
@@ -274,8 +281,10 @@ public class CountryCodePickerViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         delegate?.countryCodePickerViewControllerDidPickCountry(country)
     }
+    
 }
 
+// MARK: - UISearchResultsUpdating
 extension CountryCodePickerViewController: UISearchResultsUpdating {
     var isFiltering: Bool {
         searchController.isActive && !isSearchBarEmpty
@@ -315,8 +324,8 @@ extension CountryCodePickerViewController: UISearchResultsUpdating {
         DispatchQueue.global(qos: .userInitiated).asyncAfter(deadline: .now() + 0.25, execute: workItem)
     }
 }
-// MARK: Types
 
+// MARK: Country
 public extension CountryCodePickerViewController {
     struct Country: Sendable, Equatable, Hashable {
         public var code: String
@@ -350,7 +359,6 @@ public extension CountryCodePickerViewController {
 }
 
 // MARK: Constants
-
 public extension CountryCodePickerViewController { enum Constants {} }
 public extension CountryCodePickerViewController.Constants {
     static let screenTitle: String = NSLocalizedString("PhoneNumberKit.CountryCodePicker.Title", value: "Choose your country", comment: "Title of CountryCodePicker ViewController")

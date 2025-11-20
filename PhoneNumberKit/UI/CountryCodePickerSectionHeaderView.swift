@@ -2,8 +2,13 @@
 import UIKit
 
 public extension CountryCodePickerViewController {
+    
+    /// Protocol defining the interface for section header views in the country code picker.
     protocol CountryCodePickerSectionHeaderViewProtocol: UITableViewHeaderFooterView {
+        /// Configuration options for the header appearance.
         var options: CountryCodePickerOptions.CountryCodePickerHeaderOptions { get set }
+        /// Configures the header with the given title.
+        /// - Parameter title: The title to display in the header.
         func configure(with title: String?)
     }
     
@@ -11,8 +16,10 @@ public extension CountryCodePickerViewController {
         public static let reuseIdentifier = "CountryCodePickerSectionHeader"
         public static let defaultHeight: CGFloat = 38.0
         
-        let titleLabel = UILabel()
+        /// Label to display the section title.
+        public let titleLabel = UILabel()
         
+        /// Configuration options for the header appearance.
         public var options: CountryCodePickerOptions.CountryCodePickerHeaderOptions = .default {
             didSet {
                 if options != oldValue {
@@ -44,8 +51,16 @@ public extension CountryCodePickerViewController {
             configureOptions()
         }
         
+        // MARK: Configuration
         public func configure(with title: String?) {
-            titleLabel.text = title?.uppercased()
+            let displayTitle: String?
+            // Ensure compatibility with iOS versions for text casing
+            if #available(iOS 26.0, *) {
+                displayTitle = title
+            } else {
+                displayTitle = title?.uppercased()
+            }
+            titleLabel.text = displayTitle
         }
         
         private func configureOptions() {
@@ -70,11 +85,19 @@ public extension CountryCodePickerViewController.CountryCodePickerSectionHeader.
        if #available(iOS 13.0, *) {
            return UIColor.secondaryLabel
         } else {
+            // I'm not able to verify colors on iOS 12. But it should be close enough.
             return UIColor.darkGray
         }
     }()
     
-    static let titleFont: UIFont = .systemFont(ofSize: 13)
+    static let titleFont: UIFont = {
+        // Use preferred font for headline on iOS 26 and above, else footnote for simalar font to default header
+        if #available(iOS 26.0, *) {
+            return .preferredFont(forTextStyle: .headline)
+        } else {
+            return .preferredFont(forTextStyle: .footnote)
+        }
+    }()
 }
 
 #endif

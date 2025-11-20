@@ -12,6 +12,7 @@ public extension CountryCodePickerViewController {
         public static let reuseIdentifier = "CountryCodePickerTableViewCell"
         public static let defaultHeight: CGFloat = 44.0
         
+        /// Configuration options for the cell appearance.
         public var options: CountryCodePickerOptions.CountryCodePickerCellOptions = .default {
             didSet {
                 if options != oldValue {
