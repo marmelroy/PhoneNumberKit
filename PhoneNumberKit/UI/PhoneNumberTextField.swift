@@ -636,10 +636,8 @@ extension PhoneNumberTextField: UINavigationControllerDelegate {
     public func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
         if !viewController.isKind(of: CountryCodePickerViewController.self) {
             hostNavigationControllerDelegate?.navigationController?(navigationController, didShow: viewController, animated: animated)
-            if let hostDelegate = hostNavigationControllerDelegate {
-                containingViewController?.navigationController?.delegate = hostDelegate
-                hostNavigationControllerDelegate = nil
-            }
+            containingViewController?.navigationController?.delegate = hostNavigationControllerDelegate
+            hostNavigationControllerDelegate = nil
             countryCodePickerViewController = nil
             stateDelegate?.countryCodePickerViewControllerDidDismiss(self)
         } else {
