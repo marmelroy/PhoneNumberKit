@@ -389,11 +389,14 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         vc.delegate = self
         stateDelegate?.countryCodePickerViewControllerWillPresent(self, controller: vc)
         if let nav = containingViewController?.navigationController, !CountryCodePicker.forceModalPresentation {
-            if let _ = stateDelegate, // store host delegate only if we have a state delegate
-               let hostDelegate = nav.delegate,
-               !hostDelegate.isKind(of: PhoneNumberTextField.self) { // host delegate shouldn't be self to avoid retain cycle
-                hostNavigationControllerDelegate = nav.delegate
-                nav.delegate = self
+            if let _ = stateDelegate { // store host delegate only if we have a state delegate
+                if let hostDelegate = nav.delegate,
+                   !hostDelegate.isKind(of: PhoneNumberTextField.self) {
+                    // host delegate shouldn't be self to avoid retain cycle
+                } else {
+                    hostNavigationControllerDelegate = nav.delegate
+                    nav.delegate = self
+                }
             }
             CATransaction.begin()
             CATransaction.setCompletionBlock({ [weak self, weak vc] in
