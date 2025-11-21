@@ -20,20 +20,51 @@ final class ViewController: UIViewController, CNContactPickerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        navigationController?.delegate = self
+        
         PhoneNumberKit.CountryCodePicker.commonCountryCodes = ["US", "CA", "MX", "AU", "GB", "DE"]
         PhoneNumberKit.CountryCodePicker.alwaysShowsSearchBar = true
-
-        self.textField.stateDelegate = self
-        self.textField.becomeFirstResponder()
+        
         self.withPrefixSwitch.isOn = self.textField.withPrefix
         self.withFlagSwitch.isOn = self.textField.withFlag
         self.withExamplePlaceholderSwitch.isOn = self.textField.withExamplePlaceholder
         self.withDefaultPickerUISwitch.isOn = self.textField.withDefaultPickerUI
-
+        
         if #available(iOS 13.0, *) {
             self.view.backgroundColor = .systemBackground
         }
+        let cellNib = UINib(nibName: "CustomCell", bundle: .main)
+        
+        let cellOptions = CountryCodePickerOptions.CountryCodePickerCellOptions(
+            textLabelColor: nil,
+            textLabelFont: nil,
+            detailTextLabelColor: nil,
+            detailTextLabelFont: nil,
+            backgroundColor: nil,
+            backgroundColorSelection: nil,
+            cellType: .cellNib(cellNib, identifier: CustomCell.reuseIdentifier),
+            height: CustomCell.defaultHeight
+        )
+        
+        let headerNib = UINib(nibName: "CustomHeaderView", bundle: .main)
+        let headerOptions = CountryCodePickerOptions.CountryCodePickerHeaderOptions(
+            textLabelColor: .blue,
+            textLabelFont: .boldSystemFont(ofSize: 18),
+            backgroundColor: nil,
+            cellType: .cellNib(headerNib, identifier: CustomHeaderView.reuseIdentifier),
+            height: CustomHeaderView.defaultHeight
+        )
+        
+        textField.withDefaultPickerUIOptions = CountryCodePickerOptions(
+            backgroundColor: .yellow,
+            separatorColor: .blue,
+            tintColor: .green,
+            cellOptions: cellOptions,
+            headerOptions: headerOptions
+        )
+        
+        textField.stateDelegate = self
     }
 
     @IBAction func didTapView(_ sender: Any) {
@@ -59,6 +90,17 @@ final class ViewController: UIViewController, CNContactPickerDelegate {
         self.textField.withDefaultPickerUI = self.withDefaultPickerUISwitch.isOn
     }
 }
+
+extension ViewController: UINavigationControllerDelegate {
+    public func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        print("ViewController - will show vc: \(viewController)")
+    }
+
+    public func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+        print("ViewController - did show vc: \(viewController)")
+    }
+}
+
 
 extension ViewController: PhoneNumberTextFieldDelegate {
     func countryCodePickerViewControllerWillPresent(_ textField: PhoneNumberTextField, controller: CountryCodePickerViewController) {
