@@ -13,10 +13,10 @@ import UIKit
 
 /// Custom text field that formats phone numbers
 open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
+    /// The PhoneNumberKit instance used to parse and format phone numbers.
     public let utility: PhoneNumberUtility
-
+    /// The flag button displayed in the text field when `withFlag` is set to true.
     public lazy var flagButton = UIButton()
-
     /// Override setText so number will be automatically formatted when setting text by code
     override open var text: String? {
         set {
@@ -58,8 +58,9 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             self.partialFormatter.defaultRegion = newValue
         }
     }
-
-    public var withPrefix: Bool = true {
+    
+    /// Whether to format with the international prefix. Defaults to true.
+    @IBInspectable public var withPrefix: Bool = true {
         didSet {
             self.partialFormatter.withPrefix = self.withPrefix
             if self.withPrefix == false {
@@ -72,18 +73,20 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             }
         }
     }
-
+    
+    /// Whether to prefill the international prefix when editing begins. Defaults to true.
     public var withPrefixPrefill: Bool = true
 
-    public var withFlag: Bool = false {
+    @IBInspectable public var withFlag: Bool = false {
         didSet {
             leftView = self.withFlag ? self.flagButton : nil
             leftViewMode = self.withFlag ? .always : .never
             self.updateFlag()
         }
     }
-
-    public var withExamplePlaceholder: Bool = false {
+    
+    /// Whether to show an example placeholder when the text field is empty. Defaults to false.
+    @IBInspectable public var withExamplePlaceholder: Bool = false {
         didSet {
             if self.withExamplePlaceholder {
                 self.updatePlaceholder()
@@ -128,24 +131,29 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             }
         }
     }
-
-    public var withDefaultPickerUI: Bool {
+    
+    /// Add click action to flag button and show country code picker when withDefaultPickerUI is true
+    @IBInspectable public var withDefaultPickerUI: Bool {
         get { _withDefaultPickerUI }
         set { _withDefaultPickerUI = newValue }
     }
-
-    public var withDefaultPickerUIOptions: CountryCodePickerOptions = .init()
+    
+    /// Options for the default country code picker UI
+    public var withDefaultPickerUIOptions: CountryCodePickerOptions = .default
 
     public var modalPresentationStyle: UIModalPresentationStyle?
-
+    
+    /// Enable or disable partial formatter. Defaults to true.
     public var isPartialFormatterEnabled = true
-
+    
+    /// Maximum number of digits allowed in the phone number. Defaults to nil (no limit).
     public var maxDigits: Int? {
         didSet {
             self.partialFormatter.maxDigits = self.maxDigits
         }
     }
     
+    /// The type of phone number to use for the example placeholder. Defaults to `.mobile`.
     public var ofType: PhoneNumberType = .mobile {
         didSet {
             if self.withExamplePlaceholder {
@@ -179,18 +187,28 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             self._delegate = newValue
         }
     }
+    
+    /// Allow to manage states of PhoneNumberTextField when presenting/dismissing country code picker
+    public weak var stateDelegate: PhoneNumberTextFieldDelegate?
+    /// To store host navigation controller delegate when pushing country code picker
+    private weak var hostNavigationControllerDelegate: UINavigationControllerDelegate?
+    /// To store reference to presented country code picker
+    private weak var countryCodePickerViewController: CountryCodePickerViewController?
 
     // MARK: Status
-
+    
+    /// Returns the current region code based on the text field's content.
     public var currentRegion: String {
         return self.partialFormatter.currentRegion
     }
-
+    
+    /// Returns the current national number based on the text field's content.
     public var nationalNumber: String {
         let rawNumber = self.text ?? String()
         return self.partialFormatter.nationalNumber(from: rawNumber)
     }
-
+    
+    /// Returns whether the current phone number is valid.
     public var isValidNumber: Bool {
         let rawNumber = self.text ?? String()
         do {
@@ -292,7 +310,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         self.setup()
     }
 
-    func setup() {
+    open func setup() {
         self.autocorrectionType = .no
         self.keyboardType = .phonePad
         super.delegate = self
@@ -363,19 +381,39 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
         self.attributedPlaceholder = ph
     }
 
-    @objc func didPressFlagButton() {
+    @objc open func didPressFlagButton() {
         guard withDefaultPickerUI else { return }
         let vc = CountryCodePickerViewController(utility: utility,
                                                  options: withDefaultPickerUIOptions)
+        countryCodePickerViewController = vc
         vc.delegate = self
+        stateDelegate?.countryCodePickerViewControllerWillPresent(self, controller: vc)
         if let nav = containingViewController?.navigationController, !CountryCodePicker.forceModalPresentation {
+            if let _ = stateDelegate { // store host delegate only if we have a state delegate
+                if let hostDelegate = nav.delegate,
+                   !hostDelegate.isKind(of: PhoneNumberTextField.self) {
+                    // host delegate shouldn't be self to avoid retain cycle
+                } else {
+                    hostNavigationControllerDelegate = nav.delegate
+                    nav.delegate = self
+                }
+            }
+            CATransaction.begin()
+            CATransaction.setCompletionBlock({ [weak self, weak vc] in
+                guard let self, let vc else { return }
+                stateDelegate?.countryCodePickerViewControllerDidPresent(self, controller: vc)
+            })
             nav.pushViewController(vc, animated: true)
+            CATransaction.commit()
         } else {
             let nav = UINavigationController(rootViewController: vc)
             if modalPresentationStyle != nil {
                 nav.modalPresentationStyle = modalPresentationStyle!
             }
-            containingViewController?.present(nav, animated: true)
+            containingViewController?.present(nav, animated: true, completion: { [weak self, weak vc] in
+                guard let self, let vc else { return }
+                stateDelegate?.countryCodePickerViewControllerDidPresent(self, controller: vc)
+            })
         }
     }
 
@@ -558,6 +596,8 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     }
 }
 
+// MARK: - UINavigationControllerDelegate
+
 extension PhoneNumberTextField: CountryCodePickerDelegate {
     public func countryCodePickerViewControllerDidPickCountry(_ country: CountryCodePickerViewController.Country) {
         text = isEditing ? "+" + country.prefix : ""
@@ -565,12 +605,65 @@ extension PhoneNumberTextField: CountryCodePickerDelegate {
         partialFormatter.defaultRegion = country.code
         updateFlag()
         updatePlaceholder()
-
         if let nav = containingViewController?.navigationController, !CountryCodePicker.forceModalPresentation {
             nav.popViewController(animated: true)
         } else {
-            containingViewController?.dismiss(animated: true)
+            if let countryCodePickerViewController {
+                stateDelegate?.countryCodePickerViewControllerWillDismiss(self, controller: countryCodePickerViewController)
+            }
+            containingViewController?.dismiss(animated: true, completion: { [weak self] in
+                guard let self else { return }
+                countryCodePickerViewController = nil
+                stateDelegate?.countryCodePickerViewControllerDidDismiss(self)
+            })
         }
+    }
+    
+    public func countryCodePickerViewControllerWillDissmiss(_ controller: CountryCodePickerViewController) {
+        stateDelegate?.countryCodePickerViewControllerWillDismiss(self, controller: controller)
+    }
+    
+    public func countryCodePickerViewControllerDidDissmiss() {
+        stateDelegate?.countryCodePickerViewControllerDidDismiss(self)
+    }
+}
+
+// MARK: - UINavigationControllerDelegate
+extension PhoneNumberTextField: UINavigationControllerDelegate {
+    public func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        if let countryCodePickerViewController,
+           !viewController.isKind(of: CountryCodePickerViewController.self) {
+            stateDelegate?.countryCodePickerViewControllerWillDismiss(self, controller: countryCodePickerViewController)
+        }
+        hostNavigationControllerDelegate?.navigationController?(navigationController, willShow: viewController, animated: animated)
+    }
+
+    public func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+        if !viewController.isKind(of: CountryCodePickerViewController.self) {
+            hostNavigationControllerDelegate?.navigationController?(navigationController, didShow: viewController, animated: animated)
+            containingViewController?.navigationController?.delegate = hostNavigationControllerDelegate
+            hostNavigationControllerDelegate = nil
+            countryCodePickerViewController = nil
+            stateDelegate?.countryCodePickerViewControllerDidDismiss(self)
+        } else {
+            hostNavigationControllerDelegate?.navigationController?(navigationController, didShow: viewController, animated: animated)
+        }
+    }
+    // Just forwarding methods
+    public func navigationControllerSupportedInterfaceOrientations(_ navigationController: UINavigationController) -> UIInterfaceOrientationMask {
+        return hostNavigationControllerDelegate?.navigationControllerSupportedInterfaceOrientations?(navigationController) ?? .all
+    }
+    
+    public func navigationControllerPreferredInterfaceOrientationForPresentation(_ navigationController: UINavigationController) -> UIInterfaceOrientation {
+        return hostNavigationControllerDelegate?.navigationControllerPreferredInterfaceOrientationForPresentation?(navigationController) ?? .portrait
+    }
+    
+    public func navigationController(_ navigationController: UINavigationController, interactionControllerFor animationController: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
+        return hostNavigationControllerDelegate?.navigationController?(navigationController, interactionControllerFor: animationController)
+    }
+    
+    public func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        return hostNavigationControllerDelegate?.navigationController?(navigationController, animationControllerFor: operation, from: fromVC, to: toVC)
     }
 }
 

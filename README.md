@@ -117,16 +117,30 @@ phoneNumberUtility.countryCode(for: "FR")
 You can customize colors and fonts on the Country Picker View Controller by overriding the property "withDefaultPickerUIOptions"
 
 ```swift
+let headerOptions = CountryCodePickerOptions.CountryCodePickerHeaderOptions(
+    textLabelColor: .blue,
+    textLabelFont: .boldSystemFont(ofSize: 18),
+    backgroundColor: nil,
+    cellType: .cellNib(headerNib, identifier: CustomHeaderView.reuseIdentifier),
+    height: CustomHeaderView.defaultHeight
+)
+
+let cellOptions = CountryCodePickerOptions.CountryCodePickerCellOptions(
+    textLabelColor: nil,
+    textLabelFont: nil,
+    detailTextLabelColor: nil,
+    detailTextLabelFont: nil,
+    backgroundColor: nil,
+    backgroundColorSelection: nil,
+    cellType: .cellNib(cellNib, identifier: CustomCell.reuseIdentifier),
+    height: CustomCell.defaultHeight
+)
 let options = CountryCodePickerOptions(
-    backgroundColor: UIColor.systemGroupedBackground
-    separatorColor: UIColor.opaqueSeparator
-    textLabelColor: UIColor.label
-    textLabelFont: .preferredFont(forTextStyle: .callout)
-    detailTextLabelColor: UIColor.secondaryLabel
-    detailTextLabelFont: .preferredFont(forTextStyle: .body)
-    tintColor: UIView().tintColor
-    cellBackgroundColor: UIColor.secondarySystemGroupedBackground
-    cellBackgroundColorSelection: UIColor.tertiarySystemGroupedBackground
+    backgroundColor: .systemGroupedBackground,
+    separatorColor: .opaqueSeparator,
+    tintColor: UIView().tintColor,
+    cellOptions: cellOptions,
+    headerOptions: headerOptions
 )
 textField.withDefaultPickerUIOptions = options
 ```
