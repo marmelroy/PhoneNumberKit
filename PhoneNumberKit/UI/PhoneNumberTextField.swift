@@ -33,6 +33,11 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
             return super.text
         }
     }
+    /// Forces textContentType to .telephoneNumber for autofill support.
+    override open var textContentType: UITextContentType! {
+        get { .telephoneNumber }
+        set {}
+    }
 
     /// allows text to be set without formatting
     open func setTextUnformatted(newValue: String?) {
