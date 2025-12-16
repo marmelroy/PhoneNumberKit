@@ -19,6 +19,11 @@ public final class PhoneNumberUtility {
     let parseManager: ParseManager
     let regexManager = RegexManager()
 
+    // MARK: Configuration
+    
+    /// When true, use the countryCode from the Contacts framework if the framework is available. Has no effect when Contacts framework is not available. Must be set before calling other methods in this class.
+    static public var canUseContactsFramework = true
+
     // MARK: Lifecycle
 
     public init(metadataCallback: @escaping MetadataCallback = defaultMetadataCallback) {
@@ -288,7 +293,7 @@ public final class PhoneNumberUtility {
             return PhoneNumberConstants.defaultCountry
         }
         #if canImport(Contacts)
-        if #available(iOS 12.0, macOS 10.13, macCatalyst 13.1, watchOS 4.0, *) {
+        if #available(iOS 12.0, macOS 10.13, macCatalyst 13.1, watchOS 4.0, *), Self.canUseContactsFramework {
             // macCatalyst OS bug if language is set to Korean
             // CNContactsUserDefaults.shared().countryCode will return ko instead of kr
             // Failed parsing any phone number.
