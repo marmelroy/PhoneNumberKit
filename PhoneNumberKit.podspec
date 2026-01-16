@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'PhoneNumberKit'
-  s.version          = '4.2.2'
+  s.version          = '4.2.3'
   s.summary          = 'Swift framework for working with phone numbers'
   s.description      = <<-DESC
                         A Swift framework for parsing, formatting and validating international phone numbers. Inspired by Google's libphonenumber.
