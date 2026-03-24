@@ -18,18 +18,18 @@ final class RegexManager {
     // MARK: Regular expression pool
 
     var regularExpressionPool = [String: NSRegularExpression]()
-
-    private let regularExpressionPoolQueue = DispatchQueue(label: "com.phonenumberkit.regexpool", target: .global())
+    
+    private let regularExpressionLock = NSLock()
 
     var spaceCharacterSet: CharacterSet
 
     // MARK: Regular expression
 
     func regexWithPattern(_ pattern: String) throws -> NSRegularExpression {
-        var cached: NSRegularExpression?
-        cached = regularExpressionPoolQueue.sync {
-            regularExpressionPool[pattern]
-        }
+        
+        regularExpressionLock.lock()
+        let cached = regularExpressionPool[pattern]
+        regularExpressionLock.unlock()
 
         if let cached {
             return cached
@@ -38,9 +38,9 @@ final class RegexManager {
         do {
             let regex = try NSRegularExpression(pattern: pattern, options: .caseInsensitive)
 
-            regularExpressionPoolQueue.sync {
-                regularExpressionPool[pattern] = regex
-            }
+            regularExpressionLock.lock()
+            regularExpressionPool[pattern] = regex
+            regularExpressionLock.unlock()
 
             return regex
         } catch {
