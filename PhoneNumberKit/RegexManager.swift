@@ -26,10 +26,9 @@ final class RegexManager {
     // MARK: Regular expression
 
     func regexWithPattern(_ pattern: String) throws -> NSRegularExpression {
-        
         regularExpressionLock.lock()
+        defer { regularExpressionLock.unlock() }
         let cached = regularExpressionPool[pattern]
-        regularExpressionLock.unlock()
 
         if let cached {
             return cached
@@ -37,11 +36,7 @@ final class RegexManager {
 
         do {
             let regex = try NSRegularExpression(pattern: pattern, options: .caseInsensitive)
-
-            regularExpressionLock.lock()
             regularExpressionPool[pattern] = regex
-            regularExpressionLock.unlock()
-
             return regex
         } catch {
             throw PhoneNumberError.generalError
