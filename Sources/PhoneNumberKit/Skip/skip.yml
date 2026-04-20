@@ -3,13 +3,3 @@ skip:
 
 bridging:
   enabled: false
-
-build:
-  contents:
-    - block: "android"
-      contents:
-        - block: "sourceSets"
-          contents:
-            - block: 'getByName("main")'
-              contents:
-                - 'assets.srcDir(layout.projectDirectory.dir("src/main/swift/${project.name}/Resources"))'
