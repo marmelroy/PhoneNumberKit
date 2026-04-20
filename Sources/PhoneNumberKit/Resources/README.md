@@ -1,7 +1,7 @@
 # Metadata
 PhoneNumberKit is using metadata from Google's libphonenumber.
 
-The metadata exists in PhoneNumberMetadata.json and the original XML can be found at [Original/PhoneNumberMetadata.xml](https://github.com/marmelroy/PhoneNumberKit/blob/master/PhoneNumberKit/Resources/Original/PhoneNumberMetadata.xml)
+The metadata exists in PhoneNumberMetadata.json and the original XML can be found at [Original/PhoneNumberMetadata.xml](https://github.com/marmelroy/PhoneNumberKit/blob/master/Sources/PhoneNumberKit/Resources/Original/PhoneNumberMetadata.xml)
 
 ## Updating the metadata
 

@@ -7,6 +7,9 @@
 //
 
 import Foundation
+#if os(Android)
+import SkipAndroidBridge
+#endif
 #if canImport(Contacts)
 import Contacts
 #endif
@@ -331,23 +334,38 @@ public final class PhoneNumberUtility {
     ///
     /// - returns: an optional Data representation of the metadata.
     public static func defaultMetadataCallback() throws -> Data? {
-        let frameworkBundle = Bundle.phoneNumberKit
-        guard
-            let jsonPath = frameworkBundle.path(forResource: "PhoneNumberMetadata", ofType: "json"),
-            let handle = FileHandle(forReadingAtPath: jsonPath) else {
+        #if os(Android)
+        if !isJNIInitialized {
+            let resourceDirectoryName = "PhoneNumberKit_PhoneNumberKit.resources"
+            let metadataFileName = "PhoneNumberMetadata.json"
+            let currentDirectoryURL = URL(fileURLWithPath: FileManager.default.currentDirectoryPath, isDirectory: true)
+            let executableDirectoryURL = URL(fileURLWithPath: CommandLine.arguments[0], isDirectory: false)
+                .deletingLastPathComponent()
+            let candidateURLs = [
+                currentDirectoryURL,
+                executableDirectoryURL
+            ].map { $0.appendingPathComponent(resourceDirectoryName).appendingPathComponent(metadataFileName) }
+
+            for candidateURL in candidateURLs where FileManager.default.fileExists(atPath: candidateURL.path) {
+                return try Data(contentsOf: candidateURL)
+            }
+
             throw PhoneNumberError.metadataNotFound
         }
 
-        defer {
-            if #available(iOS 13.0, macOS 10.15, macCatalyst 13.1, tvOS 13.0, watchOS 6.0, *) {
-                try? handle.close()
-            } else {
-                handle.closeFile()
-            }
+        try? AssetURLProtocol.register()
+        let frameworkBundle = Bundle.phoneNumberKit
+        guard let jsonURL = frameworkBundle.url(forResource: "PhoneNumberMetadata", withExtension: "json") else {
+            throw PhoneNumberError.metadataNotFound
         }
-
-        let data = handle.readDataToEndOfFile()
-        return data
+        return try Data(contentsOf: jsonURL)
+        #else
+        let frameworkBundle = Bundle.phoneNumberKit
+        guard let jsonURL = frameworkBundle.url(forResource: "PhoneNumberMetadata", withExtension: "json") else {
+            throw PhoneNumberError.metadataNotFound
+        }
+        return try Data(contentsOf: jsonURL)
+        #endif
     }
 }
 

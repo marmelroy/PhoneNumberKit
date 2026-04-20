@@ -9,7 +9,9 @@ private class CurrentBundleFinder { }
 //
 extension Bundle {
     static var phoneNumberKit: Bundle = {
-        #if DEBUG && SWIFT_PACKAGE
+        #if os(Android)
+        return Bundle.module
+        #elseif DEBUG && SWIFT_PACKAGE
         let bundleName = "PhoneNumberKit_PhoneNumberKit"
         let candidates = [
             // Bundle should be present here when the package is linked into an App.
