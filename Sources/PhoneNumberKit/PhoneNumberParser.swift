@@ -169,24 +169,25 @@ final class PhoneNumberParser {
     func parsePrefixAsIdd(_ number: inout String, iddPattern: String) -> Bool {
         if self.regex.stringPositionByRegex(iddPattern, string: number) == 0 {
             do {
-                guard let matched = try regex.regexMatches(iddPattern as String, string: number as String).first else {
+                guard let matched = try regex.regexMatches(iddPattern as String, string: number).first,
+                      let matchRange = Range(matched.range, in: number) else {
                     return false
                 }
-                let matchedString = number.substring(with: matched.range)
-                let matchEnd = matchedString.count
-                let remainString = (number as NSString).substring(from: matchEnd)
+                let remainString = String(number[matchRange.upperBound...])
                 let capturingDigitPatterns = try NSRegularExpression(pattern: PhoneNumberPatterns.capturingDigitPattern, options: NSRegularExpression.Options.caseInsensitive)
-                let matchedGroups = capturingDigitPatterns.matches(in: remainString as String)
-                if let firstMatch = matchedGroups.first {
-                    let digitMatched = remainString.substring(with: firstMatch.range) as NSString
-                    if digitMatched.length > 0 {
-                        let normalizedGroup = self.regex.stringByReplacingOccurrences(digitMatched as String, map: PhoneNumberPatterns.allNormalizationMappings)
+                let range = NSRange(location: 0, length: remainString.utf16.count)
+                let matchedGroups = capturingDigitPatterns.matches(in: remainString, range: range)
+                if let firstMatch = matchedGroups.first,
+                   let range = Range(firstMatch.range, in: remainString) {
+                    let digitMatched = String(remainString[range])
+                    if !digitMatched.isEmpty {
+                        let normalizedGroup = self.regex.stringByReplacingOccurrences(digitMatched, map: PhoneNumberPatterns.allNormalizationMappings)
                         if normalizedGroup == "0" {
                             return false
                         }
                     }
                 }
-                number = remainString as String
+                number = remainString
                 return true
             } catch {
                 return false
