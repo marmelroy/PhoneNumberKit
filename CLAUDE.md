@@ -50,7 +50,7 @@ pod trunk push PhoneNumberKit.podspec
 ### Metadata Updates
 ```bash
 # Update phone number metadata from Google's libphonenumber (requires Python 3.12+ and xmljson)
-cd PhoneNumberKit/Resources && sh ./update_metadata.sh
+cd Sources/PhoneNumberKit/Resources && sh ./update_metadata.sh
 ```
 
 ## Architecture
@@ -94,12 +94,12 @@ cd PhoneNumberKit/Resources && sh ./update_metadata.sh
 
 ### UI Components (iOS only)
 
-**PhoneNumberTextField** (PhoneNumberKit/UI/PhoneNumberTextField.swift)
+**PhoneNumberTextField** (Sources/PhoneNumberKit/UI/PhoneNumberTextField.swift)
 - Custom UITextField with automatic phone number formatting
 - Features: flag display, example placeholder, prefix handling
 - Integrates PartialFormatter for real-time formatting
 
-**CountryCodePickerViewController** (PhoneNumberKit/UI/CountryCodePickerViewController.swift)
+**CountryCodePickerViewController** (Sources/PhoneNumberKit/UI/CountryCodePickerViewController.swift)
 - Country code picker UI for PhoneNumberTextField
 - Customizable via CountryCodePickerOptions
 
@@ -157,7 +157,7 @@ cd PhoneNumberKit/Resources && sh ./update_metadata.sh
 ## Metadata Updates
 
 - Metadata comes from Google's libphonenumber project
-- Update script: PhoneNumberKit/Resources/update_metadata.sh
+- Update script: Sources/PhoneNumberKit/Resources/update_metadata.sh
 - Automated via GitHub Actions workflow (.github/workflows/update_metadata.yml)
 - Runs every 12 hours and can be triggered manually
 - Requires Python 3.12+ with xmljson package installed

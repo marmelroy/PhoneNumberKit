@@ -250,7 +250,7 @@
 				3435CC8F1BBFF66F003F953B /* Resources */,
 				3420981B1BE1F1250036BBB1 /* Frameworks */,
 			);
-			path = PhoneNumberKit;
+			path = Sources/PhoneNumberKit;
 			sourceTree = "<group>";
 		};
 		342418721BB6E5A000EE70E7 /* PhoneNumberKitTests */ = {
@@ -759,7 +759,7 @@
 				DYLIB_CURRENT_VERSION = 27;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = NO;
-				INFOPLIST_FILE = PhoneNumberKit/Info.plist;
+				INFOPLIST_FILE = Sources/PhoneNumberKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -789,7 +789,7 @@
 				DYLIB_CURRENT_VERSION = 27;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = NO;
-				INFOPLIST_FILE = PhoneNumberKit/Info.plist;
+				INFOPLIST_FILE = Sources/PhoneNumberKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -854,7 +854,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = NO;
 				FRAMEWORK_VERSION = A;
-				INFOPLIST_FILE = "$(SRCROOT)/PhoneNumberKit/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/PhoneNumberKit/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -885,7 +885,7 @@
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = NO;
 				FRAMEWORK_VERSION = A;
-				INFOPLIST_FILE = "$(SRCROOT)/PhoneNumberKit/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/PhoneNumberKit/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -914,7 +914,7 @@
 				DYLIB_CURRENT_VERSION = 27;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = NO;
-				INFOPLIST_FILE = PhoneNumberKit/Info.plist;
+				INFOPLIST_FILE = Sources/PhoneNumberKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -944,7 +944,7 @@
 				DYLIB_CURRENT_VERSION = 27;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = NO;
-				INFOPLIST_FILE = PhoneNumberKit/Info.plist;
+				INFOPLIST_FILE = Sources/PhoneNumberKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -973,7 +973,7 @@
 				DYLIB_CURRENT_VERSION = 27;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = NO;
-				INFOPLIST_FILE = "$(SRCROOT)/PhoneNumberKit/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/PhoneNumberKit/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1002,7 +1002,7 @@
 				DYLIB_CURRENT_VERSION = 27;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				ENABLE_MODULE_VERIFIER = NO;
-				INFOPLIST_FILE = "$(SRCROOT)/PhoneNumberKit/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Sources/PhoneNumberKit/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

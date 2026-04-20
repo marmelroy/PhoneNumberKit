@@ -1,6 +1,9 @@
 skip:
   mode: native
 
+bridging:
+  enabled: false
+
 build:
   contents:
     - block: "android"

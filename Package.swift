@@ -44,6 +44,7 @@ let package = Package(
     targets: [
         .target(name: "PhoneNumberKit",
                 dependencies: targetDependencies,
+                path: "Sources/PhoneNumberKit",
                 exclude: targetExcludes,
                 resources: [
                     .process("Resources/PhoneNumberMetadata.json"),

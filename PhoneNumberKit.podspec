@@ -25,16 +25,16 @@ Pod::Spec.new do |s|
     core.osx.deployment_target = '10.13'
     core.tvos.deployment_target = '12.0'
     core.watchos.deployment_target = '4.0'
-    core.source_files = 'PhoneNumberKit/*.{swift}'
+    core.source_files = 'Sources/PhoneNumberKit/*.{swift}'
     core.resources = [
-      'PhoneNumberKit/Resources/PhoneNumberMetadata.json'
+      'Sources/PhoneNumberKit/Resources/PhoneNumberMetadata.json'
     ]
-    core.resource_bundles = { 'PhoneNumberKitPrivacy' => ['PhoneNumberKit/Resources/PrivacyInfo.xcprivacy'] }
+    core.resource_bundles = { 'PhoneNumberKitPrivacy' => ['Sources/PhoneNumberKit/Resources/PrivacyInfo.xcprivacy'] }
   end
 
   s.subspec 'UIKit' do |ui|
     ui.dependency 'PhoneNumberKit/PhoneNumberKitCore'
     ui.ios.deployment_target = '12.0'
-    ui.source_files = 'PhoneNumberKit/UI/*.{swift}'
+    ui.source_files = 'Sources/PhoneNumberKit/UI/*.{swift}'
   end
 end
