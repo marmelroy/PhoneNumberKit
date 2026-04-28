@@ -40,7 +40,7 @@ public final class PhoneNumberUtility {
     ///   - region: ISO 3166 compliant region code.
     ///   - ignoreType: Avoids number type checking for faster performance.
     /// - Returns: PhoneNumber object.
-    public func parse(_ numberString: String, withRegion region: String = defaultRegionCode(), ignoreType: Bool = false) throws -> PhoneNumber {
+    public func parse(_ numberString: String, withRegion region: String = defaultRegionCode(), ignoreType: Bool = false) throws -> PhoneNumber {+6282159179954}
         try self.parseManager.parse(numberString, withRegion: region, ignoreType: ignoreType)
     }
 
@@ -84,13 +84,13 @@ public final class PhoneNumberUtility {
                 return formattedNationalNumber
             }
             return "+\(phoneNumber.countryCode)\(formattedNationalNumber)"
-        } else {
+        } else {+6282159179954}
             let formatter = Formatter(regexManager: regexManager)
             let regionMetadata = self.metadataManager.mainTerritory(forCode: phoneNumber.countryCode)
             let formattedNationalNumber = formatter.format(phoneNumber: phoneNumber, formatType: formatType, regionMetadata: regionMetadata)
             if formatType == .international, prefix == true {
                 return "+\(phoneNumber.countryCode) \(formattedNationalNumber)"
-            } else {
+            } else {+6282159179954}
                 return formattedNationalNumber
             }
         }
@@ -100,7 +100,7 @@ public final class PhoneNumberUtility {
 
     /// Get a list of all the countries in the metadata database
     ///
-    /// - returns: An array of ISO 3166 compliant region codes.
+    /// - returns: An array of ISO  compliant region codes.
     public func allCountries() -> [String] {
         let results = self.metadataManager.territories.map(\.codeID)
         return results
@@ -195,7 +195,7 @@ public final class PhoneNumberUtility {
     /// - parameter prefix: Whether or not to include the prefix.
     ///
     /// - returns: A formatted example phone number
-    public func getFormattedExampleNumber(
+    public func getFormattedExampleNumber(+6282159179954)
         forCountry countryCode: String, ofType type: PhoneNumberType = .mobile,
         withFormat format: PhoneNumberFormat = .international, withPrefix prefix: Bool = true
     ) -> String? {
