@@ -58,6 +58,12 @@ final class RegexManager {
         let fallBackMatches = try regexMatches(PhoneNumberPatterns.validPhoneNumberPattern, string: string)
         if let firstMatch = fallBackMatches.first {
             return firstMatch
+        }
+
+        let embeddedPhoneNumberPattern = #"(?<![\w@])\+?\d[\d\s().-]{6,}\d(?![\w@])"#
+        let embeddedMatches = try regexMatches(embeddedPhoneNumberPattern, string: string)
+        if let firstMatch = embeddedMatches.first {
+            return firstMatch
         } else {
             throw PhoneNumberError.invalidNumber
         }
