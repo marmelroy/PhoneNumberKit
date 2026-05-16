@@ -1,9 +1,6 @@
 name: Codex macOS Validation
 
 on:
-  push:
-    branches:
-      - "codex/**"
   workflow_dispatch:
 
 jobs:
