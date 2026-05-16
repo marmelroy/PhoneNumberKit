@@ -89,13 +89,13 @@ final class ParseManager {
             }
 
             // Last attempt: try to parse the number as-is with the region's default country code
-            if let result = try validPhoneNumber(from: nationalNumber, using: regionMetadata, countryCode: regionMetadata.countryCode, ignoreType: ignoreType, numberString: numberString, numberExtension: numberExtension) {
+            if let result = try validPhoneNumber(from: nationalNumber, using: regionMetadata, countryCode: regionMetadata.countryCode, ignoreType: ignoreType, numberString: matchedNumber, numberExtension: numberExtension) {
                 return result
             }
 
             // Final fallback for countryCode == 0: try all territories with the same country code as the region
             // This handles cases where a number from one NANP territory (e.g., US) is parsed with another NANP region (e.g., AS, PR)
-            return try tryTerritoriesWithCode(regionMetadata.countryCode, nationalNumber: nationalNumber, excludingRegion: regionMetadata.codeID, ignoreType: ignoreType, numberString: numberString, numberExtension: numberExtension)
+            return try tryTerritoriesWithCode(regionMetadata.countryCode, nationalNumber: nationalNumber, excludingRegion: regionMetadata.codeID, ignoreType: ignoreType, numberString: matchedNumber, numberExtension: numberExtension)
         }
 
         // STEP 6: Update metadata if extracted country code differs from region's default
@@ -106,14 +106,14 @@ final class ParseManager {
         }
 
         // Attempt to create a valid phone number with the extracted country code
-        if let result = try validPhoneNumber(from: nationalNumber, using: regionMetadata, countryCode: countryCode, ignoreType: ignoreType, numberString: numberString, numberExtension: numberExtension) {
+        if let result = try validPhoneNumber(from: nationalNumber, using: regionMetadata, countryCode: countryCode, ignoreType: ignoreType, numberString: matchedNumber, numberExtension: numberExtension) {
             return result
         }
 
         // STEP 7: Final fallback - try all territories with the same country code
         // Some country codes are shared by multiple territories (e.g., +1 for US, CA, etc.)
         // Try each territory's metadata to see if the number is valid in any of them
-        return try tryTerritoriesWithCode(countryCode, nationalNumber: nationalNumber, excludingRegion: regionMetadata.codeID, ignoreType: ignoreType, numberString: numberString, numberExtension: numberExtension)
+        return try tryTerritoriesWithCode(countryCode, nationalNumber: nationalNumber, excludingRegion: regionMetadata.codeID, ignoreType: ignoreType, numberString: matchedNumber, numberExtension: numberExtension)
     }
 
     // Parse task
