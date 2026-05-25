@@ -51,6 +51,7 @@ public class CountryCodePickerViewController: UITableViewController {
     ///
     /// - parameter utility: A `PhoneNumberUtility` instance to be used by the text field.
     /// - parameter commonCountryCodes: An array of country codes to display in the section below the current region section. defaults to `PhoneNumberUtility.CountryCodePicker.commonCountryCodes`
+    @available(*, deprecated, message: "PhoneNumberKit's UI components have moved to github.com/PhoneNumberKit/PhoneNumberKitUI; this repository is no longer maintained. See the README to migrate.")
     public init(
         utility: PhoneNumberUtility,
         options: CountryCodePickerOptions?,

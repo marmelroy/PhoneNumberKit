@@ -40,6 +40,7 @@ open class PhoneNumberFormatter: Foundation.Formatter {
 
     // MARK: Lifecycle
 
+    @available(*, deprecated, message: "PhoneNumberKit has moved to github.com/PhoneNumberKit/PhoneNumberKit and is no longer maintained here. See the README to migrate.")
     public init(utility: PhoneNumberUtility = PhoneNumberUtility(), defaultRegion: String = PhoneNumberUtility.defaultRegionCode(), withPrefix: Bool = true) {
         self.utility = utility
         self.partialFormatter = PartialFormatter(utility: self.utility, defaultRegion: defaultRegion, withPrefix: withPrefix)

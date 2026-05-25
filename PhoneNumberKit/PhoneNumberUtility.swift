@@ -26,6 +26,7 @@ public final class PhoneNumberUtility {
 
     // MARK: Lifecycle
 
+    @available(*, deprecated, message: "PhoneNumberKit has moved to github.com/PhoneNumberKit/PhoneNumberKit and is no longer maintained here. See the README to migrate.")
     public init(metadataCallback: @escaping MetadataCallback = defaultMetadataCallback) {
         self.metadataManager = MetadataManager(metadataCallback: metadataCallback)
         self.parseManager = ParseManager(metadataManager: self.metadataManager, regexManager: self.regexManager)

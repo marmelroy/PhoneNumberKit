@@ -256,6 +256,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     /// - parameter utility: A `PhoneNumberUtility` instance to be used by the text field.
     ///
     /// - returns: UITextfield
+    @available(*, deprecated, message: "PhoneNumberKit's UI components have moved to github.com/PhoneNumberKit/PhoneNumberKitUI; this repository is no longer maintained. See the README to migrate.")
     public convenience init(utility: PhoneNumberUtility) {
         self.init(frame: .zero, utility: utility)
     }
@@ -266,6 +267,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     /// - parameter utility: A `PhoneNumberUtility` instance to be used by the text field.
     ///
     /// - returns: UITextfield
+    @available(*, deprecated, message: "PhoneNumberKit's UI components have moved to github.com/PhoneNumberKit/PhoneNumberKitUI; this repository is no longer maintained. See the README to migrate.")
     public init(frame: CGRect, utility: PhoneNumberUtility) {
         self.utility = utility
         super.init(frame: frame)
@@ -277,6 +279,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     /// - parameter frame: UITextfield F
     ///
     /// - returns: UITextfield
+    @available(*, deprecated, message: "PhoneNumberKit's UI components have moved to github.com/PhoneNumberKit/PhoneNumberKitUI; this repository is no longer maintained. See the README to migrate.")
     override public init(frame: CGRect) {
         self.utility = PhoneNumberUtility()
         super.init(frame: frame)
@@ -296,6 +299,7 @@ open class PhoneNumberTextField: UITextField, UITextFieldDelegate {
     ///   - clearButtonPadding: The padding to be applied to the clear button. This value defines the space between the clear
     ///     button and the edges of the text field. A positive value increases the distance between the clear button and the
     ///     text field's edges, and a negative value decreases this distance.
+    @available(*, deprecated, message: "PhoneNumberKit's UI components have moved to github.com/PhoneNumberKit/PhoneNumberKitUI; this repository is no longer maintained. See the README to migrate.")
     public init(insets: UIEdgeInsets, clearButtonPadding: CGFloat) {
         self.utility = PhoneNumberUtility()
         self.insets = insets
