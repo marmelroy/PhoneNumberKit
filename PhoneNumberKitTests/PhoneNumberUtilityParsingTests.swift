@@ -434,6 +434,15 @@ final class PhoneNumberUtilityParsingTests: XCTestCase {
         try XCTAssertNotNil(sut.parse(address, withRegion: "JM"))
     }
 
+    func testParsedNumberStringDoesNotKeepSurroundingContactInfo() throws {
+        let input = "Jane Doe <jane@example.com> mobile +1 650 253 0000"
+        let number = try sut.parse(input, withRegion: "US")
+
+        XCTAssertEqual(number.numberString, "+1 650 253 0000")
+        XCTAssertFalse(number.numberString.contains("jane@example.com"))
+        XCTAssertFalse(number.numberString.contains("Jane Doe"))
+    }
+
     func testRegionCountryCodeConflict() {
         XCTAssertThrowsError(try sut.parse("212-2344", withRegion: "US")) { error in
             XCTAssertEqual(error as? PhoneNumberError, .invalidNumber)

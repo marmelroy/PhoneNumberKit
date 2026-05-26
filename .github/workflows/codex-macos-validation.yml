@@ -1,0 +1,31 @@
+name: Codex macOS Validation
+
+on:
+  workflow_dispatch:
+
+jobs:
+  swift-test:
+    name: Swift tests
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run SwiftPM tests
+        run: swift test
+
+  xcodebuild:
+    name: Xcode build
+    runs-on: macos-latest
+    needs: swift-test
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build iOS framework
+        run: xcodebuild -project "PhoneNumberKit.xcodeproj" -scheme "PhoneNumberKit" -destination "generic/platform=iOS" build
+
+      - name: Build macOS framework
+        run: xcodebuild -project "PhoneNumberKit.xcodeproj" -scheme "PhoneNumberKit-macOS" -destination "generic/platform=macOS" build
