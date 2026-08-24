@@ -6,8 +6,8 @@ let skipBuildIsEnabled = ProcessInfo.processInfo.environment["SKIP_ENABLED"] != 
 
 let packageDependencies: [Package.Dependency] = skipBuildIsEnabled
     ? [
-        .package(url: "https://source.skip.tools/skip.git", from: "1.8.0"),
-        .package(url: "https://source.skip.tools/skip-android-bridge.git", "0.0.0"..<"2.0.0")
+        .package(url: "https://github.com/skiptools/skip.git", from: "1.9.7"),
+        .package(url: "https://github.com/skiptools/skip-android-bridge.git", from: "0.6.6")
     ]
     : []
 

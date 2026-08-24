@@ -8,6 +8,25 @@
 Swift 5.3 framework for parsing, formatting and validating international phone numbers.
 Inspired by Google's libphonenumber.
 
+## Fork provenance
+
+This repository started as a fork of
+[marmelroy/PhoneNumberKit](https://github.com/marmelroy/PhoneNumberKit).
+Upstream maintenance has moved to
+[PhoneNumberKit/PhoneNumberKit](https://github.com/PhoneNumberKit/PhoneNumberKit).
+
+This fork retains the upstream core and adds Android compatibility through Skip.
+
+### Swift 6 concurrency
+
+The upstream sources have not yet been validated for Swift 6 strict concurrency.
+Keep `swift-tools-version` at `5.9`; raising it to `6.3` enables Swift 6 language
+mode and turns the current concurrency diagnostics into build errors.
+
+Upgrade the tools version only after the maintained upstream has completed its
+Swift 6 concurrency migration, or after this fork has applied and validated the
+required fixes for both Apple platforms and Android/Skip.
+
 ## Features
 
 |                  | Features                                                                                    |
